@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abhyaas — Number Play Quest</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap');
+        
+        :root {
+            --brand-blue: #0f4c81;
+            --light-blue: #e0f2fe;
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.3);
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #020617, #1e3a8a, #3b82f6);
+            background-attachment: fixed;
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+            user-select: none;
+        }
+
+        h1, h2, h3, h4, .font-heading {
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        .bg-pattern {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: -1;
+            background-image: url("data:image/svg+xml,%3Csvg width='300' height='300' viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cg font-family='Fredoka, sans-serif' font-weight='bold' fill='rgba(255,255,255,0.05)'%3E%3Ctext x='20' y='60' font-size='38'%3E6174%3C/text%3E%3Ctext x='185' y='90' font-size='40'%3E12421%3C/text%3E%3Ctext x='80' y='180' font-size='36'%3E3n+1%3C/text%3E%3Ctext x='215' y='220' font-size='40'%3E495%3C/text%3E%3Ctext x='135' y='45' font-size='32'%3E11:11%3C/text%3E%3Ctext x='30' y='260' font-size='34'%3E90,000%3C/text%3E%3Ctext x='185' y='280' font-size='32'%3E21!%3C/text%3E%3C/g%3E%3C/svg%3E");
+            animation: floatPattern 60s linear infinite;
+        }
+
+        @keyframes floatPattern {
+            0% { background-position: 0 0; }
+            100% { background-position: 300px 300px; }
+        }
+
+        @keyframes pulseNode {
+            0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(255, 255, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        }
+
+        @keyframes flashRed {
+            0%, 100% { background-color: rgba(239, 68, 68, 0.4); border-color: #f87171; transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .quest-node {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            border: 4px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+
+        .quest-node.active, .quest-node:hover {
+            background: white;
+            color: var(--brand-blue);
+            transform: translate(-50%, -50%) scale(1.15);
+            animation: pulseNode 2s infinite;
+        }
+
+        .quest-node-label {
+            position: absolute;
+            top: 90px;
+            width: 220px;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            pointer-events: none;
+        }
+
+        .quiz-input {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 3px solid rgba(255, 255, 255, 0.5);
+        }
+        .quiz-input:focus { outline: none; background: rgba(255, 255, 255, 0.3); border-color: white; }
+        .quiz-input.correct {
+            background: rgba(34, 197, 94, 0.4) !important;
+            color: #ffffff;
+            border-color: #4ade80 !important;
+            box-shadow: 0 0 25px rgba(74, 222, 128, 0.7);
+            transform: scale(1.05);
+            pointer-events: none;
+        }
+        .quiz-input.incorrect {
+            animation: flashRed 0.4s ease;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 15, 40, 0.7);
+            backdrop-filter: blur(12px);
+            z-index: 50;
+            overflow-y: auto;
+            padding: 2rem 1rem;
+        }
+
+        .study-box {
+            background: rgba(255,255,255,0.05);
+            border-left: 6px solid #3b82f6;
+            padding: 1.5rem 2rem;
+            border-radius: 0 1rem 1rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        .btn-more, .btn-exercise {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s;
+        }
+        .btn-more { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+        .btn-exercise { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+        .btn-more:hover, .btn-exercise:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4); }
+
+        .custom-scroll::-webkit-scrollbar { width: 10px; }
+        .custom-scroll::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 5px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); border-radius: 5px; }
+        
+        .topic-slide {
+            display: none;
+            animation: slideIn 0.4s ease forwards;
+        }
+        .topic-slide.active {
+            display: block;
+        }
+
+        /* Enlarge Pyramid Blocks for Kids */
+        .pyramid-row { display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
+        .pyramid-block { width: 105px; height: 92px; background: rgba(255,255,255,0.15); border: 3px solid rgba(255,255,255,0.4); display: flex; align-items: center; justify-content: center; font-size: 1.75rem; font-weight: bold; border-radius: 16px; transition: all 0.3s ease; box-shadow: 0 6px 12px rgba(0,0,0,0.2); }
+        .pyramid-block input { width: 100%; height: 100%; text-align: center; border-radius: 12px; background: transparent; outline: none; transition: all 0.3s; color: white; }
+        .pyramid-block input.correct { background: rgba(34, 197, 94, 0.5) !important; color: white; }
+        .pyramid-block input.incorrect { animation: flashRed 0.4s ease; background: rgba(239, 68, 68, 0.4); }
+
+        .slide-indicator-dots { display: flex; gap: 8px; justify-content: center; margin-top: 1.5rem; }
+        .slide-dot { width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,0.2); transition: all 0.3s; cursor: pointer; }
+        .slide-dot.active { background: white; transform: scale(1.3); }
+    
+        body.embed-mode header.glass-panel {
+            display: none;
+        }
+        body.embed-mode main {
+            min-height: 85vh;
+            padding-top: 1.5rem;
+        }
+        body.embed-mode #quest-modal {
+            padding-top: 0.5rem;
+        }
+        #modal-content-panel,
+        #examples-modal .glass-panel,
+        #pdf-exercise-modal .glass-panel {
+            background: rgba(8, 22, 58, 0.92);
+        }
+
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="bg-pattern pointer-events-none"></div>
+
+    <header class="glass-panel sticky top-0 z-40 border-b-0 border-white/20">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <svg class="w-10 h-10 text-white drop-shadow-md" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"></path></svg>
+                <h1 class="text-4xl font-bold tracking-wider drop-shadow-sm font-heading">Abhyaas</h1>
+            </div>
+            <span class="text-lg font-bold bg-white/10 text-white py-2 px-6 rounded-full shadow-md uppercase tracking-wide border border-white/30">Ganita Prakash: Chapter 3</span>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto w-full px-4 py-16 relative flex flex-col items-center justify-center min-h-[70vh]">
+        <div class="text-center mb-16">
+            <h2 class="text-5xl md:text-6xl font-heading font-bold mb-6 drop-shadow-lg">Number Play</h2>
+            <p class="text-2xl text-blue-100/90 font-bold max-w-3xl mx-auto">Explore supercells, number lines, digit sums, palindromes, Kaprekar&rsquo;s constant (6174), the Collatz conjecture, and winning game strategies.</p>
+        </div>
+
+        <div class="relative w-full max-w-5xl h-[350px] mt-8">
+            <svg class="absolute top-0 left-0 w-full h-full pointer-events-none drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]" viewBox="0 0 1000 300" preserveAspectRatio="none">
+                <path d="M 150 150 C 300 150, 300 60, 500 60 C 700 60, 700 240, 850 240" 
+                      fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="10" stroke-linecap="round" stroke-dasharray="20, 20" />
+            </svg>
+            <button class="quest-node pulse" style="left: 15%; top: 50%;" onclick="openLevel(1)">1<span class="quest-node-label">Supercells &amp; Number Lines</span></button>
+            <button class="quest-node" style="left: 50%; top: 20%;" onclick="openLevel(2)">2<span class="quest-node-label">Digits, Palindromes &amp; 6174</span></button>
+            <button class="quest-node" style="left: 85%; top: 80%;" onclick="openLevel(3)">3<span class="quest-node-label">Mental Math, Collatz &amp; Games</span></button>
+        </div>
+    </main>
+
+    <!-- MAIN QUEST MODAL -->
+    <div id="quest-modal" class="modal-overlay hidden items-center justify-center">
+        
+        <!-- Main External Navigation Arrows -->
+        <button onclick="prevSlide(event)" class="fixed left-2 md:left-6 top-1/2 -translate-y-1/2 w-16 h-16 md:w-24 md:h-24 rounded-full bg-white/20 backdrop-blur-md hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-all duration-300 border-4 border-white/40 shadow-[0_0_25px_rgba(255,255,255,0.3)] z-[60] cursor-pointer" id="prev-btn"><svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M15 19l-7-7 7-7"></path></svg></button>
+        
+        <button onclick="nextSlide(event)" class="fixed right-2 md:right-6 top-1/2 -translate-y-1/2 w-16 h-16 md:w-24 md:h-24 rounded-full bg-white/20 backdrop-blur-md hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-all duration-300 border-4 border-white/40 shadow-[0_0_25px_rgba(255,255,255,0.3)] z-[60] cursor-pointer" id="next-btn"><svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M9 5l7 7-7 7"></path></svg></button>
+
+        <div id="modal-content-panel" class="glass-panel w-full max-w-5xl rounded-[2rem] p-8 md:p-12 relative flex flex-col min-h-[60vh] justify-between">
+            <button onclick="closeModal()" class="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/20 hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-colors border-2 border-white/40 z-20"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+
+            <div id="slides-container" class="w-full flex-grow mt-4">
+                
+                <!-- ================= LEVEL 1 ================= -->
+                <!-- L1 Slide 1 -->
+                <div class="topic-slide level-1-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 flex items-center gap-4 text-white">
+                        <span class="bg-white text-blue-900 w-14 h-14 rounded-full flex items-center justify-center text-3xl shrink-0">1</span>
+                        Taller Neighbours &amp; Supercells (3.1 &ndash; 3.2)
+                    </h2>
+                    
+                    <div class="study-box border-blue-400">
+                        <h4 class="text-3xl font-bold text-blue-300 mb-6">How Numbers Describe Neighbours</h4>
+                        <ul class="list-disc ml-8 space-y-3 text-xl text-blue-50">
+                            <li><strong>Taller Neighbours Rule (Section 3.1):</strong> Children stand in a line and say how many of their immediate neighbours are <strong>taller</strong> than them:
+                                <br><span class="text-blue-200">&bull; <strong>&lsquo;0&rsquo;</strong> if neither neighbour is taller, <strong>&lsquo;1&rsquo;</strong> if only one neighbour is taller, and <strong>&lsquo;2&rsquo;</strong> if both neighbours are taller.</span>
+                                <br><span class="text-blue-200">&bull; Children standing at the <strong>two ends</strong> can <em>never</em> say &lsquo;2&rsquo; (they have only 1 neighbour!). For 5 children of different heights, at most <strong>2 children</strong> can say &lsquo;2&rsquo; (arranged Tall&ndash;Short&ndash;Tall&ndash;Short&ndash;Tall: <code class="bg-black/30 px-2 rounded">0, 2, 0, 2, 0</code>).</span></li>
+                            <li><strong>Supercells (Section 3.2):</strong> A cell in a 1D row or 2D grid is a <strong class="text-green-300">supercell</strong> if its number is <strong>strictly greater than all its adjacent cells</strong> (left/right, and top/bottom in 2D).</li>
+                            <li><strong>Key Supercell Laws:</strong> The <strong>largest number</strong> in a table is <em>always</em> a supercell; the <strong>smallest number</strong> can <em>never</em> be a supercell! In a 1D row of <em>n</em> cells, the maximum number of supercells is <strong><em>n</em>/2</strong> (if <em>n</em> is even) or <strong>(<em>n</em> + 1)/2</strong> (if <em>n</em> is odd, so 9 cells can have at most <strong>5</strong> supercells).</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-blue-900/60 border-l-8 border-blue-400 p-8 rounded-r-2xl shadow-xl mt-6">
+                        <h4 class="font-bold text-white mb-4 text-3xl flex items-center gap-3">
+                            <svg class="w-8 h-8 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                            Solved Example: 1D &amp; 2D Supercells (Pages 57 &amp; 72)
+                        </h4>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
+                            <div class="bg-black/25 p-5 rounded-xl border border-white/10">
+                                <p class="text-lg font-bold text-blue-100 mb-3">1. Find Supercells in Row (Page 57 Q1):</p>
+                                <div class="grid grid-cols-9 gap-1 text-center text-xs font-bold mb-3">
+                                    <div class="bg-green-500/50 border border-green-300 p-2 rounded">6828</div>
+                                    <div class="bg-white/10 p-2 rounded">670</div>
+                                    <div class="bg-green-500/50 border border-green-300 p-2 rounded">9435</div>
+                                    <div class="bg-white/10 p-2 rounded">3780</div>
+                                    <div class="bg-white/10 p-2 rounded">3708</div>
+                                    <div class="bg-white/10 p-2 rounded">7308</div>
+                                    <div class="bg-green-500/50 border border-green-300 p-2 rounded">8000</div>
+                                    <div class="bg-white/10 p-2 rounded">5583</div>
+                                    <div class="bg-white/10 p-2 rounded">52</div>
+                                </div>
+                                <p class="text-sm text-blue-50"><strong>Supercells (3):</strong> <strong class="text-green-300">6828</strong> (&gt;670), <strong class="text-green-300">9435</strong> (&gt;670 &amp; 3780), and <strong class="text-green-300">8000</strong> (&gt;7308 &amp; 5583).</p>
+                            </div>
+                            <div class="bg-black/25 p-5 rounded-xl border border-white/10">
+                                <p class="text-lg font-bold text-blue-100 mb-2">2. Digit-Swap Grid Puzzle (Page 72 Q1):</p>
+                                <p class="text-sm text-blue-50 mb-2">In the 3&times;3 grid, <code class="bg-black/40 px-1.5 rounded">62,871</code> in the centre is the only supercell. If we swap digits <strong>1 and 6</strong> in <code class="bg-black/40 px-1.5 rounded">62,871</code> to get <strong class="text-amber-300">12,876</strong>, then 4 neighbours (<strong class="text-green-300">39,344; 23,609; 45,306; 50,319</strong>) all become supercells!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- L1 Slide 2 -->
+                <div class="topic-slide level-1-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 flex items-center gap-4 text-white">
+                        <span class="bg-white text-blue-900 w-14 h-14 rounded-full flex items-center justify-center text-3xl shrink-0">1</span>
+                        2D Supercell Table &amp; Number Lines (3.2 &ndash; 3.3)
+                    </h2>
+                    
+                    <div class="study-box border-teal-400">
+                        <h4 class="text-3xl font-bold text-teal-300 mb-6">5-Digit Supercell Table &amp; Number Line Patterns</h4>
+                        <ul class="list-disc ml-8 space-y-3 text-xl text-blue-50">
+                            <li><strong>Table 2 with Digits {1, 0, 6, 3, 9} (Pages 58&ndash;59):</strong>
+                                <br><span class="text-blue-200">&bull; Largest 5-digit number possible using <code class="bg-black/30 px-2 rounded">1, 0, 6, 3, 9</code> each once is <strong class="text-white">96,310</strong>.</span>
+                                <br><span class="text-blue-200">&bull; Smallest 5-digit number possible (cannot start with 0!) is <strong class="text-white">10,369</strong>, and the smallest <em>even</em> 5-digit number is <strong class="text-white">10,396</strong>.</span></li>
+                            <li><strong>Patterns on the Number Line (Section 3.3, Page 59):</strong> To find missing tick marks, first divide the difference between two known marks by the number of steps between them!
+                                <br><span class="text-blue-200">&bull; Between <strong>2010</strong> and <strong>2020</strong> (2 steps) &rarr; each step is <strong>+5</strong> (sequence runs from <strong>1990</strong> to <strong>2035</strong>).</span>
+                                <br><span class="text-blue-200">&bull; Between <strong>86,705</strong> and <strong>87,705</strong> (1 step) &rarr; each step is <strong>+1,000</strong> (sequence runs from <strong>83,705</strong> to <strong>92,705</strong>).</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-blue-900/60 border-l-8 border-teal-400 p-8 rounded-r-2xl shadow-xl mt-6">
+                        <h4 class="font-bold text-white mb-4 text-3xl flex items-center gap-3">
+                            <svg class="w-8 h-8 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                            Solved Example: Number Line (a) on Page 59
+                        </h4>
+                        <svg class="w-full h-24 bg-black/25 rounded-xl p-2 border border-white/10 mt-2" viewBox="0 0 540 80">
+                            <line x1="20" y1="45" x2="520" y2="45" stroke="#60a5fa" stroke-width="3"/>
+                            <!-- 10 ticks at x = 35 + i*52 -->
+                            <g stroke="#fff" stroke-width="2">
+                                <line x1="35" y1="36" x2="35" y2="54"/><line x1="87" y1="36" x2="87" y2="54"/>
+                                <line x1="139" y1="36" x2="139" y2="54"/><line x1="191" y1="36" x2="191" y2="54"/>
+                                <line x1="243" y1="36" x2="243" y2="54"/><line x1="295" y1="36" x2="295" y2="54"/>
+                                <line x1="347" y1="36" x2="347" y2="54"/><line x1="399" y1="36" x2="399" y2="54"/>
+                                <line x1="451" y1="36" x2="451" y2="54"/><line x1="503" y1="36" x2="503" y2="54"/>
+                            </g>
+                            <g fill="#fde047" font-size="12" text-anchor="middle" font-weight="bold">
+                                <text x="35" y="70">1990</text><text x="87" y="70">1995</text>
+                                <text x="139" y="70">2000</text><text x="191" y="70">2005</text>
+                                <text x="243" y="26" fill="#fff">2010</text><text x="295" y="70">2015</text>
+                                <text x="347" y="26" fill="#fff">2020</text><text x="399" y="70">2025</text>
+                                <text x="451" y="70">2030</text><text x="503" y="70">2035</text>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- L1 Slide 3 -->
+                <div class="topic-slide level-1-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 text-center text-white">
+                        Interactive Challenge
+                    </h2>
+                    
+                    <div class="bg-black/20 rounded-3xl p-8 md:p-10 border border-white/20 flex flex-col items-center justify-center shadow-inner mt-4">
+                        <h3 class="text-3xl font-heading text-center text-blue-100 mb-3">Supercell &amp; Number Line Detective</h3>
+                        <p class="text-center font-bold text-lg text-blue-200 mb-8 max-w-2xl">Test your mastery of Taller Neighbours, Supercells, and Number Line sequences!</p>
+                        
+                        <div class="flex flex-col gap-5 w-full max-w-3xl">
+                            <div class="flex items-center justify-between bg-white/10 p-5 rounded-2xl border border-white/20">
+                                <div class="pr-4">
+                                    <span class="font-bold text-xl block">1. Out of 9 cells in a single row, what is the MAXIMUM number of supercells possible?</span>
+                                    <span class="text-sm text-blue-200">Hint: Alternate high and low starting from the 1st cell: (9 + 1) &divide; 2!</span>
+                                </div>
+                                <input type="text" class="quiz-input w-28 p-3 text-center text-2xl font-bold rounded-xl shrink-0" data-answer="5|five" placeholder="#">
+                            </div>
+
+                            <div class="flex items-center justify-between bg-white/10 p-5 rounded-2xl border border-white/20">
+                                <div class="pr-4">
+                                    <span class="font-bold text-xl block">2. What is the largest 5-digit number you can form using the digits 1, 0, 6, 3, and 9 once each?</span>
+                                    <span class="text-sm text-blue-200">Hint: Arrange the digits in descending order (Page 58 Table 2).</span>
+                                </div>
+                                <input type="text" class="quiz-input w-36 p-3 text-center text-2xl font-bold rounded-xl shrink-0" data-answer="96310|96,310" placeholder="#">
+                            </div>
+
+                            <div class="flex items-center justify-between bg-white/10 p-5 rounded-2xl border border-white/20">
+                                <div class="pr-4">
+                                    <span class="font-bold text-xl block">3. Five children of different heights stand in a line. What is the maximum number of children who can say &lsquo;2&rsquo;?</span>
+                                    <span class="text-sm text-blue-200">Hint: Ends cannot say 2, and two adjacent children cannot both say 2!</span>
+                                </div>
+                                <input type="text" class="quiz-input w-28 p-3 text-center text-2xl font-bold rounded-xl shrink-0" data-answer="2|two" placeholder="#">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-6 w-full mt-10 justify-center max-w-3xl mx-auto">
+                        <button onclick="openMoreExamples(1)" class="btn-more flex-1 py-4 rounded-2xl font-bold text-white text-xl flex items-center justify-center gap-3">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                            More Examples
+                        </button>
+                        <button onclick="openPdfExercise(1)" class="btn-exercise flex-1 py-4 rounded-2xl font-bold text-white text-xl flex items-center justify-center gap-3">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            Exercises
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ================= LEVEL 2 ================= -->
+                <!-- L2 Slide 1 -->
+                <div class="topic-slide level-2-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 flex items-center gap-4 text-white">
+                        <span class="bg-white text-blue-900 w-14 h-14 rounded-full flex items-center justify-center text-3xl shrink-0">2</span>
+                        Playing with Digits &amp; Palindromes (3.4 &ndash; 3.5)
+                    </h2>
+                    
+                    <div class="study-box border-blue-400">
+                        <h4 class="text-3xl font-bold text-blue-300 mb-4">Digit Counts, Digit Sums &amp; Palindromic Numbers</h4>
+                        <ul class="list-disc ml-8 space-y-3 text-xl text-blue-50">
+                            <li><strong>How Many <em>k</em>-Digit Numbers Exist? (Page 60):</strong><br>
+                                <span class="text-blue-200">1-digit: <strong>9</strong> (1&ndash;9) &bull; 2-digit: <strong>90</strong> (10&ndash;99) &bull; 3-digit: <strong>900</strong> (100&ndash;999) &bull; 4-digit: <strong>9,000</strong> &bull; 5-digit: <strong>90,000</strong>.</span></li>
+                            <li><strong>Digit Sum 14 (Page 60):</strong> Smallest number with digit sum 14 is <strong>59</strong> (5+9=14). Largest 5-digit number with digit sum 14 is <strong>95,000</strong>. Consecutive 3-digit numbers (123&rarr;6, 234&rarr;9, 345&rarr;12) always have digit sums that are <strong>multiples of 3</strong>!</li>
+                            <li><strong>Digit Detective &lsquo;7&rsquo; (Page 61):</strong> Writing numbers from 1 to 100 uses the digit &lsquo;7&rsquo; <strong>20 times</strong>; from 1 to 1000 uses the digit &lsquo;7&rsquo; <strong>300 times</strong>!</li>
+                            <li><strong>Palindromes (Pages 61&ndash;62):</strong> Read the same forwards and backwards (e.g., 66, 848, 1221). Using only digits <code class="bg-black/30 px-2 rounded">{1, 2, 3}</code>, there are <strong>9</strong> possible 3-digit palindromes (111, 121, 131, 212, 222, 232, 313, 323, 333).</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-blue-900/60 border-l-8 border-blue-400 p-8 rounded-r-2xl shadow-xl mt-6">
+                        <h4 class="font-bold text-white mb-4 text-3xl flex items-center gap-3">
+                            <svg class="w-8 h-8 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                            Solved Example: The 5-Digit Palindrome Riddle (Page 62)
+                        </h4>
+                        <p class="text-xl text-blue-100 mb-3"><em>&ldquo;I am a 5-digit palindrome (tth, th, h, t, u). I am an odd number. My &lsquo;t&rsquo; digit is double my &lsquo;u&rsquo; digit. My &lsquo;h&rsquo; digit is double my &lsquo;t&rsquo; digit. Who am I?&rdquo;</em></p>
+                        <div class="bg-black/25 p-4 rounded-xl border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+                            <div class="text-lg text-blue-50 space-y-1">
+                                <div>1. Since the number is odd and 4&times;u must be a single digit (h), <strong>u = 1</strong>.</div>
+                                <div>2. Tens digit <strong>t = 2 &times; 1 = 2</strong>; Hundreds digit <strong>h = 2 &times; 2 = 4</strong>.</div>
+                                <div>3. By palindrome symmetry: <strong class="text-green-300">12,421</strong> (Twelve thousand four hundred twenty-one)!</div>
+                            </div>
+                            <div class="flex gap-2 shrink-0">
+                                <div class="w-12 h-14 bg-amber-500/30 border-2 border-amber-300 rounded-lg flex items-center justify-center text-2xl font-bold">1</div>
+                                <div class="w-12 h-14 bg-amber-500/30 border-2 border-amber-300 rounded-lg flex items-center justify-center text-2xl font-bold">2</div>
+                                <div class="w-12 h-14 bg-amber-500/30 border-2 border-amber-300 rounded-lg flex items-center justify-center text-2xl font-bold">4</div>
+                                <div class="w-12 h-14 bg-amber-500/30 border-2 border-amber-300 rounded-lg flex items-center justify-center text-2xl font-bold">2</div>
+                                <div class="w-12 h-14 bg-amber-500/30 border-2 border-amber-300 rounded-lg flex items-center justify-center text-2xl font-bold">1</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- L2 Slide 2 -->
+                <div class="topic-slide level-2-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 flex items-center gap-4 text-white">
+                        <span class="bg-white text-blue-900 w-14 h-14 rounded-full flex items-center justify-center text-3xl shrink-0">2</span>
+                        Kaprekar&rsquo;s Constant (6174) &amp; Clock Numbers (3.6 &ndash; 3.7)
+                    </h2>
+                    
+                    <div class="study-box border-purple-400">
+                        <ul class="list-disc ml-8 space-y-4 text-xl text-blue-50">
+                            <li><strong>The Magic Number of D.R. Kaprekar (Page 63):</strong> Pick any 4-digit number with at least two different digits. Arrange digits to form the largest number (<strong>A</strong>) and smallest number (<strong>B</strong>), then subtract <strong>C = A &minus; B</strong>. Repeat with the digits of C:
+                                <br><span class="text-green-300 font-bold">&rarr; You ALWAYS reach the Kaprekar constant 6174 (7641 &minus; 1467 = 6174)!</span></li>
+                            <li><strong>3-Digit Kaprekar Constant (Page 63 Explore):</strong> Carrying out the exact same steps on a 3-digit number (like 321) always reaches and repeats <strong class="text-amber-300">495</strong> (954 &minus; 459 = 495)!</li>
+                            <li><strong>Clock &amp; Calendar Patterns (Pages 64&ndash;65):</strong>
+                                <br><span class="text-blue-200">&bull; From <strong>10:01</strong>, the next palindromic time is <strong>11:11</strong> (after <strong>70 minutes</strong>), and the one after that is <strong>12:21</strong> (after <strong>140 minutes</strong> from 10:01).</span>
+                                <br><span class="text-blue-200">&bull; Smallest 5-digit palindrome (10,001) + Largest 5-digit palindrome (99,999) = <strong>110,000</strong>; their difference is <strong>89,998</strong>.</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-blue-900/60 border-l-8 border-purple-400 p-8 rounded-r-2xl shadow-xl mt-6">
+                        <h4 class="font-bold text-white mb-4 text-3xl flex items-center gap-3">
+                            <svg class="w-8 h-8 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                            Solved Example: Kaprekar Journey from 6382 (Page 63)
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 text-center">
+                            <div class="bg-black/25 p-4 rounded-xl border border-white/10">
+                                <span class="text-sm text-blue-200 font-bold">Round 1 (Start: 6382)</span>
+                                <p class="text-xl font-bold text-white mt-1">8632 &minus; 2368 = <span class="text-amber-300">6264</span></p>
+                            </div>
+                            <div class="bg-black/25 p-4 rounded-xl border border-white/10">
+                                <span class="text-sm text-blue-200 font-bold">Round 2 (Digits of 6264)</span>
+                                <p class="text-xl font-bold text-white mt-1">6642 &minus; 2466 = <span class="text-amber-300">4176</span></p>
+                            </div>
+                            <div class="bg-black/25 p-4 rounded-xl border border-green-400/40">
+                                <span class="text-sm text-green-300 font-bold">Round 3 (Digits of 4176)</span>
+                                <p class="text-xl font-bold text-white mt-1">7641 &minus; 1467 = <span class="text-green-300">6174</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- L2 Slide 3 -->
+                <div class="topic-slide level-2-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 text-center text-white">
+                        Interactive Challenge
+                    </h2>
+                    
+                    <div class="bg-black/20 rounded-3xl p-8 md:p-10 border border-white/20 flex flex-col items-center justify-center shadow-inner mt-4">
+                        <h3 class="text-3xl font-heading text-center text-blue-100 mb-3">Reverse-and-Add Pyramid &amp; Kaprekar Quest</h3>
+                        <p class="text-center font-bold text-lg text-blue-200 mb-6 max-w-2xl">Part A: Each top block is the sum of the two blocks beneath it (a number and its reverse!). Complete the palindrome pyramid:</p>
+                        
+                        <div class="flex flex-col items-center gap-3 w-full mb-8">
+                            <!-- Row 3 (Top) -->
+                            <div class="pyramid-row">
+                                <div class="pyramid-block"><input type="text" class="quiz-input" data-answer="363" placeholder="?"></div>
+                            </div>
+                            <!-- Row 2 -->
+                            <div class="pyramid-row">
+                                <div class="pyramid-block"><input type="text" class="quiz-input" data-answer="132" placeholder="?"></div>
+                                <div class="pyramid-block bg-blue-600 border-blue-400 text-white">231</div>
+                            </div>
+                            <!-- Row 1 (Bottom) -->
+                            <div class="pyramid-row">
+                                <div class="pyramid-block bg-blue-600 border-blue-400 text-white">48</div>
+                                <div class="pyramid-block bg-blue-600 border-blue-400 text-white">84</div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-3xl">
+                            <div class="flex items-center justify-between bg-white/10 p-4 rounded-2xl border border-white/20">
+                                <div>
+                                    <span class="font-bold text-lg block">4-Digit Kaprekar Constant:</span>
+                                    <span class="text-sm text-blue-200">Hint: 7641 &minus; 1467 = ?</span>
+                                </div>
+                                <input type="text" class="quiz-input w-28 p-3 text-center text-xl font-bold rounded-xl" data-answer="6174" placeholder="#">
+                            </div>
+                            <div class="flex items-center justify-between bg-white/10 p-4 rounded-2xl border border-white/20">
+                                <div>
+                                    <span class="font-bold text-lg block">Smallest number with digit sum 14:</span>
+                                    <span class="text-sm text-blue-200">Hint: 2-digit number ending in 9!</span>
+                                </div>
+                                <input type="text" class="quiz-input w-28 p-3 text-center text-xl font-bold rounded-xl" data-answer="59" placeholder="#">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-6 w-full mt-10 justify-center max-w-3xl mx-auto">
+                        <button onclick="openMoreExamples(2)" class="btn-more flex-1 py-4 rounded-2xl font-bold text-white text-xl flex items-center justify-center gap-3">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                            More Examples
+                        </button>
+                        <button onclick="openPdfExercise(2)" class="btn-exercise flex-1 py-4 rounded-2xl font-bold text-white text-xl flex items-center justify-center gap-3">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            Exercises
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ================= LEVEL 3 ================= -->
+                <!-- L3 Slide 1 -->
+                <div class="topic-slide level-3-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 flex items-center gap-4 text-white">
+                        <span class="bg-white text-blue-900 w-14 h-14 rounded-full flex items-center justify-center text-3xl shrink-0">3</span>
+                        Mental Math, Digit Bounds &amp; Pattern Sums (3.8 &ndash; 3.9)
+                    </h2>
+                    
+                    <div class="study-box border-blue-400">
+                        <ul class="list-disc ml-8 space-y-3 text-xl text-blue-50">
+                            <li><strong>Mental Math Target Sums (Pages 65&ndash;66):</strong> Using <code class="bg-black/30 px-2 rounded">25,000; 400; 13,000; 1,500; 60,000</code>, we can form <code class="bg-black/30 px-2 rounded">38,800 = 25,000 + 13,000 + 400&times;2</code> and <code class="bg-black/30 px-2 rounded">19,500 = 13,000 + 1,500&times;4 + 400...</code> (or 1,500&times;13). However, <strong>1,000 cannot be made</strong> because the only number under 1,000 is 400, and 1,000 is not a multiple of 400!</li>
+                            <li><strong>Impossible Digit Operations (&ldquo;Never True&rdquo;, Pages 66&ndash;67):</strong>
+                                <br><span class="text-blue-200">&bull; <strong>4-digit + 4-digit = 6-digit sum:</strong> Never possible! (Max is 9,999 + 9,999 = 19,998, a 5-digit number).</span>
+                                <br><span class="text-blue-200">&bull; <strong>5-digit + 5-digit = 18,500:</strong> Never possible! (Min is 10,000 + 10,000 = 20,000).</span>
+                                <br><span class="text-blue-200">&bull; <strong>5-digit &minus; 5-digit = 91,500:</strong> Never possible! (Max difference is 99,999 &minus; 10,000 = 89,999).</span>
+                                <br><span class="text-blue-200">&bull; <strong>5-digit &minus; 2-digit = 3-digit:</strong> Never possible! (Min is 10,000 &minus; 99 = 9,901, a 4-digit number).</span></li>
+                            <li><strong>Quick Pattern Sums (Section 3.9, Pages 67&ndash;68):</strong> Multiply count &times; value instead of adding one by one!
+                                <br><span class="text-green-300 font-bold">&bull; Fig (a): (12 &times; 40) + (10 &times; 50) = 480 + 500 = 980. &nbsp; &bull; Fig (c): (32 &times; 32) + (16 &times; 64) = 1024 + 1024 = 2048.</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-blue-900/60 border-l-8 border-blue-400 p-8 rounded-r-2xl shadow-xl mt-6">
+                        <h4 class="font-bold text-white mb-4 text-3xl flex items-center gap-3">
+                            <svg class="w-8 h-8 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                            Solved Example: Concentric Circle Pattern Sum (Page 68 Fig. f)
+                        </h4>
+                        <p class="text-xl text-blue-100">In Fig. (f), the circle has <strong>1</strong> centre bubble of <code class="bg-black/40 px-2 rounded">1000</code>, <strong>4</strong> bubbles of <code class="bg-black/40 px-2 rounded">500</code>, <strong>8</strong> bubbles of <code class="bg-black/40 px-2 rounded">250</code>, and <strong>16</strong> outer bubbles of <code class="bg-black/40 px-2 rounded">125</code>:<br>
+                        <strong class="text-white">Total Sum = 1000 + (4 &times; 500) + (8 &times; 250) + (16 &times; 125) = 1000 + 2000 + 2000 + 2000 = <span class="text-green-300">7,000</span>!</strong></p>
+                    </div>
+                </div>
+
+                <!-- L3 Slide 2 -->
+                <div class="topic-slide level-3-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 flex items-center gap-4 text-white">
+                        <span class="bg-white text-blue-900 w-14 h-14 rounded-full flex items-center justify-center text-3xl shrink-0">3</span>
+                        Collatz Conjecture, Estimation &amp; Game of 21 (3.10 &ndash; 3.12)
+                    </h2>
+                    
+                    <div class="study-box border-orange-400">
+                        <ul class="list-disc ml-8 space-y-3 text-xl text-blue-50">
+                            <li><strong>The Collatz Conjecture (Section 3.10, Pages 68&ndash;69):</strong> Start with any whole number:
+                                <br><span class="text-blue-200">&bull; If it is <strong>even</strong>, take half of it (<strong><em>n</em> &divide; 2</strong>).</span>
+                                <br><span class="text-blue-200">&bull; If it is <strong>odd</strong>, multiply by 3 and add 1 (<strong>3<em>n</em> + 1</strong>).</span>
+                                <br><span class="text-green-300 font-bold">&rarr; Example starting at 12: 12 &rarr; 6 &rarr; 3 &rarr; 10 &rarr; 5 &rarr; 16 &rarr; 8 &rarr; 4 &rarr; 2 &rarr; 1!</span></li>
+                            <li><strong>Simple Estimation (Section 3.11, Pages 69&ndash;71):</strong> Sheetal (in Grade 6) claims she has spent 13,000 hours in school. At 6 hours/day &times; 200 school days/year = <strong>1,200 hours/year</strong>, 8 years (Nursery to Grade 6) is about <strong>9,600 hours</strong> (13,000 hours would take 10.8 years, so her estimate is too high!).</li>
+                            <li><strong>Winning Strategies in Number Games (Section 3.12, Pages 71&ndash;73):</strong>
+                                <br><span class="text-blue-200">&bull; <strong>Game #1 (Reach 21, adding 1, 2, or 3):</strong> Player 1 always wins by saying <strong>1, 5, 9, 13, 17, 21</strong> (step of 1+3 = 4).</span>
+                                <br><span class="text-blue-200">&bull; <strong>Game #2 (Reach 99, adding 1 to 10):</strong> Player 2 always wins by saying multiples of 11: <strong>11, 22, 33, &hellip;, 99</strong>!</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-blue-900/60 border-l-8 border-orange-400 p-8 rounded-r-2xl shadow-xl mt-6">
+                        <h4 class="font-bold text-white mb-4 text-3xl flex items-center gap-3">
+                            <svg class="w-8 h-8 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                            Solved Example: All-Odd-Digits 5-Digit Mystery (Page 72 Q3)
+                        </h4>
+                        <p class="text-xl text-blue-100">Among 5-digit numbers between <strong>35,000 and 75,000</strong> such that <strong>all digits are odd</strong> (1, 3, 5, 7, 9):
+                        <br>&bull; Largest number: <strong class="text-white">73,999</strong> (or 73,951 without repeating digits).
+                        <br>&bull; Smallest number: <strong class="text-white">35,111</strong> (or 35,179 without repeating digits).
+                        <br>&bull; Closest to 50,000: <strong class="text-green-300">51,111</strong> (difference of 1,111, which is closer than 39,999!).</p>
+                    </div>
+                </div>
+
+                <!-- L3 Slide 3 -->
+                <div class="topic-slide level-3-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 text-center text-white">
+                        Interactive Challenge
+                    </h2>
+                    
+                    <div class="bg-black/20 rounded-3xl p-8 md:p-10 border border-white/20 flex flex-col items-center justify-center shadow-inner mt-4">
+                        <p class="text-center font-bold text-2xl text-blue-200 mb-8">Test your mastery of the Collatz Conjecture, Pattern Sums, and Winning Strategies!</p>
+                        
+                        <div class="flex flex-col gap-6 w-full max-w-3xl">
+                            <div class="flex flex-col w-full bg-white/10 p-5 rounded-2xl border border-white/20 gap-2">
+                                <span class="font-bold text-xl">1. In a Collatz sequence, if the current number is 17 (odd), what is the very next number?</span>
+                                <div class="flex justify-between items-center mt-1">
+                                    <span class="text-base text-blue-200">Hint: For an odd number, multiply by 3 and add 1: (3 &times; 17) + 1.</span>
+                                    <input type="text" class="quiz-input w-32 p-3 text-center text-2xl font-bold rounded-xl" data-answer="52" placeholder="#">
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/10 p-5 rounded-2xl border border-white/20 gap-2">
+                                <span class="font-bold text-xl">2. In the Game of 21 (adding 1, 2, or 3), your opponent says 14. What number must you say to guarantee a win?</span>
+                                <div class="flex justify-between items-center mt-1">
+                                    <span class="text-base text-blue-200">Hint: Winning checkpoints are 1, 5, 9, 13, 17, 21!</span>
+                                    <input type="text" class="quiz-input w-32 p-3 text-center text-2xl font-bold rounded-xl" data-answer="17" placeholder="#">
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/10 p-5 rounded-2xl border border-white/20 gap-2">
+                                <span class="font-bold text-xl">3. What is the largest 5-digit number between 35,000 and 75,000 whose digits are ALL ODD?</span>
+                                <div class="flex justify-between items-center mt-1">
+                                    <span class="text-base text-blue-200">Hint: Must be &lt; 75,000, so ten-thousands is 7 and thousands is 3 (Page 72 Q3).</span>
+                                    <input type="text" class="quiz-input w-36 p-3 text-center text-2xl font-bold rounded-xl" data-answer="73999|73,999" placeholder="#">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-6 w-full mt-10 justify-center max-w-3xl mx-auto">
+                        <button onclick="openMoreExamples(3)" class="btn-more flex-1 py-4 rounded-2xl font-bold text-white text-xl flex items-center justify-center gap-3">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                            More Examples
+                        </button>
+                        <button onclick="openPdfExercise(3)" class="btn-exercise flex-1 py-4 rounded-2xl font-bold text-white text-xl flex items-center justify-center gap-3">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            Exercises
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Global Slide Navigation Dots -->
+            <div id="slide-indicators" class="slide-indicator-dots">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MORE EXAMPLES SECONDARY MODAL -->
+    <div id="examples-modal" class="modal-overlay hidden items-center justify-center z-[70]">
+        <div class="glass-panel w-full max-w-2xl rounded-3xl p-6 md:p-8 relative">
+            <button onclick="closeMoreExamples()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-colors border border-white/40 z-10">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <h3 class="text-2xl font-heading font-bold mb-6 text-white text-center border-b border-white/20 pb-4 flex items-center justify-center gap-3">
+                <svg class="w-7 h-7 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/></svg>
+                Bonus Examples
+            </h3>
+
+            <!-- Extra Examples for Level 1 -->
+            <div id="extra-level-1" class="extra-content space-y-4 hidden">
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Can the smallest number in a Supercell table ever be a supercell? (yes/no)</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="no" placeholder="?">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Will the largest number in a Supercell table ALWAYS be a supercell? (yes/no)</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="yes" placeholder="?">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">What is the maximum number of supercells in a 1D row of 6 cells?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="3|three" placeholder="#">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Using digits 1, 0, 6, 3, 9 once each, what is the smallest 5-digit EVEN number?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="10396|10,396" placeholder="#">
+                </div>
+            </div>
+
+            <!-- Extra Examples for Level 2 -->
+            <div id="extra-level-2" class="extra-content space-y-4 hidden">
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">How many 4-digit numbers exist in total (from 1,000 to 9,999)?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="9000|9,000" placeholder="#">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">How many times does the digit &lsquo;7&rsquo; appear when writing numbers from 1 to 100?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="20" placeholder="#">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">What 3-digit magic constant repeats when doing Kaprekar&rsquo;s steps on 3-digit numbers?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="495" placeholder="#">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">The time is 10:01. How many minutes until the next palindromic time (11:11)?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="70" placeholder="#">
+                </div>
+            </div>
+
+            <!-- Extra Examples for Level 3 -->
+            <div id="extra-level-3" class="extra-content space-y-4 hidden">
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">In Collatz, starting at 21 (odd), what is the next number (3 &times; 21 + 1)?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="64" placeholder="#">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Find the quick sum of twelve 40s and ten 50s (Page 67 Fig. a):</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="980" placeholder="#">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Can the sum of two 4-digit numbers ever be a 6-digit number? (yes/no)</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="no" placeholder="?">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">In Game #2 (Race to 99, adding 1 to 10), which player has the winning strategy? (1 or 2)</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="2|player2|second" placeholder="#">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- PDF EXERCISE MODAL -->
+    <div id="pdf-exercise-modal" class="modal-overlay hidden items-center justify-center z-[80]">
+        <div class="glass-panel w-full max-w-5xl rounded-3xl p-6 md:p-8 relative h-[90vh] flex flex-col">
+            <button onclick="closePdfExercise()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-colors border border-white/40 z-10">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <h3 class="text-3xl font-heading font-bold mb-6 text-white text-center border-b border-white/20 pb-4 flex items-center justify-center gap-3 shrink-0">
+                <svg class="w-8 h-8 text-purple-400" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4zm0 15l3-3.86 2.14 2.58 3-3.86L18 19H6z"/></svg>
+                Complete PDF Exercises (Figure it Out &amp; Extra Practice)
+            </h3>
+
+            <div class="relative flex-grow flex flex-col overflow-hidden pb-16">
+                
+                <!-- PDF Exercise Level 1 -->
+                <div id="pdf-level-1" class="pdf-content hidden h-full overflow-y-auto custom-scroll pr-4">
+                    
+                    <!-- Focus -->
+                    <div class="exercise-page bg-blue-900/40 p-5 rounded-2xl border border-blue-400/30">
+                        <h4 class="text-xl font-bold text-blue-300 mb-4 border-b border-blue-400/30 pb-2">Focus (Easy) &mdash; Taller Neighbours &amp; Basic Supercells (Pages 56 &ndash; 57)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q1. Taller Neighbours Line (Page 56 Q1 &ndash; Q6):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) Can children at the ends of a line say &lsquo;2&rsquo;? (yes/no)</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="no"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) For 5 children of different heights, is 1, 1, 1, 1, 1 possible? (yes/no)</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="no"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) For 5 children, is the sequence 0, 1, 2, 1, 0 possible? (yes/no)</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="yes"></div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q2. 1D Supercells (Page 57 Q1 &amp; Q4):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) In [6828, 670, 9435, 3780, 3708, 7308, 8000, 5583, 52], how many supercells are there?</span><input type="text" class="quiz-input w-20 p-2 text-center text-xs font-bold rounded-lg" data-answer="3|three"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) Maximum possible supercells in a 9-cell row:</span><input type="text" class="quiz-input w-20 p-2 text-center text-xs font-bold rounded-lg" data-answer="5|five"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) Can a table of distinct numbers have ZERO supercells? (yes/no)</span><input type="text" class="quiz-input w-20 p-2 text-center text-xs font-bold rounded-lg" data-answer="no"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Practice -->
+                    <div class="exercise-page hidden bg-purple-900/40 p-5 rounded-2xl border border-purple-400/30">
+                        <h4 class="text-xl font-bold text-purple-300 mb-4 border-b border-purple-400/30 pb-2">Practice (Medium) &mdash; 2D Supercell Table &amp; Number Lines (Pages 58 &ndash; 59)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q3. Table 2 with Digits {1, 0, 6, 3, 9} (Pages 58 &ndash; 59):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) Largest 5-digit number in the completed table:</span><input type="text" class="quiz-input w-28 p-2 text-center text-xs font-bold rounded-lg" data-answer="96310|96,310"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) Smallest even 5-digit number in the table:</span><input type="text" class="quiz-input w-28 p-2 text-center text-xs font-bold rounded-lg" data-answer="10396|10,396"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) Smallest number greater than 50,000 in the table:</span><input type="text" class="quiz-input w-28 p-2 text-center text-xs font-bold rounded-lg" data-answer="60193|60,193"></div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q4. Number Line Sequences (Page 59 a, b, c, d):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) Line (a) [..., 2010, _, 2020, ...]: what is the mark between 2010 and 2020?</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="2015"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) Line (b) [..., 9996, 9997, ...]: what is the 10th (largest) mark?</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="10002|10,002"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) Line (d) [..., 86705, 87705, ...]: what is the 1st (smallest) mark?</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="83705|83,705"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Challenge -->
+                    <div class="exercise-page hidden bg-red-900/40 p-5 rounded-2xl border border-red-400/30">
+                        <h4 class="text-xl font-bold text-red-300 mb-4 border-b border-red-400/30 pb-2">Challenge (Hard) &mdash; Supercell Puzzles &amp; Digit Swap (Pages 58 &amp; 72)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q5. Supercell Construction (Page 58 Q8 &amp; Q9):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) In [2, 1, 3, 4, 5, 6, 7, 9, 8], is the 2nd smallest number (2) a supercell? (yes/no)</span><input type="text" class="quiz-input w-20 p-2 text-center text-xs font-bold rounded-lg" data-answer="yes"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) In [2, 1, 3, 4, 5, 6, 7, 9, 8], is the 2nd largest number (8) a supercell? (yes/no)</span><input type="text" class="quiz-input w-20 p-2 text-center text-xs font-bold rounded-lg" data-answer="no"></div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q6. 3&times;3 Grid Digit-Swap Puzzle (Page 72 Q1):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) Which number in the centre of the grid has two digits swapped?</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="62871|62,871"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) What new 5-digit number is formed after swapping 1 and 6 in 62,871?</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="12876|12,876"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PDF Exercise Level 2 -->
+                <div id="pdf-level-2" class="pdf-content hidden h-full overflow-y-auto custom-scroll pr-4">
+                    
+                    <!-- Focus -->
+                    <div class="exercise-page bg-blue-900/40 p-5 rounded-2xl border border-blue-400/30">
+                        <h4 class="text-xl font-bold text-blue-300 mb-4 border-b border-blue-400/30 pb-2">Focus (Easy) &mdash; Counting Digits &amp; Digit Sums (Pages 60 &ndash; 61)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q1. How Many Numbers Have k Digits? (Page 60):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) Total 2-digit numbers (10 to 99):</span><input type="text" class="quiz-input w-28 p-2 text-center text-xs font-bold rounded-lg" data-answer="90"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) Total 3-digit numbers (100 to 999):</span><input type="text" class="quiz-input w-28 p-2 text-center text-xs font-bold rounded-lg" data-answer="900"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) Total 5-digit numbers (10,000 to 99,999):</span><input type="text" class="quiz-input w-28 p-2 text-center text-xs font-bold rounded-lg" data-answer="90000|90,000"></div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q2. Digit Sum 14 &amp; Digit Detectives (Pages 60 &ndash; 61):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) Smallest number whose digit sum is 14:</span><input type="text" class="quiz-input w-28 p-2 text-center text-xs font-bold rounded-lg" data-answer="59"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) Largest 5-digit number whose digit sum is 14:</span><input type="text" class="quiz-input w-28 p-2 text-center text-xs font-bold rounded-lg" data-answer="95000|95,000"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) How many times does digit &lsquo;7&rsquo; occur from 1 to 1000?</span><input type="text" class="quiz-input w-28 p-2 text-center text-xs font-bold rounded-lg" data-answer="300"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Practice -->
+                    <div class="exercise-page hidden bg-purple-900/40 p-5 rounded-2xl border border-purple-400/30">
+                        <h4 class="text-xl font-bold text-purple-300 mb-4 border-b border-purple-400/30 pb-2">Practice (Medium) &mdash; Palindromes &amp; Kaprekar&rsquo;s Constant (Pages 61 &ndash; 65)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q3. Palindrome Puzzles (Pages 61, 62 &amp; 65 Q2):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) How many 3-digit palindromes can be made using only digits 1, 2, 3?</span><input type="text" class="quiz-input w-28 p-2 text-center text-xs font-bold rounded-lg" data-answer="9|nine"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) 5-digit odd palindrome riddle (t=2u, h=2t): Who am I?</span><input type="text" class="quiz-input w-28 p-2 text-center text-xs font-bold rounded-lg" data-answer="12421|12,421"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) Sum of smallest (10,001) and largest (99,999) 5-digit palindromes:</span><input type="text" class="quiz-input w-28 p-2 text-center text-xs font-bold rounded-lg" data-answer="110000|110,000"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q4. Kaprekar&rsquo;s Constant &amp; Rounds (Pages 63 &amp; 65 Q4):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) Difference between largest (99,999) and smallest (10,001) 5-digit palindromes:</span><input type="text" class="quiz-input w-28 p-2 text-center text-xs font-bold rounded-lg" data-answer="89998|89,998"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) How many rounds does 5683 take to reach 6174 (Page 65 Q4)?</span><input type="text" class="quiz-input w-28 p-2 text-center text-xs font-bold rounded-lg" data-answer="8|eight"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) How many rounds does year 1980 take to reach 6174 (Page 72 Q2)?</span><input type="text" class="quiz-input w-28 p-2 text-center text-xs font-bold rounded-lg" data-answer="6|six"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Challenge -->
+                    <div class="exercise-page hidden bg-red-900/40 p-5 rounded-2xl border border-red-400/30">
+                        <h4 class="text-xl font-bold text-red-300 mb-4 border-b border-red-400/30 pb-2">Challenge (Hard) &mdash; Clock Palindromes &amp; 4-Digit Extremes (Pages 64 &ndash; 65)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q5. Clock &amp; Calendar Patterns (Pages 64 &ndash; 65 Q3):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) Time is 10:01. Minutes until the SECOND palindromic time (12:21):</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="140"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) After how many years does a calendar repeat if 1 leap year is included?</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="6|six"></div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q6. Pratibha&rsquo;s 4-Digit Numbers (Page 64 Q1):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) Using digits 4, 7, 3, 1: largest (7431) &minus; smallest (1347) =</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="6084|6,084"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) Using digits 4, 7, 3, 1: largest (7431) + smallest (1347) =</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="8778|8,778"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PDF Exercise Level 3 -->
+                <div id="pdf-level-3" class="pdf-content hidden h-full overflow-y-auto custom-scroll pr-4">
+                    
+                    <!-- Focus -->
+                    <div class="exercise-page bg-blue-900/40 p-5 rounded-2xl border border-blue-400/30">
+                        <h4 class="text-xl font-bold text-blue-300 mb-4 border-b border-blue-400/30 pb-2">Focus (Easy) &mdash; Always, Sometimes, Never &amp; Pattern Sums (Pages 67 &ndash; 68)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q1. Always, Sometimes, or Never? (Page 67 Q2):</span>
+                                <p class="text-xs text-blue-100">Type <strong>always</strong>, <strong>sometimes</strong>, or <strong>never</strong>:</p>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) 5-digit + 5-digit gives a 5-digit number:</span><input type="text" class="quiz-input w-28 p-1 text-center text-xs font-bold rounded-lg" data-answer="sometimes|onlysometimestrue"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) 4-digit + 2-digit gives a 6-digit number:</span><input type="text" class="quiz-input w-28 p-1 text-center text-xs font-bold rounded-lg" data-answer="never|nevertrue"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) 5-digit &minus; 2-digit gives a 3-digit number:</span><input type="text" class="quiz-input w-28 p-1 text-center text-xs font-bold rounded-lg" data-answer="never|nevertrue"></div>
+                                </div>
+                            </div>
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q2. Visual Number Pattern Sums (Pages 67 &ndash; 68):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) Fig (c): 32 cells of 32 + 16 cells of 64 =</span><input type="text" class="quiz-input w-24 p-1 text-center text-xs font-bold rounded-lg" data-answer="2048|2,048"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) Fig (f): 1(1000) + 4(500) + 8(250) + 16(125) =</span><input type="text" class="quiz-input w-24 p-1 text-center text-xs font-bold rounded-lg" data-answer="7000|7,000"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) Mental Math (Page 66): Which single thousand (1000/2000/3000) CANNOT be made?</span><input type="text" class="quiz-input w-24 p-1 text-center text-xs font-bold rounded-lg" data-answer="1000|1,000"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Practice -->
+                    <div class="exercise-page hidden bg-purple-900/40 p-5 rounded-2xl border border-purple-400/30">
+                        <h4 class="text-xl font-bold text-purple-300 mb-4 border-b border-purple-400/30 pb-2">Practice (Medium) &mdash; Collatz Sequences &amp; Odd-Digit Group (Pages 68 &ndash; 73)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm w-full">Q3. Collatz Conjecture (Pages 68, 69 &amp; 73 Q8, Q9):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) Starting at 100: 100 &rarr; 50 &rarr; 25 &rarr; ? (3&times;25 + 1)</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="76"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) Starting at 28: 28 &rarr; 14 &rarr; 7 &rarr; ? (3&times;7 + 1)</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="22"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) How many steps for 64 (2<sup>6</sup>) to reach 1 by halving?</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="6|six"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm w-full">Q4. All-Odd-Digits Group [35,000 to 75,000] (Page 72 Q3):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) Smallest number (with repeating odd digits allowed):</span><input type="text" class="quiz-input w-28 p-2 text-center text-xs font-bold rounded-lg" data-answer="35111|35,111"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) Smallest number (with NON-repeating odd digits):</span><input type="text" class="quiz-input w-28 p-2 text-center text-xs font-bold rounded-lg" data-answer="35179|35,179"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) Number in the group closest to 50,000 (repeating allowed):</span><input type="text" class="quiz-input w-28 p-2 text-center text-xs font-bold rounded-lg" data-answer="51111|51,111"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Challenge -->
+                    <div class="exercise-page hidden bg-red-900/40 p-5 rounded-2xl border border-red-400/30">
+                        <h4 class="text-xl font-bold text-red-300 mb-4 border-b border-red-400/30 pb-2">Challenge (Hard) &mdash; Estimation &amp; Winning Strategies (Pages 70 &ndash; 73)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm w-full">Q5. Winning Game Strategies (Pages 71 &ndash; 73 Q10):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) Game #1 (Reach 21, +1 to 3): What first number should Player 1 say?</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="1"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) Page 73 Q10 (Start at 0, +1 to 3, reach 22): What first number should Player 1 say?</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="2"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) Game #2 (Reach 99, +1 to 10): If Player 1 says 7, what should Player 2 say?</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="11"></div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm w-full">Q6. Estimation &amp; Place-Value Sums (Pages 70 &ndash; 72):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) Does Sheetal spend 13,000 hours in school by Grade 6? (yes/no)</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="no"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) Page 72 Q6: If 18,000 + 300 + ? = 18,670, find the second 3-digit number:</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="370"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- NAVIGATION BUTTONS FOOTER -->
+                <div class="absolute bottom-0 left-0 right-0 flex justify-between items-center pt-4 bg-transparent z-10 border-t border-white/20">
+                    <button id="ex-prev-btn" onclick="prevExercisePage()" class="px-6 py-2 bg-white/20 hover:bg-white/30 rounded-xl font-bold transition-all text-white flex items-center gap-2 invisible">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg> Previous
+                    </button>
+                    <span id="ex-page-indicator" class="text-white/60 font-bold text-sm tracking-wide"></span>
+                    <button id="ex-next-btn" onclick="nextExercisePage()" class="px-6 py-2 bg-purple-600 hover:bg-purple-500 shadow-lg rounded-xl font-bold transition-all text-white flex items-center gap-2 invisible">
+                        Next <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('quest-modal');
+        const nextBtn = document.getElementById('next-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const slidesContainer = document.getElementById('slides-container');
+        const indicators = document.getElementById('slide-indicators');
+        
+        const examplesModal = document.getElementById('examples-modal');
+        const pdfExerciseModal = document.getElementById('pdf-exercise-modal');
+
+        let currentLevel = 1;
+        let currentSlideIndex = 0;
+        let allSlides = [];
+
+        function initSlides() {
+            allSlides = Array.from(document.querySelectorAll('.topic-slide'));
+        }
+
+        function openLevel(level) {
+            document.querySelectorAll('.quest-node').forEach((n, i) => n.classList.toggle('active', i + 1 === level));
+            currentLevel = level;
+            
+            const targetClass = `level-${level}-slide`;
+            currentSlideIndex = allSlides.findIndex(slide => slide.classList.contains(targetClass));
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            updateView();
+        }
+
+        function nextSlide(e) {
+            if(e) e.stopPropagation();
+            if (currentSlideIndex < allSlides.length - 1) {
+                currentSlideIndex++;
+                updateView();
+            }
+        }
+
+        function prevSlide(e) {
+            if(e) e.stopPropagation();
+            if (currentSlideIndex > 0) {
+                currentSlideIndex--;
+                updateView();
+            }
+        }
+
+        function updateView() {
+            allSlides.forEach((slide, index) => {
+                if (index === currentSlideIndex) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+
+            prevBtn.style.display = currentSlideIndex === 0 ? 'none' : 'flex';
+            nextBtn.style.display = currentSlideIndex === allSlides.length - 1 ? 'none' : 'flex';
+
+            const activeSlide = allSlides[currentSlideIndex];
+            for (let i = 1; i <= 3; i++) {
+                if (activeSlide.classList.contains(`level-${i}-slide`)) {
+                    currentLevel = i;
+                    document.querySelectorAll('.quest-node').forEach((n, idx) => n.classList.toggle('active', idx + 1 === currentLevel));
+                    break;
+                }
+            }
+
+            updateDots();
+        }
+
+        function updateDots() {
+            indicators.innerHTML = '';
+            const levelClass = `level-${currentLevel}-slide`;
+            const levelSlides = allSlides.filter(s => s.classList.contains(levelClass));
+            
+            let localIndex = 0;
+            const currentGlobalSlide = allSlides[currentSlideIndex];
+            localIndex = levelSlides.indexOf(currentGlobalSlide);
+
+            levelSlides.forEach((slideEl, idx) => {
+                const dot = document.createElement('div');
+                dot.className = `slide-dot ${idx === localIndex ? 'active' : ''}`;
+                dot.addEventListener('click', () => {
+                    currentSlideIndex = allSlides.indexOf(slideEl);
+                    updateView();
+                });
+                indicators.appendChild(dot);
+            });
+        }
+
+        function closeModal() { 
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            allSlides.forEach(s => s.classList.remove('active'));
+        }
+
+        // ====== MORE EXAMPLES LOGIC ======
+        function openMoreExamples(level) {
+            document.querySelectorAll('.extra-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
+            });
+            const extraTarget = document.getElementById(`extra-level-${level}`);
+            if (extraTarget) {
+                extraTarget.classList.remove('hidden');
+                extraTarget.classList.add('block');
+            }
+            examplesModal.classList.remove('hidden');
+            examplesModal.classList.add('flex');
+        }
+        
+        function closeMoreExamples() {
+            examplesModal.classList.add('hidden');
+            examplesModal.classList.remove('flex');
+        }
+
+        // ====== PDF EXERCISE LOGIC ======
+        let currentExercisePage = 0;
+        let activeExercisePages = [];
+
+        function openPdfExercise(level) {
+            document.querySelectorAll('.pdf-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
+            });
+            
+            const levelContainer = document.getElementById(`pdf-level-${level}`);
+            if (levelContainer) {
+                levelContainer.classList.remove('hidden');
+                levelContainer.classList.add('block');
+                
+                activeExercisePages = Array.from(levelContainer.querySelectorAll('.exercise-page'));
+                currentExercisePage = 0;
+                
+                updateExercisePagination();
+                
+                pdfExerciseModal.classList.remove('hidden');
+                pdfExerciseModal.classList.add('flex');
+            }
+        }
+
+        function updateExercisePagination() {
+            activeExercisePages.forEach((page, index) => {
+                if (index === currentExercisePage) {
+                    page.classList.remove('hidden');
+                    page.classList.add('block');
+                } else {
+                    page.classList.add('hidden');
+                    page.classList.remove('block');
+                }
+            });
+
+            const exPrevBtn = document.getElementById('ex-prev-btn');
+            const exNextBtn = document.getElementById('ex-next-btn');
+            const indicator = document.getElementById('ex-page-indicator');
+
+            if (exPrevBtn) exPrevBtn.style.visibility = currentExercisePage > 0 ? 'visible' : 'hidden';
+            if (exNextBtn) exNextBtn.style.visibility = currentExercisePage < activeExercisePages.length - 1 ? 'visible' : 'hidden';
+            
+            if (indicator && activeExercisePages.length > 0) {
+                indicator.textContent = `Section ${currentExercisePage + 1} of ${activeExercisePages.length}`;
+            }
+        }
+
+        function nextExercisePage() {
+            if (currentExercisePage < activeExercisePages.length - 1) {
+                currentExercisePage++;
+                updateExercisePagination();
+            }
+        }
+
+        function prevExercisePage() {
+            if (currentExercisePage > 0) {
+                currentExercisePage--;
+                updateExercisePagination();
+            }
+        }
+
+        function closePdfExercise() {
+            pdfExerciseModal.classList.add('hidden');
+            pdfExerciseModal.classList.remove('flex');
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initSlides();
+        });
+
+        document.querySelectorAll('.quiz-input').forEach(input => {
+            input.addEventListener('input', function() {
+                const val = this.value.trim().toLowerCase().replace(/\s/g, "");
+                let answers = this.getAttribute('data-answer');
+                
+                if (!answers) return;
+                
+                answers = answers.toLowerCase().split('|');
+                this.classList.remove('correct', 'incorrect');
+                if (val !== '') {
+                    if (answers.includes(val)) {
+                        this.classList.add('correct');
+                    } else {
+                        this.classList.add('incorrect');
+                    }
+                }
+            });
+        });
+        function applyEmbedMode() {
+            const params = new URLSearchParams(window.location.search);
+            let inFrame = false;
+            try { inFrame = window.self !== window.top; } catch (err) { inFrame = true; }
+            if (params.get("embed") === "1" || inFrame) {
+                document.body.classList.add("embed-mode");
+            }
+            const levelParam = params.get("level") || params.get("tab");
+            if (levelParam && typeof openLevel === "function") {
+                const level = Math.max(1, Math.min(3, parseInt(levelParam, 10) || 1));
+                setTimeout(() => openLevel(level), 150);
+            }
+        }
+        applyEmbedMode();
+        window.addEventListener("load", applyEmbedMode);
+
+    </script>
+</body>
+</html>

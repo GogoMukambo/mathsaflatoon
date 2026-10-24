@@ -1,0 +1,703 @@
+/* Phone layout: only applies when mobile.js adds body.is-mobile. */
+
+/* The Android app draws edge to edge and overrides these with the real system bar sizes. */
+:root {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+}
+
+.m-top [hidden],
+.m-section[hidden],
+.m-sheet[hidden] {
+  display: none !important;
+}
+
+body.is-mobile {
+  --m-ink: #14285c;
+  --m-lilac: #ffffff;
+  --m-mint: #ffffff;
+  --m-butter: #ffffff;
+  --m-peach: #ffffff;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body.is-mobile.m-sheet-open {
+  overflow: hidden;
+}
+
+body.is-mobile .gogo-header,
+body.is-mobile .site-brand-bar {
+  padding-left: calc(14px + var(--safe-left));
+  padding-right: calc(14px + var(--safe-right));
+  flex-wrap: nowrap;
+}
+
+body.is-mobile .header-user {
+  display: none !important;
+}
+
+body.is-mobile .top-search,
+body.is-mobile .top-nav-link:not(#navHome) {
+  display: none;
+}
+
+body.is-mobile .top-nav {
+  display: flex;
+  flex: 1 1 100%;
+  order: 3;
+}
+
+body.is-mobile .home-hero-title {
+  font-size: 34px;
+}
+
+body.is-mobile .home-trust {
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+body.is-mobile .choice-tile-atom {
+  min-height: 0;
+  padding: 28px 22px 0;
+}
+
+body.is-mobile .learn-banner-photo {
+  position: relative;
+  height: 180px;
+}
+
+body.is-mobile .gogo-word {
+  font-size: 26px;
+}
+
+body.is-mobile .gogo-chip {
+  font-size: 12px;
+  padding: 6px 10px;
+}
+
+body.is-mobile .site-tagline {
+  font-size: 20px;
+  padding: 12px 14px;
+}
+
+body.is-mobile .layout {
+  display: block;
+  min-height: calc(100vh - 64px);
+  padding: 0 calc(14px + var(--safe-right)) calc(16px + var(--safe-bottom)) calc(14px + var(--safe-left));
+}
+
+body.is-mobile .auth-gate {
+  padding: calc(20px + var(--safe-top)) calc(14px + var(--safe-right)) calc(20px + var(--safe-bottom))
+    calc(14px + var(--safe-left));
+}
+
+body.is-mobile .nav {
+  display: none;
+}
+
+body.is-mobile .content {
+  max-width: none;
+  padding: 0;
+}
+
+body.is-mobile .reader-with-lesson {
+  display: block;
+}
+
+body.is-mobile .lesson-unit {
+  display: flex;
+  flex-direction: column;
+}
+
+body.is-mobile .reader-lesson {
+  position: static;
+  margin-bottom: 18px;
+}
+
+body.is-mobile .iwb-surface,
+body.is-mobile .iwb-canvas {
+  width: 100%;
+  aspect-ratio: 800 / 500;
+}
+
+/* Top bar */
+
+.m-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: calc(14px + var(--safe-top)) 2px 14px;
+}
+
+.m-heading {
+  flex: 1;
+  min-width: 0;
+}
+
+.m-hello {
+  margin: 0;
+  font-size: 14px;
+  color: #5c6d92;
+}
+
+.m-title {
+  margin: 2px 0 0;
+  font-size: 26px;
+  line-height: 1.15;
+  font-weight: 800;
+  color: #14285c;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.m-icon-btn,
+.m-avatar {
+  flex-shrink: 0;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  font: inherit;
+}
+
+.m-icon-btn {
+  border: 1px solid #d5deef;
+  background: #ffffff;
+  color: #2d6bff;
+}
+
+.m-avatar {
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  background: linear-gradient(135deg, var(--m-mint), var(--m-lilac));
+  color: var(--m-ink);
+  font-weight: 800;
+  font-size: 16px;
+}
+
+.m-top svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Sections */
+
+.m-section {
+  margin-bottom: 18px;
+}
+
+.m-label {
+  margin: 0 0 10px 2px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #14285c;
+}
+
+body.is-mobile .subject-picks,
+body.is-mobile .mode-picks {
+  margin: 0;
+}
+
+/* Subject and path tiles: big 2-column cards until one is chosen. */
+
+body.is-mobile .year-picks,
+body.is-mobile .subject-picks,
+body.is-mobile .mode-picks {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+body.is-mobile .year-btn,
+body.is-mobile .subject-btn,
+body.is-mobile .mode-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  min-height: 150px;
+  padding: 14px;
+  border: 1px solid #e4eaf5;
+  border-radius: 24px;
+  color: var(--m-ink);
+  box-shadow: 0 10px 24px rgba(20, 40, 92, 0.08);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+body.is-mobile .year-btn img,
+body.is-mobile .subject-btn img {
+  width: 100%;
+  height: 96px;
+  border-radius: 16px;
+  box-shadow: none;
+}
+
+body.is-mobile .year-btn strong,
+body.is-mobile .subject-btn strong,
+body.is-mobile .mode-btn strong {
+  color: var(--m-ink);
+  font-size: 18px;
+  font-weight: 800;
+}
+
+body.is-mobile .year-btn span,
+body.is-mobile .subject-btn span,
+body.is-mobile .mode-btn span {
+  color: #24365f;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+body.is-mobile .year-btn {
+  background: var(--m-peach);
+}
+
+body.is-mobile .subject-btn[data-subject="science"] {
+  background: var(--m-mint);
+}
+
+body.is-mobile .subject-btn[data-subject="maths"] {
+  background: var(--m-lilac);
+}
+
+body.is-mobile .subject-btn[data-subject="mental"] {
+  background: var(--m-butter);
+}
+
+body.is-mobile .subject-picks .subject-btn:last-child:nth-child(odd),
+body.is-mobile .mode-picks .mode-btn:only-child {
+  grid-column: 1 / -1;
+}
+
+body.is-mobile .mode-btn[data-mode="study"] {
+  background: var(--m-lilac);
+}
+
+body.is-mobile .mode-btn[data-mode="cards"] {
+  background: var(--m-mint);
+}
+
+body.is-mobile .mode-btn[data-mode="test"] {
+  background: var(--m-butter);
+}
+
+body.is-mobile .mode-btn[data-mode="mock"] {
+  background: var(--m-peach);
+}
+
+body.is-mobile .mode-btn::before {
+  font-size: 44px;
+  line-height: 1;
+  margin-bottom: auto;
+}
+
+body.is-mobile .mode-btn[data-mode="study"]::before {
+  content: "📖";
+}
+
+body.is-mobile .mode-btn[data-mode="cards"]::before {
+  content: "🃏";
+}
+
+body.is-mobile .mode-btn[data-mode="test"]::before {
+  content: "⚡";
+}
+
+body.is-mobile .mode-btn[data-mode="mock"]::before {
+  content: "⏱️";
+}
+
+/* A choice stays on its own screen. Go back to change the year, subject, or path. */
+
+body.is-mobile.m-has-year .m-years,
+body.is-mobile.m-has-subject .m-subjects,
+body.is-mobile.m-has-mode .m-modes {
+  display: none;
+}
+
+/* Once chosen, the row shrinks to scrollable chips like a room picker. */
+
+body.is-mobile.m-has-year .year-picks,
+body.is-mobile.m-has-subject .subject-picks,
+body.is-mobile.m-has-mode .mode-picks {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+}
+
+body.is-mobile.m-has-year .year-picks::-webkit-scrollbar,
+body.is-mobile.m-has-subject .subject-picks::-webkit-scrollbar,
+body.is-mobile.m-has-mode .mode-picks::-webkit-scrollbar {
+  display: none;
+}
+
+body.is-mobile.m-has-year .year-btn,
+body.is-mobile.m-has-subject .subject-btn,
+body.is-mobile.m-has-mode .mode-btn {
+  flex: 0 0 auto;
+  width: auto;
+  min-height: 0;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px 8px 8px;
+  border-radius: 18px;
+  background: #ffffff;
+  color: #14285c;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7);
+}
+
+body.is-mobile.m-has-mode .mode-btn {
+  padding: 8px 16px 8px 10px;
+}
+
+body.is-mobile.m-has-year .year-btn img,
+body.is-mobile.m-has-subject .subject-btn img {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+}
+
+body.is-mobile.m-has-year .year-btn strong,
+body.is-mobile.m-has-subject .subject-btn strong,
+body.is-mobile.m-has-mode .mode-btn strong {
+  color: inherit;
+  font-size: 15px;
+}
+
+body.is-mobile.m-has-year .year-btn span,
+body.is-mobile.m-has-subject .subject-btn span {
+  color: inherit;
+}
+
+body.is-mobile.m-has-year .year-btn-copy > span,
+body.is-mobile.m-has-subject .subject-btn span span,
+body.is-mobile.m-has-mode .mode-btn > span {
+  display: none;
+}
+
+body.is-mobile.m-has-mode .mode-btn::before {
+  font-size: 22px;
+  margin: 0;
+}
+
+body.is-mobile.m-has-year .year-btn.on,
+body.is-mobile.m-has-subject .subject-btn.on,
+body.is-mobile.m-has-mode .mode-btn.on {
+  background: #fff;
+  color: var(--m-ink);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* Only the home screen shows the section chrome; inside a chapter or test the page is all content. */
+
+body.is-mobile:not(.m-home) .m-section {
+  display: none;
+}
+
+body.is-mobile:not(.m-has-year) .welcome-hero {
+  display: none;
+}
+
+body.is-mobile.m-has-mode .welcome-hero-media {
+  display: none;
+}
+
+body.is-mobile #quiz {
+  scroll-padding-bottom: calc(24px + var(--safe-bottom));
+}
+
+body.is-mobile #quizAnswer {
+  scroll-margin-bottom: calc(28px + var(--safe-bottom));
+}
+
+/* Panels and content */
+
+body.is-mobile .panel {
+  padding: 16px;
+  border-radius: 24px;
+}
+
+body.is-mobile .welcome-hero {
+  grid-template-columns: 1fr;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 20px;
+}
+
+body.is-mobile .welcome-hero-media {
+  height: 150px;
+}
+
+body.is-mobile .featured-gallery {
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+body.is-mobile .gallery-card-thumb {
+  height: 200px;
+}
+
+body.is-mobile .gallery-card-title {
+  font-size: 14px;
+}
+
+body.is-mobile .quiz-chapter-list {
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+body.is-mobile .quiz-chapter-item {
+  flex-direction: column;
+  align-items: flex-start;
+  min-height: 108px;
+  padding: 14px;
+  border-radius: 22px;
+}
+
+body.is-mobile .quiz-picker-toolbar {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+body.is-mobile .quiz-start-btn,
+body.is-mobile #mockStartBtn,
+body.is-mobile #mentalStartBtn {
+  width: 100%;
+}
+
+body.is-mobile .flash {
+  grid-template-columns: 1fr;
+  min-height: 0;
+}
+
+body.is-mobile .back {
+  max-height: none;
+}
+
+body.is-mobile .primary,
+body.is-mobile .ghost {
+  min-height: 52px;
+  font-size: 16px;
+  border-radius: 16px;
+}
+
+body.is-mobile .symbol-bar {
+  flex-basis: 84px;
+}
+
+body.is-mobile .symbol-bar button {
+  height: 36px;
+  font-size: 18px;
+}
+
+body.is-mobile #quiz .actions {
+  position: sticky;
+  bottom: calc(8px + var(--safe-bottom));
+  z-index: 5;
+  margin: 16px -6px 0;
+  padding: 8px;
+  border-radius: 20px;
+  background: #ffffff;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 8px 24px rgba(20, 40, 92, 0.12);
+}
+
+/* Flash cards: one screen, no page scroll. mobile.js sets the panel height and shrinks the note to fit. */
+
+body.is-mobile.m-cards .layout {
+  padding-bottom: 0;
+}
+
+body.is-mobile.m-cards #study {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 12px;
+}
+
+body.is-mobile.m-cards #topicShowcase,
+body.is-mobile.m-cards #study .dots {
+  display: none !important;
+}
+
+body.is-mobile.m-cards #study .meta {
+  font-size: 12px;
+}
+
+body.is-mobile.m-cards #study .bar {
+  flex: none;
+  height: 4px;
+  margin: 6px 0 10px;
+}
+
+body.is-mobile.m-cards .flash {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  gap: 8px;
+}
+
+body.is-mobile.m-cards .face {
+  min-height: 0;
+  gap: 6px;
+  border-radius: 18px;
+}
+
+body.is-mobile.m-cards .front {
+  flex: none;
+  padding: 10px 14px 12px;
+}
+
+body.is-mobile.m-cards .front .prompt {
+  font-size: 19px;
+  line-height: 1.28;
+}
+
+body.is-mobile.m-cards .back {
+  flex: 1;
+  min-height: 0;
+  max-height: none;
+  overflow: hidden;
+  padding: 10px 14px 12px;
+}
+
+body.is-mobile.m-cards .back.m-scroll {
+  overflow-y: auto;
+}
+
+body.is-mobile.m-cards .kicker {
+  font-size: 11px;
+}
+
+body.is-mobile.m-cards .back .prompt {
+  flex: none;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+body.is-mobile.m-cards .back .prompt p {
+  margin-bottom: 8px;
+}
+
+body.is-mobile.m-cards .visual {
+  flex: 1 1 0;
+  min-height: 0;
+  margin: 4px 0 0;
+  display: flex;
+  justify-content: center;
+  background: #f4efe4;
+  cursor: zoom-in;
+}
+
+body.is-mobile.m-cards .visual.m-no-art {
+  display: none;
+}
+
+body.is-mobile.m-cards .flash-art {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 140px;
+}
+
+body.is-mobile.m-cards .visual svg {
+  height: 100%;
+  width: auto;
+  max-width: 100%;
+}
+
+body.is-mobile.m-cards #study .actions {
+  flex: none;
+  margin-top: 10px;
+}
+
+body.is-mobile.m-cards #study .primary,
+body.is-mobile.m-cards #study .ghost {
+  min-height: 48px;
+  padding: 10px 14px;
+}
+
+/* Account sheet */
+
+.m-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+}
+
+.m-sheet-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(3, 6, 20, 0.6);
+}
+
+.m-sheet-panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 8px calc(16px + var(--safe-right)) calc(28px + var(--safe-bottom)) calc(16px + var(--safe-left));
+  border-radius: 28px 28px 0 0;
+  background: #ffffff;
+  color: #14285c;
+  box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.5);
+  animation: m-sheet-up 0.22s ease-out;
+}
+
+@keyframes m-sheet-up {
+  from {
+    transform: translateY(40px);
+    opacity: 0;
+  }
+}
+
+.m-sheet-grip {
+  width: 48px;
+  height: 5px;
+  margin: 6px auto 14px;
+  border-radius: 3px;
+  background: #d5deef;
+}
+
+.m-sheet-title {
+  margin: 0 0 14px;
+  font-size: 20px;
+  font-weight: 800;
+  color: #14285c;
+}
+
+.m-account-name {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #14285c;
+}
+
+.m-account-meta {
+  margin: 4px 0 18px;
+  color: #5c6d92;
+}
+
+#mLogout {
+  width: 100%;
+}

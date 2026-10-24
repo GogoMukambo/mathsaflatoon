@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900">
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path d="M 0 1 L 9 5 L 0 9 z" fill="#111111" />
+</marker>
+
+</defs>
+<rect x="0" y="0" width="1200" height="900" fill="#ffffff" />
+<path d="M 200 120 L 200 740 L 500 740 L 500 120" fill="none" stroke="#111111" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" />
+<rect x="204" y="190" width="292" height="546" fill="#d4d4d4" stroke="none" stroke-width="0" />
+<line x1="204" y1="190" x2="496" y2="190" stroke="#555555" stroke-width="3" stroke-linecap="round" />
+<circle cx="500" cy="322.5" r="7" fill="#ffffff" stroke="#111111" stroke-width="3" />
+<path d="M 508 322.5 Q 560 332.5 620 472.5" fill="none" stroke="#555555" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" />
+<line x1="508" y1="322.5" x2="570" y2="322.5" stroke="#111111" stroke-width="3" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="500" cy="481.5" r="7" fill="#ffffff" stroke="#111111" stroke-width="3" />
+<path d="M 508 481.5 Q 645 491.5 790 631.5" fill="none" stroke="#555555" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" />
+<line x1="508" y1="481.5" x2="620" y2="481.5" stroke="#111111" stroke-width="3" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="500" cy="640.5" r="7" fill="#ffffff" stroke="#111111" stroke-width="3" />
+<path d="M 508 640.5 Q 730 650.5 960 790.5" fill="none" stroke="#555555" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" />
+<line x1="508" y1="640.5" x2="670" y2="640.5" stroke="#111111" stroke-width="3" stroke-linecap="round" marker-end="url(#ah)" />
+<line x1="130" y1="190" x2="130" y2="740" stroke="#111111" stroke-width="3" stroke-linecap="round" marker-end="url(#ah)" />
+<text x="90" y="430" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="30" font-weight="600" text-anchor="middle" transform="rotate(-90 90 430)">depth</text>
+<text x="600" y="860" fill="#555555" font-family="Helvetica, Arial, sans-serif" font-size="30" font-weight="600" text-anchor="middle">deeper water pushes out harder</text>
+</svg>

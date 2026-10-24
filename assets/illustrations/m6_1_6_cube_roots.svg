@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900">
+<rect width="1600" height="900" fill="#ffffff"/>
+<rect width="1600" height="92" fill="#0f172a"/>
+<text x="800" y="62" text-anchor="middle" fill="#ffffff" font-family="Segoe UI, Arial, sans-serif" font-size="40" font-weight="700" letter-spacing="2">CUBE NUMBERS AND CUBE ROOTS</text>
+<text x="800" y="148" text-anchor="middle" fill="#2563eb" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="600">2³ = 8, so 2 is the cube root of 8.</text>
+<rect x="60" y="186" width="720" height="580" rx="18" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+<text x="420" y="228" text-anchor="middle" fill="#1d4ed8" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">Cubes</text>
+<text x="420" y="274" text-anchor="middle" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700">1³ = 1</text>
+<text x="420" y="316" text-anchor="middle" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700">2³ = 8</text>
+<text x="420" y="358" text-anchor="middle" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700">3³ = 27</text>
+<text x="420" y="400" text-anchor="middle" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700">4³ = 64</text>
+  <rect x="820" y="186" width="720" height="580" rx="18" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+<text x="1180" y="228" text-anchor="middle" fill="#065f46" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">√64 ÷ ∛64</text>
+<text x="1180" y="274" text-anchor="middle" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700">8² = 64 so √64 = 8</text>
+<text x="1180" y="316" text-anchor="middle" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700">4³ = 64 so ∛64 = 4</text>
+<text x="1180" y="358" text-anchor="middle" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="44" font-weight="700">8 ÷ 4 = 2</text>
+<rect y="808" width="1600" height="92" fill="#0f172a"/>
+<text x="800" y="864" text-anchor="middle" fill="#ffffff" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="600">RECALL  |  √64 ÷ ∛64 = 2</text>
+</svg>

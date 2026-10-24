@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" width="1200" height="720">
+  <rect width="1200" height="720" fill="#f6f1e6"/>
+  
+    <text x="72" y="108" fill="#1e293b" font-family="Plus Jakarta Sans, Segoe UI, sans-serif" font-size="54" font-weight="700">11 Ratio</text>
+    <rect x="250" y="280" width="64" height="140" rx="14" fill="#d97706"/><rect x="328" y="280" width="64" height="140" rx="14" fill="#d97706"/><rect x="406" y="280" width="64" height="140" rx="14" fill="#d97706"/>
+    <rect x="560" y="280" width="64" height="140" rx="14" fill="#0f766e"/><rect x="638" y="280" width="64" height="140" rx="14" fill="#0f766e"/><rect x="716" y="280" width="64" height="140" rx="14" fill="#0f766e"/><rect x="794" y="280" width="64" height="140" rx="14" fill="#0f766e"/><rect x="872" y="280" width="64" height="140" rx="14" fill="#0f766e"/>
+    <text x="355" y="500" text-anchor="middle" fill="#d97706" font-family="Plus Jakarta Sans, Segoe UI, sans-serif" font-size="32" font-weight="700">3 parts</text>
+    <text x="760" y="500" text-anchor="middle" fill="#0f766e" font-family="Plus Jakarta Sans, Segoe UI, sans-serif" font-size="32" font-weight="700">5 parts</text>
+    <text x="600" y="640" text-anchor="middle" fill="#1e293b" font-family="Plus Jakarta Sans, Segoe UI, sans-serif" font-size="36" font-weight="700">share in a ratio</text>
+  
+</svg>

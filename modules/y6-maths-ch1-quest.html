@@ -1,0 +1,1577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abhyaas — Integers Quest</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap');
+        
+        :root {
+            --brand-blue: #0f4c81;
+            --light-blue: #e0f2fe;
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.3);
+        }
+
+        html, body {
+            height: 100%;
+            max-height: 100vh;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #020617, #1e3a8a, #3b82f6);
+            background-attachment: fixed;
+            color: white;
+            user-select: none;
+        }
+
+        h1, h2, h3, h4, .font-heading {
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        .bg-pattern {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: -1;
+            background-image: url("data:image/svg+xml,%3Csvg width='300' height='300' viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cg font-family='Fredoka, sans-serif' font-weight='bold' fill='rgba(255,255,255,0.05)'%3E%3Ctext x='30' y='60' font-size='40'%3E-15%3C/text%3E%3Ctext x='200' y='90' font-size='50'%3E%E2%88%9A64%3C/text%3E%3Ctext x='100' y='180' font-size='45'%3ELCM%3C/text%3E%3Ctext x='240' y='220' font-size='40'%3EHCF%3C/text%3E%3Ctext x='150' y='50' font-size='35'%3E%C3%97%3C/text%3E%3Ctext x='50' y='260' font-size='35'%3E%C3%B7%3C/text%3E%3Ctext x='180' y='280' font-size='30'%3E3%C2%B3%3C/text%3E%3C/g%3E%3C/svg%3E");
+            animation: floatPattern 60s linear infinite;
+        }
+
+        @keyframes floatPattern {
+            0% { background-position: 0 0; }
+            100% { background-position: 300px 300px; }
+        }
+
+        @keyframes pulseNode {
+            0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 255, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        }
+
+        @keyframes flashRed {
+            0%, 100% { background-color: rgba(239, 68, 68, 0.4); border-color: #f87171; transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .quest-node {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            border: 3px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+
+        .quest-node.active, .quest-node:hover {
+            background: white;
+            color: var(--brand-blue);
+            transform: translate(-50%, -50%) scale(1.15);
+            animation: pulseNode 2s infinite;
+        }
+
+        .quest-node-label {
+            position: absolute;
+            top: 70px;
+            width: 140px;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            pointer-events: none;
+        }
+
+        .quiz-input {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+        .quiz-input:focus { outline: none; background: rgba(255, 255, 255, 0.3); border-color: white; }
+        .quiz-input.correct {
+            background: rgba(34, 197, 94, 0.4) !important;
+            color: #ffffff;
+            border-color: #4ade80 !important;
+            box-shadow: 0 0 20px rgba(74, 222, 128, 0.7);
+            transform: scale(1.05);
+            pointer-events: none;
+        }
+        .quiz-input.incorrect {
+            animation: flashRed 0.4s ease;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 15, 40, 0.72);
+            backdrop-filter: blur(12px);
+            z-index: 50;
+            overflow: hidden;
+            padding: 1.25rem 1rem;
+        }
+        #modal-content-panel,
+        #examples-modal .glass-panel,
+        #pdf-exercise-modal .glass-panel {
+            background: rgba(8, 22, 58, 0.92);
+            max-height: calc(100vh - 2.5rem);
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .study-box {
+            background: rgba(255,255,255,0.05);
+            border-left: 6px solid #3b82f6;
+            padding: 1.5rem 2rem;
+            border-radius: 0 1rem 1rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .topic-slide {
+            display: none;
+            animation: slideIn 0.4s ease forwards;
+        }
+        .topic-slide.active {
+            display: block;
+        }
+
+        .slide-indicator-dots { display: flex; gap: 8px; justify-content: center; margin-top: 1.5rem; }
+        .slide-dot { width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,0.2); transition: all 0.3s; }
+        .slide-dot.active { background: white; transform: scale(1.3); }
+        
+        .btn-more, .btn-exercise {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s;
+        }
+        .btn-more { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+        .btn-exercise { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+        .btn-more:hover, .btn-exercise:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); }
+
+        .custom-scroll::-webkit-scrollbar { width: 8px; }
+        .custom-scroll::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
+
+        .chapter-landing-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2.5rem;
+            width: 100%;
+            max-width: 72rem;
+            align-items: center;
+        }
+        @media (min-width: 768px) {
+            .chapter-landing-grid { grid-template-columns: 1fr 1fr; }
+        }
+        .chapter-hero-info { text-align: left; }
+        .chapter-hero-info h2 {
+            font-size: clamp(3.125rem, 6.25vw, 4.6875rem);
+            line-height: 1.1;
+        }
+        .chapter-hero-info .chapter-tagline { font-size: 1.6875rem; font-weight: 700; }
+        .chapter-hero-info .chapter-panel { font-size: 1.40625rem; }
+        .chapter-hero-info .chapter-panel h3 { font-size: 1.875rem; }
+        .chapter-hero-info .chapter-panel ul { font-size: 1.40625rem; }
+        .topic-path-label {
+            font-size: 1.6875rem;
+            font-weight: 800;
+            text-align: left;
+            color: #bfdbfe;
+            letter-spacing: 0.02em;
+        }
+        .topic-stage-wrap {
+            position: relative;
+        }
+        .topic-page.hidden {
+            display: none !important;
+        }
+
+        .topic-page {
+            height: 27rem;
+            overflow: hidden;
+            text-align: left;
+            font-size: 1.1rem;
+        }
+        /* 1.1 & 1.2 — match chapter introduction panel typography */
+        #level-1-topic-0,
+        #level-1-topic-1 {
+            height: auto;
+            min-height: 42rem;
+            max-height: none;
+            overflow: visible;
+            font-size: 1.40625rem;
+            line-height: 1.45;
+        }
+        #level-1-topic-0 .topic-lead,
+        #level-1-topic-1 .topic-lead {
+            font-size: 1.40625rem;
+            color: rgba(219, 234, 254, 0.95);
+            margin-bottom: 0.75rem;
+            line-height: 1.45;
+        }
+        #level-1-topic-0 .study-box.compact-study,
+        #level-1-topic-1 .study-box.compact-study {
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+        #level-1-topic-0 .study-box.compact-study li,
+        #level-1-topic-1 .study-box.compact-study li {
+            margin-bottom: 0.4rem;
+        }
+        #level-1-topic-0 .mini-examples,
+        #level-1-topic-1 .mini-examples {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+        }
+        @media (max-width: 640px) {
+            #level-1-topic-0 .mini-examples,
+            #level-1-topic-1 .mini-examples { grid-template-columns: 1fr; }
+        }
+        #level-1-topic-0 .mini-example-card,
+        #level-1-topic-1 .mini-example-card {
+            background: rgba(15, 23, 42, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 0.75rem;
+            padding: 0.75rem 1rem;
+            font-size: 1.3125rem;
+            line-height: 1.4;
+        }
+        #level-1-topic-0 .mini-example-card h5,
+        #level-1-topic-1 .mini-example-card h5 {
+            font-size: 1.125rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #93c5fd;
+            margin-bottom: 0.35rem;
+        }
+        #level-1-topic-0 .solved-example-box,
+        #level-1-topic-1 .solved-example-box {
+            font-size: 1.40625rem;
+            padding: 1rem 1.25rem;
+            margin-top: 0.75rem;
+        }
+        #level-1-topic-0 .solved-example-box h4,
+        #level-1-topic-1 .solved-example-box h4 {
+            font-size: 1.875rem;
+            margin-bottom: 0.5rem;
+        }
+        #level-1-topic-0 .topic-title,
+        #level-1-topic-1 .topic-title {
+            font-size: 2.25rem;
+            margin-bottom: 0.5rem;
+        }
+        .topic-page .topic-lead {
+            font-size: 1.05rem;
+            color: rgba(219, 234, 254, 0.95);
+            margin-bottom: 0.5rem;
+            line-height: 1.35;
+        }
+        .topic-page .study-box.compact-study {
+            padding: 0.65rem 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+        .topic-page .study-box.compact-study li { margin-bottom: 0.25rem; }
+        .topic-page .mini-examples {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-top: 0.35rem;
+        }
+        @media (max-width: 640px) {
+            .topic-page .mini-examples { grid-template-columns: 1fr; }
+        }
+        .topic-page .mini-example-card {
+            background: rgba(15, 23, 42, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 0.75rem;
+            padding: 0.5rem 0.65rem;
+            font-size: 0.98rem;
+        }
+        .topic-page .mini-example-card h5 {
+            font-size: 0.85rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #93c5fd;
+            margin-bottom: 0.25rem;
+        }
+        .topic-page .topic-title {
+            font-size: 2rem;
+            line-height: 1.15;
+            margin-bottom: 0.75rem;
+        }
+        .topic-page .study-box {
+            margin-bottom: 0.75rem;
+            padding: 0.85rem 1rem;
+        }
+        .topic-page .study-box li { margin-bottom: 0.35rem; }
+        .topic-page.topic-page-interactive:not(.hidden) {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .solved-example-box {
+            background: rgba(30, 58, 138, 0.5);
+            border-left: 4px solid #60a5fa;
+            padding: 0.75rem 1rem;
+            border-radius: 0 1rem 1rem 0;
+            margin-top: 0.5rem;
+            text-align: left;
+            font-size: 1.05rem;
+        }
+        .solved-example-box h4 { font-size: 1.15rem; margin-bottom: 0.35rem; }
+        .solved-example-box li { margin-bottom: 0.2rem; }
+        #prev-level-btn:disabled,
+        #next-level-btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        
+        .data-table th, .data-table td { border: 1px solid rgba(255,255,255,0.2); padding: 6px; text-align: center; }
+        .data-table th { background: rgba(255,255,255,0.1); font-weight: bold; }
+        
+        .grid-100 { display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; }
+        .grid-100 div { background: rgba(255,255,255,0.1); text-align: center; font-size: 0.75rem; padding: 2px; border-radius: 2px; }
+
+        /* Pyramid Blocks */
+        .pyramid-row { display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; }
+        .pyramid-block { width: 100px; height: 100px; background: rgba(255,255,255,0.15); border: 3px solid rgba(255,255,255,0.4); display: flex; align-items: center; justify-content: center; font-size: 2.25rem; font-weight: bold; border-radius: 16px; transition: all 0.3s ease; box-shadow: 0 6px 12px rgba(0,0,0,0.2); }
+        .pyramid-block input { width: 100%; height: 100%; text-align: center; border-radius: 10px; background: transparent; outline: none; transition: all 0.3s; color: white; }
+        .pyramid-block input.correct { background: rgba(34, 197, 94, 0.5) !important; color: white; }
+        .pyramid-block input.incorrect { animation: flashRed 0.4s ease; background: rgba(239, 68, 68, 0.4); }
+        
+    
+        body.embed-mode header.glass-panel {
+            display: none;
+        }
+
+        body.embed-mode main.landing-main {
+            height: 100vh;
+            max-height: 100vh;
+            min-height: 0;
+            padding: 0.75rem 1rem;
+            overflow: hidden;
+            justify-content: center;
+        }
+
+        body.embed-mode .chapter-landing-grid {
+            gap: 1.25rem;
+            max-height: calc(100vh - 1.5rem);
+            overflow: hidden;
+            align-items: center;
+        }
+
+        body.embed-mode .chapter-hero-info h2 {
+            font-size: clamp(2rem, 4.5vw, 2.75rem);
+            margin-bottom: 0.35rem;
+        }
+
+        body.embed-mode .chapter-hero-info .chapter-tagline {
+            font-size: 1.05rem;
+            margin-bottom: 0.75rem;
+        }
+
+        body.embed-mode .chapter-hero-info .chapter-panel {
+            font-size: 0.95rem;
+            padding: 1rem 1.25rem !important;
+        }
+
+        body.embed-mode .chapter-hero-info .chapter-panel h3 {
+            font-size: 1.05rem;
+            margin-bottom: 0.35rem;
+        }
+
+        body.embed-mode .chapter-hero-info .chapter-panel ul {
+            font-size: 0.95rem;
+        }
+
+        body.embed-mode .chapter-hero-info .chapter-panel p {
+            margin-bottom: 0.75rem;
+        }
+
+        body.embed-mode .chapter-quest-map {
+            height: min(240px, 38vh);
+            min-height: 180px;
+        }
+
+        body:not(.embed-mode) main.landing-main {
+            height: calc(100vh - 4.5rem);
+            max-height: calc(100vh - 4.5rem);
+            min-height: 0;
+            padding: 1rem 1rem 1.25rem;
+            overflow: hidden;
+            justify-content: center;
+        }
+
+        body:not(.embed-mode) .chapter-landing-grid {
+            gap: 1.5rem;
+            max-height: 100%;
+            overflow: hidden;
+            align-items: center;
+        }
+
+        body:not(.embed-mode) .chapter-hero-info .chapter-panel {
+            padding: 1.25rem 1.5rem !important;
+        }
+
+        body:not(.embed-mode) .chapter-hero-info .chapter-tagline {
+            margin-bottom: 1rem;
+        }
+
+        body:not(.embed-mode) .chapter-quest-map {
+            height: min(260px, 36vh);
+            min-height: 200px;
+        }
+
+        body.embed-mode #quest-modal {
+            padding-top: 0.5rem;
+        }
+
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="bg-pattern pointer-events-none"></div>
+
+    <header class="glass-panel sticky top-0 z-40 border-b-0 border-white/20">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <svg class="w-8 h-8 text-white drop-shadow-md" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"></path></svg>
+                <h1 class="text-3xl font-bold tracking-wider drop-shadow-sm font-heading">Abhyaas</h1>
+            </div>
+            <span class="text-sm font-bold bg-white/10 text-white py-1.5 px-4 rounded-full shadow-md uppercase tracking-wide border border-white/30">Math Quest: Chapter 1</span>
+        </div>
+    </header>
+
+    <main class="landing-main max-w-7xl mx-auto w-full px-4 relative flex flex-col items-center justify-center">
+        <div class="chapter-landing-grid">
+            <div class="chapter-hero-info order-1 z-10">
+                <p class="text-base font-bold uppercase tracking-widest text-blue-200/90 mb-2">Year 6 Mathematics</p>
+                <h2 class="font-heading font-bold mb-4 drop-shadow-lg">1 Integers</h2>
+                <p class="chapter-tagline text-blue-100/90 mb-8 max-w-xl">Master integer operations, multiples, factors, and roots on the number line.</p>
+
+                <div class="glass-panel chapter-panel p-8 rounded-2xl max-w-xl text-blue-50">
+                    <h3 class="font-bold text-blue-200 mb-3 border-b border-white/10 pb-2">Chapter introduction</h3>
+                    <p class="mb-6 leading-relaxed">Integers are whole numbers — positive, negative, and zero — used for temperatures, bank balances, and positions on a number line.</p>
+
+                    <h3 class="font-bold text-purple-300 mb-3 border-b border-white/10 pb-2">Chapter modules</h3>
+                    <ul class="list-disc ml-6 space-y-2 font-semibold">
+                        <li>Add and subtract positive and negative integers.</li>
+                        <li>Multiply and divide with integers.</li>
+                        <li>Lowest common multiples and highest common factors.</li>
+                        <li>Divisibility tests, square roots and cube roots.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="relative w-full h-[300px] min-h-[260px] order-2 chapter-quest-map">
+            <svg class="absolute top-0 left-0 w-full h-full pointer-events-none drop-shadow-[0_0_10px_rgba(255,255,255,0.4)]" viewBox="0 0 1000 300" preserveAspectRatio="none">
+                <path d="M 150 150 C 300 150, 300 60, 500 60 C 700 60, 700 240, 850 240" 
+                      fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="8" stroke-linecap="round" stroke-dasharray="15, 15" />
+            </svg>
+            <button class="quest-node pulse" style="left: 15%; top: 50%;" onclick="openLevel(1)">1<span class="quest-node-label">Integer Operations</span></button>
+            <button class="quest-node" style="left: 50%; top: 20%;" onclick="openLevel(2)">2<span class="quest-node-label">Factors & Multiples</span></button>
+            <button class="quest-node" style="left: 85%; top: 80%;" onclick="openLevel(3)">3<span class="quest-node-label">Divisibility & Roots</span></button>
+            </div>
+        </div>
+    </main>
+
+    <!-- MAIN QUEST MODAL -->
+    <div id="quest-modal" class="modal-overlay hidden items-center justify-center">
+        
+        <!-- Main External Navigation Arrows -->
+        <button onclick="prevSlide(event)" class="fixed left-2 md:left-6 top-1/2 -translate-y-1/2 w-16 h-16 md:w-24 md:h-24 rounded-full bg-white/20 backdrop-blur-md hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-all duration-300 border-4 border-white/40 shadow-[0_0_25px_rgba(255,255,255,0.3)] z-[60] cursor-pointer" id="prev-btn"><svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M15 19l-7-7 7-7"></path></svg></button>
+        
+        <button onclick="nextSlide(event)" class="fixed right-2 md:right-6 top-1/2 -translate-y-1/2 w-16 h-16 md:w-24 md:h-24 rounded-full bg-white/20 backdrop-blur-md hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-all duration-300 border-4 border-white/40 shadow-[0_0_25px_rgba(255,255,255,0.3)] z-[60] cursor-pointer" id="next-btn"><svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M9 5l7 7-7 7"></path></svg></button>
+
+        <div id="modal-content-panel" class="glass-panel w-full max-w-5xl rounded-[2rem] p-8 md:p-12 relative flex flex-col min-h-[60vh] justify-between">
+            <button onclick="closeModal()" class="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/20 hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-colors border-2 border-white/40 z-20"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+
+            <div id="slides-container" class="w-full flex-grow mt-4">
+                
+                <!-- ================= LEVEL 1 ================= -->
+                <!-- L1 Slide 1 -->
+                <div class="topic-slide level-1-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 flex items-center gap-4 text-white">
+                        <span class="bg-white text-blue-900 w-14 h-14 rounded-full flex items-center justify-center text-3xl shrink-0">1</span>
+                        Addition & Subtraction
+                    </h2>
+                    
+                    <div class="study-box border-blue-400">
+                        <h4 class="text-3xl font-bold text-blue-300 mb-6">Rules of Integers</h4>
+                        <ul class="list-disc ml-8 space-y-4 text-xl text-blue-50">
+                            <li>Integers are positive and negative whole numbers, together with zero.</li>
+                            <li>Subtraction is the inverse operation of addition. To subtract an integer, you add the inverse.</li>
+                            <li>You can estimate the answers to calculations by rounding the numbers to the nearest whole number or 10.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-blue-900/60 border-l-8 border-blue-400 p-8 rounded-r-2xl shadow-xl mt-8">
+                        <h4 class="font-bold text-white mb-4 text-3xl flex items-center gap-3">
+                            <svg class="w-8 h-8 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                            Solved Example
+                        </h4>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6">
+                            <!-- Example 1: Addition -->
+                            <div class="bg-black/20 p-6 rounded-xl border border-white/10">
+                                <p class="text-xl font-bold text-blue-100 mb-4">Work out: <span class="bg-black/40 text-white px-3 py-1 rounded">-5 + 9</span></p>
+                                <p class="text-lg text-blue-50 mb-6">Start at -5. Move 9 places to the right. You finish at 4. <strong class="text-white">-5 + 9 = 4</strong>.</p>
+                                
+                                <!-- Number Line SVG -->
+                                <svg class="w-full h-24 drop-shadow-md" viewBox="0 0 400 100">
+                                    <!-- Line and ticks -->
+                                    <line x1="20" y1="80" x2="380" y2="80" stroke="#60a5fa" stroke-width="3" stroke-linecap="round"/>
+                                    <!-- -5 tick -->
+                                    <line x1="60" y1="75" x2="60" y2="85" stroke="#fff" stroke-width="2"/>
+                                    <text x="60" y="98" fill="#fff" font-size="14" text-anchor="middle" font-weight="bold">-5</text>
+                                    <!-- 0 tick -->
+                                    <line x1="220" y1="75" x2="220" y2="85" stroke="#fff" stroke-width="2"/>
+                                    <text x="220" y="98" fill="#fff" font-size="14" text-anchor="middle">0</text>
+                                    <!-- 4 tick -->
+                                    <line x1="348" y1="75" x2="348" y2="85" stroke="#fff" stroke-width="2"/>
+                                    <text x="348" y="98" fill="#fff" font-size="14" text-anchor="middle" font-weight="bold">4</text>
+                                    
+                                    <!-- Jump Arc (Animated) -->
+                                    <path d="M 60 70 Q 204 10 348 70" fill="none" stroke="#4ade80" stroke-width="3" stroke-dasharray="8,8">
+                                        <animate attributeName="stroke-dashoffset" from="100" to="0" dur="2s" repeatCount="indefinite" />
+                                    </path>
+                                    <polygon points="345,72 355,67 348,60" fill="#4ade80" />
+                                    <text x="204" y="30" fill="#4ade80" font-size="16" text-anchor="middle" font-weight="bold">+ 9</text>
+                                </svg>
+                            </div>
+
+                            <!-- Example 2: Subtraction -->
+                            <div class="bg-black/20 p-6 rounded-xl border border-white/10">
+                                <p class="text-xl font-bold text-blue-100 mb-4">Work out: <span class="bg-black/40 text-white px-3 py-1 rounded">2 - -5</span></p>
+                                <p class="text-lg text-blue-50 mb-6">Subtracting a negative adds the inverse. <strong class="text-white">2 + 5 = 7</strong>.</p>
+                                
+                                <!-- Number Line SVG -->
+                                <svg class="w-full h-24 drop-shadow-md" viewBox="0 0 400 100">
+                                    <!-- Line and ticks -->
+                                    <line x1="20" y1="80" x2="380" y2="80" stroke="#60a5fa" stroke-width="3" stroke-linecap="round"/>
+                                    <!-- 0 tick -->
+                                    <line x1="60" y1="75" x2="60" y2="85" stroke="#fff" stroke-width="2"/>
+                                    <text x="60" y="98" fill="#fff" font-size="14" text-anchor="middle">0</text>
+                                    <!-- 2 tick -->
+                                    <line x1="140" y1="75" x2="140" y2="85" stroke="#fff" stroke-width="2"/>
+                                    <text x="140" y="98" fill="#fff" font-size="14" text-anchor="middle" font-weight="bold">2</text>
+                                    <!-- 7 tick -->
+                                    <line x1="340" y1="75" x2="340" y2="85" stroke="#fff" stroke-width="2"/>
+                                    <text x="340" y="98" fill="#fff" font-size="14" text-anchor="middle" font-weight="bold">7</text>
+                                    
+                                    <!-- Jump Arc (Animated) -->
+                                    <path d="M 140 70 Q 240 20 340 70" fill="none" stroke="#f472b6" stroke-width="3" stroke-dasharray="8,8">
+                                        <animate attributeName="stroke-dashoffset" from="100" to="0" dur="2s" repeatCount="indefinite" />
+                                    </path>
+                                    <polygon points="337,72 347,67 340,60" fill="#f472b6" />
+                                    <text x="240" y="35" fill="#f472b6" font-size="16" text-anchor="middle" font-weight="bold">+ 5</text>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- L1 Slide 2 -->
+                <div class="topic-slide level-1-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 flex items-center gap-4 text-white">
+                        <span class="bg-white text-blue-900 w-14 h-14 rounded-full flex items-center justify-center text-3xl shrink-0">1</span>
+                        Multiplying and Dividing
+                    </h2>
+                    
+                    <div class="study-box border-teal-400">
+                        <h4 class="text-3xl font-bold text-teal-300 mb-6">Core Rules</h4>
+                        <ul class="list-disc ml-8 space-y-4 text-xl text-blue-50">
+                            <li>Division is the inverse operation of multiplication.</li>
+                            <li>The product of a positive and a negative integer is <strong class="text-white bg-red-500/30 px-2 rounded">always negative</strong>.</li>
+                            <li>When one integer is positive and the other is negative, the division answer is also <strong class="text-white bg-red-500/30 px-2 rounded">negative</strong>.</li>
+                            <li>Always calculate operations inside brackets first!</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-blue-900/60 border-l-8 border-teal-400 p-8 rounded-r-2xl shadow-xl mt-8">
+                        <h4 class="font-bold text-white mb-4 text-3xl flex items-center gap-3">
+                            <svg class="w-8 h-8 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                            Solved Example
+                        </h4>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6">
+                            <!-- Example 1: Multiplication -->
+                            <div class="bg-black/20 p-6 rounded-xl border border-white/10">
+                                <p class="text-xl font-bold text-blue-100 mb-4">Work out: <span class="bg-black/40 text-white px-3 py-1 rounded">4 &times; -8</span></p>
+                                <p class="text-lg text-blue-50 mb-6">4 groups of -8. <strong class="text-white">4 &times; -8 = -32</strong>.</p>
+                                
+                                <svg class="w-full h-24 drop-shadow-md" viewBox="0 0 400 100">
+                                    <line x1="20" y1="80" x2="380" y2="80" stroke="#2dd4bf" stroke-width="3" stroke-linecap="round"/>
+                                    <text x="360" y="98" fill="#fff" font-size="14" text-anchor="middle">0</text>
+                                    <text x="275" y="98" fill="#fff" font-size="14" text-anchor="middle">-8</text>
+                                    <text x="190" y="98" fill="#fff" font-size="14" text-anchor="middle">-16</text>
+                                    <text x="105" y="98" fill="#fff" font-size="14" text-anchor="middle">-24</text>
+                                    <text x="20" y="98" fill="#fff" font-size="14" text-anchor="middle" font-weight="bold">-32</text>
+                                    
+                                    <!-- Jumps -->
+                                    <path d="M 360 80 Q 317 30 275 80 M 275 80 Q 232 30 190 80 M 190 80 Q 147 30 105 80 M 105 80 Q 62 30 20 80" fill="none" stroke="#f87171" stroke-width="3" stroke-dasharray="6,6">
+                                        <animate attributeName="stroke-dashoffset" from="50" to="0" dur="2s" repeatCount="indefinite" />
+                                    </path>
+                                </svg>
+                            </div>
+
+                            <!-- Example 2: Division -->
+                            <div class="bg-black/20 p-6 rounded-xl border border-white/10">
+                                <p class="text-xl font-bold text-blue-100 mb-4">Work out: <span class="bg-black/40 text-white px-3 py-1 rounded">-20 &divide; (3 - -2)</span></p>
+                                <p class="text-lg text-blue-50 mb-6">Bracket first: 3 + 2 = 5. Then <strong class="text-white">-20 &divide; 5 = -4</strong>.</p>
+                                
+                                <svg class="w-full h-24 drop-shadow-md" viewBox="0 0 400 100">
+                                    <!-- 5 Boxes representing groups -->
+                                    <rect x="25" y="40" width="60" height="40" rx="8" fill="rgba(248,113,113,0.3)" stroke="#f87171" stroke-width="2"/>
+                                    <text x="55" y="65" fill="#fff" font-size="16" text-anchor="middle" font-weight="bold">-4</text>
+                                    
+                                    <rect x="95" y="40" width="60" height="40" rx="8" fill="rgba(248,113,113,0.3)" stroke="#f87171" stroke-width="2"/>
+                                    <text x="125" y="65" fill="#fff" font-size="16" text-anchor="middle" font-weight="bold">-4</text>
+                                    
+                                    <rect x="165" y="40" width="60" height="40" rx="8" fill="rgba(248,113,113,0.3)" stroke="#f87171" stroke-width="2"/>
+                                    <text x="195" y="65" fill="#fff" font-size="16" text-anchor="middle" font-weight="bold">-4</text>
+
+                                    <rect x="235" y="40" width="60" height="40" rx="8" fill="rgba(248,113,113,0.3)" stroke="#f87171" stroke-width="2"/>
+                                    <text x="265" y="65" fill="#fff" font-size="16" text-anchor="middle" font-weight="bold">-4</text>
+
+                                    <rect x="305" y="40" width="60" height="40" rx="8" fill="rgba(248,113,113,0.3)" stroke="#f87171" stroke-width="2"/>
+                                    <text x="335" y="65" fill="#fff" font-size="16" text-anchor="middle" font-weight="bold">-4</text>
+                                    
+                                    <path d="M 25 30 Q 195 -10 365 30" fill="none" stroke="#2dd4bf" stroke-width="2" />
+                                    <text x="195" y="15" fill="#2dd4bf" font-size="14" text-anchor="middle" font-weight="bold">Total: -20 split into 5</text>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- L1 Slide 3 -->
+                <div class="topic-slide level-1-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 text-center text-white">
+                        Interactive Challenge
+                    </h2>
+                    
+                    <div class="bg-black/20 rounded-3xl p-10 border border-white/20 flex flex-col items-center justify-center shadow-inner mt-8">
+                        <h3 class="text-3xl font-heading text-center text-blue-100 mb-4">Addition Pyramid</h3>
+                        <p class="text-center font-bold text-xl text-blue-200 mb-10 max-w-2xl">Class Activity: Fill in the missing blocks. Each block is the sum of the two blocks directly beneath it.</p>
+                        
+                        <div class="flex flex-col items-center gap-4 w-full">
+                            <!-- Row 3 (Top) -->
+                            <div class="pyramid-row">
+                                <div class="pyramid-block"><input type="text" class="quiz-input" data-answer="-1" placeholder="?"></div>
+                            </div>
+                            <!-- Row 2 -->
+                            <div class="pyramid-row">
+                                <div class="pyramid-block"><input type="text" class="quiz-input" data-answer="2" placeholder="?"></div>
+                                <div class="pyramid-block"><input type="text" class="quiz-input" data-answer="-3" placeholder="?"></div>
+                            </div>
+                            <!-- Row 1 (Bottom) -->
+                            <div class="pyramid-row">
+                                <div class="pyramid-block bg-blue-600 border-blue-400 text-white">-3</div>
+                                <div class="pyramid-block bg-blue-600 border-blue-400 text-white">5</div>
+                                <div class="pyramid-block bg-blue-600 border-blue-400 text-white">-8</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ADDED: Buttons at the bottom of the challenge slide -->
+                    <div class="flex flex-col sm:flex-row gap-6 w-full mt-10 justify-center max-w-3xl mx-auto">
+                        <button onclick="openMoreExamples(1)" class="btn-more flex-1 py-4 rounded-2xl font-bold text-white text-xl flex items-center justify-center gap-3">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                            More Examples
+                        </button>
+                        <button onclick="openPdfExercise(1)" class="btn-exercise flex-1 py-4 rounded-2xl font-bold text-white text-xl flex items-center justify-center gap-3">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            Exercises
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ================= LEVEL 2 ================= -->
+                <!-- L2 Slide 1 -->
+                <div class="topic-slide level-2-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 flex items-center gap-4 text-white">
+                        <span class="bg-white text-blue-900 w-14 h-14 rounded-full flex items-center justify-center text-3xl shrink-0">2</span>
+                        Lowest Common Multiples (LCM)
+                    </h2>
+                    
+                    <div class="study-box border-blue-400">
+                        <ul class="list-disc ml-8 space-y-4 text-xl text-blue-50">
+                            <li>The <strong>multiples</strong> of a number are its times table (e.g., multiples of 4 are 4, 8, 12, 16...).</li>
+                            <li>Common multiples are numbers found in both lists.</li>
+                            <li>The lowest common multiple (LCM) of two numbers is the smallest number that is a multiple of both.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-blue-900/60 border-l-8 border-blue-400 p-8 rounded-r-2xl shadow-xl mt-8">
+                        <h4 class="font-bold text-white mb-4 text-3xl flex items-center gap-3">
+                            <svg class="w-8 h-8 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                            Solved Example: LCM of 6 and 9
+                        </h4>
+                        
+                        <div class="flex flex-col md:flex-row gap-8 mt-4 items-center">
+                            <div class="flex-1">
+                                <ul class="list-decimal ml-8 text-xl text-blue-100 space-y-3">
+                                    <li>Multiples of 6: 6, 12, <strong class="text-white bg-green-500/40 px-2 rounded">18</strong>, 24, 30, <strong class="text-white bg-green-500/40 px-2 rounded">36</strong>...</li>
+                                    <li>Multiples of 9: 9, <strong class="text-white bg-green-500/40 px-2 rounded">18</strong>, 27, <strong class="text-white bg-green-500/40 px-2 rounded">36</strong>...</li>
+                                    <li>The lowest common multiple is <strong class="text-white">18</strong>.</li>
+                                </ul>
+                            </div>
+                            <div class="flex-1 w-full bg-black/20 p-4 rounded-xl border border-white/10">
+                                <svg class="w-full h-32" viewBox="0 0 400 120">
+                                    <line x1="20" y1="100" x2="380" y2="100" stroke="#60a5fa" stroke-width="3"/>
+                                    <!-- Ticks -->
+                                    <text x="20" y="115" fill="#fff" font-size="12" text-anchor="middle">0</text>
+                                    <text x="110" y="115" fill="#fff" font-size="12" text-anchor="middle">6</text>
+                                    <text x="155" y="115" fill="#fff" font-size="12" text-anchor="middle">9</text>
+                                    <text x="200" y="115" fill="#fff" font-size="12" text-anchor="middle">12</text>
+                                    <text x="290" y="115" fill="#4ade80" font-size="14" text-anchor="middle" font-weight="bold">18</text>
+                                    
+                                    <!-- Jumps for 6 -->
+                                    <path d="M 20 100 Q 65 60 110 100 M 110 100 Q 155 60 200 100 M 200 100 Q 245 60 290 100" fill="none" stroke="#f472b6" stroke-width="2" />
+                                    <text x="155" y="50" fill="#f472b6" font-size="12" text-anchor="middle">Jumps of 6</text>
+                                    
+                                    <!-- Jumps for 9 -->
+                                    <path d="M 20 100 Q 87.5 20 155 100 M 155 100 Q 222.5 20 290 100" fill="none" stroke="#fbbf24" stroke-width="2" stroke-dasharray="4,4"/>
+                                    <text x="155" y="15" fill="#fbbf24" font-size="12" text-anchor="middle">Jumps of 9</text>
+                                    
+                                    <circle cx="290" cy="100" r="6" fill="#4ade80" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- L2 Slide 2 -->
+                <div class="topic-slide level-2-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 flex items-center gap-4 text-white">
+                        <span class="bg-white text-blue-900 w-14 h-14 rounded-full flex items-center justify-center text-3xl shrink-0">2</span>
+                        Highest Common Factors (HCF)
+                    </h2>
+                    
+                    <div class="study-box border-purple-400">
+                        <ul class="list-disc ml-8 space-y-4 text-xl text-blue-50">
+                            <li>The <strong>factors</strong> of a number divide it exactly (e.g., factors of 18 are 1, 2, 3, 6, 9, 18).</li>
+                            <li>The highest common factor (HCF) of two numbers is the largest factor of both numbers.</li>
+                            <li>You can use a highest common factor to simplify a fraction as much as possible.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-blue-900/60 border-l-8 border-purple-400 p-8 rounded-r-2xl shadow-xl mt-8">
+                        <h4 class="font-bold text-white mb-4 text-3xl flex items-center gap-3">
+                            <svg class="w-8 h-8 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                            Solved Example: HCF of 24 and 80
+                        </h4>
+                        
+                        <div class="flex flex-col md:flex-row gap-8 mt-4 items-center">
+                            <div class="flex-1">
+                                <ul class="list-decimal ml-8 text-xl text-blue-100 space-y-3">
+                                    <li>Factors of 24: 1, 2, 3, 4, 6, <strong class="text-white bg-purple-500/40 px-2 rounded">8</strong>, 12, 24.</li>
+                                    <li>Find the highest factor that also divides 80.</li>
+                                    <li>8 divides 80 (80 &divide; 8 = 10). 12 and 24 do not. HCF is <strong class="text-white">8</strong>.</li>
+                                </ul>
+                            </div>
+                            <div class="flex-1 w-full bg-black/20 p-4 rounded-xl border border-white/10 flex justify-center">
+                                <!-- Venn Diagram SVG -->
+                                <svg width="300" height="150" viewBox="0 0 300 150">
+                                    <circle cx="100" cy="75" r="60" fill="rgba(96,165,250,0.2)" stroke="#60a5fa" stroke-width="2"/>
+                                    <circle cx="200" cy="75" r="60" fill="rgba(244,114,182,0.2)" stroke="#f472b6" stroke-width="2"/>
+                                    <text x="60" y="30" fill="#60a5fa" font-size="14" font-weight="bold">24</text>
+                                    <text x="240" y="30" fill="#f472b6" font-size="14" font-weight="bold">80</text>
+                                    
+                                    <!-- Factors of 24 only -->
+                                    <text x="70" y="65" fill="#fff" font-size="12">3, 6</text>
+                                    <text x="70" y="90" fill="#fff" font-size="12">12, 24</text>
+                                    
+                                    <!-- Factors of 80 only -->
+                                    <text x="230" y="65" fill="#fff" font-size="12">10, 16</text>
+                                    <text x="230" y="90" fill="#fff" font-size="12">20, 40...</text>
+                                    
+                                    <!-- Common factors -->
+                                    <text x="150" y="55" fill="#fff" font-size="12" text-anchor="middle">1, 2, 4</text>
+                                    <text x="150" y="85" fill="#a855f7" font-size="20" font-weight="bold" text-anchor="middle">8</text>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- L2 Slide 3 -->
+                <div class="topic-slide level-2-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 text-center text-white">
+                        Interactive Challenge
+                    </h2>
+                    
+                    <div class="bg-black/20 rounded-3xl p-10 border border-white/20 flex flex-col items-center justify-center shadow-inner mt-8">
+                        <p class="text-center font-bold text-2xl text-blue-200 mb-10">Test your understanding of LCM and HCF.</p>
+                        
+                        <div class="flex flex-col gap-8 w-full max-w-3xl">
+                            <div class="flex flex-col w-full bg-white/10 p-6 rounded-2xl border border-white/20 gap-4">
+                                <span class="font-bold text-2xl">Find the lowest common multiple (LCM) of 6 and 10.</span>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-lg text-blue-200">Hint: Check multiples of 6 until it ends in 0.</span>
+                                    <input type="text" class="quiz-input w-32 p-4 text-center text-2xl font-bold rounded-xl" data-answer="30" placeholder="#">
+                                </div>
+                            </div>
+                            
+                            <div class="flex flex-col w-full bg-white/10 p-6 rounded-2xl border border-white/20 gap-4">
+                                <span class="font-bold text-2xl">Find the highest common factor (HCF) of 16 and 40.</span>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-lg text-blue-200">Hint: List factors of 16 first.</span>
+                                    <input type="text" class="quiz-input w-32 p-4 text-center text-2xl font-bold rounded-xl" data-answer="8" placeholder="#">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ADDED: Buttons at the bottom of the challenge slide -->
+                    <div class="flex flex-col sm:flex-row gap-6 w-full mt-10 justify-center max-w-3xl mx-auto">
+                        <button onclick="openMoreExamples(2)" class="btn-more flex-1 py-4 rounded-2xl font-bold text-white text-xl flex items-center justify-center gap-3">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                            More Examples
+                        </button>
+                        <button onclick="openPdfExercise(2)" class="btn-exercise flex-1 py-4 rounded-2xl font-bold text-white text-xl flex items-center justify-center gap-3">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            Exercises
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ================= LEVEL 3 ================= -->
+                <!-- L3 Slide 1 -->
+                <div class="topic-slide level-3-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 flex items-center gap-4 text-white">
+                        <span class="bg-white text-blue-900 w-14 h-14 rounded-full flex items-center justify-center text-3xl shrink-0">3</span>
+                        Divisibility Rules
+                    </h2>
+                    
+                    <div class="study-box border-blue-400">
+                        <ul class="list-disc ml-8 space-y-4 text-xl text-blue-50">
+                            <li>Divisible by <strong>2</strong> if the last digit is 0, 2, 4, 6 or 8. Divisible by <strong>5</strong> if it ends in 0 or 5.</li>
+                            <li>Divisible by <strong>3</strong> if the sum of the digits is a multiple of 3. Divisible by <strong>9</strong> if the sum of the digits is divisible by 9.</li>
+                            <li>Divisible by <strong>4</strong> if the number formed by the last two digits is divisible by 4.</li>
+                            <li>Divisible by <strong>6</strong> when it is divisible by both 2 and 3.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-blue-900/60 border-l-8 border-blue-400 p-8 rounded-r-2xl shadow-xl mt-8">
+                        <h4 class="font-bold text-white mb-4 text-3xl flex items-center gap-3">
+                            <svg class="w-8 h-8 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                            Solved Example: Show 3948 is divisible by 3 and 6
+                        </h4>
+                        
+                        <div class="flex flex-col md:flex-row gap-8 mt-4 items-center">
+                            <div class="flex-1">
+                                <ul class="list-decimal ml-8 text-xl text-blue-100 space-y-3">
+                                    <li>Sum of digits: 3 + 9 + 4 + 8 = <strong class="text-white">24</strong>. 24 is a multiple of 3.</li>
+                                    <li>3948 is even (ends in 8) and divisible by 3, so it is divisible by <strong class="text-white">6</strong>.</li>
+                                    <li>24 is not divisible by 9, so 3948 is <strong class="text-red-400">not</strong> divisible by 9.</li>
+                                </ul>
+                            </div>
+                            <div class="flex-1 w-full bg-black/20 p-6 rounded-xl border border-white/10 flex justify-center">
+                                <svg width="300" height="120" viewBox="0 0 300 120">
+                                    <!-- Digit Blocks -->
+                                    <rect x="20" y="20" width="40" height="40" rx="8" fill="rgba(255,255,255,0.1)" stroke="#60a5fa" stroke-width="2"/>
+                                    <text x="40" y="47" fill="#fff" font-size="20" font-weight="bold" text-anchor="middle">3</text>
+                                    <text x="75" y="47" fill="#60a5fa" font-size="20" font-weight="bold">+</text>
+                                    
+                                    <rect x="90" y="20" width="40" height="40" rx="8" fill="rgba(255,255,255,0.1)" stroke="#60a5fa" stroke-width="2"/>
+                                    <text x="110" y="47" fill="#fff" font-size="20" font-weight="bold" text-anchor="middle">9</text>
+                                    <text x="145" y="47" fill="#60a5fa" font-size="20" font-weight="bold">+</text>
+
+                                    <rect x="160" y="20" width="40" height="40" rx="8" fill="rgba(255,255,255,0.1)" stroke="#60a5fa" stroke-width="2"/>
+                                    <text x="180" y="47" fill="#fff" font-size="20" font-weight="bold" text-anchor="middle">4</text>
+                                    <text x="215" y="47" fill="#60a5fa" font-size="20" font-weight="bold">+</text>
+
+                                    <rect x="230" y="20" width="40" height="40" rx="8" fill="rgba(255,255,255,0.1)" stroke="#60a5fa" stroke-width="2"/>
+                                    <text x="250" y="47" fill="#fff" font-size="20" font-weight="bold" text-anchor="middle">8</text>
+                                    
+                                    <!-- Down arrows -->
+                                    <path d="M 145 70 L 145 90 L 135 85 M 145 90 L 155 85" fill="none" stroke="#4ade80" stroke-width="2"/>
+                                    <text x="180" y="100" fill="#4ade80" font-size="20" font-weight="bold">= 24</text>
+                                    <text x="180" y="115" fill="#9ca3af" font-size="12">(24 &divide; 3 = 8)</text>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- L3 Slide 2 -->
+                <div class="topic-slide level-3-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 flex items-center gap-4 text-white">
+                        <span class="bg-white text-blue-900 w-14 h-14 rounded-full flex items-center justify-center text-3xl shrink-0">3</span>
+                        Squares and Cubes
+                    </h2>
+                    
+                    <div class="study-box border-orange-400">
+                        <ul class="list-disc ml-8 space-y-4 text-xl text-blue-50">
+                            <li>You use an index of 2 to show square numbers (e.g., $1^2 = 1, 2^2 = 4$). The symbol for square root is $\sqrt{}$.</li>
+                            <li>You use an index of 3 to show cube numbers (e.g., $1^3 = 1, 2^3 = 8$). The symbol for cube root is $\sqrt[3]{}$.</li>
+                            <li>You can easily estimate the square roots of integers that are not perfect square numbers.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-blue-900/60 border-l-8 border-orange-400 p-8 rounded-r-2xl shadow-xl mt-8">
+                        <h4 class="font-bold text-white mb-4 text-3xl flex items-center gap-3">
+                            <svg class="w-8 h-8 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                            Solved Example: Work out $\sqrt[3]{125} - \sqrt{49}$
+                        </h4>
+                        
+                        <div class="flex flex-col md:flex-row gap-8 mt-4 items-center">
+                            <div class="flex-1">
+                                <ul class="list-decimal ml-8 text-xl text-blue-100 space-y-3">
+                                    <li>$5^3 = 5 \times 5 \times 5 = 125$, so $\sqrt[3]{125} =$ <strong class="text-white bg-orange-500/40 px-2 rounded">5</strong>.</li>
+                                    <li>$7^2 = 7 \times 7 = 49$, so $\sqrt{49} =$ <strong class="text-white bg-orange-500/40 px-2 rounded">7</strong>.</li>
+                                    <li>Calculation: 5 - 7 = <strong class="text-white">-2</strong>.</li>
+                                </ul>
+                            </div>
+                            <div class="flex-1 w-full bg-black/20 p-6 rounded-xl border border-white/10 flex justify-center gap-8">
+                                <!-- 3D Cube rep -->
+                                <svg width="100" height="100" viewBox="0 0 100 100">
+                                    <polygon points="50,10 90,30 90,70 50,90 10,70 10,30" fill="rgba(249,115,22,0.2)" stroke="#f97316" stroke-width="2"/>
+                                    <line x1="50" y1="10" x2="50" y2="50" stroke="#f97316" stroke-width="2"/>
+                                    <line x1="10" y1="30" x2="50" y2="50" stroke="#f97316" stroke-width="2"/>
+                                    <line x1="90" y1="30" x2="50" y2="50" stroke="#f97316" stroke-width="2"/>
+                                    <line x1="50" y1="50" x2="50" y2="90" stroke="#f97316" stroke-width="2"/>
+                                    <text x="50" y="105" fill="#fff" font-size="14" text-anchor="middle">5 &times; 5 &times; 5</text>
+                                </svg>
+                                
+                                <!-- 2D Square rep -->
+                                <svg width="100" height="100" viewBox="0 0 100 100">
+                                    <rect x="20" y="20" width="60" height="60" fill="rgba(96,165,250,0.2)" stroke="#60a5fa" stroke-width="2"/>
+                                    <!-- Grid lines inside square -->
+                                    <line x1="20" y1="40" x2="80" y2="40" stroke="#60a5fa" stroke-width="1" stroke-dasharray="2,2"/>
+                                    <line x1="20" y1="60" x2="80" y2="60" stroke="#60a5fa" stroke-width="1" stroke-dasharray="2,2"/>
+                                    <line x1="40" y1="20" x2="40" y2="80" stroke="#60a5fa" stroke-width="1" stroke-dasharray="2,2"/>
+                                    <line x1="60" y1="20" x2="60" y2="80" stroke="#60a5fa" stroke-width="1" stroke-dasharray="2,2"/>
+                                    <text x="50" y="105" fill="#fff" font-size="14" text-anchor="middle">7 &times; 7</text>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- L3 Slide 3 -->
+                <div class="topic-slide level-3-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 text-center text-white">
+                        Interactive Challenge
+                    </h2>
+                    
+                    <div class="bg-black/20 rounded-3xl p-10 border border-white/20 flex flex-col items-center justify-center shadow-inner mt-8">
+                        <p class="text-center font-bold text-2xl text-blue-200 mb-10">Test your knowledge of roots and divisibility.</p>
+                        
+                        <div class="flex flex-col gap-8 w-full max-w-3xl">
+                            <div class="flex flex-col w-full bg-white/10 p-6 rounded-2xl border border-white/20 gap-4">
+                                <span class="font-bold text-2xl">Work out $\sqrt{100} - \sqrt{81}$</span>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-lg text-blue-200">Hint: Evaluate the roots first.</span>
+                                    <input type="text" class="quiz-input w-32 p-4 text-center text-2xl font-bold rounded-xl" data-answer="1" placeholder="#">
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/10 p-6 rounded-2xl border border-white/20 gap-4">
+                                <span class="font-bold text-2xl">Is 87,654 divisible by 3? (yes/no)</span>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-lg text-blue-200">Hint: Calculate the sum of its digits.</span>
+                                    <input type="text" class="quiz-input w-32 p-4 text-center text-2xl font-bold rounded-xl" data-answer="yes" placeholder="?">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ADDED: Buttons at the bottom of the challenge slide -->
+                    <div class="flex flex-col sm:flex-row gap-6 w-full mt-10 justify-center max-w-3xl mx-auto">
+                        <button onclick="openMoreExamples(3)" class="btn-more flex-1 py-4 rounded-2xl font-bold text-white text-xl flex items-center justify-center gap-3">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                            More Examples
+                        </button>
+                        <button onclick="openPdfExercise(3)" class="btn-exercise flex-1 py-4 rounded-2xl font-bold text-white text-xl flex items-center justify-center gap-3">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            Exercises
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Global Slide Navigation Dots -->
+            <div id="slide-indicators" class="slide-indicator-dots">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MORE EXAMPLES SECONDARY MODAL -->
+    <div id="examples-modal" class="modal-overlay hidden items-center justify-center z-[70]">
+        <div class="glass-panel w-full max-w-2xl rounded-3xl p-6 md:p-8 relative">
+            <button onclick="closeMoreExamples()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-colors border border-white/40 z-10">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <h3 class="text-2xl font-heading font-bold mb-6 text-white text-center border-b border-white/20 pb-4 flex items-center justify-center gap-3">
+                <svg class="w-7 h-7 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/></svg>
+                Bonus Examples
+            </h3>
+
+            <!-- Extra Examples for Level 1 -->
+            <div id="extra-level-1" class="extra-content space-y-4 hidden">
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Work out: $10 \times -3$</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="-30" placeholder="#">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Work out: $-24 \div 2$</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="-12" placeholder="#">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Work out: $-5 + 9$</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="4" placeholder="#">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Work out: $2 - -5$</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="7" placeholder="#">
+                </div>
+            </div>
+
+            <!-- Extra Examples for Level 2 -->
+            <div id="extra-level-2" class="extra-content space-y-4 hidden">
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Find the multiples of 5 that are less than 40.</span>
+                    <input type="text" class="w-1/2 p-2 text-xs rounded-lg bg-white/20 border border-white/40 text-white" placeholder="e.g. 5, 10...">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Find the highest common factor of 12 and 30.</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="6" placeholder="#">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Find the LCM of 10 and 15.</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="30" placeholder="#">
+                </div>
+            </div>
+
+            <!-- Extra Examples for Level 3 -->
+            <div id="extra-level-3" class="extra-content space-y-4 hidden">
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Find: $\sqrt{36}$</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="6" placeholder="#">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Copy and complete: $4^3 = ?$</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="64" placeholder="#">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Use tests to show that 5328 is divisible by 9. Is it? (yes/no)</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="yes" placeholder="?">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- PDF EXERCISE MODAL -->
+    <div id="pdf-exercise-modal" class="modal-overlay hidden items-center justify-center z-[80]">
+        <div class="glass-panel w-full max-w-5xl rounded-3xl p-6 md:p-8 relative h-[90vh] flex flex-col">
+            <button onclick="closePdfExercise()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-colors border border-white/40 z-10">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <h3 class="text-3xl font-heading font-bold mb-6 text-white text-center border-b border-white/20 pb-4 flex items-center justify-center gap-3 shrink-0">
+                <svg class="w-8 h-8 text-purple-400" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4zm0 15l3-3.86 2.14 2.58 3-3.86L18 19H6z"/></svg>
+                Complete PDF Exercises
+            </h3>
+
+            <div class="relative flex-grow flex flex-col overflow-hidden pb-16">
+                
+                <!-- PDF Exercise Level 1 -->
+                <div id="pdf-level-1" class="pdf-content hidden h-full overflow-y-auto custom-scroll pr-4">
+                    
+                    <!-- Focus -->
+                    <div class="exercise-page bg-blue-900/40 p-5 rounded-2xl border border-blue-400/30">
+                        <h4 class="text-xl font-bold text-blue-300 mb-4 border-b border-blue-400/30 pb-2">Focus (Easy)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q1. Add these positive and negative integers.</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) $-3 + -4$</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="-7"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) $6 + -5$</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="1"></div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q2. Subtract these integers.</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) $4 - 6$</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="-2"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) $-5 - -6$</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="1"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3 lg:col-span-2">
+                                <span class="font-bold text-sm">Q3. Work out:</span>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) $10 \times -3$</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="-30"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) $-24 \div 6$</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="-4"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) $5 \times -11$</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="-55"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">d) $-63 \div 9$</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="-7"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Practice -->
+                    <div class="exercise-page hidden bg-purple-900/40 p-5 rounded-2xl border border-purple-400/30">
+                        <h4 class="text-xl font-bold text-purple-300 mb-4 border-b border-purple-400/30 pb-2">Practice (Medium)</h4>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm">Q4. Fill in the missing numbers.</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) $8 + \Box = 1$</span><input type="text" class="quiz-input w-16 p-2 text-center text-xs font-bold rounded-lg" data-answer="-7"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) $3 \times \Box = -24$</span><input type="text" class="quiz-input w-16 p-2 text-center text-xs font-bold rounded-lg" data-answer="-8"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) $-27 \div \Box = -3$</span><input type="text" class="quiz-input w-16 p-2 text-center text-xs font-bold rounded-lg" data-answer="9"></div>
+                                </div>
+
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm">Q5. Estimate the answers by rounding.</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) $-28 - 53$</span><input type="text" class="quiz-input w-20 p-2 text-center text-xs font-bold rounded-lg" data-answer="-80|-81" placeholder="est."></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) $514 + -321$</span><input type="text" class="quiz-input w-20 p-2 text-center text-xs font-bold rounded-lg" data-answer="200|190" placeholder="est."></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Challenge -->
+                    <div class="exercise-page hidden bg-red-900/40 p-5 rounded-2xl border border-red-400/30">
+                        <h4 class="text-xl font-bold text-red-300 mb-4 border-b border-red-400/30 pb-2">Challenge (Hard)</h4>
+                        <div class="space-y-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm w-full">Q6. Copy and complete these addition pyramids.</span>
+                                <div class="flex flex-wrap justify-around items-center w-full my-4 gap-6">
+                                    <!-- Pyramid A -->
+                                    <div class="flex flex-col items-center">
+                                        <div class="pyramid-row"><div class="pyramid-block" style="width:70px; height:70px; font-size:1.5rem;"><input type="text" class="quiz-input" data-answer="-6"></div></div>
+                                        <div class="pyramid-row">
+                                            <div class="pyramid-block bg-white/10 text-white" style="width:70px; height:70px; font-size:1.5rem;">-2</div>
+                                            <div class="pyramid-block" style="width:70px; height:70px; font-size:1.5rem;"><input type="text" class="quiz-input" data-answer="-4"></div>
+                                        </div>
+                                        <div class="pyramid-row">
+                                            <div class="pyramid-block bg-white/10 text-white" style="width:70px; height:70px; font-size:1.5rem;">1</div>
+                                            <div class="pyramid-block bg-white/10 text-white" style="width:70px; height:70px; font-size:1.5rem;">-3</div>
+                                            <div class="pyramid-block bg-white/10 text-white" style="width:70px; height:70px; font-size:1.5rem;">-1</div>
+                                        </div>
+                                    </div>
+                                    <!-- Pyramid B -->
+                                    <div class="flex flex-col items-center">
+                                        <div class="pyramid-row"><div class="pyramid-block bg-white/10 text-white" style="width:70px; height:70px; font-size:1.5rem;">-6</div></div>
+                                        <div class="pyramid-row">
+                                            <div class="pyramid-block" style="width:70px; height:70px; font-size:1.5rem;"><input type="text" class="quiz-input" data-answer="-1"></div>
+                                            <div class="pyramid-block" style="width:70px; height:70px; font-size:1.5rem;"><input type="text" class="quiz-input" data-answer="-5"></div>
+                                        </div>
+                                        <div class="pyramid-row">
+                                            <div class="pyramid-block bg-white/10 text-white" style="width:70px; height:70px; font-size:1.5rem;">5</div>
+                                            <div class="pyramid-block" style="width:70px; height:70px; font-size:1.5rem;"><input type="text" class="quiz-input" data-answer="-6"></div>
+                                            <div class="pyramid-block bg-white/10 text-white" style="width:70px; height:70px; font-size:1.5rem;">1</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PDF Exercise Level 2 -->
+                <div id="pdf-level-2" class="pdf-content hidden h-full overflow-y-auto custom-scroll pr-4">
+                    
+                    <!-- Focus -->
+                    <div class="exercise-page bg-blue-900/40 p-5 rounded-2xl border border-blue-400/30">
+                        <h4 class="text-xl font-bold text-blue-300 mb-4 border-b border-blue-400/30 pb-2">Focus (Easy)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3 items-center">
+                                <span class="font-bold text-sm w-full">Q1. Write down the first four multiples of 4:</span>
+                                <input type="text" class="quiz-input w-full p-2 text-center text-sm font-bold rounded-lg" data-answer="4,8,12,16|4, 8, 12, 16" placeholder="e.g. 1, 2, 3, 4">
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3 items-center">
+                                <span class="font-bold text-sm w-full">Q2. Find the factors of:</span>
+                                <div class="flex items-center w-full justify-between"><span class="text-xs">a) 21</span><input type="text" class="quiz-input w-3/4 p-1 text-center text-xs font-bold rounded-lg" data-answer="1,3,7,21|1, 3, 7, 21"></div>
+                                <div class="flex items-center w-full justify-between"><span class="text-xs">b) 32</span><input type="text" class="quiz-input w-3/4 p-1 text-center text-xs font-bold rounded-lg" data-answer="1,2,4,8,16,32|1, 2, 4, 8, 16, 32"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Practice -->
+                    <div class="exercise-page hidden bg-purple-900/40 p-5 rounded-2xl border border-purple-400/30">
+                        <h4 class="text-xl font-bold text-purple-300 mb-4 border-b border-purple-400/30 pb-2">Practice (Medium)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q3. Find the lowest common multiple (LCM) of 6 and 14.</span>
+                                <div class="flex items-center justify-between"><span class="text-xs">Answer:</span><input type="text" class="quiz-input w-16 p-2 text-center text-xs font-bold rounded-lg" data-answer="42"></div>
+                            </div>
+                            
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q4. Find the highest common factor (HCF) of 18 and 27.</span>
+                                <div class="flex items-center justify-between"><span class="text-xs">Answer:</span><input type="text" class="quiz-input w-16 p-2 text-center text-xs font-bold rounded-lg" data-answer="9"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Challenge -->
+                    <div class="exercise-page hidden bg-red-900/40 p-5 rounded-2xl border border-red-400/30">
+                        <h4 class="text-xl font-bold text-red-300 mb-4 border-b border-red-400/30 pb-2">Challenge (Hard)</h4>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between w-full bg-white/5 p-4 rounded-xl border border-white/10">
+                                <span class="font-bold text-sm mr-4 w-3/4">Q5. Find the LCM of 3, 8 and 9.</span>
+                                <input type="text" class="quiz-input w-24 p-2 text-center text-sm font-bold rounded-lg" data-answer="72" placeholder="?">
+                            </div>
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm w-full">Q6. Two numbers have a highest common factor of 5. The two numbers add up to 35.</span>
+                                <span class="text-xs">Find a possible pair:</span>
+                                <div class="flex gap-2">
+                                    <input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="5|10|15" placeholder="Num 1">
+                                    <input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="30|25|20" placeholder="Num 2">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PDF Exercise Level 3 -->
+                <div id="pdf-level-3" class="pdf-content hidden h-full overflow-y-auto custom-scroll pr-4">
+                    
+                    <!-- Focus -->
+                    <div class="exercise-page bg-blue-900/40 p-5 rounded-2xl border border-blue-400/30">
+                        <h4 class="text-xl font-bold text-blue-300 mb-4 border-b border-blue-400/30 pb-2">Focus (Easy)</h4>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm">Q1. Use tests for divisibility. Is 5328 divisible by:</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) 4? (yes/no)</span><input type="text" class="quiz-input w-16 p-1 text-center text-xs font-bold rounded-lg" data-answer="yes"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) 9? (yes/no)</span><input type="text" class="quiz-input w-16 p-1 text-center text-xs font-bold rounded-lg" data-answer="yes"></div>
+                                </div>
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm">Q2. Work out:</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) $3^2 + 4^2$</span><input type="text" class="quiz-input w-16 p-1 text-center text-xs font-bold rounded-lg" data-answer="25"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) $6^2 + 7^2$</span><input type="text" class="quiz-input w-16 p-1 text-center text-xs font-bold rounded-lg" data-answer="85"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Practice -->
+                    <div class="exercise-page hidden bg-purple-900/40 p-5 rounded-2xl border border-purple-400/30">
+                        <h4 class="text-xl font-bold text-purple-300 mb-4 border-b border-purple-400/30 pb-2">Practice (Medium)</h4>
+                        <div class="space-y-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm w-full">Q3. What integers less than 12 are factors of 7777?</span>
+                                <input type="text" class="quiz-input w-full p-2 text-center text-xs font-bold rounded-lg" data-answer="1,7,11|1, 7, 11" placeholder="Comma separated">
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm w-full">Q4. Work out:</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs font-bold">$1^3 + 2^3 = $</span>
+                                        <input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="9" placeholder="#">
+                                    </div>
+                                </div>
+                                
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm w-full">Q5. Find the integer that is closest to:</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs">$\sqrt{38}$</span>
+                                        <input type="text" class="quiz-input w-16 p-2 text-center text-xs font-bold rounded-lg" data-answer="6" placeholder="#">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Challenge -->
+                    <div class="exercise-page hidden bg-red-900/40 p-5 rounded-2xl border border-red-400/30">
+                        <h4 class="text-xl font-bold text-red-300 mb-4 border-b border-red-400/30 pb-2">Challenge (Hard)</h4>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm w-full">Q6. A number is divisible by 15 if it is divisible by 3 and 5.</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs">Is 7905 divisible by 15? (yes/no)</span>
+                                        <input type="text" class="quiz-input w-20 p-2 text-center text-xs font-bold rounded-lg" data-answer="yes" placeholder="?">
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm w-full">Q7. Find the highest common factor of $1^2+2^2+3^2$ and $4^2+5^2+6^2$.</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs">Answer:</span>
+                                        <input type="text" class="quiz-input w-20 p-2 text-center text-xs font-bold rounded-lg" data-answer="7" placeholder="#">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- NAVIGATION BUTTONS FOOTER -->
+                <div class="absolute bottom-0 left-0 right-0 flex justify-between items-center pt-4 bg-transparent z-10 border-t border-white/20">
+                    <button id="ex-prev-btn" onclick="prevExercisePage()" class="px-6 py-2 bg-white/20 hover:bg-white/30 rounded-xl font-bold transition-all text-white flex items-center gap-2 invisible">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg> Previous
+                    </button>
+                    <span id="ex-page-indicator" class="text-white/60 font-bold text-sm tracking-wide"></span>
+                    <button id="ex-next-btn" onclick="nextExercisePage()" class="px-6 py-2 bg-purple-600 hover:bg-purple-500 shadow-lg rounded-xl font-bold transition-all text-white flex items-center gap-2 invisible">
+                        Next <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('quest-modal');
+        const nextBtn = document.getElementById('next-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const slidesContainer = document.getElementById('slides-container');
+        const indicators = document.getElementById('slide-indicators');
+        
+        const examplesModal = document.getElementById('examples-modal');
+        const pdfExerciseModal = document.getElementById('pdf-exercise-modal');
+
+        let currentLevel = 1;
+        let currentSlideIndex = 0;
+        let allSlides = [];
+
+        function initSlides() {
+            allSlides = Array.from(document.querySelectorAll('.topic-slide'));
+        }
+
+        function openLevel(level) {
+            document.querySelectorAll('.quest-node').forEach((n, i) => n.classList.toggle('active', i + 1 === level));
+            currentLevel = level;
+            
+            const targetClass = `level-${level}-slide`;
+            currentSlideIndex = allSlides.findIndex(slide => slide.classList.contains(targetClass));
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            updateView();
+        }
+
+        function nextSlide(e) {
+            if(e) e.stopPropagation();
+            if (currentSlideIndex < allSlides.length - 1) {
+                currentSlideIndex++;
+                updateView();
+            }
+        }
+
+        function prevSlide(e) {
+            if(e) e.stopPropagation();
+            if (currentSlideIndex > 0) {
+                currentSlideIndex--;
+                updateView();
+            }
+        }
+
+        function updateView() {
+            allSlides.forEach((slide, index) => {
+                if (index === currentSlideIndex) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+
+            prevBtn.style.display = currentSlideIndex === 0 ? 'none' : 'flex';
+            nextBtn.style.display = currentSlideIndex === allSlides.length - 1 ? 'none' : 'flex';
+
+            const activeSlide = allSlides[currentSlideIndex];
+            for (let i = 1; i <= 3; i++) {
+                if (activeSlide.classList.contains(`level-${i}-slide`)) {
+                    currentLevel = i;
+                    document.querySelectorAll('.quest-node').forEach((n, idx) => n.classList.toggle('active', idx + 1 === currentLevel));
+                    break;
+                }
+            }
+
+            updateDots();
+        }
+
+        function updateDots() {
+            indicators.innerHTML = '';
+            const levelClass = `level-${currentLevel}-slide`;
+            const levelSlides = allSlides.filter(s => s.classList.contains(levelClass));
+            
+            let localIndex = 0;
+            const currentGlobalSlide = allSlides[currentSlideIndex];
+            localIndex = levelSlides.indexOf(currentGlobalSlide);
+
+            levelSlides.forEach((_, idx) => {
+                const dot = document.createElement('div');
+                dot.className = `slide-dot ${idx === localIndex ? 'active' : ''}`;
+                indicators.appendChild(dot);
+            });
+        }
+
+        function closeModal() { 
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            allSlides.forEach(s => s.classList.remove('active'));
+        }
+
+        // ====== MORE EXAMPLES LOGIC ======
+        function openMoreExamples(level) {
+            document.querySelectorAll('.extra-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
+            });
+            const extraTarget = document.getElementById(`extra-level-${level}`);
+            if (extraTarget) {
+                extraTarget.classList.remove('hidden');
+                extraTarget.classList.add('block');
+            }
+            examplesModal.classList.remove('hidden');
+            examplesModal.classList.add('flex');
+        }
+        
+        function closeMoreExamples() {
+            examplesModal.classList.add('hidden');
+            examplesModal.classList.remove('flex');
+        }
+
+        // ====== PDF EXERCISE LOGIC ======
+        let currentExercisePage = 0;
+        let activeExercisePages = [];
+
+        function openPdfExercise(level) {
+            document.querySelectorAll('.pdf-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
+            });
+            
+            const levelContainer = document.getElementById(`pdf-level-${level}`);
+            if (levelContainer) {
+                levelContainer.classList.remove('hidden');
+                levelContainer.classList.add('block');
+                
+                activeExercisePages = Array.from(levelContainer.querySelectorAll('.exercise-page'));
+                currentExercisePage = 0;
+                
+                updateExercisePagination();
+                
+                pdfExerciseModal.classList.remove('hidden');
+                pdfExerciseModal.classList.add('flex');
+            }
+        }
+
+        function updateExercisePagination() {
+            activeExercisePages.forEach((page, index) => {
+                if (index === currentExercisePage) {
+                    page.classList.remove('hidden');
+                    page.classList.add('block');
+                } else {
+                    page.classList.add('hidden');
+                    page.classList.remove('block');
+                }
+            });
+
+            const exPrevBtn = document.getElementById('ex-prev-btn');
+            const exNextBtn = document.getElementById('ex-next-btn');
+            const indicator = document.getElementById('ex-page-indicator');
+
+            if (exPrevBtn) exPrevBtn.style.visibility = currentExercisePage > 0 ? 'visible' : 'hidden';
+            if (exNextBtn) exNextBtn.style.visibility = currentExercisePage < activeExercisePages.length - 1 ? 'visible' : 'hidden';
+            
+            if (indicator && activeExercisePages.length > 0) {
+                indicator.textContent = `Section ${currentExercisePage + 1} of ${activeExercisePages.length}`;
+            }
+        }
+
+        function nextExercisePage() {
+            if (currentExercisePage < activeExercisePages.length - 1) {
+                currentExercisePage++;
+                updateExercisePagination();
+            }
+        }
+
+        function prevExercisePage() {
+            if (currentExercisePage > 0) {
+                currentExercisePage--;
+                updateExercisePagination();
+            }
+        }
+
+        function closePdfExercise() {
+            pdfExerciseModal.classList.add('hidden');
+            pdfExerciseModal.classList.remove('flex');
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initSlides();
+        });
+
+        document.querySelectorAll('.quiz-input').forEach(input => {
+            input.addEventListener('input', function() {
+                const val = this.value.trim().toLowerCase().replace(/\s/g, "");
+                let answers = this.getAttribute('data-answer');
+                
+                if (!answers) return;
+                
+                answers = answers.toLowerCase().split('|');
+                this.classList.remove('correct', 'incorrect');
+                if (val !== '') {
+                    if (answers.includes(val)) {
+                        this.classList.add('correct');
+                    } else {
+                        this.classList.add('incorrect');
+                    }
+                }
+            });
+        });
+        function applyEmbedMode() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get("embed") === "1") {
+                document.body.classList.add("embed-mode");
+            }
+            const levelParam = params.get("level") || params.get("tab");
+            if (levelParam && typeof openLevel === "function") {
+                const level = Math.max(1, Math.min(3, parseInt(levelParam, 10) || 1));
+                setTimeout(() => openLevel(level), 150);
+            }
+        }
+
+        window.addEventListener("load", applyEmbedMode);
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" role="img" aria-label="Convection current in a heated room">
+  <rect width="800" height="420" fill="#fff7ed"/>
+  <text x="400" y="34" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" fill="#9a3412">Convection current  warm fluid rises, cool fluid sinks</text>
+  <rect x="90" y="60" width="620" height="300" rx="16" fill="#e0f2fe" stroke="#0369a1" stroke-width="3"/>
+  <rect x="120" y="300" width="140" height="40" rx="8" fill="#ea580c"/>
+  <text x="190" y="326" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">heater</text>
+  <circle r="9" fill="#ef4444">
+    <animateMotion dur="6s" repeatCount="indefinite" path="M190,290 C190,120 400,80 620,140 C700,180 650,300 190,290"/>
+  </circle>
+  <circle r="8" fill="#f97316">
+    <animateMotion dur="6s" begin="1.5s" repeatCount="indefinite" path="M190,290 C190,120 400,80 620,140 C700,180 650,300 190,290"/>
+  </circle>
+  <circle r="8" fill="#3b82f6">
+    <animateMotion dur="6s" begin="3s" repeatCount="indefinite" path="M190,290 C190,120 400,80 620,140 C700,180 650,300 190,290"/>
+  </circle>
+  <circle r="7" fill="#2563eb">
+    <animateMotion dur="6s" begin="4.5s" repeatCount="indefinite" path="M190,290 C190,120 400,80 620,140 C700,180 650,300 190,290"/>
+  </circle>
+  <text x="250" y="150" fill="#b91c1c" font-size="14" font-weight="700">warm air rises (less dense)</text>
+  <text x="520" y="280" fill="#1d4ed8" font-size="14" font-weight="700">cool air sinks (more dense)</text>
+  <text x="400" y="400" text-anchor="middle" fill="#7c2d12" font-size="14">density = mass ÷ volume · volume up, density down</text>
+</svg>

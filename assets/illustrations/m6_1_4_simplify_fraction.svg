@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900">
+<rect width="1600" height="900" fill="#ffffff"/>
+<rect width="1600" height="92" fill="#0f172a"/>
+<text x="800" y="62" text-anchor="middle" fill="#ffffff" font-family="Segoe UI, Arial, sans-serif" font-size="40" font-weight="700" letter-spacing="2">SIMPLIFY WITH THE HCF</text>
+<text x="800" y="148" text-anchor="middle" fill="#059669" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="600">Divide the top and the bottom by the HCF.</text>
+<rect x="80" y="186" width="700" height="580" rx="18" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/>
+<text x="430" y="228" text-anchor="middle" fill="#c2410c" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">HCF(16, 40)</text>
+<text x="430" y="274" text-anchor="middle" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700">16: 1, 2, 4, 8, 16</text>
+<text x="430" y="316" text-anchor="middle" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700">8 × 5 = 40</text>
+<text x="430" y="358" text-anchor="middle" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="40" font-weight="700">HCF = 8</text>
+  <rect x="820" y="186" width="700" height="580" rx="18" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+<text x="1170" y="228" text-anchor="middle" fill="#065f46" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">16 / 40</text>
+<text x="1170" y="274" text-anchor="middle" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700">16 ÷ 8 = 2</text>
+<text x="1170" y="316" text-anchor="middle" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700">40 ÷ 8 = 5</text>
+<text x="1170" y="358" text-anchor="middle" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="40" font-weight="700">16/40 = 2/5</text>
+<rect y="808" width="1600" height="92" fill="#0f172a"/>
+<text x="800" y="864" text-anchor="middle" fill="#ffffff" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="600">CHECK  |  HCF 8   ·   16/40 = 2/5</text>
+</svg>

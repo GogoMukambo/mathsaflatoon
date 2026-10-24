@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abhyaas — Decimals Quest</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap');
+        
+        :root {
+            --brand-blue: #0f4c81;
+            --light-blue: #e0f2fe;
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.3);
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #020617, #1e3a8a, #3b82f6);
+            background-attachment: fixed;
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+            user-select: none;
+        }
+
+        h1, h2, h3, h4, .font-heading {
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        .bg-pattern {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: -1;
+            background-image: url("data:image/svg+xml,%3Csvg width='300' height='300' viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cg font-family='Fredoka, sans-serif' font-weight='bold' fill='rgba(255,255,255,0.05)'%3E%3Ctext x='30' y='60' font-size='40'%3E4.25%3C/text%3E%3Ctext x='200' y='90' font-size='50'%3E%3C%3C/text%3E%3Ctext x='100' y='180' font-size='45'%3E0.001%3C/text%3E%3Ctext x='240' y='220' font-size='40'%3E%C3%97%3C/text%3E%3Ctext x='150' y='50' font-size='35'%3E%3D%3C/text%3E%3Ctext x='50' y='260' font-size='35'%3E10.5%3C/text%3E%3Ctext x='180' y='280' font-size='30'%3E%C3%B7%3C/text%3E%3C/g%3E%3C/svg%3E");
+            animation: floatPattern 60s linear infinite;
+        }
+
+        @keyframes floatPattern {
+            0% { background-position: 0 0; }
+            100% { background-position: 300px 300px; }
+        }
+
+        @keyframes pulseNode {
+            0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 255, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        }
+
+        @keyframes flashRed {
+            0%, 100% { background-color: rgba(239, 68, 68, 0.4); border-color: #f87171; transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .quest-node {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            border: 3px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+
+        .quest-node.active, .quest-node:hover {
+            background: white;
+            color: var(--brand-blue);
+            transform: translate(-50%, -50%) scale(1.15);
+            animation: pulseNode 2s infinite;
+        }
+
+        .quest-node-label {
+            position: absolute;
+            top: 70px;
+            width: 160px;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            pointer-events: none;
+            line-height: 1.2;
+        }
+
+        .quiz-input {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+        .quiz-input:focus { outline: none; background: rgba(255, 255, 255, 0.3); border-color: white; }
+        .quiz-input.correct {
+            background: rgba(34, 197, 94, 0.4) !important;
+            color: #ffffff;
+            border-color: #4ade80 !important;
+            box-shadow: 0 0 20px rgba(74, 222, 128, 0.7);
+            transform: scale(1.05);
+            pointer-events: none;
+        }
+        .quiz-input.incorrect {
+            animation: flashRed 0.4s ease;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 15, 40, 0.6);
+            backdrop-filter: blur(8px);
+            z-index: 50;
+            overflow-y: auto;
+            padding: 2rem 1rem;
+            display: none;
+        }
+
+        .drag-card {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.6);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1rem;
+            border-radius: 0.75rem;
+            cursor: grab;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: transform 0.2s;
+            user-select: none;
+            text-align: center;
+        }
+        .drag-card:active { cursor: grabbing; transform: scale(0.95); }
+        
+        .drop-slot {
+            width: 100px;
+            height: 60px;
+            border: 2px dashed rgba(255,255,255,0.4);
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .drop-slot.filled { border-style: solid; }
+        
+        .study-box {
+            background: rgba(255,255,255,0.05);
+            border-left: 4px solid #3b82f6;
+            padding: 1.25rem;
+            border-radius: 0 1rem 1rem 0;
+            margin-bottom: 1.5rem;
+        }
+        
+        .btn-more, .btn-exercise {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s;
+        }
+        .btn-more { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+        .btn-exercise { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+        .btn-more:hover, .btn-exercise:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); }
+
+        .custom-scroll::-webkit-scrollbar { width: 8px; }
+        .custom-scroll::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
+    
+        body.embed-mode header.glass-panel {
+            display: none;
+        }
+
+        body.embed-mode main {
+            min-height: 85vh;
+            padding-top: 1.5rem;
+        }
+
+        body.embed-mode #quest-modal {
+            padding-top: 0.5rem;
+        }
+
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="bg-pattern pointer-events-none"></div>
+
+    <header class="glass-panel sticky top-0 z-40 border-b-0 border-white/20">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <svg class="w-8 h-8 text-white drop-shadow-md" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"></path></svg>
+                <h1 class="text-3xl font-bold tracking-wider drop-shadow-sm font-heading">Abhyaas</h1>
+            </div>
+            <span class="text-sm font-bold bg-white/10 text-white py-1.5 px-4 rounded-full shadow-md uppercase tracking-wide border border-white/30">Math Quest: Chapter 4</span>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto w-full px-4 py-12 relative flex flex-col items-center justify-center min-h-[70vh]">
+        <div class="text-center mb-10">
+            <h2 class="text-5xl font-heading font-bold mb-4 drop-shadow-lg">Decimals</h2>
+            <p class="text-xl text-blue-100/80 font-bold max-w-2xl mx-auto mb-8">Master ordering, adding, subtracting, multiplying, and dividing decimals easily.</p>
+            
+            <div class="glass-panel p-8 rounded-2xl max-w-4xl mx-auto mb-8 text-left z-10 relative">
+                <h3 class="text-2xl font-bold text-blue-200 mb-3 border-b border-white/10 pb-2">Why learn this in the real world?</h3>
+                <p class="text-blue-50 mb-6 leading-relaxed">The decimal system is a number system based on 10, which allows us to write all numbers using just ten digits (0-9). Many countries use a decimal system for their currency (e.g., $1 = 100 cents, £1 = 100 pence). Understanding decimals is essential when you travel and exchange money, buy groceries by weight, or compare exact times in competitive sports like the 100m sprint.</p>
+                
+                <h3 class="text-2xl font-bold text-purple-300 mb-3 border-b border-white/10 pb-2">Chapter Modules:</h3>
+                <ul class="list-disc ml-6 space-y-2 text-blue-50 font-semibold grid grid-cols-1 sm:grid-cols-2 gap-x-6">
+                    <li>4.1 Ordering decimals</li>
+                    <li>4.2 Adding and subtracting decimals</li>
+                    <li>4.3 Multiplying decimals</li>
+                    <li>4.4 Dividing decimals</li>
+                    <li>4.5 Making decimal calculations easier</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="relative w-full max-w-4xl h-[300px] mt-4">
+            <svg class="absolute top-0 left-0 w-full h-full pointer-events-none drop-shadow-[0_0_10px_rgba(255,255,255,0.4)]" viewBox="0 0 1000 300" preserveAspectRatio="none">
+                <path d="M 150 150 C 300 150, 300 60, 500 60 C 700 60, 700 240, 850 240" 
+                      fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="8" stroke-linecap="round" stroke-dasharray="15, 15" />
+            </svg>
+            <button class="quest-node pulse" style="left: 15%; top: 50%;" onclick="openLevel(1)">1<span class="quest-node-label">4.1<br>Ordering Decimals</span></button>
+            <button class="quest-node" style="left: 50%; top: 20%;" onclick="openLevel(2)">2<span class="quest-node-label">4.2<br>Add & Subtract</span></button>
+            <button class="quest-node" style="left: 85%; top: 80%;" onclick="openLevel(3)">3<span class="quest-node-label">4.3 - 4.5<br>Multiply & Divide</span></button>
+        </div>
+    </main>
+
+    <!-- MAIN QUEST MODAL -->
+    <div id="quest-modal" class="modal-overlay hidden items-center justify-center">
+        <button onclick="prevLevel(event)" class="fixed left-2 md:left-8 top-1/2 -translate-y-1/2 w-14 h-14 md:w-20 md:h-20 rounded-full bg-white/20 backdrop-blur-md hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-all duration-300 border-2 border-white/40 shadow-[0_0_20px_rgba(255,255,255,0.3)] z-[60] cursor-pointer" id="prev-level-btn"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path></svg></button>
+        <button onclick="nextLevel(event)" class="fixed right-2 md:right-8 top-1/2 -translate-y-1/2 w-14 h-14 md:w-20 md:h-20 rounded-full bg-white/20 backdrop-blur-md hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-all duration-300 border-2 border-white/40 shadow-[0_0_20px_rgba(255,255,255,0.3)] z-[60] cursor-pointer" id="next-level-btn"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg></button>
+
+        <div id="modal-content-panel" class="glass-panel w-full max-w-5xl rounded-3xl p-6 md:p-10 relative">
+            <button onclick="closeModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-colors border border-white/40 z-10"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+
+            <!-- Level 1: Ordering Decimals -->
+            <div id="level-1" class="level-content hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Left: Study Material -->
+                    <div>
+                        <h2 class="text-3xl font-heading font-bold mb-6 flex items-center gap-3">
+                            <span class="bg-white text-blue-900 w-10 h-10 rounded-full flex items-center justify-center text-xl">1</span>
+                            Ordering Decimals
+                        </h2>
+                        <div class="study-box">
+                            <h4 class="text-lg font-bold text-blue-300 mb-2">Comparing Decimals</h4>
+                            <ul class="list-disc ml-5 space-y-2 text-sm text-blue-50">
+                                <li>To order decimal numbers, write them from smallest to largest.</li>
+                                <li><b>Different whole-number parts:</b> First compare the whole numbers. (e.g. 14.6 is bigger than 8.9 because 14 > 8).</li>
+                                <li><b>Same whole-number parts:</b> Compare the tenths first, then the hundredths, and so on. (e.g. 2.6 is smaller than 2.82 because 6 tenths is less than 8 tenths).</li>
+                            </ul>
+                        </div>
+                        <div class="study-box border-teal-400">
+                            <h4 class="text-lg font-bold text-teal-300 mb-2">Adding Trailing Zeros (Ulrika's Method)</h4>
+                            <ul class="list-disc ml-5 space-y-2 text-sm text-blue-50">
+                                <li>If numbers have different lengths of decimal places, add zeros at the end to make them the same length. This makes comparing easier.</li>
+                                <li>Example: Order 4.23, 4.6, and 4.179. Give them all 3 decimal places: 4.230, 4.600, 4.179. Now compare: 179 < 230 < 600. Ordered: 4.179, 4.23, 4.6.</li>
+                            </ul>
+                        </div>
+                        <!-- SOLVED EXAMPLE -->
+                        <div class="bg-blue-900/50 border-l-4 border-blue-400 p-4 rounded-r-xl mb-6 shadow-lg">
+                            <h4 class="font-bold text-blue-200 mb-2 text-lg">Symbols & Solved Example</h4>
+                            <ul class="list-disc ml-5 text-sm text-blue-100 space-y-1 mb-3">
+                                <li><b>&lt;</b> means "is less than".</li>
+                                <li><b>&gt;</b> means "is greater than".</li>
+                                <li><b>&ne;</b> means "is not equal to".</li>
+                            </ul>
+                            <p class="text-sm font-bold">Example: 4.07 &lt; 4.15</p>
+                            <p class="text-sm font-bold">Example: 0.183 &ne; 0.18</p>
+                        </div>
+                    </div>
+
+                    <!-- Right: Interactive Component -->
+                    <div class="flex flex-col justify-center">
+                        <div class="bg-black/20 rounded-3xl p-6 border border-white/20 h-full flex flex-col items-center gap-6 shadow-inner relative">
+                            <h3 class="text-2xl font-heading text-center text-blue-100">Interactive: Sort the Decimals</h3>
+                            <p class="text-center font-bold text-sm text-blue-200 mb-4">Drag the decimal numbers to arrange them in order from smallest to largest.</p>
+                            
+                            <div id="l1-source" class="flex gap-4 w-full justify-center">
+                                <div draggable="true" ondragstart="drag(event)" id="card1" data-val="2.82" class="drag-card shadow-lg bg-red-500/40 w-24">2.82</div>
+                                <div draggable="true" ondragstart="drag(event)" id="card2" data-val="2.6" class="drag-card shadow-lg bg-teal-500/40 w-24">2.6</div>
+                                <div draggable="true" ondragstart="drag(event)" id="card3" data-val="2.816" class="drag-card shadow-lg bg-purple-500/40 w-24">2.816</div>
+                            </div>
+
+                            <div class="flex gap-4 mt-6 w-full justify-center border-t border-white/20 pt-6">
+                                <div class="flex flex-col items-center gap-2">
+                                    <span class="text-xs text-blue-200 uppercase font-bold">1st (Smallest)</span>
+                                    <div class="drop-slot" ondrop="dropL1(event)" ondragover="allowDrop(event)" data-expected="2.6"></div>
+                                </div>
+                                <div class="flex flex-col items-center gap-2">
+                                    <span class="text-xs text-blue-200 uppercase font-bold">2nd</span>
+                                    <div class="drop-slot" ondrop="dropL1(event)" ondragover="allowDrop(event)" data-expected="2.816"></div>
+                                </div>
+                                <div class="flex flex-col items-center gap-2">
+                                    <span class="text-xs text-blue-200 uppercase font-bold">3rd (Largest)</span>
+                                    <div class="drop-slot" ondrop="dropL1(event)" ondragover="allowDrop(event)" data-expected="2.82"></div>
+                                </div>
+                            </div>
+                            <div id="l1-success" class="hidden text-green-300 font-bold text-xl animate-bounce mt-4">Perfectly Ordered!</div>
+
+                            <div class="flex gap-4 w-full mt-6">
+                                <button onclick="openMoreExamples(1)" class="btn-more w-1/2 py-3 rounded-xl font-bold text-white text-md flex items-center justify-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                                    More Examples
+                                </button>
+                                <button onclick="openPdfExercise(1)" class="btn-exercise w-1/2 py-3 rounded-xl font-bold text-white text-md flex items-center justify-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                    Exercises
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Level 2: Add & Subtract -->
+            <div id="level-2" class="level-content hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Left: Study Material -->
+                    <div>
+                        <h2 class="text-3xl font-heading font-bold mb-6 flex items-center gap-3">
+                            <span class="bg-white text-blue-900 w-10 h-10 rounded-full flex items-center justify-center text-xl">2</span>
+                            Add & Subtract
+                        </h2>
+                        <div class="study-box">
+                            <h4 class="text-lg font-bold text-blue-300 mb-2">Mental Methods</h4>
+                            <ul class="list-disc ml-5 space-y-2 text-sm text-blue-50">
+                                <li><b>Partitioning:</b> Separate into whole numbers and decimals. E.g., 2.3 + 7.8 = (2+7) + (0.3+0.8) = 9 + 1.1 = 10.1.</li>
+                                <li><b>Rounding and Adjusting:</b> If a number is close to a whole, round it, calculate, then adjust. E.g., 6.9 + 12.4. Round 6.9 up to 7. Do 7 + 12.4 = 19.4. Then subtract the extra 0.1 to get 19.3.</li>
+                            </ul>
+                        </div>
+                        <div class="study-box border-purple-400">
+                            <h4 class="text-lg font-bold text-purple-300 mb-2">Written Methods</h4>
+                            <ul class="list-disc ml-5 space-y-2 text-sm text-blue-50">
+                                <li>Always write calculations in columns with the <b>decimal points vertically in line</b>.</li>
+                                <li>Fill any empty spaces at the end of a decimal with zeros (e.g. 4.8 becomes 4.80) to help align columns.</li>
+                                <li>Add or subtract from right to left, remembering to carry or borrow just like with whole numbers.</li>
+                            </ul>
+                        </div>
+                        <!-- SOLVED EXAMPLE -->
+                        <div class="bg-blue-900/50 border-l-4 border-blue-400 p-4 rounded-r-xl mb-6 shadow-lg">
+                            <h4 class="font-bold text-blue-200 mb-2 text-lg">Solved Example (Subtracting)</h4>
+                            <p class="text-sm font-bold">Calculate: 10 - 4.83</p>
+                            <ul class="list-decimal ml-5 text-sm text-blue-100 mt-2 space-y-1 mb-3">
+                                <li>Mentally: 10 - 4 = 6.</li>
+                                <li>6.0 - 0.8 = 5.2.</li>
+                                <li>5.20 - 0.03 = 5.17.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Right: Interactive Component -->
+                    <div class="flex flex-col justify-center">
+                        <div class="bg-black/20 rounded-3xl p-6 border border-white/20 h-full flex flex-col items-center justify-center gap-6 shadow-inner">
+                            <h3 class="text-2xl mb-4 font-heading text-center text-blue-100">Class Challenge</h3>
+                            <p class="text-center font-bold text-sm text-blue-200 mb-4">Complete these decimal additions and subtractions mentally or using the column method.</p>
+                            
+                            <div class="flex flex-col gap-4 w-full">
+                                <div class="flex flex-col w-full bg-white/10 p-4 rounded-xl border border-white/20 gap-3">
+                                    <span class="font-bold text-sm">Work out mentally: 7.5 + 4.8</span>
+                                    <div class="flex justify-between items-center mt-2">
+                                        <span class="text-xs text-blue-200">Hint: Add 5, then subtract 0.2.</span>
+                                        <input type="text" class="quiz-input w-24 p-2 text-center font-bold rounded-lg" data-answer="12.3" placeholder="?">
+                                    </div>
+                                </div>
+                                <div class="flex flex-col w-full bg-white/10 p-4 rounded-xl border border-white/20 gap-3">
+                                    <span class="font-bold text-sm">Work out mentally: 14.4 - 6.5</span>
+                                    <div class="flex justify-between items-center mt-2">
+                                        <span class="text-xs text-blue-200">Hint: 14 - 6 = 8, then 0.4 - 0.5 = -0.1.</span>
+                                        <input type="text" class="quiz-input w-24 p-2 text-center font-bold rounded-lg" data-answer="7.9" placeholder="?">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex gap-4 w-full mt-4">
+                                <button onclick="openMoreExamples(2)" class="btn-more w-1/2 py-3 rounded-xl font-bold text-white text-md flex items-center justify-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                                    More Examples
+                                </button>
+                                <button onclick="openPdfExercise(2)" class="btn-exercise w-1/2 py-3 rounded-xl font-bold text-white text-md flex items-center justify-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                    Exercises
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Level 3: Multiply & Divide -->
+            <div id="level-3" class="level-content hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Left: Study Material -->
+                    <div>
+                        <h2 class="text-3xl font-heading font-bold mb-6 flex items-center gap-3">
+                            <span class="bg-white text-blue-900 w-10 h-10 rounded-full flex items-center justify-center text-xl">3</span>
+                            Multiply & Divide
+                        </h2>
+                        <div class="study-box">
+                            <h4 class="text-lg font-bold text-blue-300 mb-2">Multiplying & Dividing</h4>
+                            <ul class="list-disc ml-5 space-y-2 text-sm text-blue-50">
+                                <li><b>Multiply:</b> Work out the multiplication without the decimal point. Then count the total decimal places in the question and put that many places in your answer.</li>
+                                <li><b>Divide:</b> Use short division. Keep the decimal point in the answer exactly above the decimal point in the question.</li>
+                            </ul>
+                        </div>
+                        <div class="study-box border-orange-400">
+                            <h4 class="text-lg font-bold text-orange-300 mb-2">Making Calculations Easier</h4>
+                            <ul class="list-disc ml-5 space-y-1 text-sm text-blue-50">
+                                <li><b>Place Value & Fractions:</b> $0.06 \times 3500$ is the same as $(6 \div 100) \times 3500$, which is $6 \times 35 = 210$.</li>
+                                <li><b>Partitioning:</b> To multiply by 9, multiply by $(10 - 1)$. Example: $8.2 \times 9 = 8.2 \times 10 - 8.2 = 82 - 8.2 = 73.8$.</li>
+                            </ul>
+                        </div>
+                        <!-- SOLVED EXAMPLE -->
+                        <div class="bg-blue-900/50 border-l-4 border-blue-400 p-4 rounded-r-xl mb-6 shadow-lg">
+                            <h4 class="font-bold text-blue-200 mb-2 text-lg">Solved Examples</h4>
+                            <p class="text-sm font-bold">Solve mentally: 0.002 &times; 4</p>
+                            <ul class="list-decimal ml-5 text-sm text-blue-100 mt-2 space-y-1 mb-3">
+                                <li>Without decimal: 2 &times; 4 = 8.</li>
+                                <li>Three decimal places in question, so three in answer: 0.008.</li>
+                            </ul>
+                            <p class="text-sm font-bold">Divide: 12.56 &divide; 40</p>
+                            <ul class="list-decimal ml-5 text-sm text-blue-100 mt-2 space-y-1">
+                                <li>Divide both by 10 to make it easier: 1.256 &divide; 4.</li>
+                                <li>Short division gives 0.314.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Right: Interactive Component -->
+                    <div class="flex flex-col justify-center">
+                        <div class="bg-black/20 rounded-3xl p-6 border border-white/20 h-full flex flex-col items-center justify-center gap-6 shadow-inner">
+                            <h3 class="text-2xl mb-4 font-heading text-center text-blue-100">Mental Math Challenge</h3>
+                            <p class="text-center font-bold text-sm text-blue-200 mb-4">Use the tricks you just learned to solve these mentally!</p>
+                            
+                            <div class="flex flex-col gap-4 w-full">
+                                <div class="flex flex-col w-full bg-white/10 p-4 rounded-xl border border-white/20 gap-3">
+                                    <span class="font-bold text-sm">Work out mentally: 0.3 &times; 6</span>
+                                    <div class="flex justify-between items-center mt-2">
+                                        <span class="text-xs text-blue-200">Hint: 3 &times; 6 = 18</span>
+                                        <input type="text" class="quiz-input w-24 p-2 text-center font-bold rounded-lg" data-answer="1.8" placeholder="?">
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col w-full bg-white/10 p-4 rounded-xl border border-white/20 gap-3">
+                                    <span class="font-bold text-sm">Work out mentally: 6.3 &divide; 3</span>
+                                    <div class="flex justify-between items-center mt-2">
+                                        <span class="text-xs text-blue-200">Hint: Divide whole and tenths separately.</span>
+                                        <input type="text" class="quiz-input w-24 p-2 text-center font-bold rounded-lg" data-answer="2.1" placeholder="?">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-4 w-full mt-4">
+                                <button onclick="openMoreExamples(3)" class="btn-more w-1/2 py-3 rounded-xl font-bold text-white text-md flex items-center justify-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                                    More Examples
+                                </button>
+                                <button onclick="openPdfExercise(3)" class="btn-exercise w-1/2 py-3 rounded-xl font-bold text-white text-md flex items-center justify-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                    Exercises
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MORE EXAMPLES SECONDARY MODAL -->
+    <div id="examples-modal" class="modal-overlay hidden items-center justify-center z-[70]">
+        <div class="glass-panel w-full max-w-2xl rounded-3xl p-6 md:p-8 relative">
+            <button onclick="closeMoreExamples()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-colors border border-white/40 z-10">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <h3 class="text-2xl font-heading font-bold mb-6 text-white text-center border-b border-white/20 pb-4 flex items-center justify-center gap-3">
+                <svg class="w-7 h-7 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/></svg>
+                Bonus Examples
+            </h3>
+
+            <!-- Extra Examples for Level 1 -->
+            <div id="extra-level-1" class="extra-content space-y-4 hidden">
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Fill in &lt; or &gt;: 6.4 ___ 8.1</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="<" placeholder="?">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">True or False? 12.03 &gt; 11.95</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg uppercase" data-answer="t|true" placeholder="T/F">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Which is smaller? 0.05 or 0.043</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="0.043" placeholder="?">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Fill in = or &ne;: 8.9 ___ 8.90</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="=" placeholder="?">
+                </div>
+            </div>
+
+            <!-- Extra Examples for Level 2 -->
+            <div id="extra-level-2" class="extra-content space-y-4 hidden">
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Calculate mentally: 1 - 0.36</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="0.64" placeholder="?">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Calculate mentally: 4.3 + 7.9</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="12.2" placeholder="?">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Calculate mentally: 5.4 - 1.9</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="3.5" placeholder="?">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Calculate: 10 - 6.42</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="3.58" placeholder="?">
+                </div>
+            </div>
+
+            <!-- Extra Examples for Level 3 -->
+            <div id="extra-level-3" class="extra-content space-y-4 hidden">
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Calculate mentally: 0.1 &times; 8</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="0.8" placeholder="?">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">If 521 &times; 53 = 27613, what is 521 &times; 5.3?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="2761.3" placeholder="?">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Solve the division: 8.654 &divide; 2</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="4.327" placeholder="?">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Make easier: 4.6 &times; 9 (using 4.6 &times; 10 - 4.6)</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="41.4" placeholder="?">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- PDF EXERCISE MODAL (NEW) -->
+    <div id="pdf-exercise-modal" class="modal-overlay hidden items-center justify-center z-[80]">
+        <div class="glass-panel w-full max-w-5xl rounded-3xl p-6 md:p-8 relative h-[90vh] flex flex-col">
+            <button onclick="closePdfExercise()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-colors border border-white/40 z-10">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <h3 class="text-3xl font-heading font-bold mb-6 text-white text-center border-b border-white/20 pb-4 flex items-center justify-center gap-3 shrink-0">
+                <svg class="w-8 h-8 text-purple-400" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4zm0 15l3-3.86 2.14 2.58 3-3.86L18 19H6z"/></svg>
+                Workbook Exercises
+            </h3>
+
+            <!-- REPLACED SCROLL CONTAINER WITH RELATIVE FLEX CONTAINER -->
+            <div class="relative flex-grow flex flex-col overflow-hidden pb-16">
+                
+                <!-- PDF Exercise Level 1 (Ordering Decimals) -->
+                <div id="pdf-level-1" class="pdf-content hidden h-full overflow-y-auto custom-scroll pr-4">
+                    
+                    <!-- Focus -->
+                    <div class="exercise-page bg-blue-900/40 p-5 rounded-2xl border border-blue-400/30">
+                        <h4 class="text-xl font-bold text-blue-300 mb-4 border-b border-blue-400/30 pb-2">Focus (Easy)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q1. Write the correct inequality (&lt; or &gt;)</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) 3.4 ___ 3.21</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer=">"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) 18.54 ___ 18.45</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer=">"></div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q2. Write the correct inequality (&lt; or &gt;)</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) 0.09 ___ 0.1</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="<"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">d) 0.05 ___ 0.043</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer=">"></div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q3. Write the correct sign (= or &ne;)</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) 8.3 ___ 8.30</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="="></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) 4.660 ___ 4.66</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="="></div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3 lg:col-span-2">
+                                <span class="font-bold text-sm">Q4. Which decimal is the smallest?</span>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) 12.56 or 21.652</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="12.56"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) 0.67 or 0.72</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="0.67"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Practice -->
+                    <div class="exercise-page hidden bg-purple-900/40 p-5 rounded-2xl border border-purple-400/30">
+                        <h4 class="text-xl font-bold text-purple-300 mb-4 border-b border-purple-400/30 pb-2">Practice (Medium)</h4>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3 lg:col-span-2">
+                                    <span class="font-bold text-sm">Q5. Write these numbers in order of size, starting with the smallest. (Type answers separated by commas without spaces)</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">4.67, 4.21, 4.5, 4.02</span><input type="text" class="quiz-input w-full max-w-[200px] p-2 text-center text-xs font-bold rounded-lg" data-answer="4.02,4.21,4.5,4.67"></div>
+                                </div>
+
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3 lg:col-span-2">
+                                    <span class="font-bold text-sm">Q6. Write these numbers in order of size, smallest first:</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">12.9, 12.41, 12.08, 12.3</span><input type="text" class="quiz-input w-full max-w-[200px] p-2 text-center text-xs font-bold rounded-lg" data-answer="12.08,12.3,12.41,12.9"></div>
+                                </div>
+
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3 lg:col-span-2">
+                                    <span class="font-bold text-sm">Q7. Write these numbers in order of size, smallest first:</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">0.71, 0.52, 0.77, 0.59</span><input type="text" class="quiz-input w-full max-w-[200px] p-2 text-center text-xs font-bold rounded-lg" data-answer="0.52,0.59,0.71,0.77"></div>
+                                </div>
+                                
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3 lg:col-span-2">
+                                    <span class="font-bold text-sm">Q8. Write these numbers in order of size, smallest first:</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">9.09, 9.7, 9.901, 9.04, 9.99</span><input type="text" class="quiz-input w-full max-w-[250px] p-2 text-center text-xs font-bold rounded-lg" data-answer="9.04,9.09,9.7,9.901,9.99"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Challenge -->
+                    <div class="exercise-page hidden bg-red-900/40 p-5 rounded-2xl border border-red-400/30">
+                        <h4 class="text-xl font-bold text-red-300 mb-4 border-b border-red-400/30 pb-2">Challenge (Hard)</h4>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3 lg:col-span-2">
+                                    <span class="font-bold text-sm w-full">Q9. The table shows three of the fastest 100m times.</span>
+                                    <ul class="text-xs text-blue-100 ml-4 list-disc mb-2">
+                                        <li>Donovan Bailey: 9.84 s</li>
+                                        <li>Usain Bolt: 9.58 s</li>
+                                        <li>Tyson Gay: 9.69 s</li>
+                                    </ul>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs font-bold">Which man ran the fastest? (Type the time)</span>
+                                        <input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="9.58" placeholder="?">
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm w-full">Q10. For the inequality x > 5.2</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs font-bold">Smallest possible integer?</span>
+                                        <input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="6" placeholder="#">
+                                    </div>
+                                </div>
+                                
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm w-full">Q11. For the inequality y < 5.2</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs font-bold">Largest possible integer?</span>
+                                        <input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="5" placeholder="#">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PDF Exercise Level 2 (Add & Subtract) -->
+                <div id="pdf-level-2" class="pdf-content hidden h-full overflow-y-auto custom-scroll pr-4">
+                    
+                    <!-- Focus -->
+                    <div class="exercise-page bg-blue-900/40 p-5 rounded-2xl border border-blue-400/30">
+                        <h4 class="text-xl font-bold text-blue-300 mb-4 border-b border-blue-400/30 pb-2">Focus (Easy)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3 items-center">
+                                <span class="font-bold text-sm w-full">Q1. Work out mentally: 1 - 0.65</span>
+                                <input type="text" class="quiz-input w-full p-2 text-center text-sm font-bold rounded-lg" data-answer="0.35" placeholder="?">
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3 items-center">
+                                <span class="font-bold text-sm w-full">Q2. Work out mentally: 1 - 0.324</span>
+                                <input type="text" class="quiz-input w-full p-2 text-center text-sm font-bold rounded-lg" data-answer="0.676" placeholder="?">
+                            </div>
+                            
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3 items-center">
+                                <span class="font-bold text-sm w-full">Q3. Work out mentally: 5.5 + 2.3</span>
+                                <input type="text" class="quiz-input w-full p-2 text-center text-sm font-bold rounded-lg" data-answer="7.8" placeholder="?">
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3 items-center">
+                                <span class="font-bold text-sm w-full">Q4. Work out mentally: 18.6 - 7.4</span>
+                                <input type="text" class="quiz-input w-full p-2 text-center text-sm font-bold rounded-lg" data-answer="11.2" placeholder="?">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Practice -->
+                    <div class="exercise-page hidden bg-purple-900/40 p-5 rounded-2xl border border-purple-400/30">
+                        <h4 class="text-xl font-bold text-purple-300 mb-4 border-b border-purple-400/30 pb-2">Practice (Medium)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q5. Calculate (hint: use rounding): 5.9 + 3.3</span>
+                                <div class="flex items-center justify-between"><span class="text-xs">Answer:</span><input type="text" class="quiz-input w-32 p-2 text-center text-xs font-bold rounded-lg" data-answer="9.2"></div>
+                            </div>
+                            
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q6. Calculate (hint: use rounding): 13.5 - 8.8</span>
+                                <div class="flex items-center justify-between"><span class="text-xs">Answer:</span><input type="text" class="quiz-input w-32 p-2 text-center text-xs font-bold rounded-lg" data-answer="4.7"></div>
+                            </div>
+                            
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q7. Written method: 7.67 + 0.15</span>
+                                <div class="flex items-center justify-between"><span class="text-xs">Answer:</span><input type="text" class="quiz-input w-32 p-2 text-center text-xs font-bold rounded-lg" data-answer="7.82"></div>
+                            </div>
+                            
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q8. Written method: 45.67 + 76.5</span>
+                                <div class="flex items-center justify-between"><span class="text-xs">Answer:</span><input type="text" class="quiz-input w-32 p-2 text-center text-xs font-bold rounded-lg" data-answer="122.17"></div>
+                            </div>
+                            
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q9. Written method: 8.64 - 6.42</span>
+                                <div class="flex items-center justify-between"><span class="text-xs">Answer:</span><input type="text" class="quiz-input w-32 p-2 text-center text-xs font-bold rounded-lg" data-answer="2.22"></div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q10. Written method: 77.7 - 38.66</span>
+                                <div class="flex items-center justify-between"><span class="text-xs">Answer:</span><input type="text" class="quiz-input w-32 p-2 text-center text-xs font-bold rounded-lg" data-answer="39.04"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Challenge -->
+                    <div class="exercise-page hidden bg-red-900/40 p-5 rounded-2xl border border-red-400/30">
+                        <h4 class="text-xl font-bold text-red-300 mb-4 border-b border-red-400/30 pb-2">Challenge (Hard)</h4>
+                        <div class="space-y-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm w-full">Q11. Work out: 10 - 3.74</span>
+                                <div class="flex items-center justify-between w-full">
+                                    <span class="text-xs">Answer:</span>
+                                    <input type="text" class="quiz-input w-32 p-2 text-center text-sm font-bold rounded-lg" data-answer="6.26" placeholder="?">
+                                </div>
+                            </div>
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm w-full">Q12. Bijoux spends $1.50 on a ticket, $1.75 on food and $0.85 on a drink. How much does she spend in total?</span>
+                                <div class="flex items-center justify-between w-full">
+                                    <span class="text-xs">Total ($):</span>
+                                    <input type="text" class="quiz-input w-32 p-2 text-center text-sm font-bold rounded-lg" data-answer="4.10|4.1" placeholder="?">
+                                </div>
+                            </div>
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm w-full">Q13. Bijoux pays with a $5 note. How much change does she receive?</span>
+                                <div class="flex items-center justify-between w-full">
+                                    <span class="text-xs">Change ($):</span>
+                                    <input type="text" class="quiz-input w-32 p-2 text-center text-sm font-bold rounded-lg" data-answer="0.90|0.9" placeholder="?">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PDF Exercise Level 3 (Multiply & Divide) -->
+                <div id="pdf-level-3" class="pdf-content hidden h-full overflow-y-auto custom-scroll pr-4">
+                    
+                    <!-- Focus -->
+                    <div class="exercise-page bg-blue-900/40 p-5 rounded-2xl border border-blue-400/30">
+                        <h4 class="text-xl font-bold text-blue-300 mb-4 border-b border-blue-400/30 pb-2">Focus (Easy)</h4>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm">Q1. Use mental method: 0.3 &times; 6</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">Ans = </span><input type="text" class="quiz-input w-16 p-1 text-center text-xs font-bold rounded-lg" data-answer="1.8"></div>
+                                </div>
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm">Q2. Use mental method: 0.2 &times; 8</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">Ans = </span><input type="text" class="quiz-input w-16 p-1 text-center text-xs font-bold rounded-lg" data-answer="1.6"></div>
+                                </div>
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm">Q3. Use mental method: 0.04 &times; 2</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">Ans = </span><input type="text" class="quiz-input w-20 p-1 text-center text-xs font-bold rounded-lg" data-answer="0.08"></div>
+                                </div>
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm">Q4. Divide: 8.26 &divide; 2</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">Ans = </span><input type="text" class="quiz-input w-20 p-1 text-center text-xs font-bold rounded-lg" data-answer="4.13"></div>
+                                </div>
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm">Q5. Divide: 18.66 &divide; 6</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">Ans = </span><input type="text" class="quiz-input w-20 p-1 text-center text-xs font-bold rounded-lg" data-answer="3.11"></div>
+                                </div>
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm">Q6. Divide: 45.05 &divide; 5</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">Ans = </span><input type="text" class="quiz-input w-20 p-1 text-center text-xs font-bold rounded-lg" data-answer="9.01"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Practice -->
+                    <div class="exercise-page hidden bg-purple-900/40 p-5 rounded-2xl border border-purple-400/30">
+                        <h4 class="text-xl font-bold text-purple-300 mb-4 border-b border-purple-400/30 pb-2">Practice (Medium)</h4>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm w-full">Q7. Make easier and solve: 150 &times; 0.2 (using 150 &times; 2 &divide; 10)</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs font-bold">Ans = </span>
+                                        <input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="30" placeholder="#">
+                                    </div>
+                                </div>
+                                
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm w-full">Q8. Make easier and solve: 1200 &times; 0.03</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs font-bold">Ans = </span>
+                                        <input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="36" placeholder="#">
+                                    </div>
+                                </div>
+                                
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm w-full">Q9. Make easier: 2.3 &times; 9 (hint: 2.3 &times; 10 - 2.3)</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs font-bold">Ans = </span>
+                                        <input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="20.7" placeholder="#">
+                                    </div>
+                                </div>
+                                
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm w-full">Q10. Make easier: 5.7 &times; 9</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs font-bold">Ans = </span>
+                                        <input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="51.3" placeholder="#">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Challenge -->
+                    <div class="exercise-page hidden bg-red-900/40 p-5 rounded-2xl border border-red-400/30">
+                        <h4 class="text-xl font-bold text-red-300 mb-4 border-b border-red-400/30 pb-2">Challenge (Hard)</h4>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-1 gap-4">
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm w-full">Q11. In 1g of pink gold there is 0.05g of silver. How many grams of silver in 30g of pink gold?</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs">Ans = </span>
+                                        <input type="text" class="quiz-input w-20 p-2 text-center text-xs font-bold rounded-lg" data-answer="1.5" placeholder="?">
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm w-full">Q12. Kai pays $7.45 for five bags of cement. How much does one bag of cement cost?</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs">Ans ($) = </span>
+                                        <input type="text" class="quiz-input w-20 p-2 text-center text-xs font-bold rounded-lg" data-answer="1.49" placeholder="#">
+                                    </div>
+                                </div>
+                                
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm w-full">Q13. Make easier and solve: 16.47 &divide; 30 (use &divide; 10 then &divide; 3)</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs">Ans = </span>
+                                        <input type="text" class="quiz-input w-20 p-2 text-center text-xs font-bold rounded-lg" data-answer="0.549" placeholder="#">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- NAVIGATION BUTTONS FOOTER -->
+                <div class="absolute bottom-0 left-0 right-0 flex justify-between items-center pt-4 bg-transparent z-10 border-t border-white/20">
+                    <button id="ex-prev-btn" onclick="prevExercisePage()" class="px-6 py-2 bg-white/20 hover:bg-white/30 rounded-xl font-bold transition-all text-white flex items-center gap-2 invisible">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg> Previous
+                    </button>
+                    <span id="ex-page-indicator" class="text-white/60 font-bold text-sm tracking-wide"></span>
+                    <button id="ex-next-btn" onclick="nextExercisePage()" class="px-6 py-2 bg-purple-600 hover:bg-purple-500 shadow-lg rounded-xl font-bold transition-all text-white flex items-center gap-2 invisible">
+                        Next <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('quest-modal');
+        const nextBtn = document.getElementById('next-level-btn');
+        const prevBtn = document.getElementById('prev-level-btn');
+        const contentPanel = document.getElementById('modal-content-panel');
+        let currentLevel = 1;
+        const totalLevels = 3;
+
+        function openLevel(level) {
+            document.querySelectorAll('.quest-node').forEach((n, i) => n.classList.toggle('active', i + 1 === level));
+            
+            document.querySelectorAll('.level-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
+            });
+            
+            const targetLevel = document.getElementById(`level-${level}`);
+            if (targetLevel) {
+                targetLevel.classList.remove('hidden');
+                targetLevel.classList.add('block');
+            }
+            
+            currentLevel = level;
+            
+            modal.style.display = 'flex';
+            
+            nextBtn.classList.toggle('hidden', level >= totalLevels);
+            prevBtn.classList.toggle('hidden', level <= 1);
+        }
+
+        function slide(dir) {
+            const nextLvl = currentLevel + dir;
+            if (nextLvl < 1 || nextLvl > totalLevels) return;
+            
+            contentPanel.style.opacity = '0';
+            contentPanel.style.transform = `translateX(${dir * -40}px)`;
+            
+            setTimeout(() => {
+                openLevel(nextLvl);
+                contentPanel.style.transition = 'none';
+                contentPanel.style.transform = `translateX(${dir * 40}px)`;
+                void contentPanel.offsetWidth; 
+                contentPanel.style.transition = 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+                contentPanel.style.opacity = '1';
+                contentPanel.style.transform = 'translateX(0)';
+            }, 300);
+        }
+
+        function nextLevel(e) { e.stopPropagation(); slide(1); }
+        function prevLevel(e) { e.stopPropagation(); slide(-1); }
+        
+        function closeModal() { 
+            modal.style.display = 'none';
+        }
+        
+        const examplesModal = document.getElementById('examples-modal');
+        const pdfExerciseModal = document.getElementById('pdf-exercise-modal');
+
+        function openMoreExamples(level) {
+            document.querySelectorAll('.extra-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
+            });
+            
+            const extraTarget = document.getElementById(`extra-level-${level}`);
+            if (extraTarget) {
+                extraTarget.classList.remove('hidden');
+                extraTarget.classList.add('block');
+            }
+            
+            examplesModal.style.display = 'flex';
+        }
+        
+        function closeMoreExamples() {
+            examplesModal.style.display = 'none';
+        }
+
+        let currentExercisePage = 0;
+        let activeExercisePages = [];
+
+        function openPdfExercise(level) {
+            document.querySelectorAll('.pdf-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
+            });
+            
+            const levelContainer = document.getElementById(`pdf-level-${level}`);
+            if (levelContainer) {
+                levelContainer.classList.remove('hidden');
+                levelContainer.classList.add('block');
+                
+                activeExercisePages = Array.from(levelContainer.querySelectorAll('.exercise-page'));
+                currentExercisePage = 0;
+                
+                updateExercisePagination();
+                
+                pdfExerciseModal.style.display = 'flex';
+            }
+        }
+
+        function updateExercisePagination() {
+            activeExercisePages.forEach((page, index) => {
+                if (index === currentExercisePage) {
+                    page.classList.remove('hidden');
+                    page.classList.add('block');
+                } else {
+                    page.classList.add('hidden');
+                    page.classList.remove('block');
+                }
+            });
+
+            const exPrevBtn = document.getElementById('ex-prev-btn');
+            const exNextBtn = document.getElementById('ex-next-btn');
+            const indicator = document.getElementById('ex-page-indicator');
+
+            if (exPrevBtn) exPrevBtn.style.visibility = currentExercisePage > 0 ? 'visible' : 'hidden';
+            if (exNextBtn) exNextBtn.style.visibility = currentExercisePage < activeExercisePages.length - 1 ? 'visible' : 'hidden';
+            
+            if (indicator && activeExercisePages.length > 0) {
+                indicator.textContent = `Section ${currentExercisePage + 1} of ${activeExercisePages.length}`;
+            }
+        }
+
+        function nextExercisePage() {
+            if (currentExercisePage < activeExercisePages.length - 1) {
+                currentExercisePage++;
+                updateExercisePagination();
+            }
+        }
+
+        function prevExercisePage() {
+            if (currentExercisePage > 0) {
+                currentExercisePage--;
+                updateExercisePagination();
+            }
+        }
+
+        function closePdfExercise() {
+            pdfExerciseModal.style.display = 'none';
+        }
+
+        // Global Drag & Drop
+        function allowDrop(ev) { ev.preventDefault(); }
+        function drag(ev) { ev.dataTransfer.setData("text", ev.target.id); }
+
+        // L1 Ordering
+        let l1Correct = 0;
+        function dropL1(ev) {
+            ev.preventDefault();
+            const data = ev.dataTransfer.getData("text");
+            const el = document.getElementById(data);
+            const expected = ev.target.getAttribute('data-expected');
+            
+            if(el.getAttribute('data-val') === expected && !ev.target.hasChildNodes()) {
+                ev.target.appendChild(el);
+                el.draggable = false;
+                el.classList.add('!bg-green-500/40', '!border-green-400');
+                ev.target.classList.add('filled', 'border-green-400', 'bg-green-500/10');
+                l1Correct++;
+                if(l1Correct === 3) document.getElementById('l1-success').classList.remove('hidden');
+            } else {
+                el.classList.add('animate-[flashRed_0.4s_ease]');
+                setTimeout(() => el.classList.remove('animate-[flashRed_0.4s_ease]'), 400);
+            }
+        }
+
+        // Auto-Check Inputs
+        document.querySelectorAll('.quiz-input').forEach(input => {
+            input.addEventListener('input', function() {
+                const val = this.value.trim().toLowerCase().replace(/\s/g, "");
+                let answers = this.getAttribute('data-answer');
+                
+                if (!answers) return;
+                
+                answers = answers.toLowerCase().split('|');
+                this.classList.remove('correct', 'incorrect');
+                if (val !== '') {
+                    if (answers.includes(val)) {
+                        this.classList.add('correct');
+                    } else {
+                        this.classList.add('incorrect');
+                    }
+                }
+            });
+        });
+        function applyEmbedMode() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get("embed") === "1") {
+                document.body.classList.add("embed-mode");
+            }
+            const levelParam = params.get("level") || params.get("tab");
+            if (levelParam && typeof openLevel === "function") {
+                const level = Math.max(1, Math.min(3, parseInt(levelParam, 10) || 1));
+                setTimeout(() => openLevel(level), 150);
+            }
+        }
+
+        window.addEventListener("load", applyEmbedMode);
+    </script>
+</body>
+</html>

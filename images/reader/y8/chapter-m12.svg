@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" width="1200" height="720">
+  <rect width="1200" height="720" fill="#f6f1e6"/>
+  
+    <text x="72" y="108" fill="#1e293b" font-family="Plus Jakarta Sans, Segoe UI, sans-serif" font-size="54" font-weight="700">12 Probability</text>
+    <line x1="180" y1="360" x2="1020" y2="360" stroke="#1e293b" stroke-width="8"/>
+    <circle cx="180" cy="360" r="14" fill="#1e293b"/>
+    <circle cx="1020" cy="360" r="14" fill="#1e293b"/>
+    <circle cx="390" cy="360" r="16" fill="#dc2626"/>
+    <text x="180" y="430" text-anchor="middle" fill="#1e293b" font-family="Plus Jakarta Sans, Segoe UI, sans-serif" font-size="32" font-weight="700">0</text>
+    <text x="1020" y="430" text-anchor="middle" fill="#1e293b" font-family="Plus Jakarta Sans, Segoe UI, sans-serif" font-size="32" font-weight="700">1</text>
+    <text x="390" y="300" text-anchor="middle" fill="#dc2626" font-family="Plus Jakarta Sans, Segoe UI, sans-serif" font-size="36" font-weight="700">1/6</text>
+    <text x="600" y="640" text-anchor="middle" fill="#1e293b" font-family="Plus Jakarta Sans, Segoe UI, sans-serif" font-size="36" font-weight="700">equally likely outcomes</text>
+  
+</svg>

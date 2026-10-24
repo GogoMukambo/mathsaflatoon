@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" width="1200" height="720">
+  <rect width="1200" height="720" fill="#f6f1e6"/>
+  
+    <text x="72" y="108" fill="#1e293b" font-family="Plus Jakarta Sans, Segoe UI, sans-serif" font-size="54" font-weight="700">13 Position</text>
+    <polygon points="280,460 280,280 420,280 420,360 520,360 520,460" fill="#dbeafe" stroke="#2563eb" stroke-width="6"/>
+    <polygon points="920,460 920,280 780,280 780,360 680,360 680,460" fill="#fde68a" stroke="#d97706" stroke-width="6"/>
+    <text x="400" y="520" text-anchor="middle" fill="#2563eb" font-family="Plus Jakarta Sans, Segoe UI, sans-serif" font-size="28" font-weight="700">shape</text>
+    <text x="800" y="520" text-anchor="middle" fill="#d97706" font-family="Plus Jakarta Sans, Segoe UI, sans-serif" font-size="28" font-weight="700">reflection</text>
+    <text x="600" y="640" text-anchor="middle" fill="#1e293b" font-family="Plus Jakarta Sans, Segoe UI, sans-serif" font-size="36" font-weight="700">reflect and rotate</text>
+  
+</svg>

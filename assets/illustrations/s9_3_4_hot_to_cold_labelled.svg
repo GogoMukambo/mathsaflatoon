@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" role="img">
+  <rect width="800" height="500" fill="#fff7ed"/>
+  <text x="400" y="40" text-anchor="middle" font-size="20" font-weight="700" fill="#9a3412">Thermal energy: hot ’ cold</text>
+  <rect x="100" y="100" width="200" height="120" rx="12" fill="#fed7aa" stroke="#ea580c" stroke-width="3"/>
+  <text x="200" y="140" text-anchor="middle" font-size="14" font-weight="600">Hot drink</text>
+  <text x="200" y="168" text-anchor="middle" fill="#c2410c" font-size="13">Higher temperature</text>
+  <rect x="500" y="100" width="200" height="120" rx="12" fill="#dbeafe" stroke="#2563eb" stroke-width="3"/>
+  <text x="600" y="140" text-anchor="middle" font-size="14" font-weight="600">Your hands</text>
+  <text x="600" y="168" text-anchor="middle" fill="#1d4ed8" font-size="13">Lower temperature</text>
+  <path d="M 310 160 L 490 160" stroke="#dc2626" stroke-width="4" marker-end="url(#a2)"/>
+  <defs><marker id="a2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,1 L8,5 L0,9" fill="#dc2626"/></marker></defs>
+  <text x="400" y="145" text-anchor="middle" fill="#dc2626" font-size="13" font-weight="600">Thermal energy transfer</text>
+  <rect x="120" y="280" width="260" height="140" rx="10" fill="#f0f9ff" stroke="#0284c7" stroke-width="2"/>
+  <text x="250" y="315" text-anchor="middle" font-size="14" font-weight="600">Ice in hand</text>
+  <text x="250" y="345" text-anchor="middle" fill="#64748b" font-size="12">Cold does NOT flow in</text>
+  <text x="250" y="375" text-anchor="middle" fill="#0369a1" font-size="12">Energy leaves hand ’ ice</text>
+  <rect x="420" y="280" width="260" height="140" rx="10" fill="#fef2f2" stroke="#ef4444" stroke-width="2"/>
+  <text x="550" y="315" text-anchor="middle" font-size="14" font-weight="600">Open window</text>
+  <text x="550" y="345" text-anchor="middle" fill="#64748b" font-size="12">Warm room ’ cold outside</text>
+  <text x="550" y="375" text-anchor="middle" fill="#b91c1c" font-size="12">Dissipation to surroundings</text>
+  <text x="400" y="460" text-anchor="middle" fill="#0f172a" font-size="14" font-weight="600">Always from hotter place to colder place</text>
+</svg>

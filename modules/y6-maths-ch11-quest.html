@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abhyaas — Graphs Quest</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap');
+        
+        :root {
+            --brand-blue: #0f4c81;
+            --light-blue: #e0f2fe;
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.3);
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #020617, #1e3a8a, #3b82f6);
+            background-attachment: fixed;
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+            user-select: none;
+        }
+
+        h1, h2, h3, h4, .font-heading {
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        .bg-pattern {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: -1;
+            background-image: url("data:image/svg+xml,%3Csvg width='300' height='300' viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cg font-family='Fredoka, sans-serif' font-weight='bold' fill='rgba(255,255,255,0.05)'%3E%3Cpath d='M30 180 L270 180 M150 60 L150 270' stroke='rgba(255,255,255,0.1)' stroke-width='4'/%3E%3Cpath d='M50 250 L250 50' stroke='rgba(255,255,255,0.1)' stroke-width='4'/%3E%3Ctext x='160' y='80' font-size='30'%3Ey%3C/text%3E%3Ctext x='250' y='170' font-size='30'%3Ex%3C/text%3E%3Ccircle cx='150' cy='150' r='5' fill='rgba(255,255,255,0.2)'/%3E%3Ccircle cx='200' cy='100' r='5' fill='rgba(255,255,255,0.2)'/%3E%3C/g%3E%3C/svg%3E");
+            animation: floatPattern 60s linear infinite;
+        }
+
+        @keyframes floatPattern {
+            0% { background-position: 0 0; }
+            100% { background-position: 300px 300px; }
+        }
+
+        @keyframes pulseNode {
+            0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 255, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes flashRed {
+            0%, 100% { background-color: rgba(239, 68, 68, 0.4); border-color: #f87171; transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .quest-node {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            border: 3px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+
+        .quest-node.active, .quest-node:hover {
+            background: white;
+            color: var(--brand-blue);
+            transform: translate(-50%, -50%) scale(1.15);
+            animation: pulseNode 2s infinite;
+        }
+
+        .quest-node-label {
+            position: absolute;
+            top: 70px;
+            width: 140px;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            pointer-events: none;
+        }
+
+        .quiz-input {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+        .quiz-input:focus { outline: none; background: rgba(255, 255, 255, 0.3); border-color: white; }
+        .quiz-input.correct {
+            background: rgba(34, 197, 94, 0.4) !important;
+            color: #ffffff;
+            border-color: #4ade80 !important;
+            box-shadow: 0 0 20px rgba(74, 222, 128, 0.7);
+            transform: scale(1.05);
+            pointer-events: none;
+        }
+        .quiz-input.incorrect {
+            animation: flashRed 0.4s ease;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 15, 40, 0.4);
+            backdrop-filter: blur(8px);
+            z-index: 50;
+            overflow-y: auto;
+            padding: 2rem 1rem;
+        }
+
+
+        body.embed-mode header.glass-panel {
+            display: none;
+        }
+
+        body.embed-mode main {
+            min-height: 85vh;
+            padding-top: 1.5rem;
+        }
+
+        body.embed-mode #quest-modal {
+            padding-top: 0.5rem;
+        }
+
+        /* Interactive Specific Styles */
+        .drag-card {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.6);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1rem;
+            border-radius: 0.75rem;
+            cursor: grab;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: transform 0.2s;
+            user-select: none;
+            text-align: center;
+        }
+        .drag-card:active { cursor: grabbing; transform: scale(0.95); }
+        
+        .drop-slot {
+            width: 100px;
+            height: 50px;
+            border: 2px dashed rgba(255,255,255,0.4);
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .drop-slot.filled { border-style: solid; }
+        
+        .grid-point {
+            width: 16px;
+            height: 16px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .grid-point:hover { background: rgba(255,255,255,0.8); transform: scale(1.5); }
+        .grid-point.active { background: #4ade80; box-shadow: 0 0 10px #4ade80; }
+        
+        .grid-line { stroke: rgba(255,255,255,0.2); stroke-width: 1; }
+        .axis-line { stroke: rgba(255,255,255,0.8); stroke-width: 2; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="bg-pattern"></div>
+
+    <header class="glass-panel sticky top-0 z-40 border-b-0 border-white/20">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <svg class="w-8 h-8 text-white drop-shadow-md" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"></path></svg>
+                <h1 class="text-3xl font-bold tracking-wider drop-shadow-sm font-heading">Abhyaas</h1>
+            </div>
+            <span class="text-sm font-bold bg-white/10 text-white py-1.5 px-4 rounded-full shadow-md uppercase tracking-wide border border-white/30">Math Quest: Chapter 11</span>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto w-full px-4 py-12 relative flex flex-col items-center justify-center min-h-[70vh]">
+        
+        <div class="text-center mb-10">
+            <h2 class="text-5xl font-heading font-bold mb-4 drop-shadow-lg">Graphs</h2>
+            <p class="text-xl text-blue-100/80 font-bold max-w-2xl mx-auto">Master functions, coordinates, and interpreting straight-line graphs.</p>
+        </div>
+
+        <div class="relative w-full max-w-4xl h-[300px] mt-8">
+            <svg class="absolute top-0 left-0 w-full h-full drop-shadow-[0_0_10px_rgba(255,255,255,0.4)]" viewBox="0 0 1000 300" preserveAspectRatio="none">
+                <path d="M 100 150 C 200 150, 200 60, 300 60 C 400 60, 400 150, 500 150 C 600 150, 600 240, 700 240 C 800 240, 800 150, 900 150" 
+                      fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="8" stroke-linecap="round" stroke-dasharray="15, 15" />
+            </svg>
+
+            <button class="quest-node pulse" style="left: 10%; top: 50%;" onclick="openLevel(1)">1<span class="quest-node-label">Functions</span></button>
+            <button class="quest-node" style="left: 30%; top: 20%;" onclick="openLevel(2)">2<span class="quest-node-label">Graphs of Functions</span></button>
+            <button class="quest-node" style="left: 50%; top: 50%;" onclick="openLevel(3)">3<span class="quest-node-label">Parallel to Axes</span></button>
+            <button class="quest-node" style="left: 70%; top: 80%;" onclick="openLevel(4)">4<span class="quest-node-label">Interpreting Rates</span></button>
+        </div>
+    </main>
+
+    <!-- MODAL -->
+    <div id="quest-modal" class="modal-overlay flex items-center justify-center">
+        <button onclick="prevLevel(event)" class="fixed left-2 md:left-8 top-1/2 -translate-y-1/2 w-14 h-14 md:w-20 md:h-20 rounded-full bg-white/20 backdrop-blur-md hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-all duration-300 border-2 border-white/40 shadow-[0_0_20px_rgba(255,255,255,0.3)] z-[60] cursor-pointer" id="prev-level-btn"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path></svg></button>
+        <button onclick="nextLevel(event)" class="fixed right-2 md:right-8 top-1/2 -translate-y-1/2 w-14 h-14 md:w-20 md:h-20 rounded-full bg-white/20 backdrop-blur-md hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-all duration-300 border-2 border-white/40 shadow-[0_0_20px_rgba(255,255,255,0.3)] z-[60] cursor-pointer" id="next-level-btn"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg></button>
+
+        <div id="modal-content-panel" class="glass-panel w-full max-w-4xl rounded-3xl p-6 md:p-10 relative">
+            <button onclick="closeModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-colors border border-white/40 z-10"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+
+            <!-- Level 1: Functions -->
+            <div id="level-1" class="level-content hidden">
+                <h2 class="text-3xl font-heading font-bold mb-6 flex items-center gap-3">
+                    <span class="bg-white text-blue-900 w-10 h-10 rounded-full flex items-center justify-center text-xl">1</span>
+                    Functions
+                </h2>
+                
+                <p class="text-lg mb-6 bg-white/10 border-l-4 border-white p-4 rounded-r-xl font-bold">
+                    A function shows the relationship between two variables. You often use <strong>x</strong> and <strong>y</strong> to represent these variables.
+                </p>
+
+                <!-- SOLVED EXAMPLE -->
+                <div class="bg-blue-900/50 border-l-4 border-blue-400 p-4 rounded-r-xl mb-6 shadow-lg">
+                    <h4 class="font-bold text-blue-200 mb-2 text-xl">Solved Example: Writing a Function</h4>
+                    <p>You can exchange 1 US dollar ($1) for 70 Indian rupees (₹70).</p>
+                    <ul class="list-decimal ml-5 text-sm text-blue-100 mt-2 space-y-1">
+                        <li>Let 'x' be US dollars. Let 'y' be Indian rupees.</li>
+                        <li>For every 1 unit of x, you get 70 units of y.</li>
+                        <li>The relationship is: multiply x by 70 to get y.</li>
+                    </ul>
+                    <p class="font-bold mt-3 text-lg text-green-300">Answer: y = 70x</p>
+                </div>
+
+                <!-- Interactive Component -->
+                <div class="bg-black/10 rounded-3xl p-6 border border-white/20 mb-6 flex flex-col items-center gap-6">
+                    <h3 class="text-xl font-heading text-center text-blue-100">Interactive: Match the Function</h3>
+                    <p class="text-center font-bold text-sm text-blue-100 mb-4">Drag the correct function rule to match the scenario.</p>
+                    
+                    <div id="l1-source" class="flex gap-4 min-h-[60px] flex-wrap justify-center">
+                        <div draggable="true" ondragstart="drag(event)" id="f1" data-val="y=x-10" class="drag-card shadow-lg bg-teal-500/40">y = x - 10</div>
+                        <div draggable="true" ondragstart="drag(event)" id="f2" data-val="y=x+10" class="drag-card shadow-lg bg-orange-500/40">y = x + 10</div>
+                        <div draggable="true" ondragstart="drag(event)" id="f3" data-val="y=10x" class="drag-card shadow-lg bg-purple-500/40">y = 10x</div>
+                    </div>
+
+                    <div class="flex flex-col gap-4 w-full">
+                        <div class="flex items-center justify-between bg-white/5 p-4 rounded-xl border border-white/10">
+                            <span class="font-bold">A book (y) costs $10 more than a diary (x)</span>
+                            <div class="drop-slot" ondrop="dropL1(event)" ondragover="allowDrop(event)" data-expected="y=x+10"></div>
+                        </div>
+                    </div>
+
+                    <div id="l1-success" class="hidden text-green-300 font-bold text-xl animate-bounce mt-2">Function Matched!</div>
+                </div>
+            </div>
+
+            <!-- Level 2: Graphs of Functions -->
+            <div id="level-2" class="level-content hidden">
+                <h2 class="text-3xl font-heading font-bold mb-6 flex items-center gap-3">
+                    <span class="bg-white text-blue-900 w-10 h-10 rounded-full flex items-center justify-center text-xl">2</span>
+                    Graphs of Functions
+                </h2>
+
+                <p class="text-lg mb-6 bg-white/10 border-l-4 border-white p-4 rounded-r-xl font-bold">
+                    You can display values of x and the corresponding values of y in a table, then use these values as <strong>coordinates</strong> to plot points on a graph.
+                </p>
+
+                <!-- SOLVED EXAMPLE -->
+                <div class="bg-blue-900/50 border-l-4 border-blue-400 p-4 rounded-r-xl mb-6 shadow-lg">
+                    <h4 class="font-bold text-blue-200 mb-2 text-xl">Solved Example: Plotting y = 0.5x</h4>
+                    <p>Show that the point (24, 12) is on the line y = 0.5x, but (15, 30) is not.</p>
+                    <ul class="list-decimal ml-5 text-sm text-blue-100 mt-2 space-y-1">
+                        <li>Test first point (24, 12): When x = 24, y = 0.5 × 24 = 12. Since 12 = 12, this point IS on the line.</li>
+                        <li>Test second point (15, 30): When x = 15, y = 0.5 × 15 = 7.5. Since 7.5 ≠ 30, this point is NOT on the line.</li>
+                    </ul>
+                </div>
+
+                <!-- Interactive Component -->
+                <div class="bg-black/10 rounded-3xl p-6 border border-white/20 mb-6 flex flex-col items-center">
+                    <h3 class="text-xl mb-4 font-heading text-center text-blue-100">Interactive: Plot y = x + 1</h3>
+                    <p class="font-bold text-sm mb-4">Click the correct grid points to plot the line y = x + 1. Find the points where x=0, x=1, and x=2.</p>
+                    
+                    <div class="relative w-64 h-64 bg-white/5 border border-white/20 rounded-lg mx-auto">
+                        <svg class="absolute inset-0 w-full h-full" viewBox="-1 -1 5 5">
+                            <!-- Grid -->
+                            <path class="grid-line" d="M0 -1 L0 5 M1 -1 L1 5 M2 -1 L2 5 M3 -1 L3 5 M4 -1 L4 5" />
+                            <path class="grid-line" d="M-1 0 L5 0 M-1 1 L5 1 M-1 2 L5 2 M-1 3 L5 3 M-1 4 L5 4" />
+                            <!-- Axes -->
+                            <line x1="-1" y1="0" x2="5" y2="0" class="axis-line" />
+                            <line x1="0" y1="-1" x2="0" y2="5" class="axis-line" />
+                        </svg>
+                        
+                        <!-- Interactive Points -->
+                        <div class="absolute bottom-[33%] left-[17%] grid-point" onclick="plotPoint(this, 0, 1)" style="transform: translate(-50%, 50%);"></div>
+                        <div class="absolute bottom-[17%] left-[17%] grid-point" onclick="plotPoint(this, 0, 0)" style="transform: translate(-50%, 50%);"></div> 
+                        
+                        <div class="absolute bottom-[50%] left-[33%]" style="transform: translate(-50%, 50%);">
+                            <div class="grid-point" onclick="plotPoint(this, 1, 2)"></div>
+                        </div>
+                        
+                        <div class="absolute bottom-[67%] left-[50%]" style="transform: translate(-50%, 50%);">
+                            <div class="grid-point" onclick="plotPoint(this, 2, 3)"></div>
+                        </div>
+                        
+                        <!-- Line to show on completion -->
+                        <svg id="l2-line" class="absolute inset-0 w-full h-full hidden" viewBox="-1 -1 5 5">
+                             <line x1="0" y1="1" x2="4" y2="5" stroke="#4ade80" stroke-width="0.1" transform="scale(1, -1) translate(0, -4)"/>
+                        </svg>
+                    </div>
+                    <div id="l2-feedback" class="mt-4 text-xl font-bold h-8 text-center"></div>
+                </div>
+            </div>
+
+            <!-- Level 3: Parallel to Axes -->
+            <div id="level-3" class="level-content hidden">
+                <h2 class="text-3xl font-heading font-bold mb-6 flex items-center gap-3">
+                    <span class="bg-white text-blue-900 w-10 h-10 rounded-full flex items-center justify-center text-xl">3</span>
+                    Lines Parallel to the Axes
+                </h2>
+                <p class="text-lg mb-6 bg-white/10 border-l-4 border-white p-4 rounded-r-xl font-bold">
+                    A line parallel to the y-axis has the equation <strong>x = [number]</strong>. A line parallel to the x-axis has the equation <strong>y = [number]</strong>.
+                </p>
+                
+                <!-- SOLVED EXAMPLE -->
+                <div class="bg-blue-900/50 border-l-4 border-blue-400 p-4 rounded-r-xl mb-6 shadow-lg">
+                    <h4 class="font-bold text-blue-200 mb-2 text-xl">Solved Example: Naming lines</h4>
+                    <p>A horizontal line passes through -3 on the y-axis. What is its name (equation)?</p>
+                    <ul class="list-decimal ml-5 text-sm text-blue-100 mt-2 space-y-1">
+                        <li>The line is horizontal, so it is parallel to the x-axis.</li>
+                        <li>Every point on this line has a y-coordinate of -3.</li>
+                    </ul>
+                    <p class="font-bold mt-3 text-lg text-green-300">Answer: y = -3</p>
+                </div>
+
+                <!-- Original Inputs -->
+                <div class="bg-white/10 rounded-3xl p-6 border border-white/20">
+                    <h3 class="text-2xl mb-4 font-heading text-center">Coordinate Challenge</h3>
+                    <div class="flex flex-col items-center gap-4">
+                        <div class="flex items-center justify-between w-full max-w-md bg-white/10 p-3 rounded-xl border border-white/20">
+                            <span class="font-bold">What is the equation of the x-axis?</span>
+                            <input type="text" class="quiz-input w-24 p-2 text-center font-bold rounded-lg" data-answer="y=0" placeholder="?">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Level 4: Interpreting Rates -->
+            <div id="level-4" class="level-content hidden">
+                <h2 class="text-3xl font-heading font-bold mb-6 flex items-center gap-3">
+                    <span class="bg-white text-blue-900 w-10 h-10 rounded-full flex items-center justify-center text-xl">4</span>
+                    Interpreting Graphs
+                </h2>
+                <p class="text-lg mb-6 bg-white/10 border-l-4 border-white p-4 rounded-r-xl font-bold">
+                    Graphs show how variables change. A graph sloping upwards has a <strong>positive gradient</strong> (increase). Sloping downwards is a <strong>negative gradient</strong> (decrease). Horizontal is <strong>zero gradient</strong>.
+                </p>
+                
+                <!-- SOLVED EXAMPLE -->
+                <div class="bg-blue-900/50 border-l-4 border-blue-400 p-4 rounded-r-xl mb-6 shadow-lg">
+                    <h4 class="font-bold text-blue-200 mb-2 text-xl">Solved Example: Rate of Change</h4>
+                    <p>A straight-line graph shows Cost ($) vs Time (min). At 4 minutes, the cost is $1.60. What is the rate per minute?</p>
+                    <ul class="list-decimal ml-5 text-sm text-blue-100 mt-2 space-y-1">
+                        <li>The graph is a straight line starting at 0, meaning the rate is constant.</li>
+                        <li>Divide total cost by total time: $1.60 ÷ 4 minutes.</li>
+                    </ul>
+                    <p class="font-bold mt-3 text-lg text-green-300">Answer: $0.40 per minute</p>
+                </div>
+                
+                <!-- Original Inputs -->
+                <div class="bg-white/10 rounded-3xl p-6 border border-white/20 flex flex-col items-center gap-4">
+                    <h3 class="text-2xl mb-2 font-heading text-center">Graph Interpretation</h3>
+                    <div class="flex items-center justify-between w-full max-w-md bg-white/10 p-3 rounded-xl border border-white/20">
+                        <span class="font-bold text-lg">If cost 'c' is $0.40 per minute 't', write the function:</span>
+                        <input type="text" class="quiz-input w-24 p-2 text-center font-bold rounded-lg" data-answer="c=0.4t" placeholder="c=...">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('quest-modal');
+        const nextBtn = document.getElementById('next-level-btn');
+        const prevBtn = document.getElementById('prev-level-btn');
+        const contentPanel = document.getElementById('modal-content-panel');
+        let currentLevel = 1;
+        const totalLevels = 4;
+
+        function openLevel(level) {
+            document.querySelectorAll('.quest-node').forEach((n, i) => n.classList.toggle('active', i + 1 === level));
+            document.querySelectorAll('.level-content').forEach(el => el.style.display = 'none');
+            document.getElementById(`level-${level}`).style.display = 'block';
+            currentLevel = level;
+            modal.style.display = 'flex';
+            nextBtn.classList.toggle('hidden', level >= totalLevels);
+            prevBtn.classList.toggle('hidden', level <= 1);
+        }
+
+        function slide(dir) {
+            const nextLvl = currentLevel + dir;
+            if (nextLvl < 1 || nextLvl > totalLevels) return;
+            contentPanel.style.opacity = '0';
+            contentPanel.style.transform = `translateX(${dir * -40}px)`;
+            setTimeout(() => {
+                openLevel(nextLvl);
+                contentPanel.style.transition = 'none';
+                contentPanel.style.transform = `translateX(${dir * 40}px)`;
+                void contentPanel.offsetWidth; 
+                contentPanel.style.transition = 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+                contentPanel.style.opacity = '1';
+                contentPanel.style.transform = 'translateX(0)';
+            }, 300);
+        }
+
+        function nextLevel(e) { e.stopPropagation(); slide(1); }
+        function prevLevel(e) { e.stopPropagation(); slide(-1); }
+        function closeModal() { modal.style.display = 'none'; }
+        modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+        // Global Drag & Drop
+        function allowDrop(ev) { ev.preventDefault(); }
+        function drag(ev) { ev.dataTransfer.setData("text", ev.target.id); }
+
+        // L1 Matching
+        function dropL1(ev) {
+            ev.preventDefault();
+            const data = ev.dataTransfer.getData("text");
+            const el = document.getElementById(data);
+            const expected = ev.target.getAttribute('data-expected');
+            
+            if(el.getAttribute('data-val') === expected && !ev.target.hasChildNodes()) {
+                ev.target.appendChild(el);
+                el.draggable = false;
+                el.classList.add('!bg-green-500/40', '!border-green-400');
+                ev.target.classList.add('filled', 'border-green-400', 'bg-green-500/10');
+                document.getElementById('l1-success').classList.remove('hidden');
+            } else {
+                el.classList.add('animate-[flashRed_0.4s_ease]');
+                setTimeout(() => el.classList.remove('animate-[flashRed_0.4s_ease]'), 400);
+            }
+        }
+
+        // L2 Plotting
+        let pointsPlotted = 0;
+        function plotPoint(element, expectedX, expectedY) {
+            if(element.classList.contains('active')) return; // Already clicked
+
+            const isCorrect = (expectedY === expectedX + 1); 
+
+            const feedback = document.getElementById('l2-feedback');
+
+            if (isCorrect) {
+                element.classList.add('active');
+                pointsPlotted++;
+                feedback.innerHTML = `<span class='text-green-400'>Point (${expectedX}, ${expectedY}) plotted!</span>`;
+                
+                if(pointsPlotted === 3) {
+                    document.getElementById('l2-line').classList.remove('hidden');
+                    feedback.innerHTML = `<span class='text-green-400'>Line Complete!</span>`;
+                }
+            } else {
+                element.classList.add('animate-[flashRed_0.4s_ease]');
+                setTimeout(() => element.classList.remove('animate-[flashRed_0.4s_ease]'), 400);
+                feedback.innerHTML = `<span class='text-red-400'>Incorrect point. Try again!</span>`;
+            }
+        }
+
+        // Auto-Check Inputs
+        document.querySelectorAll('.quiz-input').forEach(input => {
+            input.addEventListener('input', function() {
+                const val = this.value.trim().toLowerCase().replace(/\s/g, "");
+                const answer = this.getAttribute('data-answer').toLowerCase().replace(/\s/g, "");
+                this.classList.remove('correct', 'incorrect');
+                if (val !== '') {
+                    if (val === answer) this.classList.add('correct');
+                    else this.classList.add('incorrect');
+                }
+            });
+        });
+        function applyEmbedMode() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get("embed") === "1") {
+                document.body.classList.add("embed-mode");
+            }
+            const levelParam = params.get("level");
+            if (levelParam) {
+                const level = Math.max(1, Math.min(4, parseInt(levelParam, 10) || 1));
+                setTimeout(() => openLevel(level), 150);
+            }
+        }
+
+        window.addEventListener("load", applyEmbedMode);
+    </script>
+</body>
+</html>

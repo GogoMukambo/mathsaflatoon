@@ -1,0 +1,535 @@
+window.STUDY_YEARS.push({
+  id: "8",
+  title: "Year 8",
+  stage: "Year 8",
+  book: "Learner’s Book",
+  intro:
+    "Choose a chapter. Cards follow the Science Learner’s Book (Second Edition).",
+  units: [
+    {
+      id: "1",
+      title: "1 Photosynthesis and the carbon cycle",
+      strand: "Biology · Earth",
+      intro: "How plants make food, what affects the rate, how carbon moves around Earth, and why climate is changing.",
+      topics: [
+        {
+          id: "1.1",
+          title: "Photosynthesis",
+          cards: [
+            { kind: "Key idea", front: "What is photosynthesis?", back: "The process in green plants (and some other organisms) that uses light energy to make glucose from carbon dioxide and water, releasing oxygen." },
+            { kind: "Recall", front: "Word equation for photosynthesis?", back: "carbon dioxide + water → glucose + oxygen, in the presence of light and chlorophyll." },
+            { kind: "Recall", front: "Where does it happen in a leaf cell?", back: "In chloroplasts, which contain chlorophyll to absorb light." },
+            { kind: "Check", front: "Why are most leaves broad and thin?", back: "Large surface to catch light; a short distance for gases to diffuse to and from cells." },
+            { kind: "Recall", front: "What is chlorophyll?", back: "The green pigment in chloroplasts that absorbs light energy for photosynthesis. It absorbs mainly red and blue light and reflects green." },
+            { kind: "Check", front: "Why is photosynthesis important?", back: "It makes food (glucose) for plants and for almost all food chains, and it releases the oxygen that aerobic organisms need." },
+            { kind: "Check", front: "How do seedlings grown in the dark differ from those in the light?", back: "They are pale (little chlorophyll), tall and spindly, with weak leaves — they cannot photosynthesise properly without light." },
+          ],
+        },
+        {
+          id: "1.2",
+          title: "More about photosynthesis",
+          cards: [
+            { kind: "Key idea", front: "What can limit the rate of photosynthesis?", back: "Light intensity, carbon dioxide concentration, and temperature. The factor in shortest supply limits the rate." },
+            { kind: "Recall", front: "What happens to the glucose made?", back: "Used in respiration, stored as starch, or built into cellulose, proteins and oils." },
+            { kind: "Recall", front: "How can you test a leaf for starch?", back: "Boil to stop reactions, decolourise in ethanol (carefully), rinse, then add iodine. Blue-black means starch is present." },
+            { kind: "Check", front: "Why does rate rise then fall as temperature increases?", back: "Warmer means faster particle collisions — until enzymes denature and the rate drops." },
+            { kind: "Key idea", front: "Where in a plant does photosynthesis happen?", back: "Mainly in green leaves (and green stems). Those parts have chloroplasts. Roots and most flowers lack chlorophyll, so they cannot photosynthesise." },
+            { kind: "Recall", front: "Why do plants need magnesium and nitrate?", back: "Magnesium is needed to make chlorophyll. Nitrate is used to make amino acids and proteins for growth. Both can be supplied by fertiliser to raise yield." },
+            { kind: "Recall", front: "What are stomata?", back: "Tiny pores in the leaf, each bordered by guard cells. They let CO₂ in and O₂ and water vapour out." },
+          ],
+        },
+        {
+          id: "1.3",
+          title: "The carbon cycle",
+          cards: [
+            { kind: "Key idea", front: "How does carbon move between air and living things?", back: "Photosynthesis takes CO₂ from the air into plants. Feeding passes carbon along food chains. Respiration and combustion return CO₂ to the air." },
+            { kind: "Recall", front: "What do decomposers do in the cycle?", back: "They break down dead organisms and waste, releasing carbon dioxide (and returning minerals to the soil)." },
+            { kind: "Recall", front: "How is carbon locked underground?", back: "Over long times, remains can form fossil fuels and some rocks (for example limestone)." },
+            { kind: "Check", front: "Why does burning fossil fuels add extra CO₂?", back: "It releases carbon that had been stored for millions of years, faster than natural processes can remove it." },
+            { kind: "Recall", front: "Does a carbon atom change into a different element in photosynthesis?", back: "No. It stays a carbon atom but becomes part of a new compound (glucose) instead of CO₂." },
+            { kind: "Check", front: "How do photosynthesis and respiration change CO₂ in the air?", back: "Photosynthesis removes CO₂; respiration (and combustion) add it. If they are unbalanced, the amount in the atmosphere changes." },
+          ],
+        },
+        {
+          id: "1.4",
+          title: "Climate change",
+          cards: [
+            { kind: "Key idea", front: "How is climate change linked to the carbon cycle?", back: "Extra greenhouse gases, especially CO₂ and methane, trap more heat, so Earth’s average temperature and weather patterns shift." },
+            { kind: "Recall", front: "Name two human activities that increase greenhouse gases.", back: "Burning fossil fuels, deforestation, and some farming (for example methane from livestock and rice paddies)." },
+            { kind: "Recall", front: "Give two likely effects.", back: "Rising sea level from melting ice and expanding seawater; more extreme weather; habitat loss." },
+            { kind: "Check", front: "Why is planting trees not a complete fix on its own?", back: "Trees store carbon while they grow, but we also need to cut emissions. Forests can burn or be cut, releasing carbon again." },
+            { kind: "Key idea", front: "How does the greenhouse effect keep Earth warm?", back: "The Sun warms the ground. Some energy is radiated back. Greenhouse gases such as CO₂ trap part of that energy so it stays in the atmosphere instead of all escaping to space." },
+            { kind: "Recall", front: "Has Earth’s climate changed in the past?", back: "Yes — ice ages and warm periods happened naturally. A huge asteroid impact is linked to a mass extinction (including the non-bird dinosaurs)." },
+            { kind: "Recall", front: "Meteoroid, meteor, meteorite — what is the difference?", back: "A meteoroid is a rock in space. A meteor is the streak as it burns in the atmosphere. A meteorite is any piece that reaches the ground." },
+          ],
+        },
+      ],
+    },
+    {
+      id: "2",
+      title: "2 Properties of materials",
+      strand: "Chemistry",
+      intro: "Atoms and the Periodic Table, group trends, why elements form compounds, and simple versus giant structures.",
+      topics: [
+        {
+          id: "2.1",
+          title: "Atomic structure and the Periodic Table",
+          cards: [
+            { kind: "Key idea", front: "How is the Periodic Table arranged?", back: "Elements in order of atomic number. Periods are rows; groups are columns of elements with similar chemical properties." },
+            { kind: "Recall", front: "What do proton number and mass number tell you?", back: "Proton (atomic) number is the number of protons. Mass number is protons + neutrons." },
+            { kind: "Recall", front: "How are electrons arranged?", back: "In shells. The first shell holds 2, the next typically 8. The outer-shell electrons decide much of the chemistry." },
+            { kind: "Check", front: "Why do elements in the same group behave alike?", back: "They have the same number of outer-shell electrons, so they form similar types of ion or bond." },
+            { kind: "Recall", front: "Name the three particles in an atom and their charges.", back: "Proton +1 (nucleus), neutron 0 (nucleus), electron −1 (in shells / energy levels). Opposite charges attract by electrostatic forces." },
+            { kind: "Recall", front: "What is electronic structure?", back: "How electrons are arranged in shells, for example sodium 2,8,1. The last number is the outer-shell (highest energy level) count." },
+          ],
+        },
+        {
+          id: "2.2",
+          title: "Trends in groups within the Periodic Table",
+          cards: [
+            { kind: "Key idea", front: "How does reactivity change down Group 1?", back: "Alkali metals get more reactive down the group. They all react with water to make a hydroxide and hydrogen." },
+            { kind: "Recall", front: "What about Group 7 (halogens)?", back: "Reactivity decreases down the group. Fluorine and chlorine are more reactive than bromine and iodine." },
+            { kind: "Recall", front: "What are Group 0 (noble gases) like?", back: "Very unreactive because they have full outer shells, so they rarely form compounds." },
+            { kind: "Check", front: "Why can chlorine displace iodine from potassium iodide?", back: "Chlorine is more reactive, so it takes iodine’s place in the compound (a displacement reaction)." },
+            { kind: "Recall", front: "What are alkali metals, halogens and noble gases?", back: "Alkali metals: Group 1 (Li, Na, K…). Halogens: Group 7 (F, Cl, Br, I…). Noble gases: Group 0 (He, Ne, Ar…)." },
+            { kind: "Check", front: "Magnesium: name a metal in the same group and one in the same period.", back: "Same group (2): calcium or barium. Same period (3): sodium or aluminium (metals); silicon or chlorine as non-metals in that period." },
+          ],
+        },
+        {
+          id: "2.3",
+          title: "Why elements react to form compounds",
+          cards: [
+            { kind: "Key idea", front: "Why do atoms form compounds?", back: "To gain a more stable electron arrangement, often a full outer shell, by transferring or sharing electrons." },
+            { kind: "Recall", front: "Ionic bonding in one sentence?", back: "Metal atoms lose electrons to non-metals; oppositely charged ions attract." },
+            { kind: "Recall", front: "Covalent bonding in one sentence?", back: "Non-metal atoms share pairs of electrons." },
+            { kind: "Check", front: "Why is sodium chloride a compound, not a mixture?", back: "Sodium and chlorine are chemically combined in a fixed ratio, with new properties unlike the elements." },
+            { kind: "Recall", front: "How does an ion differ from an atom?", back: "An ion has gained or lost electrons, so its charge is not zero. The nucleus (protons and neutrons) stays the same." },
+            { kind: "Recall", front: "What is a molecule?", back: "A group of atoms joined by covalent bonds, such as H₂O, O₂ or CO₂. A dot-and-cross diagram shows the shared outer electrons." },
+            { kind: "Check", front: "Write the formula of sodium chloride and of water.", back: "NaCl (ionic, 1:1 ions). H₂O (covalent molecule: two hydrogen atoms share electrons with one oxygen)." },
+          ],
+        },
+        {
+          id: "2.4",
+          title: "Simple and giant structures",
+          cards: [
+            { kind: "Key idea", front: "Simple molecular vs giant structure?", back: "Simple molecules are small groups of atoms (like O₂ or H₂O). Giant structures are huge networks of ions or atoms (salt, diamond, metals)." },
+            { kind: "Recall", front: "Why do many simple molecules have low melting points?", back: "The covalent bonds inside molecules are strong, but the forces between molecules are weak, so little energy is needed to separate them." },
+            { kind: "Recall", front: "Why do ionic giants have high melting points?", back: "Strong electrostatic forces between ions throughout the lattice need a lot of energy to break." },
+            { kind: "Check", front: "Why does graphite conduct electricity but diamond does not?", back: "Graphite has delocalised electrons between layers. Diamond’s electrons are all locked in covalent bonds." },
+            { kind: "Recall", front: "What is a lattice? What is a macromolecule?", back: "A lattice is a regular 3D network of particles. A macromolecule is a giant covalent structure (diamond, graphite, silica) — one huge covalently bonded network." },
+            { kind: "Recall", front: "What are intermolecular forces?", back: "Weak attractions between simple molecules. They are much weaker than the covalent bonds inside the molecule, so the melting point is low." },
+          ],
+        },
+      ],
+    },
+    {
+      id: "3",
+      title: "3 Forces and energy",
+      strand: "Physics",
+      intro: "Density, the difference between heat and temperature, energy conservation, and how thermal energy moves.",
+      topics: [
+        {
+          id: "3.1",
+          title: "Density",
+          cards: [
+            { kind: "Key idea", front: "What is density?", back: "Mass per unit volume. density = mass / volume. Units often g/cm³ or kg/m³." },
+            { kind: "Recall", front: "How can you find the volume of an irregular solid?", back: "Displacement: the rise in water level in a measuring cylinder equals the object’s volume." },
+            { kind: "Recall", front: "Why do some objects float?", back: "They are less dense than the fluid they are in (or they displace a weight of fluid equal to their own weight)." },
+            { kind: "Check", front: "A 40 g block has volume 8 cm³. Density?", back: "40 / 8 = 5 g/cm³." },
+            { kind: "Recall", front: "Compare typical densities of solids, liquids and gases.", back: "Gases are much less dense (particles far apart). Most solids are denser than liquids, but ice is less dense than water. Hollow objects can float even if made of a dense material." },
+            { kind: "Check", front: "Density of mercury is 13.5 g/cm³. Mass of 4 cm³?", back: "Rearrange: mass = density × volume = 13.5 × 4 = 54 g." },
+          ],
+        },
+        {
+          id: "3.2",
+          title: "Heat and temperature",
+          cards: [
+            { kind: "Key idea", front: "Is heat the same as temperature?", back: "No. Temperature is how hot something is (average kinetic energy of particles). Thermal energy (heat) is energy transferred because of a temperature difference." },
+            { kind: "Recall", front: "What does a thermometer measure?", back: "Temperature, usually in °C — not the total energy stored." },
+            { kind: "Recall", front: "Why can a spark have a high temperature but little energy?", back: "Particles are moving very fast, but there are few of them, so little total thermal energy." },
+            { kind: "Check", front: "A lake and a cup of tea: which has more thermal energy?", back: "The lake, even if cooler: it contains far more particles." },
+            { kind: "Check", front: "Which needs more energy to rise 10 °C: 0.25 kg of water or a 375 000 kg pool?", back: "The pool — far more mass, so far more thermal energy is needed for the same temperature rise." },
+          ],
+        },
+        {
+          id: "3.3",
+          title: "Conservation of energy",
+          cards: [
+            { kind: "Key idea", front: "What does conservation of energy mean?", back: "Energy cannot be created or destroyed, only transferred or stored in different ways. The total stays the same." },
+            { kind: "Recall", front: "Name some energy stores.", back: "Kinetic, gravitational potential, chemical, elastic, thermal, nuclear." },
+            { kind: "Recall", front: "Why do machines never give ‘more energy out than in’?", back: "Some energy is always transferred to less useful stores, often thermal energy to the surroundings." },
+            { kind: "Check", front: "A falling ball speeds up. Where does the extra kinetic energy come from?", back: "From its gravitational store as it loses height — not from nowhere." },
+          ],
+        },
+        {
+          id: "3.4",
+          title: "Moving from hot to cold",
+          cards: [
+            { kind: "Key idea", front: "Which way does thermal energy flow?", back: "From a hotter region to a colder region, until temperatures are equal (thermal equilibrium)." },
+            { kind: "Recall", front: "What is a thermal conductor?", back: "A material that transfers thermal energy easily, such as metals. Insulators (air, plastics, wool) do this poorly." },
+            { kind: "Recall", front: "Why do we wear coats in winter?", back: "They reduce the rate of thermal energy loss from the body to cold air — they insulate, they do not ‘add heat’ by themselves." },
+            { kind: "Check", front: "Why does a metal spoon in soup feel hotter than a wooden one?", back: "Metal conducts thermal energy to your hand faster, even if both spoons are at the same temperature." },
+          ],
+        },
+        {
+          id: "3.5",
+          title: "Ways of transferring thermal energy",
+          cards: [
+            { kind: "Key idea", front: "Name the three main transfer methods.", back: "Conduction (through solids), convection (in fluids), and radiation (infrared, which can travel through a vacuum)." },
+            { kind: "Recall", front: "How does conduction work in a metal?", back: "Vibrating particles pass energy to neighbours, and delocalised electrons carry energy quickly along the metal." },
+            { kind: "Recall", front: "What is a convection current?", back: "Warmer fluid becomes less dense and rises; cooler, denser fluid sinks, transferring energy as it circulates." },
+            { kind: "Check", front: "How does energy from the Sun reach Earth?", back: "By radiation — there is no air in space for conduction or convection." },
+            { kind: "Recall", front: "What does emit mean, and why do fluids convect?", back: "Emit: give out radiation. When a fluid is heated it expands, becomes less dense and rises, so a convection current forms; cooler fluid sinks." },
+            { kind: "Check", front: "In a stone oven, name one example of each transfer.", back: "Conduction from the hot floor into the bread; convection of hot air in the dome; radiation from the flames to the surface." },
+          ],
+        },
+        {
+          id: "3.6",
+          title: "Cooling by evaporation",
+          cards: [
+            { kind: "Key idea", front: "Why does evaporation cool a liquid?", back: "The fastest particles escape as gas. The particles left behind have a lower average kinetic energy, so the liquid’s temperature falls." },
+            { kind: "Recall", front: "What speeds up evaporation?", back: "Higher temperature, larger surface area, moving air, and lower humidity." },
+            { kind: "Recall", front: "How does sweating cool you?", back: "Sweat evaporates from the skin, taking thermal energy with it." },
+            { kind: "Check", front: "Why does blowing on hot soup cool it faster?", back: "Moving air removes vapour, so more liquid can evaporate, taking energy from the soup." },
+            { kind: "Recall", front: "How is evaporation different from boiling?", back: "Evaporation happens at the surface at any temperature. Boiling is rapid bubbling throughout the liquid at the boiling point." },
+          ],
+        },
+      ],
+    },
+    {
+      id: "4",
+      title: "4 Maintaining life",
+      strand: "Biology",
+      intro: "How plants move water, transpiration, how humans excrete waste, and how a fetus is protected.",
+      topics: [
+        {
+          id: "4.1",
+          title: "Plants and water",
+          cards: [
+            { kind: "Key idea", front: "How does water enter a plant?", back: "Mostly through root hair cells, by osmosis, from soil water into the more concentrated cell sap." },
+            { kind: "Recall", front: "Why are root hairs useful?", back: "They increase surface area, so more water and minerals can be absorbed." },
+            { kind: "Recall", front: "How does water travel up the stem?", back: "Through xylem vessels — hollow tubes that carry water and dissolved minerals up to the leaves." },
+            { kind: "Check", front: "What happens if a plant cannot take up enough water?", back: "Cells lose turgor, the plant wilts, and photosynthesis and support suffer." },
+            { kind: "Recall", front: "Why do living cells need water besides transport?", back: "Water dissolves chemicals so reactions such as respiration can happen inside cells." },
+          ],
+        },
+        {
+          id: "4.2",
+          title: "Transpiration",
+          cards: [
+            { kind: "Key idea", front: "What is transpiration?", back: "The loss of water vapour from leaves (mainly through stomata), which helps pull water up the xylem." },
+            { kind: "Recall", front: "What increases transpiration rate?", back: "Warmth, wind, low humidity, and light (stomata open more in the light)." },
+            { kind: "Recall", front: "How can you investigate it?", back: "A potometer measures water uptake, which is closely linked to transpiration if the shoot is healthy and sealed." },
+            { kind: "Check", front: "Why do some plants close stomata on a hot dry day?", back: "To reduce water loss, even though that also slows CO₂ entry for photosynthesis." },
+            { kind: "Recall", front: "What do guard cells do?", back: "They swell with water to open the stoma, or lose water and go floppy to close it, controlling gas exchange and water loss." },
+          ],
+        },
+        {
+          id: "4.3",
+          title: "Excretion in humans",
+          cards: [
+            { kind: "Key idea", front: "What is excretion?", back: "Removing waste products of metabolism, such as carbon dioxide and urea — not the same as egestion of faeces." },
+            { kind: "Recall", front: "How is CO₂ excreted?", back: "From respiring cells into the blood, then out of the lungs when you breathe out." },
+            { kind: "Recall", front: "What do the kidneys do?", back: "They filter blood, remove urea and excess water and salts, and produce urine stored in the bladder." },
+            { kind: "Check", front: "Why is urea produced?", back: "From breaking down excess amino acids in the liver. It is toxic if it builds up." },
+            { kind: "Recall", front: "List the main parts of the human excretory system.", back: "Kidneys (filter blood), ureters (carry urine), bladder (stores urine), urethra (urine leaves the body). Renal means ‘to do with the kidney’." },
+            { kind: "Recall", front: "Which wastes do humans excrete?", back: "Carbon dioxide (lungs), urea, excess water and salts (kidneys as urine). Sweat also loses water and salts. Faeces are egestion, not excretion." },
+          ],
+        },
+        {
+          id: "4.4",
+          title: "Keeping a fetus healthy",
+          cards: [
+            { kind: "Key idea", front: "How does a fetus get what it needs?", back: "The placenta exchanges oxygen and nutrients from the mother’s blood with carbon dioxide and wastes from the fetus. Bloods do not normally mix." },
+            { kind: "Recall", front: "What does the amniotic fluid do?", back: "It cushions the fetus and helps keep a stable temperature." },
+            { kind: "Recall", front: "Name risks to a fetus from the mother’s lifestyle.", back: "Smoking, alcohol, some drugs, and some infections can harm development. A balanced diet with folic acid supports a healthy pregnancy." },
+            { kind: "Check", front: "Why can substances the mother takes affect the baby?", back: "Many chemicals cross the placenta. The fetus is small and still developing, so it is more easily harmed." },
+            { kind: "Recall", front: "What does the umbilical cord do?", back: "It links the fetus to the placenta, carrying blood to exchange substances. The mother’s blood and the fetus’s blood still do not mix in the placenta." },
+          ],
+        },
+      ],
+    },
+    {
+      id: "5",
+      title: "5 Reactivity",
+      strand: "Chemistry",
+      intro: "The reactivity series, displacement, making salts, and seeing reactions as atoms rearranging.",
+      topics: [
+        {
+          id: "5.1",
+          title: "Reactivity and displacement reactions",
+          cards: [
+            { kind: "Key idea", front: "What is the reactivity series?", back: "A list of metals in order of how readily they react, for example with oxygen, water or acids." },
+            { kind: "Recall", front: "What is a displacement reaction?", back: "A more reactive metal takes the place of a less reactive metal in a compound." },
+            { kind: "Recall", front: "Example: iron in copper sulfate?", back: "Iron is more reactive than copper, so iron sulfate forms and copper metal appears." },
+            { kind: "Check", front: "Would gold displace zinc from zinc sulfate?", back: "No. Gold is less reactive than zinc, so there is no reaction." },
+            { kind: "Recall", front: "Give signs that a chemical reaction is happening.", back: "Temperature change, colour change, gas (fizz), a new solid (precipitate), or light / sparks." },
+          ],
+        },
+        {
+          id: "5.2",
+          title: "Using the reactivity series and displacement reactions",
+          cards: [
+            { kind: "Key idea", front: "How do we extract metals using this idea?", back: "Metals below carbon in the series can often be extracted by heating the oxide with carbon (reduction). More reactive metals need electrolysis." },
+            { kind: "Recall", front: "Why is potassium never extracted by heating with carbon?", back: "Potassium is more reactive than carbon, so carbon cannot take oxygen from potassium oxide in that way." },
+            { kind: "Recall", front: "Give a practical use of displacement.", back: "Thermite reaction (aluminium + iron oxide) to weld rails; or coating a less reactive metal by dipping in a salt of a more useful metal — only if reactivity allows." },
+            { kind: "Check", front: "Why is recycling aluminium worthwhile?", back: "Extracting it from ore uses a lot of electrical energy. Recycling avoids most of that cost." },
+          ],
+        },
+        {
+          id: "5.3",
+          title: "Salts",
+          cards: [
+            { kind: "Key idea", front: "What is a salt in chemistry?", back: "A compound formed when the hydrogen of an acid is replaced by a metal ion (or ammonium)." },
+            { kind: "Recall", front: "Name the salts from hydrochloric, sulfuric and nitric acids.", back: "Chlorides, sulfates and nitrates." },
+            { kind: "Recall", front: "metal + acid → ?", back: "salt + hydrogen. metal oxide or hydroxide + acid → salt + water. carbonate + acid → salt + water + carbon dioxide." },
+            { kind: "Check", front: "What salt from zinc and sulfuric acid?", back: "Zinc sulfate (and hydrogen)." },
+          ],
+        },
+        {
+          id: "5.4",
+          title: "Other ways of making salts",
+          cards: [
+            { kind: "Key idea", front: "How do you make a soluble salt from an insoluble base?", back: "Add excess base to warm acid, filter off leftover base, then evaporate to crystallise the salt." },
+            { kind: "Recall", front: "How can you make an insoluble salt?", back: "Mix two solutions that contain the right ions so the salt precipitates, then filter, wash and dry." },
+            { kind: "Recall", front: "Why add excess metal oxide, then filter?", back: "So all the acid is used up. Filtering removes the unused solid oxide, leaving a salt solution." },
+            { kind: "Check", front: "Why not evaporate to dryness if you want good crystals?", back: "Gentle evaporation and cooling lets crystals grow; boiling dry can give a powder or decompose the salt." },
+          ],
+        },
+        {
+          id: "5.5",
+          title: "Rearranging atoms",
+          cards: [
+            { kind: "Key idea", front: "What happens to atoms in a chemical reaction?", back: "They are rearranged into new substances. Atoms are not created or destroyed, so mass is conserved in a closed system." },
+            { kind: "Recall", front: "Why must a symbol equation be balanced?", back: "So it shows the same number of each type of atom on both sides." },
+            { kind: "Recall", front: "Reactants vs products?", back: "Reactants are the starting substances; products are what you make." },
+            { kind: "Check", front: "If 4 g of hydrogen burns in 32 g of oxygen, what mass of water forms?", back: "36 g, if nothing escapes — mass of products equals mass of reactants." },
+          ],
+        },
+      ],
+    },
+    {
+      id: "6",
+      title: "6 Sound and space",
+      strand: "Physics · Earth",
+      intro: "Loudness and pitch, when sounds cancel, how the Moon may have formed, nebulae, and plate tectonics.",
+      topics: [
+        {
+          id: "6.1",
+          title: "Loudness and pitch of sound",
+          cards: [
+            { kind: "Key idea", front: "What do amplitude and frequency control?", back: "Amplitude links to loudness (bigger amplitude, louder). Frequency links to pitch (more waves per second, higher pitch)." },
+            { kind: "Recall", front: "Unit of frequency?", back: "Hertz (Hz) — waves per second." },
+            { kind: "Recall", front: "What kind of wave is sound?", back: "A longitudinal wave: particles vibrate parallel to the direction the wave travels. It needs a medium." },
+            { kind: "Check", front: "Why is there no sound in space?", back: "There are too few particles to pass the vibrations along." },
+            { kind: "Recall", front: "How do you read loudness and pitch from a waveform?", back: "On an oscilloscope: taller peaks and troughs mean larger amplitude (louder). More waves packed into the same time means higher frequency (higher pitch)." },
+          ],
+        },
+        {
+          id: "6.2",
+          title: "Interference of sound",
+          cards: [
+            { kind: "Key idea", front: "What is interference?", back: "When two waves overlap, they add. Crest + crest makes a bigger wave (constructive). Crest + trough can cancel (destructive)." },
+            { kind: "Recall", front: "How can two sounds make a quieter region?", back: "If they arrive out of step (out of phase), destructive interference reduces the amplitude." },
+            { kind: "Recall", front: "What are beats?", back: "A throbbing loud–quiet pattern when two close frequencies interfere." },
+            { kind: "Check", front: "Why might noise-cancelling headphones play a sound?", back: "They produce a wave shaped to cancel incoming noise by destructive interference." },
+          ],
+        },
+        {
+          id: "6.3",
+          title: "Formation of the Moon",
+          cards: [
+            { kind: "Key idea", front: "What is the leading idea for how the Moon formed?", back: "A giant impact: a Mars-sized body struck the young Earth; debris in orbit clumped together to form the Moon." },
+            { kind: "Recall", front: "What evidence supports a shared origin?", back: "Moon rocks are similar in some ways to Earth’s mantle, and the Moon’s orbit and composition fit a high-energy collision better than capture of a fully formed Moon." },
+            { kind: "Recall", front: "Why is the Moon’s far side more cratered?", back: "The near side has more volcanic maria that covered older craters; the far side kept more of its ancient cratered crust." },
+            { kind: "Check", front: "Is the Moon a captured asteroid?", back: "That is not the best fit for the evidence. Composition and orbit favour debris from Earth plus an impactor." },
+          ],
+        },
+        {
+          id: "6.4",
+          title: "Nebulae",
+          cards: [
+            { kind: "Key idea", front: "What is a nebula?", back: "A huge cloud of gas and dust in space. Some are places where new stars form; others are leftover from dying stars." },
+            { kind: "Recall", front: "How can a nebula form stars?", back: "Gravity pulls denser clumps together. As they collapse they heat up; if hot and dense enough, nuclear fusion starts." },
+            { kind: "Recall", front: "Why do some nebulae glow?", back: "Hot nearby stars excite the gas, or dust reflects starlight." },
+            { kind: "Check", front: "Are nebulae inside our Solar System?", back: "No. They are interstellar clouds, typically many light-years across, far outside the Solar System." },
+          ],
+        },
+        {
+          id: "6.5",
+          title: "Tectonics",
+          cards: [
+            { kind: "Key idea", front: "What is plate tectonics?", back: "Earth’s outer shell is broken into plates that move slowly on the mantle, driven by internal heat and convection." },
+            { kind: "Recall", front: "What happens at plate boundaries?", back: "Plates can move apart (new crust, ridges), collide (mountains, some volcanoes), or slide past (earthquakes)." },
+            { kind: "Recall", front: "Why do earthquakes and volcanoes cluster?", back: "Most occur along plate edges where stress builds or magma can rise." },
+            { kind: "Check", front: "Why do continents slowly change position?", back: "They ride on plates. Over millions of years, oceans open and close and mountain ranges form." },
+          ],
+        },
+      ],
+    },
+    {
+      id: "7",
+      title: "7 Genes and inheritance",
+      strand: "Biology",
+      intro: "DNA, genes and chromosomes, how features are inherited, why we vary, and natural selection.",
+      topics: [
+        {
+          id: "7.1",
+          title: "Chromosomes, genes and DNA",
+          cards: [
+            { kind: "Key idea", front: "How do DNA, genes and chromosomes fit together?", back: "DNA is the chemical that stores genetic information. A gene is a section of DNA that codes for a protein. Chromosomes are long DNA strands packaged in the nucleus." },
+            { kind: "Recall", front: "How many chromosomes in a typical human body cell?", back: "46 (23 pairs). Gametes have 23." },
+            { kind: "Recall", front: "What does a gene actually do?", back: "It carries the instructions to make a particular protein, which affects a characteristic." },
+            { kind: "Check", front: "Are all your cells’ genes switched on?", back: "No. Different cells use different genes, so a muscle cell and a nerve cell work differently." },
+          ],
+        },
+        {
+          id: "7.2",
+          title: "Gametes and inheritance",
+          cards: [
+            { kind: "Key idea", front: "Why do children resemble both parents but are not identical to either?", back: "They inherit half their chromosomes from each parent’s gametes (sperm and egg), so they get a mix of alleles." },
+            { kind: "Recall", front: "What is an allele?", back: "A different version of the same gene, for example different eye-colour versions." },
+            { kind: "Recall", front: "Dominant vs recessive?", back: "A dominant allele shows its effect even if only one copy is present. A recessive allele shows only if two copies are present." },
+            { kind: "Check", front: "Why use a Punnett square?", back: "It shows the possible allele combinations from two parents and helps you work out probabilities." },
+          ],
+        },
+        {
+          id: "7.3",
+          title: "Variation",
+          cards: [
+            { kind: "Key idea", front: "What causes variation in a species?", back: "Genetic differences (alleles, mutations, mixing at fertilisation) and environmental differences (diet, climate, training)." },
+            { kind: "Recall", front: "Continuous vs discontinuous variation?", back: "Continuous: a range, like height. Discontinuous: distinct groups, like blood group." },
+            { kind: "Recall", front: "Why is variation useful for a population?", back: "If conditions change, some individuals may already have features that help them survive and reproduce." },
+            { kind: "Check", front: "Is height only genetic?", back: "No. Genes set a range, but nutrition and health strongly affect the height reached." },
+          ],
+        },
+        {
+          id: "7.4",
+          title: "Natural selection",
+          cards: [
+            { kind: "Key idea", front: "What is natural selection?", back: "Individuals with advantageous variations are more likely to survive and reproduce, so those alleles become more common over generations." },
+            { kind: "Recall", front: "What must be true for this to happen?", back: "Variation, inheritance of the feature, and differences in survival or reproduction (a selection pressure)." },
+            { kind: "Recall", front: "Give a classic example.", back: "Peppered moths: darker moths were better camouflaged on sooty trees during industrial pollution, so they were eaten less." },
+            { kind: "Check", front: "Does an individual ‘try’ to adapt?", back: "No. The variation already exists (or arises by mutation). Selection acts on who reproduces." },
+          ],
+        },
+      ],
+    },
+    {
+      id: "8",
+      title: "8 Rates of reaction",
+      strand: "Chemistry",
+      intro: "How to measure how fast a reaction goes, and how surface area, temperature and concentration change the rate.",
+      topics: [
+        {
+          id: "8.1",
+          title: "Measuring the rate of reaction",
+          cards: [
+            { kind: "Key idea", front: "What is rate of reaction?", back: "How quickly reactants are used up or products form — for example mass or volume of gas per second." },
+            { kind: "Recall", front: "Name two ways to follow a reaction that makes a gas.", back: "Collect the gas in a gas syringe (volume vs time) or measure mass loss on a balance as gas escapes." },
+            { kind: "Recall", front: "How do you get rate from a graph?", back: "Gradient of quantity against time. Steeper means faster. Rate often falls as reactants are used up." },
+            { kind: "Check", front: "Why might you repeat the experiment?", back: "To spot anomalies and take a mean, so the pattern is more reliable." },
+          ],
+        },
+        {
+          id: "8.2",
+          title: "Surface area and the rate of reaction",
+          cards: [
+            { kind: "Key idea", front: "Why do powders react faster than lumps?", back: "Smaller pieces have a larger surface area, so more particle collisions happen per second at the surface." },
+            { kind: "Recall", front: "Collision theory in one line?", back: "Particles must collide with enough energy (activation energy) for a reaction to occur." },
+            { kind: "Recall", front: "A safety warning?", back: "Fine flammable powders (flour, sawdust) can ignite or explode because they mix so well with air." },
+            { kind: "Check", front: "Same mass of marble: chips or powder in acid — which is faster?", back: "Powder, because of greater surface area." },
+          ],
+        },
+        {
+          id: "8.3",
+          title: "Temperature and the rate of reaction",
+          cards: [
+            { kind: "Key idea", front: "Why does heating usually speed a reaction?", back: "Particles move faster, collide more often, and a larger fraction have energy above the activation energy." },
+            { kind: "Recall", front: "What is activation energy?", back: "The minimum energy colliding particles need to react." },
+            { kind: "Recall", front: "Do all collisions succeed?", back: "No. Many are too gentle or hit at the wrong angle." },
+            { kind: "Check", front: "Why store some foods in a fridge?", back: "Lower temperature slows the reactions that make food spoil." },
+          ],
+        },
+        {
+          id: "8.4",
+          title: "Concentration and the rate of reaction",
+          cards: [
+            { kind: "Key idea", front: "Why does a more concentrated solution often react faster?", back: "More particles in the same volume means more frequent successful collisions." },
+            { kind: "Recall", front: "What must you keep the same in a fair test of concentration?", back: "Temperature, surface area of any solid, volume of mixture if that affects measuring, and how you start timing." },
+            { kind: "Recall", front: "For gases, what is the similar idea to concentration?", back: "Pressure: higher pressure packs more gas particles into the same space, so more collisions." },
+            { kind: "Check", front: "If you dilute acid to half concentration, what happens to rate (roughly)?", back: "It usually falls, often to about half if other factors stay the same — because collisions with acid particles become less frequent." },
+          ],
+        },
+      ],
+    },
+    {
+      id: "9",
+      title: "9 Electricity",
+      strand: "Physics",
+      intro: "Parallel circuits, how current and voltage behave, resistance, and everyday practical circuits.",
+      topics: [
+        {
+          id: "9.1",
+          title: "Parallel circuits",
+          cards: [
+            { kind: "Key idea", front: "How is a parallel circuit different from series?", back: "In parallel, components sit on separate branches. Each branch has its own path from one side of the supply to the other." },
+            { kind: "Recall", front: "What happens if one lamp blows in parallel?", back: "The other branches still work. In series, the whole loop would go off." },
+            { kind: "Recall", front: "How do you draw a simple parallel pair of lamps?", back: "Two loops sharing the same battery connections, each lamp on its own branch, with a switch if needed." },
+            { kind: "Check", front: "Why are house lights wired in parallel?", back: "So each can be switched independently and other rooms stay on if one bulb fails." },
+          ],
+        },
+        {
+          id: "9.2",
+          title: "Current and voltage in parallel circuits",
+          cards: [
+            { kind: "Key idea", front: "How does current split in parallel?", back: "The current from the supply splits between branches. Branch currents add up to the total current." },
+            { kind: "Recall", front: "What about voltage in parallel?", back: "Each branch gets the same voltage as the supply (ideally)." },
+            { kind: "Recall", front: "Where do you put an ammeter and a voltmeter?", back: "Ammeter in series with the part you are measuring. Voltmeter in parallel across the component." },
+            { kind: "Check", front: "Two identical lamps in parallel vs the same two in series — which are brighter?", back: "Parallel: each gets the full supply voltage, so they are brighter than in series, where they share the voltage." },
+          ],
+        },
+        {
+          id: "9.3",
+          title: "Resistance",
+          cards: [
+            { kind: "Key idea", front: "What is resistance?", back: "How much a component opposes current. resistance = voltage / current. Unit: ohm (Ω)." },
+            { kind: "Recall", front: "What makes resistance larger?", back: "A longer wire, a thinner wire, or a less conductive material. Heating a metal wire also usually increases resistance." },
+            { kind: "Recall", front: "Ohm’s law idea?", back: "For an ohmic conductor at constant temperature, current is proportional to voltage, so a V–I graph is a straight line through the origin." },
+            { kind: "Check", front: "If V = 6 V and I = 0.3 A, what is R?", back: "R = 6 / 0.3 = 20 Ω." },
+            { kind: "Recall", front: "How do you rearrange V = IR?", back: "I = V / R and V = I × R. Same idea as rearranging density = mass / volume." },
+          ],
+        },
+        {
+          id: "9.4",
+          title: "Practical circuits",
+          cards: [
+            { kind: "Key idea", front: "Why do we use fuses or circuit breakers?", back: "If current gets too high, they cut the circuit so wires do not overheat and cause a fire." },
+            { kind: "Recall", front: "What does an earth wire do on a metal-cased appliance?", back: "If a live fault touches the case, a large current flows to earth and the fuse blows, so the case does not stay live." },
+            { kind: "Recall", front: "Why is a switch placed in the live wire?", back: "So that when it is off, the appliance is disconnected from the high-potential live supply." },
+            { kind: "Check", front: "Give two everyday parallel circuits.", back: "Lighting in a house; car headlights and dashboard lamps that can work independently." },
+            { kind: "Recall", front: "Live, neutral and earth — what is each for?", back: "Live brings the high potential (~230 V). Neutral completes the circuit. Earth is a safety path from a metal case if live touches it." },
+          ],
+        },
+      ],
+    },
+    {
+      id: "skills9",
+      title: "Science skills",
+      strand: "Working scientifically",
+      intro: "The Stage 9 book ends with skills used in every unit — especially rearranging science equations.",
+      topics: [
+        {
+          id: "SS.1",
+          title: "Working with equations",
+          cards: [
+            { kind: "Key idea", front: "How do you remember a science equation?", back: "Use letters (D = m / V), say what it means (mass in a fixed volume), and check the units (g/cm³ means grams divided by cubic centimetres)." },
+            { kind: "Recall", front: "Make mass the subject of density = mass / volume.", back: "mass = density × volume. Multiply both sides by volume." },
+            { kind: "Recall", front: "Make volume the subject of the same equation.", back: "volume = mass / density." },
+            { kind: "Check", front: "A sample has density 2.5 g/cm³ and mass 10 g. Volume?", back: "V = 10 / 2.5 = 4 cm³." },
+          ],
+        },
+      ],
+    },
+  ],
+});

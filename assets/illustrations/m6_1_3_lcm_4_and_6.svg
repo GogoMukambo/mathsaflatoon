@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900">
+<rect width="1600" height="900" fill="#ffffff"/>
+<rect width="1600" height="92" fill="#0f172a"/>
+<text x="800" y="62" text-anchor="middle" fill="#ffffff" font-family="Segoe UI, Arial, sans-serif" font-size="40" font-weight="700" letter-spacing="2">LOWEST COMMON MULTIPLE</text>
+<text x="800" y="148" text-anchor="middle" fill="#ea580c" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="600">12 is the smallest number that is a multiple of both 4 and 6.</text>
+<rect x="70" y="186" width="700" height="280" rx="18" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+  <text x="420" y="232" text-anchor="middle" fill="#1d4ed8" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700">Multiples of 4</text>
+  <rect x="110" y="260" width="76" height="56" rx="10" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/><text x="148" y="296" text-anchor="middle" fill="#1e3a8a" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">4</text>
+<rect x="198" y="260" width="76" height="56" rx="10" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/><text x="236" y="296" text-anchor="middle" fill="#1e3a8a" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">8</text>
+<rect x="286" y="260" width="76" height="56" rx="10" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/><text x="324" y="296" text-anchor="middle" fill="#1e3a8a" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">12</text>
+<rect x="374" y="260" width="76" height="56" rx="10" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/><text x="412" y="296" text-anchor="middle" fill="#1e3a8a" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">16</text>
+<rect x="462" y="260" width="76" height="56" rx="10" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/><text x="500" y="296" text-anchor="middle" fill="#1e3a8a" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">20</text>
+<rect x="110" y="330" width="76" height="56" rx="10" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/><text x="148" y="366" text-anchor="middle" fill="#1e3a8a" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">24</text>
+<rect x="198" y="330" width="76" height="56" rx="10" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/><text x="236" y="366" text-anchor="middle" fill="#1e3a8a" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">28</text>
+<rect x="286" y="330" width="76" height="56" rx="10" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/><text x="324" y="366" text-anchor="middle" fill="#1e3a8a" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">32</text>
+<rect x="374" y="330" width="76" height="56" rx="10" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/><text x="412" y="366" text-anchor="middle" fill="#1e3a8a" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">36</text>
+<rect x="462" y="330" width="76" height="56" rx="10" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/><text x="500" y="366" text-anchor="middle" fill="#1e3a8a" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">40</text>
+  <rect x="830" y="186" width="700" height="280" rx="18" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/>
+  <text x="1180" y="232" text-anchor="middle" fill="#c2410c" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700">Multiples of 6</text>
+  <rect x="870" y="260" width="76" height="56" rx="10" fill="#ffedd5" stroke="#ea580c" stroke-width="2"/><text x="908" y="296" text-anchor="middle" fill="#9a3412" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">6</text>
+<rect x="958" y="260" width="76" height="56" rx="10" fill="#ffedd5" stroke="#ea580c" stroke-width="2"/><text x="996" y="296" text-anchor="middle" fill="#9a3412" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">12</text>
+<rect x="1046" y="260" width="76" height="56" rx="10" fill="#ffedd5" stroke="#ea580c" stroke-width="2"/><text x="1084" y="296" text-anchor="middle" fill="#9a3412" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">18</text>
+<rect x="1134" y="260" width="76" height="56" rx="10" fill="#ffedd5" stroke="#ea580c" stroke-width="2"/><text x="1172" y="296" text-anchor="middle" fill="#9a3412" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">24</text>
+<rect x="1222" y="260" width="76" height="56" rx="10" fill="#ffedd5" stroke="#ea580c" stroke-width="2"/><text x="1260" y="296" text-anchor="middle" fill="#9a3412" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">30</text>
+<rect x="870" y="330" width="76" height="56" rx="10" fill="#ffedd5" stroke="#ea580c" stroke-width="2"/><text x="908" y="366" text-anchor="middle" fill="#9a3412" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">36</text>
+<rect x="958" y="330" width="76" height="56" rx="10" fill="#ffedd5" stroke="#ea580c" stroke-width="2"/><text x="996" y="366" text-anchor="middle" fill="#9a3412" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">42</text>
+  <rect x="70" y="490" width="1460" height="280" rx="18" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+  <text x="800" y="548" text-anchor="middle" fill="#065f46" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700">Common multiples  12, 24, 36, …</text>
+  <text x="800" y="640" text-anchor="middle" fill="#047857" font-family="Segoe UI, Arial, sans-serif" font-size="48" font-weight="700">LCM(4, 6) = 12</text>
+  <text x="800" y="720" text-anchor="middle" fill="#334155" font-family="Segoe UI, Arial, sans-serif" font-size="22">4 × 1, 4 × 2, 4 × 3, …</text>
+<rect y="808" width="1600" height="92" fill="#0f172a"/>
+<text x="800" y="864" text-anchor="middle" fill="#ffffff" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="600">KEY IDEA  |  LCM is the first shared multiple</text>
+</svg>

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900">
+<rect width="1600" height="900" fill="#ffffff"/>
+<rect width="1600" height="92" fill="#0f172a"/>
+<text x="800" y="62" text-anchor="middle" fill="#ffffff" font-family="Segoe UI, Arial, sans-serif" font-size="40" font-weight="700" letter-spacing="2">TESTS FOR 6, 8, 9, 10 AND 11</text>
+<text x="800" y="148" text-anchor="middle" fill="#2563eb" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="600">Keep using 87654.</text>
+<rect x="80" y="180" width="1440" height="88" rx="14" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+  <text x="180" y="234" text-anchor="middle" fill="#065f46" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="700">÷ 6</text>
+  <text x="360" y="234" fill="#065f46" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700">YES</text>
+  <text x="500" y="234" fill="#334155" font-family="Segoe UI, Arial, sans-serif" font-size="24">Divisible by 2 and by 3</text>
+  <rect x="80" y="276" width="1440" height="88" rx="14" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/>
+  <text x="180" y="330" text-anchor="middle" fill="#991b1b" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="700">÷ 8</text>
+  <text x="360" y="330" fill="#991b1b" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700">NO</text>
+  <text x="500" y="330" fill="#334155" font-family="Segoe UI, Arial, sans-serif" font-size="24">Last three digits 654 ÷ 8 = 81 r 6</text>
+  <rect x="80" y="372" width="1440" height="88" rx="14" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/>
+  <text x="180" y="426" text-anchor="middle" fill="#991b1b" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="700">÷ 9</text>
+  <text x="360" y="426" fill="#991b1b" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700">NO</text>
+  <text x="500" y="426" fill="#334155" font-family="Segoe UI, Arial, sans-serif" font-size="24">Digit sum 30 is not divisible by 9</text>
+  <rect x="80" y="468" width="1440" height="88" rx="14" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/>
+  <text x="180" y="522" text-anchor="middle" fill="#991b1b" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="700">÷10</text>
+  <text x="360" y="522" fill="#991b1b" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700">NO</text>
+  <text x="500" y="522" fill="#334155" font-family="Segoe UI, Arial, sans-serif" font-size="24">Last digit is not 0</text>
+  <rect x="80" y="564" width="1440" height="88" rx="14" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/>
+  <text x="180" y="618" text-anchor="middle" fill="#991b1b" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="700">÷11</text>
+  <text x="360" y="618" fill="#991b1b" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700">NO</text>
+  <text x="500" y="618" fill="#334155" font-family="Segoe UI, Arial, sans-serif" font-size="24">Odd digits 18 − even digits 12 = 6</text>
+<rect y="808" width="1600" height="92" fill="#0f172a"/>
+<text x="800" y="864" text-anchor="middle" fill="#ffffff" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="600">RECALL  |  Only the test for 6 passes</text>
+</svg>

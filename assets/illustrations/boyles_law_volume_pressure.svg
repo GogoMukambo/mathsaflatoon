@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900">
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path d="M 0 1 L 9 5 L 0 9 z" fill="#111111" />
+</marker>
+
+</defs>
+<rect x="0" y="0" width="1200" height="900" fill="#ffffff" />
+<path d="M 150 200 L 150 740 L 520 740 L 520 200" fill="none" stroke="#111111" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" />
+<rect x="154" y="250" width="362" height="486" fill="#ffffff" stroke="none" stroke-width="0" />
+<rect x="152" y="216" width="366" height="34" fill="#999999" stroke="#111111" stroke-width="3" />
+<rect x="321" y="100" width="28" height="116" fill="#d4d4d4" stroke="#111111" stroke-width="3" />
+<circle cx="347.4796211719513" cy="373.2738137245178" r="12" fill="#111111" />
+<circle cx="425.2079910039902" cy="629.3430650234222" r="12" fill="#111111" />
+<circle cx="295.49431562423706" cy="390.6375730037689" r="12" fill="#111111" />
+<circle cx="310.2059817314148" cy="574.9935281276703" r="12" fill="#111111" />
+<circle cx="335.1555323600769" cy="395.29362082481384" r="12" fill="#111111" />
+<circle cx="353.4423327445984" cy="691.4078462123871" r="12" fill="#111111" />
+<circle cx="399.87473249435425" cy="384.3731915950775" r="12" fill="#111111" />
+<circle cx="313.7044495344162" cy="366.80716037750244" r="12" fill="#111111" />
+<circle cx="304.81607377529144" cy="576.8154108524323" r="12" fill="#111111" />
+<circle cx="364.02318239212036" cy="535.308347940445" r="12" fill="#111111" />
+<circle cx="253.40544939041138" cy="628.8685128092766" r="12" fill="#111111" />
+<circle cx="223.73274326324463" cy="669.3839511275291" r="12" fill="#111111" />
+<circle cx="455.3947424888611" cy="286.1764705181122" r="12" fill="#111111" />
+<circle cx="482.9295212775469" cy="660.3013849258423" r="12" fill="#111111" />
+<text x="335" y="860" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="30" font-weight="600" text-anchor="middle">large volume</text>
+<path d="M 680 200 L 680 740 L 1050 740 L 1050 200" fill="none" stroke="#111111" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" />
+<rect x="684" y="470" width="362" height="266" fill="#ffffff" stroke="none" stroke-width="0" />
+<rect x="682" y="436" width="366" height="34" fill="#999999" stroke="#111111" stroke-width="3" />
+<rect x="851" y="320" width="28" height="116" fill="#d4d4d4" stroke="#111111" stroke-width="3" />
+<circle cx="773.2319086883217" cy="698.1088796257973" r="12" fill="#111111" />
+<circle cx="839.1976857185364" cy="628.8877713680267" r="12" fill="#111111" />
+<circle cx="898.847439289093" cy="646.8094766139984" r="12" fill="#111111" />
+<circle cx="906.4563298225403" cy="507.6461446285248" r="12" fill="#111111" />
+<circle cx="890.7902354001999" cy="630.382673740387" r="12" fill="#111111" />
+<circle cx="766.9705533981323" cy="686.1491098999977" r="12" fill="#111111" />
+<circle cx="969.0415644645691" cy="535.2127802371979" r="12" fill="#111111" />
+<circle cx="844.4054001569748" cy="680.984148979187" r="12" fill="#111111" />
+<circle cx="717.6932239532471" cy="563.4263236448169" r="12" fill="#111111" />
+<circle cx="924.0865612030029" cy="648.4986925125122" r="12" fill="#111111" />
+<circle cx="900.893964767456" cy="622.0676469802856" r="12" fill="#111111" />
+<circle cx="920.7494640350342" cy="579.2688035964966" r="12" fill="#111111" />
+<circle cx="988.7800121307373" cy="543.788685798645" r="12" fill="#111111" />
+<circle cx="968.3156961202621" cy="616.5488374233246" r="12" fill="#111111" />
+<text x="865" y="860" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="30" font-weight="600" text-anchor="middle">small volume</text>
+<line x1="865" y1="120" x2="865" y2="200" stroke="#111111" stroke-width="5" stroke-linecap="round" marker-end="url(#ah)" />
+<line x1="560" y1="470" x2="650" y2="470" stroke="#555555" stroke-width="4" stroke-linecap="round" marker-end="url(#ah)" />
+</svg>

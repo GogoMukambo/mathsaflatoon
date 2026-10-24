@@ -1,0 +1,354 @@
+.question-bank-page {
+  min-height: 100vh;
+}
+
+.qb-wrap {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 3rem;
+}
+
+.qb-wrap h1 {
+  font-family: "Fredoka", "Nunito", sans-serif;
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  margin: 0.25rem 0 0.5rem;
+  color: #f8fafc;
+}
+
+.qb-wrap .hint {
+  color: rgba(226, 232, 240, 0.85);
+  max-width: 42rem;
+  line-height: 1.55;
+}
+
+.qb-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 1.25rem 0 1.5rem;
+}
+
+.qb-actions a {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.55rem 1.1rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+  color: #1e3a8a;
+  background: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.qb-actions a.ghost {
+  background: rgba(255, 255, 255, 0.12);
+  color: #e2e8f0;
+}
+
+.qb-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.5rem;
+  font-size: 0.875rem;
+  color: #bfdbfe;
+  margin-bottom: 1rem;
+}
+
+.qb-breadcrumb button {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  font-weight: 700;
+  color: #93c5fd;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.qb-breadcrumb .sep {
+  opacity: 0.6;
+}
+
+.qb-breadcrumb .current {
+  color: #f1f5f9;
+  font-weight: 800;
+}
+
+.qb-panel {
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 1rem;
+  padding: 1rem 1.1rem;
+  backdrop-filter: blur(8px);
+}
+
+.qb-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr));
+  gap: 0.65rem;
+}
+
+.qb-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  gap: 0.25rem;
+  padding: 0.85rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(30, 58, 138, 0.45);
+  color: #f8fafc;
+  cursor: pointer;
+  font: inherit;
+  transition: transform 0.12s ease, background 0.15s ease;
+}
+
+.qb-tile:hover {
+  transform: translateY(-2px);
+  background: rgba(37, 99, 235, 0.55);
+}
+
+.qb-tile .meta {
+  font-size: 0.75rem;
+  opacity: 0.85;
+}
+
+.qb-tile .title {
+  font-weight: 800;
+  font-size: 0.95rem;
+}
+
+.qb-topic-head {
+  margin-bottom: 1rem;
+}
+
+.qb-topic-head h2 {
+  font-family: "Fredoka", sans-serif;
+  margin: 0 0 0.35rem;
+  color: #f8fafc;
+  font-size: 1.35rem;
+}
+
+.qb-topic-head p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #cbd5e1;
+}
+
+.qb-group {
+  margin-top: 1.25rem;
+}
+
+.qb-group h3 {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #93c5fd;
+  margin: 0 0 0.65rem;
+}
+
+.qb-qlist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.qb-q {
+  padding: 0.75rem 0.85rem;
+  border-radius: 0.65rem;
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(71, 85, 105, 0.5);
+}
+
+.qb-q-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.65rem;
+  align-items: baseline;
+  margin-bottom: 0.35rem;
+}
+
+.qb-q-id {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #64748b;
+  font-family: ui-monospace, monospace;
+}
+
+.qb-q-label {
+  font-weight: 800;
+  color: #fcd34d;
+  font-size: 0.85rem;
+}
+
+.qb-q-type {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  background: rgba(59, 130, 246, 0.25);
+  color: #bfdbfe;
+}
+
+.qb-q-prompt {
+  margin: 0;
+  color: #f1f5f9;
+  line-height: 1.5;
+  font-size: 0.9375rem;
+}
+
+.qb-q-diagram {
+  margin: 0.65rem 0 0.35rem;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.qb-q-diagram svg {
+  display: block;
+  max-width: min(100%, 520px);
+  height: auto;
+  border-radius: 0.5rem;
+}
+
+.qb-q-table {
+  margin-top: 0.5rem;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.qb-q-table th,
+.qb-q-table td {
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  padding: 0.35rem 0.65rem;
+  text-align: center;
+  min-width: 2.5rem;
+}
+
+.qb-q-table th {
+  background: rgba(30, 64, 175, 0.35);
+  color: #e2e8f0;
+}
+
+.qb-q-answer {
+  margin: 0.45rem 0 0;
+  font-size: 0.8125rem;
+  color: #86efac;
+}
+
+.qb-q-note {
+  margin: 0.25rem 0 0;
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+.qb-empty {
+  color: #cbd5e1;
+  padding: 1rem 0;
+}
+
+.gogo-home-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 1.5rem;
+}
+
+.gogo-home-actions .gogo-upload-btn {
+  margin-top: 0;
+}
+
+.gogo-qb-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.35rem;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 0.9375rem;
+  text-decoration: none;
+  color: #ffffff;
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.gogo-qb-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+}
+
+.qb-section-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 0.85rem;
+  margin-bottom: 1.25rem;
+}
+
+.qb-section-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  padding: 1.1rem 1.15rem;
+  border-radius: 0.85rem;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  background: linear-gradient(145deg, rgba(30, 58, 138, 0.55), rgba(15, 23, 42, 0.75));
+  color: #f8fafc;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  transition: transform 0.12s ease, border-color 0.15s ease;
+}
+
+.qb-section-tile:hover {
+  transform: translateY(-2px);
+  border-color: rgba(147, 197, 253, 0.65);
+}
+
+.qb-section-tile .meta {
+  font-size: 0.75rem;
+  color: #93c5fd;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.qb-section-tile .title {
+  font-weight: 800;
+  font-size: 1.05rem;
+}
+
+.qb-paper-meta {
+  margin: 0 0 1rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 0.65rem;
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(71, 85, 105, 0.5);
+  color: #cbd5e1;
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+
+.qb-paper-meta a {
+  color: #93c5fd;
+  font-weight: 700;
+}
+
+.qb-q-marks {
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  background: rgba(234, 179, 8, 0.25);
+  color: #fde68a;
+}

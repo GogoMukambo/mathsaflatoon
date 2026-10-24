@@ -1,0 +1,7 @@
+{
+  "name": "year8-science-study",
+  "private": true,
+  "scripts": {
+    "start": "node start.js"
+  }
+}

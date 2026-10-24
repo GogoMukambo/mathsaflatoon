@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Achiever's Den</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fredoka:wght@400;500;600;700;800&family=Nunito:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <script>
+      tailwind.config = {
+        important: "#parentHome",
+        corePlugins: { preflight: false },
+        theme: {
+          extend: {
+            fontFamily: {
+              heading: ["Fredoka", "sans-serif"],
+              sans: ["Plus Jakarta Sans", "sans-serif"]
+            }
+          }
+        }
+      };
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css?v=36" />
+    <link rel="stylesheet" href="y6-maths-quest-theme.css?v=2" />
+    <link rel="stylesheet" href="mobile.css?v=18" />
+    <link rel="stylesheet" href="quest-site-theme.css?v=6" />
+    <link rel="stylesheet" href="gogo-home.css?v=11" />
+    <link rel="stylesheet" href="question-bank.css?v=1" />
+  </head>
+  <body class="home-landing parent-dash">
+    <div class="bg"></div>
+    <div class="stage-backdrop" id="stageBackdrop" aria-hidden="true"></div>
+    <header class="site-brand-bar">
+      <div class="header-leading">
+        <button type="button" class="site-brand" id="brandHome" aria-label="Achiever's Den home">
+          <span class="site-brand-mark" aria-hidden="true">✦</span>
+          <span class="site-brand-name">Achiever's Den</span>
+        </button>
+        <button type="button" class="header-back view-back" id="viewBack" hidden></button>
+      </div>
+      <div class="header-actions">
+        <span id="userChip" class="header-user"></span>
+        <div class="child-switch" id="childSwitch" hidden>
+          <button type="button" class="header-child" id="childChip" aria-expanded="false" aria-controls="childMenu">
+            <span id="childChipName">Child</span>
+          </button>
+          <div class="child-menu" id="childMenu" hidden>
+            <p class="child-menu-label">Your children</p>
+            <div id="childMenuList"></div>
+            <button type="button" id="addChildBtn">Add a child</button>
+          </div>
+        </div>
+        <button type="button" class="header-logout" id="logoutBtn">Log out</button>
+        <button type="button" class="header-stats-btn" id="headerStatsBtn" aria-label="Open your progress stats">
+          <span class="header-stats-ico" aria-hidden="true">📊</span>
+          <span class="header-stats-label">Stats</span>
+          <span class="header-stats-pct" id="headerStatsPct"></span>
+        </button>
+      </div>
+    </header>
+    <div class="nav-pick-sink" hidden aria-hidden="true">
+      <div class="year-picks" id="yearPicks"></div>
+    </div>
+
+    <section id="authGate" class="auth-gate hidden" hidden>
+      <div class="auth-card">
+        <div class="auth-brand">
+          <span class="auth-brand-mark" aria-hidden="true"><i class="fa-solid fa-infinity"></i></span>
+          <span class="auth-brand-copy">
+            <span class="auth-brand-name">Maths <span class="aflatoon-magic"><i class="fa-solid fa-bolt aflatoon-bolt"></i> Aflatoon</span></span>
+            <span class="auth-brand-sub">Parent Dashboard</span>
+          </span>
+        </div>
+        <p class="eyebrow">Years 4–9 · IGCSE &amp; CBSE</p>
+        <h1 id="authWelcome">Welcome back</h1>
+        <p class="hint" id="authHint">Log in to start this course. Your lessons and progress stay on this account.</p>
+        <div class="auth-tabs">
+          <button type="button" class="auth-tab on" id="tabRegister">Register</button>
+          <button type="button" class="auth-tab" id="tabLogin">Log in</button>
+        </div>
+        <p id="authError" class="auth-error" hidden></p>
+        <div id="googleWrap" class="google-wrap">
+          <div id="googleButtonSlot"></div>
+          <button type="button" class="google-fallback" data-google-btn>Continue with Google</button>
+          <p id="googleNote" class="auth-note" hidden>
+            Google sign-in needs a Client ID in auth-config.js. Email registration works now.
+          </p>
+        </div>
+        <p class="auth-or">or use email</p>
+
+        <form id="registerForm" class="auth-form">
+          <div class="auth-row">
+            <label>Name
+              <input name="firstName" type="text" autocomplete="given-name" required />
+            </label>
+            <label>Surname
+              <input name="surname" type="text" autocomplete="family-name" required />
+            </label>
+          </div>
+          <label>Email
+            <input name="email" type="email" autocomplete="email" required />
+          </label>
+          <div class="auth-row">
+            <label>Password
+              <input name="password" type="password" autocomplete="new-password" minlength="6" required />
+            </label>
+            <label>Confirm password
+              <input name="confirmPassword" type="password" autocomplete="new-password" minlength="6" required />
+            </label>
+          </div>
+          <div class="auth-row">
+            <label>Date of birth
+              <input name="dob" type="date" required />
+            </label>
+            <label>Gender
+              <select name="gender" required>
+                <option value="">Select</option>
+                <option value="Female">Female</option>
+                <option value="Male">Male</option>
+                <option value="Other">Other</option>
+                <option value="Prefer not to say">Prefer not to say</option>
+              </select>
+            </label>
+          </div>
+          <button type="submit" class="primary">Register and continue</button>
+        </form>
+
+        <form id="loginForm" class="auth-form hidden" hidden>
+          <label>Email
+            <input name="email" type="email" autocomplete="username" required />
+          </label>
+          <label>Password
+            <input name="password" type="password" autocomplete="current-password" required />
+          </label>
+          <button type="submit" class="primary">Log in</button>
+        </form>
+
+        <form id="profileForm" class="auth-form hidden" hidden>
+          <p class="hint">Add these details to finish signing in with Google.</p>
+          <div class="auth-row">
+            <label>Name
+              <input id="profileFirstName" name="firstName" type="text" required />
+            </label>
+            <label>Surname
+              <input id="profileSurname" name="surname" type="text" required />
+            </label>
+          </div>
+          <div class="auth-row">
+            <label>Date of birth
+              <input id="profileDob" name="dob" type="date" required />
+            </label>
+            <label>Gender
+              <select id="profileGender" name="gender" required>
+                <option value="">Select</option>
+                <option value="Female">Female</option>
+                <option value="Male">Male</option>
+                <option value="Other">Other</option>
+                <option value="Prefer not to say">Prefer not to say</option>
+              </select>
+            </label>
+          </div>
+          <button type="submit" class="primary">Save and go to home</button>
+        </form>
+
+        <form id="childForm" class="auth-form hidden" hidden>
+          <p class="hint">Add the child who will study. Their lessons and progress stay on this profile. You can add more children afterwards.</p>
+          <label>Name
+            <input name="name" type="text" autocomplete="off" required />
+          </label>
+          <div class="auth-row">
+            <label>Gender
+              <select name="gender" required>
+                <option value="">Select</option>
+                <option value="Female">Female</option>
+                <option value="Male">Male</option>
+                <option value="Other">Other</option>
+                <option value="Prefer not to say">Prefer not to say</option>
+              </select>
+            </label>
+            <label>Date of birth
+              <input name="dob" type="date" required />
+            </label>
+          </div>
+          <div class="auth-row">
+            <label>Board
+              <select name="board" required>
+                <option value="">Select</option>
+                <option value="CBSE">CBSE</option>
+                <option value="IGCSE">IGCSE</option>
+              </select>
+            </label>
+            <label>School
+              <input name="school" type="text" autocomplete="organization" required />
+            </label>
+          </div>
+          <button type="submit" class="primary">Save child and continue</button>
+        </form>
+        <button type="button" class="auth-secondary auth-back" id="authBackHome">Back to home</button>
+      </div>
+    </section>
+
+    <div id="childDialog" class="child-dialog" hidden>
+      <div class="auth-card" role="dialog" aria-labelledby="childDialogTitle">
+        <h2 id="childDialogTitle">Add a child</h2>
+        <p class="hint">This child gets a separate profile. Lessons, stats, and Maths Aflatoon progress are saved here.</p>
+        <p id="childDialogError" class="auth-error" hidden></p>
+        <form id="addChildForm" class="auth-form">
+          <label>Name
+            <input name="name" type="text" autocomplete="off" required />
+          </label>
+          <div class="auth-row">
+            <label>Gender
+              <select name="gender" required>
+                <option value="">Select</option>
+                <option value="Female">Female</option>
+                <option value="Male">Male</option>
+                <option value="Other">Other</option>
+                <option value="Prefer not to say">Prefer not to say</option>
+              </select>
+            </label>
+            <label>Date of birth
+              <input name="dob" type="date" required />
+            </label>
+          </div>
+          <div class="auth-row">
+            <label>Board
+              <select name="board" required>
+                <option value="">Select</option>
+                <option value="CBSE">CBSE</option>
+                <option value="IGCSE">IGCSE</option>
+              </select>
+            </label>
+            <label>School
+              <input name="school" type="text" autocomplete="organization" required />
+            </label>
+          </div>
+          <button type="submit" class="primary">Save child</button>
+          <button type="button" class="auth-secondary" id="cancelAddChild">Cancel</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="layout" id="appShell">
+      <button type="button" class="hidden" id="homeBtn" hidden aria-label="Back to year menu">Home</button>
+      <div class="app-toolbar" id="appToolbar">
+        <p class="nav-label" id="subjectLabel" hidden>Subject</p>
+        <div class="subject-picks" id="subjectPicks"></div>
+        <p class="nav-label" id="modeLabel" hidden>Path</p>
+        <div class="mode-picks" id="modePicks"></div>
+        <p class="nav-label" id="moduleLabel">Modules</p>
+        <nav class="tree" id="tree" aria-label="Chapters and topics"></nav>
+      </div>
+      <aside class="nav hidden" id="nav" hidden>
+        <header class="brand nav-profile">
+          <img class="nav-avatar" src="images/hero/student-avatar.jpg" alt="" />
+          <div>
+            <p class="eyebrow" id="eyebrow">Cambridge Lower Secondary</p>
+            <h1 id="pageTitle">Science study</h1>
+          </div>
+        </header>
+      </aside>
+
+      <main class="content">
+        <section id="welcome" class="panel">
+          <div class="gogo-home home-hero" id="homeHero">
+            <div id="parentHome">
+              <div class="min-h-screen bg-slate-50 font-sans text-slate-800 antialiased">
+                <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm">
+                  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-16 py-2 flex flex-wrap items-center justify-between gap-2">
+                    <button type="button" id="parentBrandHome" class="flex items-center space-x-3">
+                      <div class="w-10 h-10 rounded-2xl bg-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-200">
+                        <i class="fa-solid fa-infinity text-xl"></i>
+                      </div>
+                      <div class="text-left">
+                        <div class="font-heading font-extrabold text-xl tracking-tight text-slate-900 flex items-center gap-1">
+                          Maths<span class="aflatoon-magic"><i class="fa-solid fa-bolt aflatoon-bolt ml-1"></i> Aflatoon</span>
+                        </div>
+                        <p class="text-xs text-slate-500 font-medium">Parent Dashboard</p>
+                      </div>
+                    </button>
+                    <div class="flex items-center space-x-3">
+                      <button type="button" id="parentDashHome" class="px-4 py-2 rounded-xl text-sm font-heading font-bold text-slate-600 hover:bg-slate-100 transition items-center gap-2 inline-flex whitespace-nowrap">
+                        <i class="fa-solid fa-house"></i> Home
+                      </button>
+                      <button type="button" id="parentLoginBtn" class="px-4 py-2 rounded-xl text-sm font-heading font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition items-center gap-2 inline-flex whitespace-nowrap">
+                        <i class="fa-solid fa-right-to-bracket"></i> Log in
+                      </button>
+                      <div class="relative">
+                        <button type="button" id="parentAvatarBtn" class="hidden w-9 h-9 rounded-full bg-slate-200 border-2 border-indigo-200 flex items-center justify-center text-indigo-700 font-bold" hidden aria-expanded="false" aria-controls="parentAvatarMenu" aria-label="Account and children">
+                          <span id="parentInitial">P</span>
+                        </button>
+                        <div id="parentAvatarMenu" class="hidden absolute right-0 mt-2 w-64 bg-white rounded-2xl border border-slate-200 shadow-xl p-3 z-50 text-left" hidden>
+                          <p class="text-xs font-bold text-slate-400 uppercase tracking-wider px-2 pb-2">Your children</p>
+                          <div id="parentChildList" class="space-y-1"></div>
+                          <button type="button" id="openAddChild" class="w-full text-left px-3 py-2 rounded-xl text-sm font-heading font-bold text-indigo-700 hover:bg-indigo-50 mt-1">Add a child</button>
+                          <button type="button" id="parentStatsBtn" class="w-full text-left px-3 py-2 rounded-xl text-sm font-heading font-bold text-slate-700 hover:bg-slate-50">Stats</button>
+                          <button type="button" id="parentLogoutBtn" class="w-full text-left px-3 py-2 rounded-xl text-sm font-heading font-bold text-slate-700 hover:bg-slate-50">Log out</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </header>
+                <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                  <div id="parentView-dashboard" class="space-y-12">
+                  <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div>
+                      <h1 id="parentWelcome" class="font-heading font-extrabold text-3xl sm:text-4xl text-slate-900 tracking-tight">Welcome back, Parent! 👋</h1>
+                      <p class="text-slate-600 mt-2">Manage your children's profiles and select their learning pathways.</p>
+                    </div>
+                  </div>
+                  <section class="space-y-6 pt-4">
+                    <div>
+                      <h2 class="font-heading font-bold text-xl text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-map-location-dot text-indigo-600"></i> Choose a Learning Pathway
+                      </h2>
+                      <p id="pathwayChild" class="text-sm text-slate-500 mt-1">Select a program below to begin your child's math journey.</p>
+                    </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                      <div class="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden flex flex-col hover:border-indigo-300 transition">
+                        <div class="bg-slate-100 p-8 text-center relative">
+                          <div class="w-20 h-20 mx-auto bg-white rounded-2xl shadow-sm border border-slate-200 flex items-center justify-center text-4xl mb-4 text-indigo-600">
+                            <i class="fa-solid fa-book-open"></i>
+                          </div>
+                          <h3 class="font-heading font-extrabold text-2xl text-slate-900">Formal Curriculum</h3>
+                          <div class="flex justify-center gap-2 mt-3">
+                            <span class="bg-indigo-100 text-indigo-700 text-xs px-3 py-1 rounded-lg font-bold">CBSE</span>
+                            <span class="bg-emerald-100 text-emerald-700 text-xs px-3 py-1 rounded-lg font-bold">IGCSE</span>
+                          </div>
+                        </div>
+                        <div class="p-8 flex-1 flex flex-col justify-between space-y-6">
+                          <p class="text-slate-600 text-sm leading-relaxed">Comprehensive chapter-wise learning strictly aligned with CBSE and IGCSE boards. Master foundational concepts, step-by-step textbook modules, and prepare for school exams.</p>
+                          <ul class="space-y-3">
+                            <li class="flex items-start gap-3 text-sm text-slate-700 font-medium"><i class="fa-solid fa-circle-check text-emerald-500 mt-0.5"></i> Interactive formal chapters and lessons.</li>
+                            <li class="flex items-start gap-3 text-sm text-slate-700 font-medium"><i class="fa-solid fa-circle-check text-emerald-500 mt-0.5"></i> Topic-specific quizzes and full-length tests.</li>
+                          </ul>
+                          <button type="button" id="exploreCurriculumBtn" class="w-full bg-slate-100 hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 border border-slate-200 font-heading font-bold text-lg px-6 py-4 rounded-2xl transition">Explore Curriculum</button>
+                        </div>
+                      </div>
+                      <div class="bg-gradient-to-br from-indigo-900 via-indigo-800 to-slate-900 rounded-3xl border border-indigo-700 shadow-2xl overflow-hidden flex flex-col relative">
+                        <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
+                        <div class="p-8 text-center relative z-10">
+                          <div class="inline-flex items-center gap-1.5 bg-indigo-500/30 border border-indigo-400/30 text-indigo-200 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-4">
+                            <i class="fa-solid fa-fire text-amber-400"></i> Most Popular
+                          </div>
+                          <h3 class="font-heading font-extrabold text-3xl sm:text-4xl text-white mb-2">The <span class="aflatoon-magic">90-Day</span> Program</h3>
+                          <p class="font-heading font-bold text-amber-300 text-lg">Become a Maths Aflatoon</p>
+                        </div>
+                        <div class="px-8 pb-8 flex-1 flex flex-col justify-between space-y-6 relative z-10">
+                          <p class="text-indigo-100 text-sm leading-relaxed">A 90-day mental maths program in three stages — Beginner, Foundation, and Advanced — built to turn calculation into a daily speed habit.</p>
+                          <div class="bg-white/10 rounded-2xl p-4 border border-white/10 space-y-3">
+                            <div class="flex items-center gap-3 text-sm text-indigo-50">
+                              <div class="w-8 h-8 rounded-full bg-amber-400/20 text-amber-400 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-bolt"></i></div>
+                              <span>Mental estimation and calculation hacks</span>
+                            </div>
+                          </div>
+                          <a href="maths-aflatoon.html" class="aflatoon-start w-full bg-amber-400 hover:bg-amber-300 text-slate-950 font-heading font-bold text-lg px-6 py-4 rounded-2xl shadow-lg transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-rocket text-indigo-900"></i> Start 90-Day Program
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+                  </div>
+
+                  <div id="parentView-setup" class="hidden space-y-8 max-w-4xl mx-auto" hidden>
+                    <button type="button" id="setupBackBtn" class="px-4 py-2 rounded-xl text-sm font-heading font-bold text-slate-600 hover:bg-slate-200 bg-slate-100 transition inline-flex items-center gap-2">
+                      <i class="fa-solid fa-arrow-left"></i> Back to Dashboard
+                    </button>
+                    <div class="text-center space-y-2">
+                      <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-indigo-100 text-indigo-600 text-3xl mb-2">
+                        <i class="fa-solid fa-sliders"></i>
+                      </div>
+                      <h2 class="font-heading font-extrabold text-3xl sm:text-4xl text-slate-900">Setup Formal Curriculum</h2>
+                      <p class="text-slate-500">Customize the learning path for your child.</p>
+                    </div>
+                    <form id="setupForm" class="space-y-10 bg-white p-8 sm:p-12 rounded-3xl border border-slate-200 shadow-xl">
+                      <div class="space-y-4">
+                        <div class="flex items-center gap-3 border-b border-slate-100 pb-2">
+                          <span class="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold font-heading">1</span>
+                          <h3 class="font-heading font-bold text-xl text-slate-800">Select Educational Board</h3>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <label class="relative cursor-pointer">
+                            <input type="radio" name="board" value="CBSE" class="card-radio sr-only" required />
+                            <div class="border-2 border-slate-200 rounded-2xl p-6 hover:border-indigo-300 transition h-full relative">
+                              <i class="fa-solid fa-circle-check check-icon text-indigo-600 absolute top-4 right-4 text-xl"></i>
+                              <div class="font-heading font-extrabold text-2xl text-slate-800 mb-1">CBSE</div>
+                              <p class="text-sm text-slate-500">Central Board of Secondary Education. Standardized national curriculum.</p>
+                            </div>
+                          </label>
+                          <label class="relative cursor-pointer">
+                            <input type="radio" name="board" value="IGCSE" class="card-radio sr-only" />
+                            <div class="border-2 border-slate-200 rounded-2xl p-6 hover:border-indigo-300 transition h-full relative">
+                              <i class="fa-solid fa-circle-check check-icon text-indigo-600 absolute top-4 right-4 text-xl"></i>
+                              <div class="font-heading font-extrabold text-2xl text-slate-800 mb-1">IGCSE</div>
+                              <p class="text-sm text-slate-500">International General Certificate of Secondary Education. Global standards.</p>
+                            </div>
+                          </label>
+                        </div>
+                      </div>
+                      <div class="space-y-4">
+                        <div class="flex items-center gap-3 border-b border-slate-100 pb-2">
+                          <span class="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold font-heading">2</span>
+                          <h3 class="font-heading font-bold text-xl text-slate-800">Select Academic Year</h3>
+                        </div>
+                        <div id="setupYearGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3"></div>
+                      </div>
+                      <p id="setupFormError" class="text-sm text-rose-600 hidden" hidden></p>
+                      <div class="pt-4 flex justify-end">
+                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-heading font-bold px-8 py-4 rounded-xl shadow-lg transition text-lg inline-flex items-center gap-2">
+                          Save &amp; Continue to Chapters <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+
+                  <div id="parentView-chapters" class="hidden space-y-8" hidden>
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                      <button type="button" id="chaptersDashBtn" class="px-4 py-2 rounded-xl text-sm font-heading font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition inline-flex items-center gap-2">
+                        <i class="fa-solid fa-arrow-left"></i> Dashboard
+                      </button>
+                      <div class="flex items-center gap-3">
+                        <div id="displayBoard" class="bg-indigo-100 text-indigo-800 font-heading font-extrabold text-sm px-4 py-1.5 rounded-xl border border-indigo-200">CBSE</div>
+                        <div class="text-slate-400 font-bold"><i class="fa-solid fa-chevron-right text-xs"></i></div>
+                        <div id="displayYear" class="bg-emerald-100 text-emerald-800 font-heading font-extrabold text-sm px-4 py-1.5 rounded-xl border border-emerald-200">Year 6</div>
+                      </div>
+                      <button type="button" id="changeCurriculumBtn" class="text-xs font-bold text-slate-500 hover:text-indigo-600 transition inline-flex items-center gap-1">
+                        <i class="fa-solid fa-pen"></i> Change Board/Year
+                      </button>
+                    </div>
+                    <div class="space-y-2">
+                      <h2 id="chapterPageTitle" class="font-heading font-extrabold text-3xl sm:text-4xl text-slate-900">Year 6 Mathematics</h2>
+                      <p class="text-slate-600">Select a chapter below to access formal textbook modules, quizzes, and tests.</p>
+                    </div>
+                    <div id="chapterSubjects" class="flex flex-wrap gap-3">
+                      <button type="button" class="px-4 py-2 rounded-xl text-sm font-heading font-bold border-2 border-indigo-600 bg-indigo-50 text-indigo-700">Mathematics</button>
+                      <button type="button" class="px-4 py-2 rounded-xl text-sm font-heading font-bold border-2 border-slate-200 bg-white text-slate-600">Science</button>
+                    </div>
+                    <div id="chaptersGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                  </div>
+                </main>
+                <footer class="bg-white border-t border-slate-200 mt-16 py-8 text-center text-sm text-slate-500">
+                  <div class="max-w-7xl mx-auto px-4 space-y-2">
+                    <p class="font-heading font-bold text-slate-800 flex items-center justify-center gap-1.5">
+                      Maths<span class="aflatoon-magic"><i class="fa-solid fa-bolt aflatoon-bolt ml-0.5"></i> Aflatoon</span> · Formal Curriculum Portal
+                    </p>
+                    <p class="text-xs text-slate-400">Master every chapter with structured precision.</p>
+                    <p class="text-xs text-slate-400">
+                      <a href="upload.html" class="hover:text-indigo-600">Upload new content</a>
+                      ·
+                      <a href="question-bank.html" class="hover:text-indigo-600">Question bank</a>
+                    </p>
+                  </div>
+                </footer>
+                <div id="parentAddChildModal" class="hidden fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4" hidden>
+                  <div class="bg-white rounded-3xl p-6 sm:p-10 max-w-lg w-full space-y-6 shadow-2xl relative" role="dialog" aria-labelledby="parentAddChildTitle">
+                    <button type="button" id="closeAddChild" class="absolute top-6 right-6 w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 transition" aria-label="Close">
+                      <i class="fa-solid fa-xmark"></i>
+                    </button>
+                    <div class="space-y-2 text-center">
+                      <div class="w-16 h-16 bg-indigo-100 text-indigo-600 rounded-2xl mx-auto flex items-center justify-center text-2xl mb-2">
+                        <i class="fa-solid fa-child-reaching"></i>
+                      </div>
+                      <h3 id="parentAddChildTitle" class="font-heading font-extrabold text-2xl text-slate-900">Add Child Profile</h3>
+                      <p class="text-slate-500 text-sm">Enter details to customize their learning experience.</p>
+                    </div>
+                    <form id="parentAddChildForm" class="space-y-4">
+                      <p id="parentAddChildError" class="text-sm text-rose-600 hidden" hidden></p>
+                      <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5" for="parentChildName">Child's full name</label>
+                        <input id="parentChildName" name="name" type="text" required placeholder="e.g. Aryan Sharma" class="w-full bg-slate-50 border-2 border-slate-200 focus:border-indigo-600 px-4 py-3 rounded-xl font-heading font-medium text-slate-900 outline-none transition" />
+                      </div>
+                      <div class="grid grid-cols-2 gap-4">
+                        <div>
+                          <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5" for="parentChildDob">Date of birth</label>
+                          <input id="parentChildDob" name="dob" type="date" required class="w-full bg-slate-50 border-2 border-slate-200 focus:border-indigo-600 px-4 py-3 rounded-xl font-heading font-medium text-slate-900 outline-none transition" />
+                        </div>
+                        <div>
+                          <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5" for="parentChildGender">Gender</label>
+                          <select id="parentChildGender" name="gender" required class="w-full bg-slate-50 border-2 border-slate-200 focus:border-indigo-600 px-4 py-3 rounded-xl font-heading font-medium text-slate-900 outline-none transition">
+                            <option value="">Select...</option>
+                            <option value="Female">Female</option>
+                            <option value="Male">Male</option>
+                            <option value="Other">Other</option>
+                            <option value="Prefer not to say">Prefer not to say</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5" for="parentChildSchool">School name</label>
+                        <input id="parentChildSchool" name="school" type="text" required placeholder="e.g. DPS Pune" class="w-full bg-slate-50 border-2 border-slate-200 focus:border-indigo-600 px-4 py-3 rounded-xl font-heading font-medium text-slate-900 outline-none transition" />
+                      </div>
+                      <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Curriculum board</label>
+                        <div class="grid grid-cols-2 gap-3">
+                          <label class="cursor-pointer">
+                            <input type="radio" name="board" value="CBSE" class="peer sr-only" required />
+                            <div class="text-center px-4 py-3 rounded-xl border-2 border-slate-200 peer-checked:border-indigo-600 peer-checked:bg-indigo-50 peer-checked:text-indigo-700 font-heading font-bold text-slate-600 transition">CBSE</div>
+                          </label>
+                          <label class="cursor-pointer">
+                            <input type="radio" name="board" value="IGCSE" class="peer sr-only" />
+                            <div class="text-center px-4 py-3 rounded-xl border-2 border-slate-200 peer-checked:border-emerald-500 peer-checked:bg-emerald-50 peer-checked:text-emerald-700 font-heading font-bold text-slate-600 transition">IGCSE</div>
+                          </label>
+                        </div>
+                      </div>
+                      <div class="pt-4">
+                        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-heading font-bold py-4 rounded-xl shadow-lg transition text-lg">Create Profile</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+                <template id="childCardTemplate">
+                  <button type="button" class="child-profile-card bg-white rounded-3xl p-6 border border-slate-200 border-indigo-300 shadow-sm hover:shadow-md transition relative overflow-hidden text-left w-full cursor-pointer">
+                    <div data-active-badge class="absolute top-0 right-0 bg-indigo-100 text-indigo-700 text-[10px] font-bold px-3 py-1 rounded-bl-xl uppercase tracking-wider">Active</div>
+                    <div class="flex items-center gap-4">
+                      <div data-face class="w-14 h-14 rounded-2xl bg-amber-100 text-amber-600 bg-sky-100 text-sky-600 bg-emerald-100 text-emerald-600 bg-rose-100 text-rose-600 flex items-center justify-center text-2xl font-bold flex-shrink-0">🧒</div>
+                      <div>
+                        <h3 data-name class="font-heading font-extrabold text-lg text-slate-900"></h3>
+                        <p data-meta class="text-xs text-slate-500 font-medium"></p>
+                      </div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-slate-100 grid grid-cols-2 gap-2 text-sm">
+                      <div>
+                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Board</div>
+                        <div data-board class="font-heading font-bold text-slate-700"></div>
+                      </div>
+                      <div>
+                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">School</div>
+                        <div data-school class="font-heading font-bold text-slate-700 truncate"></div>
+                      </div>
+                    </div>
+                  </button>
+                </template>
+                <template id="yearChoiceTemplate">
+                  <label class="relative cursor-pointer">
+                    <input type="radio" name="year" class="card-radio sr-only" />
+                    <div class="border-2 border-slate-200 rounded-xl p-4 text-center hover:border-indigo-300 transition relative">
+                      <i class="fa-solid fa-circle-check check-icon text-indigo-600 absolute top-2 right-2 text-sm"></i>
+                      <div data-label class="font-heading font-bold text-lg text-slate-800">Year 6</div>
+                    </div>
+                  </label>
+                </template>
+                <template id="chapterCardTemplate">
+                  <button type="button" class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-md hover:border-indigo-300 transition text-left w-full cursor-pointer flex flex-col justify-between space-y-4">
+                    <div class="space-y-3">
+                      <div class="flex items-start justify-between gap-3">
+                        <div data-num class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-700 flex items-center justify-center font-heading font-bold border border-indigo-100">Ch 1</div>
+                        <span data-status class="bg-emerald-100 text-emerald-700 bg-amber-100 text-amber-700 bg-slate-100 text-slate-500 text-[10px] font-bold px-2 py-1 rounded-md">Not Started</span>
+                      </div>
+                      <div>
+                        <h3 data-title class="font-heading font-bold text-lg text-slate-900"></h3>
+                        <p data-desc class="text-xs text-slate-500 mt-1 line-clamp-2"></p>
+                      </div>
+                    </div>
+                    <div class="pt-4 border-t border-slate-100 space-y-2 w-full">
+                      <div class="flex justify-between text-[10px] font-bold text-slate-400 uppercase">
+                        <span>Mastery</span>
+                        <span data-pct>0%</span>
+                      </div>
+                      <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                        <div data-bar class="bg-emerald-500 bg-amber-500 h-2 rounded-full" style="width:0%"></div>
+                      </div>
+                    </div>
+                  </button>
+                </template>
+                <template id="addChildCardTemplate">
+                  <button type="button" class="bg-slate-50 rounded-3xl p-6 border-2 border-dashed border-slate-300 hover:border-indigo-400 hover:bg-indigo-50/50 transition flex flex-col items-center justify-center text-center cursor-pointer min-h-[160px] w-full">
+                    <div class="w-12 h-12 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl mb-3">
+                      <i class="fa-solid fa-plus"></i>
+                    </div>
+                    <h3 class="font-heading font-bold text-slate-700">Add New Child</h3>
+                    <p class="text-xs text-slate-500 mt-1">Set up a new learning profile</p>
+                  </button>
+                </template>
+              </div>
+            </div>
+            <div class="gogo-metro-wrap hidden" id="gogoMetro" hidden>
+                <div class="gogo-view" data-gogo-view="board" hidden aria-label="Select board">
+                  <div class="gogo-view-head">
+                    <h2>1. Choose where to begin</h2>
+                  </div>
+                  <button type="button" class="metro-tile metro-tile-wide metro-tile-board metro-tile-cbse" data-gogo-board="CBSE">
+                    <span class="live-tile-inner delay-1">
+                      <span class="tile-face tile-face-row">
+                        <svg class="tile-board-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                        <span class="tile-face-board-copy">
+                          <span class="tile-face-board-title">CBSE Board</span>
+                          <p class="tile-face-board-sub">National curriculum</p>
+                        </span>
+                      </span>
+                      <span class="tile-face tile-face-cta"><span>Coming soon →</span></span>
+                    </span>
+                  </button>
+                  <button type="button" class="metro-tile metro-tile-wide metro-tile-board metro-tile-igcse" data-gogo-board="IGCSE">
+                    <span class="live-tile-inner delay-2">
+                      <span class="tile-face tile-face-row">
+                        <svg class="tile-board-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="tile-face-board-copy">
+                          <span class="tile-face-board-title">IGCSE Board</span>
+                          <p class="tile-face-board-sub">Cambridge pathway · Years 4–9</p>
+                        </span>
+                      </span>
+                      <span class="tile-face tile-face-cta"><span>Start learning →</span></span>
+                    </span>
+                  </button>
+                  <a class="metro-tile metro-tile-wide metro-tile-board metro-tile-aflatoon" href="maths-aflatoon.html">
+                    <span class="live-tile-inner delay-1">
+                      <span class="tile-face tile-face-row">
+                        <svg class="tile-board-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        <span class="tile-face-board-copy">
+                          <span class="tile-face-board-title">Maths Aflatoon</span>
+                          <p class="tile-face-board-sub">Beginner, Foundation and Advanced · 90 days</p>
+                        </span>
+                      </span>
+                      <span class="tile-face tile-face-cta"><span>Start the 90 days →</span></span>
+                    </span>
+                  </a>
+                </div>
+                <div class="gogo-view" data-gogo-view="years-cbse" hidden aria-label="CBSE years">
+                  <div class="gogo-view-head">
+                    <h2>2. Select your Year</h2>
+                    <button type="button" class="gogo-back-btn" data-gogo-back="parent">
+                      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                      Back
+                    </button>
+                  </div>
+                  <button type="button" class="metro-tile metro-tile-half metro-tile-y4" data-gogo-year="4">
+                    <span class="live-tile-inner delay-1">
+                      <span class="tile-face"><span class="tile-year-num">4</span><span class="tile-label">Class 4</span></span>
+                      <span class="tile-face tile-face-subjects"><span class="tile-year-subjects">Mathematics<br />NCERT</span><span class="tile-label">Class 4</span></span>
+                    </span>
+                  </button>
+                  <button type="button" class="metro-tile metro-tile-half metro-tile-y6" data-gogo-year="6">
+                    <span class="live-tile-inner delay-2">
+                      <span class="tile-face"><span class="tile-year-num">6</span><span class="tile-label">Class 6</span></span>
+                      <span class="tile-face tile-face-subjects"><span class="tile-year-subjects">Mathematics<br />Ganita Prakash</span><span class="tile-label">Class 6</span></span>
+                    </span>
+                  </button>
+                </div>
+                <div class="gogo-view" data-gogo-view="years-igcse" hidden aria-label="IGCSE years">
+                  <div class="gogo-view-head">
+                    <h2>2. Select your Year</h2>
+                    <button type="button" class="gogo-back-btn" data-gogo-back="parent">
+                      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                      Back
+                    </button>
+                  </div>
+                  <button type="button" class="metro-tile metro-tile-half metro-tile-y4" data-gogo-year="4">
+                    <span class="live-tile-inner delay-1">
+                      <span class="tile-face"><span class="tile-year-num">4</span><span class="tile-label">Year 4</span></span>
+                      <span class="tile-face tile-face-subjects"><span class="tile-year-subjects">Mental<br />Mathematics</span><span class="tile-label">Year 4</span></span>
+                    </span>
+                  </button>
+                  <button type="button" class="metro-tile metro-tile-half metro-tile-y5" data-gogo-year="5">
+                    <span class="live-tile-inner delay-2">
+                      <span class="tile-face"><span class="tile-year-num">5</span><span class="tile-label">Year 5</span></span>
+                      <span class="tile-face tile-face-subjects"><span class="tile-year-subjects">Mental<br />Mathematics</span><span class="tile-label">Year 5</span></span>
+                    </span>
+                  </button>
+                  <button type="button" class="metro-tile metro-tile-half metro-tile-y6" data-gogo-year="6">
+                    <span class="live-tile-inner delay-1">
+                      <span class="tile-face"><span class="tile-year-num">6</span><span class="tile-label">Year 6</span></span>
+                      <span class="tile-face tile-face-subjects"><span class="tile-year-subjects">Mathematics<br />Mental Mathematics</span><span class="tile-label">Year 6</span></span>
+                    </span>
+                  </button>
+                  <button type="button" class="metro-tile metro-tile-half metro-tile-y7" data-gogo-year="7">
+                    <span class="live-tile-inner delay-2">
+                      <span class="tile-face"><span class="tile-year-num">7</span><span class="tile-label">Year 7</span></span>
+                      <span class="tile-face tile-face-subjects"><span class="tile-year-subjects">Science · Maths<br />Mental Mathematics</span><span class="tile-label">Year 7</span></span>
+                    </span>
+                  </button>
+                  <button type="button" class="metro-tile metro-tile-half metro-tile-y8" data-gogo-year="8">
+                    <span class="live-tile-inner delay-1">
+                      <span class="tile-face"><span class="tile-year-num">8</span><span class="tile-label">Year 8</span></span>
+                      <span class="tile-face tile-face-subjects"><span class="tile-year-subjects">Science · Maths<br />Mental Mathematics</span><span class="tile-label">Year 8</span></span>
+                    </span>
+                  </button>
+                  <button type="button" class="metro-tile metro-tile-half metro-tile-y9" data-gogo-year="9">
+                    <span class="live-tile-inner delay-2">
+                      <span class="tile-face"><span class="tile-year-num">9</span><span class="tile-label">Year 9</span></span>
+                      <span class="tile-face tile-face-subjects"><span class="tile-year-subjects">Science<br />Mathematics</span><span class="tile-label">Year 9</span></span>
+                    </span>
+                  </button>
+                </div>
+              </div>
+          </div>
+          <div class="learn-banner learn-banner-full hidden" id="learnBanner" hidden>
+            <img class="learn-banner-full-img" src="images/hero/learn-header.jpg" alt="Best place to learn Science and Maths" />
+          </div>
+          <div class="welcome-hero hidden" id="welcomeHero" hidden>
+            <div class="welcome-hero-media">
+              <img id="welcomeHeroImg" src="images/years/year-8.jpg" alt="Year 8: science and mathematics study together" />
+              <span class="hero-badge" id="welcomeHeroBadge">Cambridge Year 8</span>
+            </div>
+            <div class="welcome-hero-body">
+              <p class="lede" id="welcomeTitle">Choose a subject</p>
+              <p class="hint" id="welcomeHint">
+                Pick Science, Mathematics, or Quick Mental Mathematics.
+              </p>
+            </div>
+          </div>
+          <div class="choice-stage" id="choiceStage" hidden></div>
+          <div class="featured-gallery hidden" id="featuredGallery" hidden></div>
+          <div class="quiz-picker hidden" id="quizPicker" hidden>
+            <div class="quiz-picker-toolbar">
+              <button type="button" class="primary" id="quizAllTopicsBtn">All topics</button>
+              <button type="button" class="primary" id="quizStartTopBtn">Start</button>
+            </div>
+            <div class="quiz-chapter-list" id="quizChapterList"></div>
+            <p class="quiz-picker-error hidden" id="quizPickerError" hidden></p>
+            <button type="button" class="primary quiz-start-btn" id="quizStartBtn">Start</button>
+          </div>
+          <div class="mock-welcome hidden" id="mockWelcome" hidden>
+            <ul class="mock-rules">
+              <li>Calculators are not allowed.</li>
+              <li>You can move back and forth between questions.</li>
+              <li>The paper lasts 1 hour.</li>
+              <li>Once you submit, the exam is final.</li>
+              <li>If you leave this screen, your progress is lost and you will have to start again.</li>
+              <li>All the best.</li>
+            </ul>
+            <button type="button" class="primary" id="mockStartBtn">Start test</button>
+          </div>
+          <div class="mental-welcome hidden" id="mentalWelcome" hidden>
+            <p class="mental-high">High score: <strong id="mentalHighScore">0</strong></p>
+            <button type="button" class="primary" id="mentalStartBtn">Start</button>
+          </div>
+        </section>
+
+        <section id="reader" class="panel hidden" hidden>
+          <article class="reader-doc" id="readerDoc"></article>
+        </section>
+
+        <section id="study" class="panel hidden" hidden>
+          <div class="topic-showcase" id="topicShowcase">
+            <div class="topic-showcase-media" id="topicShowcaseMedia">
+              <img id="topicHeroImg" src="" alt="" class="topic-hero-img" />
+              <div class="topic-showcase-overlay">
+                <span class="hero-badge" id="topicHeroBadge">Topic Visual</span>
+                <button type="button" class="hero-zoom-btn" id="heroZoomBtn" aria-label="Open image in full view">🔍 View Full Image</button>
+              </div>
+            </div>
+            <div class="topic-showcase-info">
+              <div class="topic-showcase-header">
+                <span class="showcase-tag" id="showcaseTag">Module Visual</span>
+                <span class="showcase-source" id="showcaseSource">IGCSE Stage Media</span>
+              </div>
+              <p class="topic-showcase-caption" id="topicHeroCaption"></p>
+              <div class="topic-gallery-tabs" id="topicGalleryTabs"></div>
+            </div>
+          </div>
+
+          <div class="meta">
+            <span id="cardProgress">Card 1 of 1</span>
+            <span id="topicLabel"></span>
+          </div>
+          <div class="bar"><i id="barFill"></i></div>
+
+          <div class="flash" id="flash">
+            <article class="face front">
+              <span class="kicker" id="faceKicker">Idea</span>
+              <div class="prompt" id="frontText"></div>
+            </article>
+            <article class="face back">
+              <span class="kicker">Remember</span>
+              <div class="prompt study-note" id="backText"></div>
+              <figure class="visual hidden" id="visual" hidden></figure>
+            </article>
+          </div>
+
+          <div class="actions">
+            <button type="button" class="ghost" id="prevBtn">Previous</button>
+            <button type="button" class="primary" id="nextBtn">Next card</button>
+          </div>
+          <div class="dots" id="dots" role="tablist" aria-label="Cards in this topic"></div>
+        </section>
+
+        <section id="quiz" class="panel hidden" hidden>
+          <div class="meta">
+            <span id="quizProgress">Question 1 of 10</span>
+            <span id="quizSubjectLabel"></span>
+            <span id="examTimer" class="exam-timer hidden" hidden>60:00</span>
+          </div>
+          <div class="bar"><i id="quizBarFill"></i></div>
+          <article class="quiz-card">
+            <span class="kicker" id="quizSource">Paper</span>
+            <p class="prompt" id="quizPrompt"></p>
+            <label class="quiz-label" id="quizAnswerLabel" for="quizAnswer">Your answer</label>
+            <div class="quiz-answer-row">
+              <textarea id="quizAnswer" rows="4" placeholder="Type your answer here"></textarea>
+              <div class="symbol-bar" id="symbolBar" hidden>
+                <button type="button" data-symbol="√" aria-label="Square root">√</button>
+                <button type="button" data-symbol="π" aria-label="Pi">π</button>
+                <button type="button" data-symbol="×" aria-label="Multiply">×</button>
+                <button type="button" data-symbol="÷" aria-label="Divide">÷</button>
+                <button type="button" data-symbol="°" aria-label="Degrees">°</button>
+                <button type="button" data-symbol="²" aria-label="Squared">x²</button>
+                <button type="button" data-symbol="³" aria-label="Cubed">x³</button>
+                <button type="button" data-symbol="≤" aria-label="Less than or equal">≤</button>
+                <button type="button" data-symbol="≥" aria-label="Greater than or equal">≥</button>
+                <button type="button" data-symbol="≠" aria-label="Not equal">≠</button>
+                <button type="button" data-symbol="≈" aria-label="Approximately equal">≈</button>
+                <button type="button" data-symbol="±" aria-label="Plus or minus">±</button>
+              </div>
+            </div>
+            <div class="quiz-choices hidden" id="quizChoices" hidden></div>
+          </article>
+          <div class="actions">
+            <button type="button" class="ghost" id="quizPrevBtn">Previous</button>
+            <button type="button" class="primary" id="quizNextBtn">Next</button>
+          </div>
+        </section>
+
+        <section id="quizResult" class="panel hidden" hidden>
+          <p class="lede" id="quizScoreTitle">Your score</p>
+          <p class="score-number" id="quizScoreNumber"></p>
+          <p class="hint" id="quizScoreHint"></p>
+          <div class="actions">
+            <button type="button" class="primary" id="reviewBtn">Review answers</button>
+            <button type="button" class="ghost" id="retakeBtn">Retake test</button>
+          </div>
+        </section>
+
+        <section id="quizReview" class="panel hidden" hidden>
+          <p class="lede" id="reviewTitle">Review</p>
+          <p class="hint" id="reviewHint"></p>
+          <div id="reviewList" class="review-list"></div>
+          <div class="actions">
+            <button type="button" class="ghost" id="reviewBackBtn">Back to score</button>
+            <button type="button" class="primary" id="reviewRetakeBtn">Retake test</button>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="leaveDialog" class="leave-dialog hidden" hidden role="dialog" aria-modal="true" aria-labelledby="leaveDialogText">
+      <div class="leave-dialog-card">
+        <p id="leaveDialogText"></p>
+        <div class="actions">
+          <button type="button" class="ghost" id="leaveCancelBtn">Cancel</button>
+          <button type="button" class="primary" id="leaveOkBtn">OK</button>
+        </div>
+      </div>
+    </div>
+    <div id="countdownOverlay" class="countdown-overlay hidden" hidden>
+      <p class="countdown-num" id="countdownNum" aria-live="assertive">3</p>
+    </div>
+    <div id="trophyFlash" class="trophy-flash hidden" hidden aria-hidden="true">
+      <svg viewBox="0 0 120 120" aria-hidden="true">
+        <path fill="#f6c445" d="M38 18h44v10c0 16-8 28-22 32-14-4-22-16-22-32V18z"/>
+        <path fill="#ffe38a" d="M46 18h28v8c0 12-6 20-14 23-8-3-14-11-14-23v-8z"/>
+        <path fill="#d7a21a" d="M24 22h14v8c0 8-4 14-10 16-4-6-4-14-4-24zm58 0h14c0 10 0 18-4 24-6-2-10-8-10-16v-8z"/>
+        <path fill="#f6c445" d="M52 60h16v10H52z"/>
+        <path fill="#e0b03a" d="M40 74h40v8H40z"/>
+        <path fill="#f6c445" d="M34 84h52v10H34z"/>
+        <path fill="#fff4c2" d="M58 28l2 6 6 1-4 4 1 6-5-3-5 3 1-6-4-4 6-1z"/>
+      </svg>
+    </div>
+
+    <div id="imageModal" class="image-modal hidden" hidden aria-hidden="true" role="dialog" aria-label="Image Preview">
+      <div class="modal-backdrop" id="modalBackdrop"></div>
+      <div class="modal-content">
+        <button type="button" class="modal-close" id="modalCloseBtn" aria-label="Close image preview">✕</button>
+        <img id="modalImg" src="" alt="" class="modal-img" />
+        <div class="modal-caption" id="modalCaption"></div>
+      </div>
+    </div>
+
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="content.js"></script>
+    <script src="content-y8.js"></script>
+    <script src="content-y7.js?v=9"></script>
+    <script src="elaborate.js?v=10"></script>
+    <script src="elaborate-y8b.js"></script>
+    <script src="elaborate-y8.js?v=2"></script>
+    <script src="visuals.js?v=3"></script>
+    <script src="module-images.js"></script>
+    <script src="maths-images.js?v=2"></script>
+    <script src="reader-images.js?v=5"></script>
+    <script src="y7-images.js"></script>
+    <script src="y6-images.js"></script>
+    <script src="content-y4.js"></script>
+    <script src="content-cbse-y4-maths.js"></script>
+    <script src="content-cbse-y6-maths.js"></script>
+    <script src="cbse-y4-maths-ch1-data.js"></script>
+    <script src="cbse-y4-maths-ch1-reader.js?v=2"></script>
+    <script src="cbse-y4-maths-ch2-reader.js?v=1"></script>
+    <script src="content-y5.js"></script>
+    <script src="content-y6.js"></script>
+    <script src="content-y8-maths.js"></script>
+    <script src="content-y7-maths.js?v=10"></script>
+    <script src="content-y6-maths.js?v=19"></script>
+    <script src="content-y9.js"></script>
+    <script src="content-y9-science.js?v=6"></script>
+    <script src="content-y9-maths.js?v=2"></script>
+    <script src="science-images-y9.js?v=4"></script>
+    <script src="content-11plus-maths.js"></script>
+    <script src="maths-lessons.js"></script>
+    <script src="interactive-whiteboard-data.js?v=22"></script>
+    <script src="iwb-y7-maths-ch1.js?v=8"></script>
+    <script src="iwb-y6-maths-ch1.js"></script>
+    <script src="iwb-y7-ch1/1.1.js?v=18"></script>
+    <script src="iwb-y7-ch1/1.2.js?v=18"></script>
+    <script src="iwb-y7-ch1/1.3.js?v=18"></script>
+    <script src="iwb-y7-ch1/1.4.js?v=18"></script>
+    <script src="iwb-y7-science-enhanced.js?v=21"></script>
+    <script src="iwb-y7-ch3.js?v=1"></script>
+    <script src="iwb-y9-m13.js?v=2"></script>
+    <script src="iwb-y9-maths-ch12.js?v=2"></script>
+    <script src="iwb-y9-science-ch3.js?v=5"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
+    <script src="interactive-3d.js?v=1"></script>
+    <script src="interactive-whiteboard.js?v=14"></script>
+    <script src="elaborate-maths.js?v=5"></script>
+    <script src="elaborate-y9-maths.js?v=2"></script>
+    <script src="elaborate-y9-science.js?v=6"></script>
+    <script src="quiz-y8.js"></script>
+    <script src="quiz-y7.js"></script>
+    <script src="quiz-y9.js?v=3"></script>
+    <script src="mental-maths.js"></script>
+    <script src="mock-y8.js"></script>
+    <script src="account-sync.js?v=1"></script>
+    <script src="auth-config.js"></script>
+    <script src="auth.js?v=3"></script>
+    <script src="app.js?v=73"></script>
+    <script src="y6-maths-ch1-reader.js?v=12"></script>
+    <script src="auth-ui.js?v=7"></script>
+    <script src="mobile.js"></script>
+  </body>
+</html>

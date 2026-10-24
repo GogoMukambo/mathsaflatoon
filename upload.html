@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Upload new content · Achiever's Den</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css?v=34" />
+    <link rel="stylesheet" href="quest-site-theme.css?v=2" />
+  </head>
+  <body class="upload-page">
+    <div class="bg"></div>
+    <header class="site-brand-bar">
+      <a class="site-brand" href="index.html" aria-label="Achiever's Den home">
+        <span class="site-brand-mark" aria-hidden="true">✦</span>
+        <span class="site-brand-name">Achiever's Den</span>
+      </a>
+    </header>
+
+    <main class="upload-wrap">
+      <p class="eyebrow">IGCSE content</p>
+      <h1>Upload new content</h1>
+      <p class="hint">Year and subject are required. After the book is split into topics (1.1, 1.2, …), choose which topics to build. Each topic is sent to Cursor on Grok 4.6 as three follow-up commands; the topic PDF is attached only on the first command. Keep the upload helper running, and set CURSOR_API_KEY in that same terminal.</p>
+
+      <form id="uploadForm" class="upload-card" novalidate>
+        <label>Board
+          <select name="board" required>
+            <option value="IGCSE" selected>IGCSE</option>
+          </select>
+        </label>
+        <label>Year <span class="req" aria-hidden="true">*</span>
+          <select name="year" id="yearSelect" required aria-required="true">
+            <option value="">Select year</option>
+            <option value="4">Year 4</option>
+            <option value="5">Year 5</option>
+            <option value="6">Year 6</option>
+            <option value="7">Year 7</option>
+            <option value="8">Year 8</option>
+            <option value="9">Year 9</option>
+          </select>
+        </label>
+        <label>Subject <span class="req" aria-hidden="true">*</span>
+          <select name="subject" id="subjectSelect" required aria-required="true">
+            <option value="">Select subject</option>
+            <option value="science">Science</option>
+            <option value="mathematics">Mathematics</option>
+          </select>
+        </label>
+        <label>PDF file <span class="req" aria-hidden="true">*</span>
+          <input name="file" id="fileInput" type="file" accept="application/pdf,.pdf" required aria-required="true" />
+        </label>
+        <p id="uploadStatus" class="upload-status" hidden></p>
+        <section id="chapterPicker" class="chapter-picker" hidden>
+          <div class="chapter-picker-head">
+            <h2>Select topics to build</h2>
+            <div class="chapter-picker-tools">
+              <button type="button" class="ghost" id="selectAllBtn">Select all</button>
+              <button type="button" class="ghost" id="selectNoneBtn">Select none</button>
+            </div>
+          </div>
+          <p class="chapter-picker-hint">Tick the topics you want. Then queue those builds only.</p>
+          <div id="chapterList" class="chapter-list"></div>
+          <div class="actions">
+            <button type="button" class="primary" id="queueBtn" disabled>Queue selected topics</button>
+          </div>
+        </section>
+        <div class="actions">
+          <a class="ghost" href="index.html">Cancel</a>
+          <button type="submit" class="primary" id="uploadBtn" disabled>Upload and split</button>
+        </div>
+      </form>
+
+      <hr class="upload-divider" />
+
+      <h2 class="upload-subhead">Replace a chapter from markdown</h2>
+      <p class="hint">Pick year, subject, and chapter (1–20), then upload a <code>.md</code> file. The helper creates or replaces that chapter in the app content file (maths: years 6–9; science: years 7–9). Restart the upload helper after updating it.</p>
+
+      <form id="mdForm" class="upload-card" novalidate>
+        <label>Board
+          <select name="board">
+            <option value="IGCSE" selected>IGCSE</option>
+          </select>
+        </label>
+        <label>Year <span class="req" aria-hidden="true">*</span>
+          <select name="year" id="mdYearSelect" required aria-required="true">
+            <option value="">Select year</option>
+            <option value="4">Year 4</option>
+            <option value="5">Year 5</option>
+            <option value="6">Year 6</option>
+            <option value="7">Year 7</option>
+            <option value="8">Year 8</option>
+            <option value="9">Year 9</option>
+          </select>
+        </label>
+        <label>Subject <span class="req" aria-hidden="true">*</span>
+          <select name="subject" id="mdSubjectSelect" required aria-required="true">
+            <option value="">Select subject</option>
+            <option value="science">Science</option>
+            <option value="mathematics">Mathematics</option>
+          </select>
+        </label>
+        <label>Chapter <span class="req" aria-hidden="true">*</span>
+          <select name="chapter" id="mdChapterSelect" required aria-required="true">
+            <option value="">Select chapter</option>
+          </select>
+        </label>
+        <label>Markdown file <span class="req" aria-hidden="true">*</span>
+          <input name="mdfile" id="mdFileInput" type="file" accept=".md,text/markdown" required aria-required="true" />
+        </label>
+        <p id="mdStatus" class="upload-status" hidden></p>
+        <div class="actions">
+          <button type="submit" class="primary" id="mdApplyBtn" disabled>Apply markdown to app</button>
+        </div>
+      </form>
+    </main>
+    <script src="upload.js?v=10"></script>
+  </body>
+</html>

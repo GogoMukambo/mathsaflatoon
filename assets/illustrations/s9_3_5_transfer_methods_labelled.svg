@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" role="img">
+  <rect width="800" height="500" fill="#f8fafc"/>
+  <text x="400" y="38" text-anchor="middle" font-size="20" font-weight="700">Conduction · Convection · Radiation</text>
+  <rect x="40" y="70" width="230" height="200" rx="10" fill="#fff" stroke="#64748b" stroke-width="2"/>
+  <text x="155" y="98" text-anchor="middle" font-size="14" font-weight="600">Conduction</text>
+  <rect x="70" y="120" width="170" height="30" fill="#78716c"/>
+  <circle cx="90" cy="135" r="6" fill="#fbbf24"/><circle cx="110" cy="135" r="6" fill="#fbbf24"/><circle cx="130" cy="135" r="6" fill="#fbbf24"/>
+  <text x="155" y="175" text-anchor="middle" fill="#64748b" font-size="11">Vibrations passed</text>
+  <text x="155" y="195" text-anchor="middle" fill="#64748b" font-size="11">Best in solids / metals</text>
+  <text x="155" y="250" text-anchor="middle" fill="#dc2626" font-size="11">Not in vacuum</text>
+  <rect x="285" y="70" width="230" height="200" rx="10" fill="#fff" stroke="#64748b" stroke-width="2"/>
+  <text x="400" y="98" text-anchor="middle" font-size="14" font-weight="600">Convection</text>
+  <path d="M 350 200 Q 400 120 450 200" fill="none" stroke="#ea580c" stroke-width="3"/>
+  <path d="M 450 220 Q 400 260 350 220" fill="none" stroke="#0284c7" stroke-width="3"/>
+  <text x="400" y="175" text-anchor="middle" fill="#ea580c" font-size="11">Warm rises</text>
+  <text x="400" y="245" text-anchor="middle" fill="#0284c7" font-size="11">Cool sinks</text>
+  <text x="400" y="250" text-anchor="middle" fill="#64748b" font-size="11">Liquids &amp; gases only</text>
+  <rect x="530" y="70" width="230" height="200" rx="10" fill="#fff" stroke="#64748b" stroke-width="2"/>
+  <text x="645" y="98" text-anchor="middle" font-size="14" font-weight="600">Radiation</text>
+  <circle cx="580" cy="160" r="35" fill="#fbbf24" stroke="#f59e0b" stroke-width="2"/>
+  <path d="M 615 160 L 720 160" stroke="#f59e0b" stroke-width="2" stroke-dasharray="8 6"/>
+  <text x="645" y="220" text-anchor="middle" fill="#64748b" font-size="11">Waves  no particles</text>
+  <text x="645" y="240" text-anchor="middle" fill="#64748b" font-size="11">Sun ’ Earth through space</text>
+  <rect x="120" y="300" width="560" height="160" rx="12" fill="#fefce8" stroke="#ca8a04" stroke-width="2"/>
+  <text x="400" y="335" text-anchor="middle" font-size="14" font-weight="600">Vacuum flask (idea)</text>
+  <rect x="320" y="350" width="160" height="90" rx="40" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+  <text x="400" y="395" text-anchor="middle" font-size="11">Silver reflects radiation</text>
+  <text x="400" y="415" text-anchor="middle" font-size="11">Vacuum stops conduction</text>
+  <text x="400" y="435" text-anchor="middle" fill="#713f12" font-size="12">Dull black absorbs best · Shiny white reflects</text>
+</svg>

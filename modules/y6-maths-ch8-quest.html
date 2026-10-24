@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abhyaas — Shapes Quest</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap');
+        
+        :root {
+            --brand-blue: #0f4c81;
+            --light-blue: #e0f2fe;
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.3);
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #020617, #1e3a8a, #3b82f6);
+            background-attachment: fixed;
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+            user-select: none;
+        }
+
+        h1, h2, h3, h4, .font-heading {
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        .bg-pattern {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: -1;
+            background-image: url("data:image/svg+xml,%3Csvg width='300' height='300' viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cg font-family='Fredoka, sans-serif' font-weight='bold' fill='rgba(255,255,255,0.05)'%3E%3Ctext x='30' y='60' font-size='40'%3E%E2%96%A0%3C/text%3E%3Ctext x='200' y='90' font-size='50'%3E%E2%97%8F%3C/text%3E%3Ctext x='100' y='180' font-size='45'%3E%E2%96%B2%3C/text%3E%3Ctext x='240' y='220' font-size='40'%3E%E2%97%86%3C/text%3E%3Ctext x='150' y='50' font-size='35'%3E%E2%AC%A1%3C/text%3E%3Ctext x='50' y='260' font-size='35'%3E%E2%AC%A2%3C/text%3E%3Ctext x='180' y='280' font-size='30'%3E%E2%9A%96%3C/text%3E%3C/g%3E%3C/svg%3E");
+            animation: floatPattern 60s linear infinite;
+        }
+
+        @keyframes floatPattern {
+            0% { background-position: 0 0; }
+            100% { background-position: 300px 300px; }
+        }
+
+        @keyframes pulseNode {
+            0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 255, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        }
+
+        @keyframes flashRed {
+            0%, 100% { background-color: rgba(239, 68, 68, 0.4); border-color: #f87171; transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .quest-node {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            border: 3px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+
+        .quest-node.active, .quest-node:hover {
+            background: white;
+            color: var(--brand-blue);
+            transform: translate(-50%, -50%) scale(1.15);
+            animation: pulseNode 2s infinite;
+        }
+
+        .quest-node-label {
+            position: absolute;
+            top: 70px;
+            width: 160px;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            pointer-events: none;
+            line-height: 1.2;
+        }
+
+        .quiz-input {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+        .quiz-input:focus { outline: none; background: rgba(255, 255, 255, 0.3); border-color: white; }
+        .quiz-input.correct {
+            background: rgba(34, 197, 94, 0.4) !important;
+            color: #ffffff;
+            border-color: #4ade80 !important;
+            box-shadow: 0 0 20px rgba(74, 222, 128, 0.7);
+            transform: scale(1.05);
+            pointer-events: none;
+        }
+        .quiz-input.incorrect {
+            animation: flashRed 0.4s ease;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 15, 40, 0.6);
+            backdrop-filter: blur(8px);
+            z-index: 50;
+            overflow-y: auto;
+            padding: 2rem 1rem;
+            display: none;
+        }
+
+        .drag-card {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.6);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1rem;
+            border-radius: 0.75rem;
+            cursor: grab;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: transform 0.2s;
+            user-select: none;
+            text-align: center;
+        }
+        .drag-card:active { cursor: grabbing; transform: scale(0.95); }
+        
+        .drop-slot {
+            width: 150px;
+            height: 60px;
+            border: 2px dashed rgba(255,255,255,0.4);
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .drop-slot.filled { border-style: solid; }
+        
+        .study-box {
+            background: rgba(255,255,255,0.05);
+            border-left: 4px solid #3b82f6;
+            padding: 1.25rem;
+            border-radius: 0 1rem 1rem 0;
+            margin-bottom: 1.5rem;
+        }
+        
+        .btn-more, .btn-exercise {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s;
+        }
+        .btn-more { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+        .btn-exercise { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+        .btn-more:hover, .btn-exercise:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); }
+
+        .custom-scroll::-webkit-scrollbar { width: 8px; }
+        .custom-scroll::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
+        
+        .data-table th, .data-table td { border: 1px solid rgba(255,255,255,0.2); padding: 6px; text-align: center; }
+        .data-table th { background: rgba(255,255,255,0.1); font-weight: bold; }
+        
+    
+        body.embed-mode header.glass-panel {
+            display: none;
+        }
+
+        body.embed-mode main {
+            min-height: 85vh;
+            padding-top: 1.5rem;
+        }
+
+        body.embed-mode #quest-modal {
+            padding-top: 0.5rem;
+        }
+
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="bg-pattern pointer-events-none"></div>
+
+    <header class="glass-panel sticky top-0 z-40 border-b-0 border-white/20">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <svg class="w-8 h-8 text-white drop-shadow-md" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"></path></svg>
+                <h1 class="text-3xl font-bold tracking-wider drop-shadow-sm font-heading">Abhyaas</h1>
+            </div>
+            <span class="text-sm font-bold bg-white/10 text-white py-1.5 px-4 rounded-full shadow-md uppercase tracking-wide border border-white/30">Math Quest: Chapter 8</span>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto w-full px-4 py-12 relative flex flex-col items-center justify-center min-h-[70vh]">
+        <div class="text-center mb-10">
+            <h2 class="text-5xl font-heading font-bold mb-4 drop-shadow-lg">Shapes & Symmetry</h2>
+            <p class="text-xl text-blue-100/80 font-bold max-w-2xl mx-auto mb-8">Master the properties of 2D & 3D shapes, circles, symmetry, and congruence.</p>
+            
+            <div class="glass-panel p-8 rounded-2xl max-w-4xl mx-auto mb-8 text-left z-10 relative">
+                <h3 class="text-2xl font-bold text-blue-200 mb-3 border-b border-white/10 pb-2">Why learn this in the real world?</h3>
+                <p class="text-blue-50 mb-6 leading-relaxed">Symmetry has been an important part of the design of everyday objects throughout history, seen in architecture like the Alhambra Palace in Spain. Understanding the properties of 2D and 3D shapes helps architects, engineers, and designers visualize and construct buildings, packaging, and art with perfect precision and structural integrity.</p>
+                
+                <h3 class="text-2xl font-bold text-purple-300 mb-3 border-b border-white/10 pb-2">Chapter Modules:</h3>
+                <ul class="list-disc ml-6 space-y-2 text-blue-50 font-semibold grid grid-cols-1 sm:grid-cols-2 gap-x-6">
+                    <li>Identifying lines of symmetry and rotational symmetry in 2D shapes.</li>
+                    <li>Understanding circles (radius, diameter, chord, tangent).</li>
+                    <li>Describing properties of regular and irregular polygons.</li>
+                    <li>Recognizing congruent shapes (identical in shape and size).</li>
+                    <li>Visualizing 3D shapes (faces, vertices, edges, and front/top/side views).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="relative w-full max-w-4xl h-[300px] mt-4">
+            <svg class="absolute top-0 left-0 w-full h-full pointer-events-none drop-shadow-[0_0_10px_rgba(255,255,255,0.4)]" viewBox="0 0 1000 300" preserveAspectRatio="none">
+                <path d="M 150 150 C 300 150, 300 60, 500 60 C 700 60, 700 240, 850 240" 
+                      fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="8" stroke-linecap="round" stroke-dasharray="15, 15" />
+            </svg>
+            <button class="quest-node pulse" style="left: 15%; top: 50%;" onclick="openLevel(1)">1<span class="quest-node-label">8.1 & 8.2<br>Symmetry & Circles</span></button>
+            <button class="quest-node" style="left: 50%; top: 20%;" onclick="openLevel(2)">2<span class="quest-node-label">8.3<br>Congruent Shapes</span></button>
+            <button class="quest-node" style="left: 85%; top: 80%;" onclick="openLevel(3)">3<span class="quest-node-label">8.4<br>3D Shapes & Views</span></button>
+        </div>
+    </main>
+
+    <!-- MAIN QUEST MODAL -->
+    <div id="quest-modal" class="modal-overlay hidden items-center justify-center">
+        <button onclick="prevLevel(event)" class="fixed left-2 md:left-8 top-1/2 -translate-y-1/2 w-14 h-14 md:w-20 md:h-20 rounded-full bg-white/20 backdrop-blur-md hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-all duration-300 border-2 border-white/40 shadow-[0_0_20px_rgba(255,255,255,0.3)] z-[60] cursor-pointer" id="prev-level-btn"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path></svg></button>
+        <button onclick="nextLevel(event)" class="fixed right-2 md:right-8 top-1/2 -translate-y-1/2 w-14 h-14 md:w-20 md:h-20 rounded-full bg-white/20 backdrop-blur-md hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-all duration-300 border-2 border-white/40 shadow-[0_0_20px_rgba(255,255,255,0.3)] z-[60] cursor-pointer" id="next-level-btn"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg></button>
+
+        <div id="modal-content-panel" class="glass-panel w-full max-w-5xl rounded-3xl p-6 md:p-10 relative">
+            <button onclick="closeModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-colors border border-white/40 z-10"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+
+            <!-- Level 1: Symmetry & Circles -->
+            <div id="level-1" class="level-content hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Left: Study Material -->
+                    <div>
+                        <h2 class="text-3xl font-heading font-bold mb-6 flex items-center gap-3">
+                            <span class="bg-white text-blue-900 w-10 h-10 rounded-full flex items-center justify-center text-xl">1</span>
+                            Symmetry & Circles
+                        </h2>
+
+                        <div class="study-box">
+                            <h4 class="text-lg font-bold text-blue-300 mb-2">8.1 2D Symmetry</h4>
+                            <ul class="list-disc ml-5 space-y-2 text-sm text-blue-50">
+                                <li><b>Line Symmetry:</b> A line where you can fold a shape and both halves match exactly (also called a mirror line). A rectangle has 2.</li>
+                                <li><b>Rotational Symmetry:</b> The number of times a shape looks exactly the same during one full 360° turn. A shape that only fits on itself once has order 1. A rectangle has order 2.</li>
+                            </ul>
+                        </div>
+                        <div class="study-box border-teal-400">
+                            <h4 class="text-lg font-bold text-teal-300 mb-2">8.2 Circles & Polygons</h4>
+                            <ul class="list-disc ml-5 space-y-2 text-sm text-blue-50">
+                                <li><b>Chord:</b> A straight line starting and finishing on the circumference. (A diameter is a special chord that passes through the centre).</li>
+                                <li><b>Tangent:</b> A straight line that touches the outside of the circle at exactly one point. The angle between a tangent and a radius is always 90°.</li>
+                                <li><b>Regular Polygons:</b> All sides and angles are equal. E.g., a regular octagon has 8 equal sides, 8 equal angles, 8 lines of symmetry, and rotational order 8.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Right: Interactive Component -->
+                    <div class="flex flex-col gap-6">
+                        <div class="bg-black/20 rounded-3xl p-6 border border-white/20 flex flex-col items-center justify-center gap-4 shadow-inner relative">
+                            <h3 class="text-2xl font-heading text-center text-blue-100">Interactive: Circle Parts</h3>
+                            <p class="text-center font-bold text-sm text-blue-200 mb-2">Identify the correct line type for each color.</p>
+                            
+                            <div class="flex flex-col items-center gap-4 w-full">
+                                <svg width="195" height="195" viewBox="0 0 150 150" class="drop-shadow-md">
+                                    <circle cx="75" cy="75" r="60" fill="#4ade80" fill-opacity="0.3" stroke="white" stroke-width="2"/>
+                                    <!-- Diameter -->
+                                    <line x1="15" y1="75" x2="135" y2="75" stroke="#fca5a5" stroke-width="3"/>
+                                    <!-- Tangent -->
+                                    <line x1="25" y1="15" x2="125" y2="15" stroke="#93c5fd" stroke-width="3"/>
+                                    <circle cx="75" cy="15" r="3" fill="white"/>
+                                    <!-- Radius -->
+                                    <line x1="75" y1="75" x2="75" y2="15" stroke="#fde047" stroke-width="3"/>
+                                    <!-- Chord -->
+                                    <line x1="39" y1="123" x2="111" y2="123" stroke="#c084fc" stroke-width="3"/>
+                                    <circle cx="75" cy="75" r="3" fill="white"/>
+                                </svg>
+                                
+                                <div class="grid grid-cols-2 gap-3 w-full">
+                                    <div class="flex flex-col items-center">
+                                        <span class="text-xs font-bold text-red-300 mb-1">Red Line:</span>
+                                        <input type="text" class="quiz-input w-24 p-1 text-center text-xs font-bold rounded-lg uppercase" data-answer="diameter" placeholder="?">
+                                    </div>
+                                    <div class="flex flex-col items-center">
+                                        <span class="text-xs font-bold text-blue-300 mb-1">Blue Line:</span>
+                                        <input type="text" class="quiz-input w-24 p-1 text-center text-xs font-bold rounded-lg uppercase" data-answer="tangent" placeholder="?">
+                                    </div>
+                                    <div class="flex flex-col items-center">
+                                        <span class="text-xs font-bold text-yellow-300 mb-1">Yellow Line:</span>
+                                        <input type="text" class="quiz-input w-24 p-1 text-center text-xs font-bold rounded-lg uppercase" data-answer="radius" placeholder="?">
+                                    </div>
+                                    <div class="flex flex-col items-center">
+                                        <span class="text-xs font-bold text-purple-300 mb-1">Purple Line:</span>
+                                        <input type="text" class="quiz-input w-24 p-1 text-center text-xs font-bold rounded-lg uppercase" data-answer="chord" placeholder="?">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-4 w-full mt-2">
+                                <button onclick="openMoreExamples(1)" class="btn-more w-1/2 py-3 rounded-xl font-bold text-white text-md flex items-center justify-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                                    More Examples
+                                </button>
+                                <button onclick="openPdfExercise(1)" class="btn-exercise w-1/2 py-3 rounded-xl font-bold text-white text-md flex items-center justify-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                    Exercises
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Sketches Component -->
+                        <div class="flex justify-around items-center bg-black/20 p-4 rounded-2xl border border-white/10 shadow-inner w-full">
+                            <div class="text-center">
+                                <svg width="130" height="78" viewBox="0 0 100 60" class="text-blue-300 drop-shadow-md">
+                                    <line x1="10" y1="50" x2="90" y2="50" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                                    <line x1="50" y1="50" x2="75" y2="10" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                                    <path d="M 35 50 A 15 15 0 0 1 59 35" fill="none" stroke="#f87171" stroke-width="2"/>
+                                    <text x="35" y="42" fill="white" font-size="12" font-weight="bold">a</text>
+                                    <text x="65" y="42" fill="white" font-size="12" font-weight="bold">b</text>
+                                </svg>
+                                <span class="text-xs font-bold text-blue-200 mt-2 block">Line = 180°</span>
+                            </div>
+                            <div class="text-center">
+                                <svg width="78" height="78" viewBox="0 0 60 60" class="text-blue-300 drop-shadow-md">
+                                    <circle cx="30" cy="30" r="3" fill="currentColor"/>
+                                    <line x1="30" y1="30" x2="30" y2="2" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                                    <line x1="30" y1="30" x2="55" y2="45" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                                    <line x1="30" y1="30" x2="5" y2="45" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                                    <path d="M 30 15 A 15 15 0 0 1 42 37" fill="none" stroke="#4ade80" stroke-width="2"/>
+                                    <path d="M 42 37 A 15 15 0 0 1 18 37" fill="none" stroke="#f87171" stroke-width="2"/>
+                                    <path d="M 18 37 A 15 15 0 0 1 30 15" fill="none" stroke="#a78bfa" stroke-width="2"/>
+                                </svg>
+                                <span class="text-xs font-bold text-blue-200 mt-2 block">Point = 360°</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Level 2: Congruent Shapes -->
+            <div id="level-2" class="level-content hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Left: Study Material -->
+                    <div>
+                        <h2 class="text-3xl font-heading font-bold mb-6 flex items-center gap-3">
+                            <span class="bg-white text-blue-900 w-10 h-10 rounded-full flex items-center justify-center text-xl">2</span>
+                            Congruent Shapes
+                        </h2>
+
+                        <div class="study-box">
+                            <h4 class="text-lg font-bold text-blue-300 mb-2">8.3 Recognising Congruent Shapes</h4>
+                            <ul class="list-disc ml-5 space-y-2 text-sm text-blue-50">
+                                <li>Shapes that are <b>identical in shape and size</b> are called congruent.</li>
+                                <li>They might be in a different <b>orientation</b> (rotated or flipped), but if you trace one, it will fit exactly over the other.</li>
+                                <li>In congruent shapes, <b>corresponding sides</b> are equal in length, and <b>corresponding angles</b> are equal in size.</li>
+                                <li>Congruent shapes will always have the exact same perimeter and the exact same area.</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- SOLVED EXAMPLE -->
+                        <div class="bg-blue-900/50 border-l-4 border-blue-400 p-4 rounded-r-xl mb-6 shadow-lg">
+                            <h4 class="font-bold text-blue-200 mb-2 text-lg">Solved Example</h4>
+                            <p class="text-sm font-bold">Triangle ABC is congruent to triangle DEF. AC = 13cm, angle BAC = 35°. Find DF and angle EDF.</p>
+                            <ul class="list-decimal ml-5 text-sm text-blue-100 mt-2 space-y-1 mb-3">
+                                <li>AC and DF are corresponding sides. So DF = 13cm.</li>
+                                <li>Angle BAC and angle EDF are corresponding angles. So angle EDF = 35°.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Right: Interactive Component -->
+                    <div class="flex flex-col gap-6">
+                        <div class="bg-black/20 rounded-3xl p-6 border border-white/20 flex flex-col items-center justify-center gap-4 shadow-inner relative">
+                            <h3 class="text-2xl font-heading text-center text-blue-100">Congruence Check</h3>
+                            <p class="text-center font-bold text-sm text-blue-200 mb-2">Test your understanding of identical shapes.</p>
+                            
+                            <div class="flex flex-col items-center w-full bg-white/10 p-4 rounded-2xl border border-white/20 gap-4">
+                                <div class="flex justify-around w-full items-center">
+                                    <svg viewBox="0 0 100 80" class="w-24 h-20 drop-shadow-md">
+                                        <polygon points="10,70 90,70 10,10" fill="#fca5a5" stroke="white" stroke-width="2"/>
+                                        <text x="30" y="40" fill="white" font-size="12" font-weight="bold">A</text>
+                                        <text x="45" y="75" fill="white" font-size="10">8cm</text>
+                                        <text x="15" y="25" fill="white" font-size="10">6cm</text>
+                                    </svg>
+                                    <svg viewBox="0 0 100 80" class="w-24 h-20 drop-shadow-md" style="transform: scaleX(-1);">
+                                        <polygon points="10,70 90,70 10,10" fill="#93c5fd" stroke="white" stroke-width="2"/>
+                                        <text x="30" y="40" fill="white" font-size="12" font-weight="bold" style="transform: scaleX(-1); transform-origin: 30px 40px;">B</text>
+                                        <text x="45" y="75" fill="white" font-size="10" style="transform: scaleX(-1); transform-origin: 45px 75px;">?</text>
+                                        <text x="15" y="25" fill="white" font-size="10" style="transform: scaleX(-1); transform-origin: 15px 25px;">?</text>
+                                    </svg>
+                                </div>
+                                <p class="text-xs text-center text-blue-50">Triangle A is congruent to Triangle B.</p>
+                                
+                                <div class="grid grid-cols-2 gap-2 w-full">
+                                    <div class="flex flex-col items-center">
+                                        <span class="text-xs font-bold text-blue-200 mb-1">B's bottom base:</span>
+                                        <input type="text" class="quiz-input w-16 p-2 text-center text-sm font-bold rounded-lg" data-answer="8" placeholder="?cm">
+                                    </div>
+                                    <div class="flex flex-col items-center">
+                                        <span class="text-xs font-bold text-blue-200 mb-1">B's vertical side:</span>
+                                        <input type="text" class="quiz-input w-16 p-2 text-center text-sm font-bold rounded-lg" data-answer="6" placeholder="?cm">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex gap-4 w-full mt-2">
+                                <button onclick="openMoreExamples(2)" class="btn-more w-1/2 py-3 rounded-xl font-bold text-white text-md flex items-center justify-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                                    More Examples
+                                </button>
+                                <button onclick="openPdfExercise(2)" class="btn-exercise w-1/2 py-3 rounded-xl font-bold text-white text-md flex items-center justify-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                    Exercises
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Level 3: 3D Shapes & Views -->
+            <div id="level-3" class="level-content hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Left: Study Material -->
+                    <div>
+                        <h2 class="text-3xl font-heading font-bold mb-6 flex items-center gap-3">
+                            <span class="bg-white text-blue-900 w-10 h-10 rounded-full flex items-center justify-center text-xl">3</span>
+                            3D Shapes & Views
+                        </h2>
+                        
+                        <div class="study-box">
+                            <h4 class="text-lg font-bold text-blue-300 mb-2">8.4 3D Shapes Properties</h4>
+                            <ul class="list-disc ml-5 space-y-2 text-sm text-blue-50">
+                                <li><b>Faces:</b> The flat surfaces of a solid shape.</li>
+                                <li><b>Edges:</b> The straight lines where two faces meet.</li>
+                                <li><b>Vertices:</b> The corners where edges meet.</li>
+                                <li>E.g., A Cuboid has 6 rectangular faces, 12 edges, and 8 vertices.</li>
+                            </ul>
+                        </div>
+                        <div class="study-box border-orange-400">
+                            <h4 class="text-lg font-bold text-orange-300 mb-2">Visualizing Views (Elevations)</h4>
+                            <p class="text-sm text-blue-50 mb-2">You must be able to draw what a 3D shape looks like from different 2D perspectives:</p>
+                            <ul class="list-disc ml-5 space-y-1 text-sm text-blue-50 font-bold">
+                                <li><b>Top view (Plan):</b> Looking straight down from above.</li>
+                                <li><b>Front view:</b> Looking directly at the front face.</li>
+                                <li><b>Side view:</b> Looking directly from the side.</li>
+                                <li>E.g., A cylinder looks like a circle from the top, but a rectangle from the front or side.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Right: Interactive Component -->
+                    <div class="flex flex-col gap-6">
+                        <div class="bg-black/20 rounded-3xl p-6 border border-white/20 flex flex-col items-center justify-center gap-4 shadow-inner">
+                            <h3 class="text-2xl mb-4 font-heading text-center text-blue-100">Shape Identification</h3>
+                            <p class="text-center font-bold text-sm text-blue-200 mb-2">Use the properties or views to identify the 3D shape.</p>
+                            
+                            <div class="flex flex-col gap-4 w-full">
+                                <div class="flex flex-col w-full bg-white/10 p-4 rounded-xl border border-white/20 gap-3">
+                                    <span class="font-bold text-sm">"I have one curved surface, zero edges, and zero vertices. What am I?"</span>
+                                    <div class="flex justify-between items-center mt-2">
+                                        <span class="text-xs text-blue-200">Hint: Like a ball.</span>
+                                        <input type="text" class="quiz-input w-28 p-2 text-center text-xs font-bold rounded-lg uppercase" data-answer="sphere" placeholder="?">
+                                    </div>
+                                </div>
+                                <div class="flex flex-col w-full bg-white/10 p-4 rounded-xl border border-white/20 gap-3">
+                                    <span class="font-bold text-sm">"My top view is a circle, and my side view is a triangle. What am I?"</span>
+                                    <div class="flex justify-between items-center mt-2">
+                                        <span class="text-xs text-blue-200">Hint: Like an ice cream...</span>
+                                        <input type="text" class="quiz-input w-28 p-2 text-center text-xs font-bold rounded-lg uppercase" data-answer="cone" placeholder="?">
+                                    </div>
+                                </div>
+                                <div class="flex flex-col w-full bg-white/10 p-4 rounded-xl border border-white/20 gap-3">
+                                    <span class="font-bold text-sm">How many faces does a square-based pyramid have?</span>
+                                    <div class="flex justify-between items-center mt-2">
+                                        <span class="text-xs text-blue-200">Hint: The base + 4 triangles.</span>
+                                        <input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="5" placeholder="#">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-4 w-full mt-2">
+                                <button onclick="openMoreExamples(3)" class="btn-more w-1/2 py-3 rounded-xl font-bold text-white text-md flex items-center justify-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                                    More Examples
+                                </button>
+                                <button onclick="openPdfExercise(3)" class="btn-exercise w-1/2 py-3 rounded-xl font-bold text-white text-md flex items-center justify-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                    Exercises
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MORE EXAMPLES SECONDARY MODAL -->
+    <div id="examples-modal" class="modal-overlay hidden items-center justify-center z-[70]">
+        <div class="glass-panel w-full max-w-2xl rounded-3xl p-6 md:p-8 relative">
+            <button onclick="closeMoreExamples()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-colors border border-white/40 z-10">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <h3 class="text-2xl font-heading font-bold mb-6 text-white text-center border-b border-white/20 pb-4 flex items-center justify-center gap-3">
+                <svg class="w-7 h-7 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/></svg>
+                Bonus Examples
+            </h3>
+
+            <!-- Extra Examples for Level 1 -->
+            <div id="extra-level-1" class="extra-content space-y-4 hidden">
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">What is the order of rotational symmetry of a square?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="4" placeholder="?">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">How many lines of symmetry does a regular hexagon have?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="6" placeholder="?">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">The angle between a tangent and a radius is always ___ degrees.</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="90" placeholder="?">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">A straight line that passes through the centre and touches both sides of the circumference is the ______.</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg uppercase" data-answer="diameter" placeholder="?">
+                </div>
+            </div>
+
+            <!-- Extra Examples for Level 2 -->
+            <div id="extra-level-2" class="extra-content space-y-4 hidden">
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">True or False: Congruent shapes always have the exact same perimeter.</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg uppercase" data-answer="t|true" placeholder="T/F">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">True or False: Congruent shapes always have the exact same area.</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg uppercase" data-answer="t|true" placeholder="T/F">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">If Triangle X corresponds to Triangle Y, and an angle in X is 45°, the corresponding angle in Y is ____.</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="45" placeholder="?°">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Two shapes have sides of equal length. Does this guarantee they are congruent? (Yes/No)</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg uppercase" data-answer="n|no" placeholder="Y/N">
+                </div>
+            </div>
+
+            <!-- Extra Examples for Level 3 -->
+            <div id="extra-level-3" class="extra-content space-y-4 hidden">
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">How many edges does a cube have?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="12" placeholder="?">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">What is the shape of the faces of a regular tetrahedron?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg uppercase" data-answer="triangle" placeholder="?">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">If you look directly down from above on a cylinder, what 2D shape do you see?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg uppercase" data-answer="circle" placeholder="?">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">How many vertices does a triangular prism have?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="6" placeholder="?">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- PDF EXERCISE MODAL (NEW) -->
+    <div id="pdf-exercise-modal" class="modal-overlay hidden items-center justify-center z-[80]">
+        <div class="glass-panel w-full max-w-5xl rounded-3xl p-6 md:p-8 relative h-[90vh] flex flex-col">
+            <button onclick="closePdfExercise()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-colors border border-white/40 z-10">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <h3 class="text-3xl font-heading font-bold mb-6 text-white text-center border-b border-white/20 pb-4 flex items-center justify-center gap-3 shrink-0">
+                <svg class="w-8 h-8 text-purple-400" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4zm0 15l3-3.86 2.14 2.58 3-3.86L18 19H6z"/></svg>
+                Complete PDF Exercises
+            </h3>
+
+            <!-- REPLACED SCROLL CONTAINER WITH RELATIVE FLEX CONTAINER -->
+            <div class="relative flex-grow flex flex-col overflow-hidden pb-16">
+                
+                <!-- PDF Exercise Level 1 -->
+                <div id="pdf-level-1" class="pdf-content hidden h-full overflow-y-auto custom-scroll pr-4">
+                    
+                    <!-- Focus -->
+                    <div class="exercise-page bg-blue-900/40 p-5 rounded-2xl border border-blue-400/30">
+                        <h4 class="text-xl font-bold text-blue-300 mb-4 border-b border-blue-400/30 pb-2">Focus (Easy)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q1. Write down the number of lines of symmetry for a rectangle.</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">Answer:</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="2"></div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q2. Write down the number of lines of symmetry for a regular pentagon.</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">Answer:</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="5"></div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q3. What is the order of rotational symmetry of an equilateral triangle?</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">Answer:</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="3"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q4. What is the order of rotational symmetry of a regular octagon?</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">Answer:</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="8"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Practice -->
+                    <div class="exercise-page hidden bg-purple-900/40 p-5 rounded-2xl border border-purple-400/30">
+                        <h4 class="text-xl font-bold text-purple-300 mb-4 border-b border-purple-400/30 pb-2">Practice (Medium)</h4>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm">Q5. A line that touches the circle at exactly one point is a...</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">Answer:</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg uppercase" data-answer="tangent"></div>
+                                </div>
+
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm">Q6. A straight line that starts and finishes on the circumference is a...</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">Answer:</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg uppercase" data-answer="chord"></div>
+                                </div>
+
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm">Q7. A polygon with 10 sides is called a...</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">Answer:</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg uppercase" data-answer="decagon"></div>
+                                </div>
+                                
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm">Q8. How many lines of symmetry does a scalene triangle have?</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">Answer:</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="0"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Challenge -->
+                    <div class="exercise-page hidden bg-red-900/40 p-5 rounded-2xl border border-red-400/30">
+                        <h4 class="text-xl font-bold text-red-300 mb-4 border-b border-red-400/30 pb-2">Challenge (Hard)</h4>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3 lg:col-span-2">
+                                    <span class="font-bold text-sm w-full">Q9. If a regular polygon has rotational symmetry of order 9, how many sides does it have?</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs font-bold">Sides = </span>
+                                        <input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="9" placeholder="#">
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3 lg:col-span-2">
+                                    <span class="font-bold text-sm w-full">Q10. Calculate the perimeter of a regular hexagon with side length 5cm.</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs font-bold">Perimeter = </span>
+                                        <input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="30" placeholder="?cm">
+                                    </div>
+                                </div>
+                                
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3 lg:col-span-2">
+                                    <span class="font-bold text-sm w-full">Q11. The angle between a tangent and the radius drawn to the point of contact is always ____ degrees.</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs font-bold">Angle = ?</span>
+                                        <input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="90" placeholder="?°">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PDF Exercise Level 2 -->
+                <div id="pdf-level-2" class="pdf-content hidden h-full overflow-y-auto custom-scroll pr-4">
+                    
+                    <!-- Focus -->
+                    <div class="exercise-page bg-blue-900/40 p-5 rounded-2xl border border-blue-400/30">
+                        <h4 class="text-xl font-bold text-blue-300 mb-4 border-b border-blue-400/30 pb-2">Focus (Easy)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3 items-center">
+                                <span class="font-bold text-sm w-full">Q1. True or False: Congruent shapes must be the exact same size.</span>
+                                <input type="text" class="quiz-input w-full p-2 text-center text-sm font-bold rounded-lg uppercase" data-answer="t|true" placeholder="T/F">
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3 items-center">
+                                <span class="font-bold text-sm w-full">Q2. True or False: Congruent shapes must be pointing in the exact same direction.</span>
+                                <input type="text" class="quiz-input w-full p-2 text-center text-sm font-bold rounded-lg uppercase" data-answer="f|false" placeholder="T/F">
+                            </div>
+                            
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3 items-center">
+                                <span class="font-bold text-sm w-full">Q3. Triangle ABC corresponds to XYZ. If side AB is 5cm, side XY is ____cm.</span>
+                                <input type="text" class="quiz-input w-full p-2 text-center text-sm font-bold rounded-lg" data-answer="5" placeholder="?cm">
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3 items-center">
+                                <span class="font-bold text-sm w-full">Q4. If angle B is 45°, the corresponding angle Y is ____°.</span>
+                                <input type="text" class="quiz-input w-full p-2 text-center text-sm font-bold rounded-lg" data-answer="45" placeholder="?°">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Practice -->
+                    <div class="exercise-page hidden bg-purple-900/40 p-5 rounded-2xl border border-purple-400/30">
+                        <h4 class="text-xl font-bold text-purple-300 mb-4 border-b border-purple-400/30 pb-2">Practice (Medium)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q5. Triangle KLM is congruent to DEF. Angle LKM is 28°. What is angle EDF?</span>
+                                <div class="flex items-center justify-between"><span class="text-xs">Answer:</span><input type="text" class="quiz-input w-32 p-2 text-center text-xs font-bold rounded-lg" data-answer="28"></div>
+                            </div>
+                            
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q6. In the same triangles, if KL = 6cm, which side in DEF is 6cm?</span>
+                                <div class="flex items-center justify-between"><span class="text-xs">Answer:</span><input type="text" class="quiz-input w-32 p-2 text-center text-xs font-bold rounded-lg uppercase" data-answer="de"></div>
+                            </div>
+                            
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q7. Parallelogram PQRS is congruent to WXYZ. Side PQ is 10cm. What is side WX?</span>
+                                <div class="flex items-center justify-between"><span class="text-xs">Answer:</span><input type="text" class="quiz-input w-32 p-2 text-center text-xs font-bold rounded-lg" data-answer="10"></div>
+                            </div>
+                            
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q8. Side PS is 8cm. What is side WZ?</span>
+                                <div class="flex items-center justify-between"><span class="text-xs">Answer:</span><input type="text" class="quiz-input w-32 p-2 text-center text-xs font-bold rounded-lg" data-answer="8"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Challenge -->
+                    <div class="exercise-page hidden bg-red-900/40 p-5 rounded-2xl border border-red-400/30">
+                        <h4 class="text-xl font-bold text-red-300 mb-4 border-b border-red-400/30 pb-2">Challenge (Hard)</h4>
+                        <div class="space-y-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm w-full">Q9. True or False: Two triangles with the exact same angles (e.g. 60,60,60) must be congruent.</span>
+                                <div class="flex items-center justify-between w-full">
+                                    <span class="text-xs">Answer:</span>
+                                    <input type="text" class="quiz-input w-32 p-2 text-center text-sm font-bold rounded-lg uppercase" data-answer="f|false" placeholder="T/F">
+                                </div>
+                            </div>
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm w-full">Q10. True or False: Congruent shapes will always have the exact same perimeter.</span>
+                                <div class="flex items-center justify-between w-full">
+                                    <span class="text-xs">Answer:</span>
+                                    <input type="text" class="quiz-input w-32 p-2 text-center text-sm font-bold rounded-lg uppercase" data-answer="t|true" placeholder="T/F">
+                                </div>
+                            </div>
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm w-full">Q11. Two triangles have sides 5cm, 6cm, 7cm. Are they guaranteed to be congruent?</span>
+                                <div class="flex gap-2 w-full justify-between items-center">
+                                    <span class="text-xs">Answer:</span>
+                                    <input type="text" class="quiz-input w-32 p-2 text-center text-sm font-bold rounded-lg uppercase" data-answer="yes|y" placeholder="Y/N">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PDF Exercise Level 3 -->
+                <div id="pdf-level-3" class="pdf-content hidden h-full overflow-y-auto custom-scroll pr-4">
+                    
+                    <!-- Focus -->
+                    <div class="exercise-page bg-blue-900/40 p-5 rounded-2xl border border-blue-400/30">
+                        <h4 class="text-xl font-bold text-blue-300 mb-4 border-b border-blue-400/30 pb-2">Focus (Easy)</h4>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm">Q1. How many faces does a cube have?</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">Ans = </span><input type="text" class="quiz-input w-16 p-1 text-center text-xs font-bold rounded-lg" data-answer="6"></div>
+                                </div>
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm">Q2. How many edges does a cube have?</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">Ans = </span><input type="text" class="quiz-input w-16 p-1 text-center text-xs font-bold rounded-lg" data-answer="12"></div>
+                                </div>
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm">Q3. How many vertices does a tetrahedron have?</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">Ans = </span><input type="text" class="quiz-input w-16 p-1 text-center text-xs font-bold rounded-lg" data-answer="4"></div>
+                                </div>
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm">Q4. How many curved surfaces does a sphere have?</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">Ans = </span><input type="text" class="quiz-input w-16 p-1 text-center text-xs font-bold rounded-lg" data-answer="1"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Practice -->
+                    <div class="exercise-page hidden bg-purple-900/40 p-5 rounded-2xl border border-purple-400/30">
+                        <h4 class="text-xl font-bold text-purple-300 mb-4 border-b border-purple-400/30 pb-2">Practice (Medium)</h4>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm w-full">Q5. A shape with 2 circular faces and 1 curved surface?</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs font-bold">Ans = </span>
+                                        <input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg uppercase" data-answer="cylinder" placeholder="?">
+                                    </div>
+                                </div>
+                                
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm w-full">Q6. A shape with 1 circular face and 1 curved surface?</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs font-bold">Ans = </span>
+                                        <input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg uppercase" data-answer="cone" placeholder="?">
+                                    </div>
+                                </div>
+                                
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm w-full">Q7. What is the top view of a cylinder?</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs">Ans = </span>
+                                        <input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg uppercase" data-answer="circle" placeholder="?">
+                                    </div>
+                                </div>
+                                
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm w-full">Q8. What is the side view of a cylinder?</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs">Ans = </span>
+                                        <input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg uppercase" data-answer="rectangle" placeholder="?">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Challenge -->
+                    <div class="exercise-page hidden bg-red-900/40 p-5 rounded-2xl border border-red-400/30">
+                        <h4 class="text-xl font-bold text-red-300 mb-4 border-b border-red-400/30 pb-2">Challenge (Hard)</h4>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-1 gap-4">
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm w-full">Q9. A shape has 8 faces (2 hexagons, 6 rectangles). What is it?</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs">Ans = </span>
+                                        <input type="text" class="quiz-input w-32 p-2 text-center text-xs font-bold rounded-lg uppercase" data-answer="hexagonal prism" placeholder="?">
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm w-full">Q10. How many edges does a pentagonal prism have?</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs">Answer:</span>
+                                        <input type="text" class="quiz-input w-20 p-2 text-center text-xs font-bold rounded-lg" data-answer="15" placeholder="#">
+                                    </div>
+                                </div>
+                                
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm w-full">Q11. The number of edges on a prism is always a multiple of...</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs">Answer:</span>
+                                        <input type="text" class="quiz-input w-20 p-2 text-center text-xs font-bold rounded-lg" data-answer="3" placeholder="#">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- NAVIGATION BUTTONS FOOTER -->
+                <div class="absolute bottom-0 left-0 right-0 flex justify-between items-center pt-4 bg-transparent z-10 border-t border-white/20">
+                    <button id="ex-prev-btn" onclick="prevExercisePage()" class="px-6 py-2 bg-white/20 hover:bg-white/30 rounded-xl font-bold transition-all text-white flex items-center gap-2 invisible">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg> Previous
+                    </button>
+                    <span id="ex-page-indicator" class="text-white/60 font-bold text-sm tracking-wide"></span>
+                    <button id="ex-next-btn" onclick="nextExercisePage()" class="px-6 py-2 bg-purple-600 hover:bg-purple-500 shadow-lg rounded-xl font-bold transition-all text-white flex items-center gap-2 invisible">
+                        Next <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('quest-modal');
+        const nextBtn = document.getElementById('next-level-btn');
+        const prevBtn = document.getElementById('prev-level-btn');
+        const contentPanel = document.getElementById('modal-content-panel');
+        let currentLevel = 1;
+        const totalLevels = 3;
+
+        function openLevel(level) {
+            document.querySelectorAll('.quest-node').forEach((n, i) => n.classList.toggle('active', i + 1 === level));
+            
+            document.querySelectorAll('.level-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
+            });
+            
+            const targetLevel = document.getElementById(`level-${level}`);
+            if (targetLevel) {
+                targetLevel.classList.remove('hidden');
+                targetLevel.classList.add('block');
+            }
+            
+            currentLevel = level;
+            
+            modal.style.display = 'flex';
+            
+            nextBtn.classList.toggle('hidden', level >= totalLevels);
+            prevBtn.classList.toggle('hidden', level <= 1);
+        }
+
+        function slide(dir) {
+            const nextLvl = currentLevel + dir;
+            if (nextLvl < 1 || nextLvl > totalLevels) return;
+            
+            contentPanel.style.opacity = '0';
+            contentPanel.style.transform = `translateX(${dir * -40}px)`;
+            
+            setTimeout(() => {
+                openLevel(nextLvl);
+                contentPanel.style.transition = 'none';
+                contentPanel.style.transform = `translateX(${dir * 40}px)`;
+                void contentPanel.offsetWidth; 
+                contentPanel.style.transition = 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+                contentPanel.style.opacity = '1';
+                contentPanel.style.transform = 'translateX(0)';
+            }, 300);
+        }
+
+        function nextLevel(e) { e.stopPropagation(); slide(1); }
+        function prevLevel(e) { e.stopPropagation(); slide(-1); }
+        
+        function closeModal() { 
+            modal.style.display = 'none';
+        }
+        
+        const examplesModal = document.getElementById('examples-modal');
+        const pdfExerciseModal = document.getElementById('pdf-exercise-modal');
+
+        function openMoreExamples(level) {
+            document.querySelectorAll('.extra-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
+            });
+            
+            const extraTarget = document.getElementById(`extra-level-${level}`);
+            if (extraTarget) {
+                extraTarget.classList.remove('hidden');
+                extraTarget.classList.add('block');
+            }
+            
+            examplesModal.style.display = 'flex';
+        }
+        
+        function closeMoreExamples() {
+            examplesModal.style.display = 'none';
+        }
+
+        let currentExercisePage = 0;
+        let activeExercisePages = [];
+
+        function openPdfExercise(level) {
+            document.querySelectorAll('.pdf-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
+            });
+            
+            const levelContainer = document.getElementById(`pdf-level-${level}`);
+            if (levelContainer) {
+                levelContainer.classList.remove('hidden');
+                levelContainer.classList.add('block');
+                
+                activeExercisePages = Array.from(levelContainer.querySelectorAll('.exercise-page'));
+                currentExercisePage = 0;
+                
+                updateExercisePagination();
+                
+                pdfExerciseModal.style.display = 'flex';
+            }
+        }
+
+        function updateExercisePagination() {
+            activeExercisePages.forEach((page, index) => {
+                if (index === currentExercisePage) {
+                    page.classList.remove('hidden');
+                    page.classList.add('block');
+                } else {
+                    page.classList.add('hidden');
+                    page.classList.remove('block');
+                }
+            });
+
+            const exPrevBtn = document.getElementById('ex-prev-btn');
+            const exNextBtn = document.getElementById('ex-next-btn');
+            const indicator = document.getElementById('ex-page-indicator');
+
+            if (exPrevBtn) exPrevBtn.style.visibility = currentExercisePage > 0 ? 'visible' : 'hidden';
+            if (exNextBtn) exNextBtn.style.visibility = currentExercisePage < activeExercisePages.length - 1 ? 'visible' : 'hidden';
+            
+            if (indicator && activeExercisePages.length > 0) {
+                indicator.textContent = `Section ${currentExercisePage + 1} of ${activeExercisePages.length}`;
+            }
+        }
+
+        function nextExercisePage() {
+            if (currentExercisePage < activeExercisePages.length - 1) {
+                currentExercisePage++;
+                updateExercisePagination();
+            }
+        }
+
+        function prevExercisePage() {
+            if (currentExercisePage > 0) {
+                currentExercisePage--;
+                updateExercisePagination();
+            }
+        }
+
+        function closePdfExercise() {
+            pdfExerciseModal.style.display = 'none';
+        }
+
+        // Global Drag & Drop
+        function allowDrop(ev) { ev.preventDefault(); }
+        function drag(ev) { ev.dataTransfer.setData("text", ev.target.id); }
+
+        // L1 Matching
+        let l1Correct = 0;
+        function dropL1(ev) {
+            ev.preventDefault();
+            const data = ev.dataTransfer.getData("text");
+            const el = document.getElementById(data);
+            const expected = ev.target.getAttribute('data-expected');
+            
+            if(el.getAttribute('data-val') === expected && !ev.target.hasChildNodes()) {
+                ev.target.appendChild(el);
+                el.draggable = false;
+                el.classList.add('!bg-green-500/40', '!border-green-400');
+                ev.target.classList.add('filled', 'border-green-400', 'bg-green-500/10');
+                l1Correct++;
+                if(l1Correct === 4) document.getElementById('l1-success').classList.remove('hidden');
+            } else {
+                el.classList.add('animate-[flashRed_0.4s_ease]');
+                setTimeout(() => el.classList.remove('animate-[flashRed_0.4s_ease]'), 400);
+            }
+        }
+
+        // Auto-Check Inputs
+        document.querySelectorAll('.quiz-input').forEach(input => {
+            input.addEventListener('input', function() {
+                const val = this.value.trim().toLowerCase().replace(/\s/g, "");
+                let answers = this.getAttribute('data-answer');
+                
+                if (!answers) return;
+                
+                answers = answers.toLowerCase().split('|');
+                this.classList.remove('correct', 'incorrect');
+                if (val !== '') {
+                    if (answers.includes(val)) {
+                        this.classList.add('correct');
+                    } else {
+                        this.classList.add('incorrect');
+                    }
+                }
+            });
+        });
+        function applyEmbedMode() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get("embed") === "1") {
+                document.body.classList.add("embed-mode");
+            }
+            const levelParam = params.get("level") || params.get("tab");
+            if (levelParam && typeof openLevel === "function") {
+                const level = Math.max(1, Math.min(3, parseInt(levelParam, 10) || 1));
+                setTimeout(() => openLevel(level), 150);
+            }
+        }
+
+        window.addEventListener("load", applyEmbedMode);
+    </script>
+</body>
+</html>

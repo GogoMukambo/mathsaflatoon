@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900">
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path d="M 0 1 L 9 5 L 0 9 z" fill="#111111" />
+</marker>
+
+</defs>
+<rect x="0" y="0" width="1200" height="900" fill="#ffffff" />
+<rect x="120" y="180" width="430" height="430" fill="none" stroke="#111111" stroke-width="4" />
+<circle cx="174" cy="234" r="16" fill="#111111" />
+<circle cx="239" cy="234" r="16" fill="#111111" />
+<circle cx="304" cy="234" r="16" fill="#111111" />
+<circle cx="369" cy="234" r="16" fill="#111111" />
+<circle cx="434" cy="234" r="16" fill="#111111" />
+<circle cx="499" cy="234" r="16" fill="#111111" />
+<circle cx="174" cy="299" r="16" fill="#111111" />
+<circle cx="239" cy="299" r="16" fill="#111111" />
+<circle cx="304" cy="299" r="16" fill="#111111" />
+<circle cx="369" cy="299" r="16" fill="#111111" />
+<circle cx="434" cy="299" r="16" fill="#111111" />
+<circle cx="499" cy="299" r="16" fill="#111111" />
+<circle cx="174" cy="364" r="16" fill="#111111" />
+<circle cx="239" cy="364" r="16" fill="#111111" />
+<circle cx="304" cy="364" r="16" fill="#111111" />
+<circle cx="369" cy="364" r="16" fill="#111111" />
+<circle cx="434" cy="364" r="16" fill="#111111" />
+<circle cx="499" cy="364" r="16" fill="#111111" />
+<circle cx="174" cy="429" r="16" fill="#111111" />
+<circle cx="239" cy="429" r="16" fill="#111111" />
+<circle cx="304" cy="429" r="16" fill="#111111" />
+<circle cx="369" cy="429" r="16" fill="#111111" />
+<circle cx="434" cy="429" r="16" fill="#111111" />
+<circle cx="499" cy="429" r="16" fill="#111111" />
+<circle cx="174" cy="494" r="16" fill="#111111" />
+<circle cx="239" cy="494" r="16" fill="#111111" />
+<circle cx="304" cy="494" r="16" fill="#111111" />
+<circle cx="369" cy="494" r="16" fill="#111111" />
+<circle cx="434" cy="494" r="16" fill="#111111" />
+<circle cx="499" cy="494" r="16" fill="#111111" />
+<circle cx="174" cy="559" r="16" fill="#111111" />
+<circle cx="239" cy="559" r="16" fill="#111111" />
+<circle cx="304" cy="559" r="16" fill="#111111" />
+<circle cx="369" cy="559" r="16" fill="#111111" />
+<circle cx="434" cy="559" r="16" fill="#111111" />
+<circle cx="499" cy="559" r="16" fill="#111111" />
+<text x="335" y="680" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="34" font-weight="700" text-anchor="middle">pure substance</text>
+<rect x="650" y="180" width="430" height="430" fill="none" stroke="#111111" stroke-width="4" />
+<circle cx="704" cy="234" r="16" fill="#111111" />
+<circle cx="769" cy="234" r="16" fill="#111111" />
+<rect x="819" y="219" width="30" height="30" fill="#ffffff" stroke="#111111" stroke-width="3" />
+<circle cx="899" cy="234" r="16" fill="#111111" />
+<circle cx="964" cy="234" r="16" fill="#111111" />
+<rect x="1014" y="219" width="30" height="30" fill="#ffffff" stroke="#111111" stroke-width="3" />
+<circle cx="704" cy="299" r="16" fill="#111111" />
+<circle cx="769" cy="299" r="16" fill="#111111" />
+<rect x="819" y="284" width="30" height="30" fill="#ffffff" stroke="#111111" stroke-width="3" />
+<circle cx="899" cy="299" r="16" fill="#111111" />
+<circle cx="964" cy="299" r="16" fill="#111111" />
+<rect x="1014" y="284" width="30" height="30" fill="#ffffff" stroke="#111111" stroke-width="3" />
+<circle cx="704" cy="364" r="16" fill="#111111" />
+<circle cx="769" cy="364" r="16" fill="#111111" />
+<rect x="819" y="349" width="30" height="30" fill="#ffffff" stroke="#111111" stroke-width="3" />
+<circle cx="899" cy="364" r="16" fill="#111111" />
+<circle cx="964" cy="364" r="16" fill="#111111" />
+<rect x="1014" y="349" width="30" height="30" fill="#ffffff" stroke="#111111" stroke-width="3" />
+<circle cx="704" cy="429" r="16" fill="#111111" />
+<circle cx="769" cy="429" r="16" fill="#111111" />
+<rect x="819" y="414" width="30" height="30" fill="#ffffff" stroke="#111111" stroke-width="3" />
+<circle cx="899" cy="429" r="16" fill="#111111" />
+<circle cx="964" cy="429" r="16" fill="#111111" />
+<rect x="1014" y="414" width="30" height="30" fill="#ffffff" stroke="#111111" stroke-width="3" />
+<circle cx="704" cy="494" r="16" fill="#111111" />
+<circle cx="769" cy="494" r="16" fill="#111111" />
+<rect x="819" y="479" width="30" height="30" fill="#ffffff" stroke="#111111" stroke-width="3" />
+<circle cx="899" cy="494" r="16" fill="#111111" />
+<circle cx="964" cy="494" r="16" fill="#111111" />
+<rect x="1014" y="479" width="30" height="30" fill="#ffffff" stroke="#111111" stroke-width="3" />
+<circle cx="704" cy="559" r="16" fill="#111111" />
+<circle cx="769" cy="559" r="16" fill="#111111" />
+<rect x="819" y="544" width="30" height="30" fill="#ffffff" stroke="#111111" stroke-width="3" />
+<circle cx="899" cy="559" r="16" fill="#111111" />
+<circle cx="964" cy="559" r="16" fill="#111111" />
+<rect x="1014" y="544" width="30" height="30" fill="#ffffff" stroke="#111111" stroke-width="3" />
+<text x="865" y="680" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="34" font-weight="700" text-anchor="middle">mixture</text>
+<text x="600" y="760" fill="#555555" font-family="Helvetica, Arial, sans-serif" font-size="27" font-weight="600" text-anchor="middle">one kind of particle  ·  more than one kind of particle</text>
+</svg>

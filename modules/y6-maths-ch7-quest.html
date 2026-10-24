@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abhyaas — Fractions Quest</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap');
+        
+        :root {
+            --brand-blue: #0f4c81;
+            --light-blue: #e0f2fe;
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.3);
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #020617, #1e3a8a, #3b82f6);
+            background-attachment: fixed;
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+            user-select: none;
+        }
+
+        h1, h2, h3, h4, .font-heading {
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        .bg-pattern {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: -1;
+            background-image: url("data:image/svg+xml,%3Csvg width='300' height='300' viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cg font-family='Fredoka, sans-serif' font-weight='bold' fill='rgba(255,255,255,0.05)'%3E%3Ctext x='30' y='60' font-size='40'%3E%C2%BD%3C/text%3E%3Ctext x='200' y='90' font-size='50'%3E%C2%BE%3C/text%3E%3Ctext x='100' y='180' font-size='45'%3E%C3%97%3C/text%3E%3Ctext x='240' y='220' font-size='40'%3E%C3%B7%3C/text%3E%3Ctext x='150' y='50' font-size='35'%3E%3C%3C/text%3E%3Ctext x='50' y='260' font-size='35'%3E%3E%3C/text%3E%3Ctext x='180' y='280' font-size='30'%3E%E2%89%A0%3C/text%3E%3C/g%3E%3C/svg%3E");
+            animation: floatPattern 60s linear infinite;
+        }
+
+        @keyframes floatPattern {
+            0% { background-position: 0 0; }
+            100% { background-position: 300px 300px; }
+        }
+
+        @keyframes pulseNode {
+            0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 255, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        }
+
+        @keyframes flashRed {
+            0%, 100% { background-color: rgba(239, 68, 68, 0.4); border-color: #f87171; transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .quest-node {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            border: 3px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+
+        .quest-node.active, .quest-node:hover {
+            background: white;
+            color: var(--brand-blue);
+            transform: translate(-50%, -50%) scale(1.15);
+            animation: pulseNode 2s infinite;
+        }
+
+        .quest-node-label {
+            position: absolute;
+            top: 70px;
+            width: 160px;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            pointer-events: none;
+            line-height: 1.2;
+        }
+
+        .quiz-input {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+        .quiz-input:focus { outline: none; background: rgba(255, 255, 255, 0.3); border-color: white; }
+        .quiz-input.correct {
+            background: rgba(34, 197, 94, 0.4) !important;
+            color: #ffffff;
+            border-color: #4ade80 !important;
+            box-shadow: 0 0 20px rgba(74, 222, 128, 0.7);
+            transform: scale(1.05);
+            pointer-events: none;
+        }
+        .quiz-input.incorrect {
+            animation: flashRed 0.4s ease;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 15, 40, 0.6);
+            backdrop-filter: blur(8px);
+            z-index: 50;
+            overflow-y: auto;
+            padding: 2rem 1rem;
+            display: none;
+        }
+
+        .drag-card {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.6);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1rem;
+            border-radius: 0.75rem;
+            cursor: grab;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: transform 0.2s;
+            user-select: none;
+            text-align: center;
+        }
+        .drag-card:active { cursor: grabbing; transform: scale(0.95); }
+        
+        .drop-slot {
+            width: 150px;
+            height: 60px;
+            border: 2px dashed rgba(255,255,255,0.4);
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .drop-slot.filled { border-style: solid; }
+        
+        .study-box {
+            background: rgba(255,255,255,0.05);
+            border-left: 4px solid #3b82f6;
+            padding: 1.25rem;
+            border-radius: 0 1rem 1rem 0;
+            margin-bottom: 1.5rem;
+        }
+        
+        .btn-more, .btn-exercise {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s;
+        }
+        .btn-more { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+        .btn-exercise { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+        .btn-more:hover, .btn-exercise:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); }
+
+        .custom-scroll::-webkit-scrollbar { width: 8px; }
+        .custom-scroll::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
+
+        .chapter-landing-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2.5rem;
+            width: 100%;
+            max-width: 72rem;
+            align-items: center;
+        }
+        @media (min-width: 768px) {
+            .chapter-landing-grid { grid-template-columns: 1fr 1fr; }
+        }
+        .chapter-hero-info { text-align: left; }
+        .chapter-hero-info h2 {
+            font-size: clamp(3.125rem, 6.25vw, 4.6875rem);
+            line-height: 1.1;
+        }
+        .chapter-hero-info .chapter-tagline { font-size: 1.6875rem; font-weight: 700; }
+        .chapter-hero-info .chapter-panel { font-size: 1.40625rem; }
+        .chapter-hero-info .chapter-panel h3 { font-size: 1.875rem; }
+        .chapter-hero-info .chapter-panel ul { font-size: 1.40625rem; }
+        .topic-path-label {
+            font-size: 1.6875rem;
+            font-weight: 800;
+            text-align: left;
+            color: #bfdbfe;
+            letter-spacing: 0.02em;
+        }
+        .topic-stage-wrap {
+            position: relative;
+            padding-left: 3.25rem;
+            padding-right: 3.25rem;
+        }
+        @media (min-width: 768px) {
+            .topic-stage-wrap {
+                padding-left: 4.25rem;
+                padding-right: 4.25rem;
+            }
+        }
+        .l1-topic-page {
+            min-height: 28rem;
+            height: 28rem;
+            overflow-y: auto;
+            text-align: left;
+            font-size: 1.40625rem;
+        }
+        .l1-topic-page .topic-title {
+            font-size: 2.34375rem;
+            line-height: 1.2;
+        }
+        .l1-topic-page.topic-page-interactive {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .solved-example-box {
+            background: rgba(30, 58, 138, 0.5);
+            border-left: 4px solid #60a5fa;
+            padding: 1.25rem 1.5rem;
+            border-radius: 0 1rem 1rem 0;
+            margin-top: 1.5rem;
+            text-align: left;
+        }
+        .topic-sub-nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 20;
+            width: 3.25rem;
+            height: 3.25rem;
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.22);
+            border: 2px solid rgba(255, 255, 255, 0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        .topic-sub-nav-btn:hover:not(:disabled) {
+            background: white;
+            color: #1e3a8a;
+        }
+        .topic-sub-nav-btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+        #topic-sub-prev { left: 0; }
+        #topic-sub-next { right: 0; }
+        @media (min-width: 768px) {
+            .topic-sub-nav-btn { width: 3.75rem; height: 3.75rem; }
+        }
+        
+        .pyramid-row { display: flex; justify-content: center; gap: 10px; margin-bottom: 10px; }
+        .pyramid-block { width: 80px; height: 60px; background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.4); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: bold; border-radius: 12px; transition: all 0.3s ease; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+        .pyramid-block input { width: 100%; height: 100%; text-align: center; border-radius: 10px; background: transparent; outline: none; transition: all 0.3s; color: white; font-weight: bold;}
+        .pyramid-block input.correct { background: rgba(34, 197, 94, 0.5) !important; color: white; }
+        .pyramid-block input.incorrect { animation: flashRed 0.4s ease; background: rgba(239, 68, 68, 0.4); }
+        
+    
+        body.embed-mode header.glass-panel {
+            display: none;
+        }
+
+        body.embed-mode main {
+            min-height: 85vh;
+            padding-top: 1.5rem;
+        }
+
+        body.embed-mode #quest-modal {
+            padding-top: 0.5rem;
+        }
+
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="bg-pattern pointer-events-none"></div>
+
+    <header class="glass-panel sticky top-0 z-40 border-b-0 border-white/20">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <svg class="w-8 h-8 text-white drop-shadow-md" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"></path></svg>
+                <h1 class="text-3xl font-bold tracking-wider drop-shadow-sm font-heading">Abhyaas</h1>
+            </div>
+            <span class="text-sm font-bold bg-white/10 text-white py-1.5 px-4 rounded-full shadow-md uppercase tracking-wide border border-white/30">Math Quest: Chapter 7</span>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto w-full px-4 py-12 relative flex flex-col items-center justify-center min-h-[70vh]">
+        <div class="chapter-landing-grid">
+            <div class="chapter-hero-info order-1 z-10">
+                <p class="text-base font-bold uppercase tracking-widest text-blue-200/90 mb-2">Year 6 Mathematics</p>
+                <h2 class="font-heading font-bold mb-4 drop-shadow-lg">7 Fractions</h2>
+                <p class="chapter-tagline text-blue-100/90 mb-8 max-w-xl">Master ordering, adding mixed numbers, and multiplying/dividing fractions.</p>
+
+                <div class="glass-panel chapter-panel p-8 rounded-2xl max-w-xl text-blue-50">
+                    <h3 class="font-bold text-blue-200 mb-3 border-b border-white/10 pb-2">Why learn this in the real world?</h3>
+                    <p class="mb-6 leading-relaxed">The word &lsquo;fraction&rsquo; comes from the Latin <em>fractio</em> — breaking into pieces. You use fractions for shop discounts, recipes, and distance signs every day.</p>
+
+                    <h3 class="font-bold text-purple-300 mb-3 border-b border-white/10 pb-2">Chapter modules</h3>
+                    <ul class="list-disc ml-6 space-y-2 font-semibold">
+                        <li>Compare and order fractions (common denominators or decimals).</li>
+                        <li>Add mixed numbers efficiently.</li>
+                        <li>Multiply and divide proper fractions.</li>
+                        <li>Simplify calculations using factors and equivalent fractions.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="relative w-full h-[300px] min-h-[260px] order-2 chapter-quest-map">
+            <svg class="absolute top-0 left-0 w-full h-full pointer-events-none drop-shadow-[0_0_10px_rgba(255,255,255,0.4)]" viewBox="0 0 1000 300" preserveAspectRatio="none">
+                <path d="M 150 150 C 300 150, 300 60, 500 60 C 700 60, 700 240, 850 240" 
+                      fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="8" stroke-linecap="round" stroke-dasharray="15, 15" />
+            </svg>
+            <button class="quest-node pulse" style="left: 15%; top: 50%;" onclick="openLevel(1)">1<span class="quest-node-label">Ordering & Adding</span></button>
+            <button class="quest-node" style="left: 50%; top: 20%;" onclick="openLevel(2)">2<span class="quest-node-label">Multiply & Divide</span></button>
+            <button class="quest-node" style="left: 85%; top: 80%;" onclick="openLevel(3)">3<span class="quest-node-label">Making it Easier</span></button>
+            </div>
+        </div>
+    </main>
+
+    <!-- MAIN QUEST MODAL -->
+    <div id="quest-modal" class="modal-overlay hidden items-center justify-center">
+        <button onclick="prevLevel(event)" class="fixed left-2 md:left-8 top-1/2 -translate-y-1/2 w-14 h-14 md:w-20 md:h-20 rounded-full bg-white/20 backdrop-blur-md hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-all duration-300 border-2 border-white/40 shadow-[0_0_20px_rgba(255,255,255,0.3)] z-[60] cursor-pointer" id="prev-level-btn"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path></svg></button>
+        <button onclick="nextLevel(event)" class="fixed right-2 md:right-8 top-1/2 -translate-y-1/2 w-14 h-14 md:w-20 md:h-20 rounded-full bg-white/20 backdrop-blur-md hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-all duration-300 border-2 border-white/40 shadow-[0_0_20px_rgba(255,255,255,0.3)] z-[60] cursor-pointer" id="next-level-btn"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg></button>
+
+        <div id="modal-content-panel" class="glass-panel w-full max-w-5xl rounded-3xl p-6 md:p-10 relative">
+            <button onclick="closeModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-colors border border-white/40 z-10"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+
+            <!-- Level 1: Ordering & Adding (topic sub-pages) -->
+            <div id="level-1" class="level-content hidden">
+                <p id="topic-path-label" class="topic-path-label mb-4">7 Fractions › 7.1 Ordering fractions</p>
+                <div class="topic-stage-wrap">
+                    <button type="button" id="topic-sub-prev" class="topic-sub-nav-btn" onclick="prevTopicSubPage(event)" aria-label="Previous topic page" disabled>
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path></svg>
+                    </button>
+                    <button type="button" id="topic-sub-next" class="topic-sub-nav-btn" onclick="nextTopicSubPage(event)" aria-label="Next topic page">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+
+                    <div id="l1-topic-page-0" class="l1-topic-page">
+                        <h2 class="topic-title font-heading font-bold mb-6 flex items-center gap-3">
+                            <span class="bg-white text-blue-900 w-11 h-11 rounded-full flex items-center justify-center text-xl shrink-0">1</span>
+                            <span>7.1 Ordering fractions</span>
+                        </h2>
+                        <div class="study-box">
+                            <ul class="list-disc ml-5 space-y-3 text-blue-50">
+                                <li>Compare fractions by giving them a <b>common denominator</b>.</li>
+                                <li>Or write them as <b>decimals</b> (divide numerator by denominator).</li>
+                                <li>Recurring decimals repeat forever (e.g. 0.6&#x307;).</li>
+                                <li>Change improper fractions to mixed numbers before comparing.</li>
+                            </ul>
+                        </div>
+                        <div class="solved-example-box">
+                            <h4 class="font-bold text-blue-200 mb-2 text-xl">Solved example</h4>
+                            <p class="font-bold mt-2">Order from smallest: 2.6, 2.816, 2.82</p>
+                            <ul class="list-decimal ml-5 text-blue-100 space-y-1 mt-3">
+                                <li>All have whole part 2 — compare tenths: 2.6 has 6 tenths (smallest so far).</li>
+                                <li>2.816 has 1 hundredth; 2.82 has 2 hundredths.</li>
+                                <li>Order: 2.6, 2.816, 2.82.</li>
+                            </ul>
+                            <p class="font-bold text-blue-200 mt-4">Compare: &frac23; and &frac34; using twelfths → 8/12 &lt; 9/12.</p>
+                        </div>
+                    </div>
+
+                    <div id="l1-topic-page-1" class="l1-topic-page hidden">
+                        <h2 class="topic-title font-heading font-bold mb-6 flex items-center gap-3">
+                            <span class="bg-white text-blue-900 w-11 h-11 rounded-full flex items-center justify-center text-xl shrink-0">2</span>
+                            <span>7.2 Adding mixed numbers</span>
+                        </h2>
+                        <div class="study-box border-teal-400">
+                            <ul class="list-disc ml-5 space-y-3 text-blue-50">
+                                <li><b>Step 1:</b> Add whole-number parts for an estimate.</li>
+                                <li><b>Step 2:</b> Add fractional parts with a common denominator; simplify.</li>
+                                <li><b>Step 3:</b> Combine whole numbers and fractions for the final answer.</li>
+                            </ul>
+                        </div>
+                        <div class="solved-example-box">
+                            <h4 class="font-bold text-blue-200 mb-2 text-xl">Solved example</h4>
+                            <p class="font-bold mt-2">Work out: 2&frac14; + 3&#x2156;</p>
+                            <ul class="list-decimal ml-5 text-blue-100 space-y-1 mt-3">
+                                <li>Add whole numbers: 2 + 3 = 5.</li>
+                                <li>Add fractions: &frac14; + &#x2156; = 3/12 + 10/12 = 13/12 = 1&frac112;.</li>
+                                <li>Combine: 5 + 1&frac112; = 6&frac112;.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div id="l1-topic-page-2" class="l1-topic-page topic-page-interactive hidden">
+                        <h2 class="topic-title font-heading font-bold mb-4">Interactive: Compare fractions</h2>
+                        <p class="text-xl font-bold text-blue-200 mb-6 max-w-lg">Type the correct symbol: <b>&lt;</b>, <b>&gt;</b>, or <b>=</b></p>
+
+                        <div class="flex flex-col gap-4 w-full max-w-2xl flex-1">
+                            <div class="flex flex-col w-full bg-white/10 p-4 rounded-xl border border-white/20 gap-3 text-left mx-auto">
+                                <span class="font-bold">Compare: &frac23; and 10/15</span>
+                                <div class="flex justify-between items-center mt-2 gap-4">
+                                    <span class="text-blue-200">Hint: Simplify 10/15</span>
+                                    <input type="text" class="quiz-input w-24 p-2 text-center font-bold rounded-lg" data-answer="=" placeholder="<, >, =">
+                                </div>
+                            </div>
+                            <div class="flex flex-col w-full bg-white/10 p-4 rounded-xl border border-white/20 gap-3 text-left mx-auto">
+                                <span class="font-bold">Compare: 21/5 and 3&frac45;</span>
+                                <div class="flex justify-between items-center mt-2 gap-4">
+                                    <span class="text-blue-200">Hint: 21/5 is 4&frac15;</span>
+                                    <input type="text" class="quiz-input w-24 p-2 text-center font-bold rounded-lg" data-answer=">" placeholder="<, >, =">
+                                </div>
+                            </div>
+                            <div class="flex flex-col w-full bg-white/10 p-4 rounded-xl border border-white/20 gap-3 text-left mx-auto">
+                                <span class="font-bold">Compare: 17/3 and 5&#x2156;</span>
+                                <div class="flex justify-between items-center mt-2 gap-4">
+                                    <span class="text-blue-200">Hint: 17/3 is 5&frac23;</span>
+                                    <input type="text" class="quiz-input w-24 p-2 text-center font-bold rounded-lg" data-answer="<" placeholder="<, >, =">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row gap-4 w-full max-w-2xl mt-auto pt-6 justify-center">
+                            <button type="button" onclick="openMoreExamples(1)" class="btn-more w-full sm:w-1/2 py-3 rounded-xl font-bold text-white text-xl flex items-center justify-center gap-2">
+                                More examples
+                            </button>
+                            <button type="button" onclick="openPdfExercise(1)" class="btn-exercise w-full sm:w-1/2 py-3 rounded-xl font-bold text-white text-xl flex items-center justify-center gap-2">
+                                Exercises
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Level 2: Multiply & Divide -->
+            <div id="level-2" class="level-content hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Left: Study Material -->
+                    <div>
+                        <h2 class="text-3xl font-heading font-bold mb-6 flex items-center gap-3">
+                            <span class="bg-white text-blue-900 w-10 h-10 rounded-full flex items-center justify-center text-xl">2</span>
+                            Multiply & Divide
+                        </h2>
+
+                        <div class="study-box">
+                            <h4 class="text-lg font-bold text-blue-300 mb-2">7.3 Multiplying Fractions</h4>
+                            <ul class="list-disc ml-5 space-y-2 text-sm text-blue-50">
+                                <li>To find a fraction of a fraction, multiply them together.</li>
+                                <li>Multiply the <b>numerators</b> together, and multiply the <b>denominators</b> together.</li>
+                                <li>Always cancel your final answer to its simplest form.</li>
+                            </ul>
+                        </div>
+                        <div class="study-box border-purple-400">
+                            <h4 class="text-lg font-bold text-purple-300 mb-2">7.4 Dividing Fractions</h4>
+                            <ul class="list-disc ml-5 space-y-2 text-sm text-blue-50">
+                                <li><b>Step 1:</b> Turn the second fraction upside down (this gives you the <b>reciprocal</b>).</li>
+                                <li><b>Step 2:</b> Multiply the fractions together, as usual.</li>
+                                <li><b>Step 3:</b> Write the answer in its simplest form, and as a mixed number when possible.</li>
+                            </ul>
+                        </div>
+                        <!-- SOLVED EXAMPLE -->
+                        <div class="bg-blue-900/50 border-l-4 border-blue-400 p-4 rounded-r-xl mb-6 shadow-lg">
+                            <h4 class="font-bold text-blue-200 mb-2 text-lg">Solved Examples</h4>
+                            <p class="text-sm font-bold">Multiply: &frac25; &times; &#x215e;</p>
+                            <ul class="list-decimal ml-5 text-sm text-blue-100 mt-2 space-y-1 mb-3">
+                                <li>Multiply top and bottom: (2&times;7) / (5&times;8) = 14 / 40.</li>
+                                <li>Simplify (divide by 2): 7 / 20.</li>
+                            </ul>
+                            <p class="text-sm font-bold mt-4">Divide: &frac25; &divide; 3/10</p>
+                            <ul class="list-decimal ml-5 text-sm text-blue-100 space-y-1">
+                                <li>Turn second upside down and multiply: &frac25; &times; 10/3.</li>
+                                <li>(2&times;10) / (5&times;3) = 20 / 15.</li>
+                                <li>Simplify and convert: 4 / 3 = 1&frac13;.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Right: Interactive Component -->
+                    <div class="flex flex-col gap-6">
+                        <div class="bg-black/20 rounded-3xl p-6 border border-white/20 flex flex-col items-center justify-center gap-4 shadow-inner">
+                            <h3 class="text-2xl mb-4 font-heading text-center text-blue-100">Quick Fire</h3>
+                            <p class="text-center font-bold text-sm text-blue-200 mb-2">Practice multiplying and dividing simple fractions.</p>
+                            
+                            <div class="flex flex-col gap-4 w-full">
+                                <div class="flex flex-col w-full bg-white/10 p-4 rounded-xl border border-white/20 gap-3">
+                                    <span class="font-bold text-sm">Multiply: &frac14; &times; &frac13;</span>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-xs text-blue-200">Hint: Top&times;Top / Bottom&times;Bottom</span>
+                                        <input type="text" class="quiz-input w-24 p-2 text-center font-bold rounded-lg" data-answer="1/12" placeholder="?/?">
+                                    </div>
+                                </div>
+                                <div class="flex flex-col w-full bg-white/10 p-4 rounded-xl border border-white/20 gap-3">
+                                    <span class="font-bold text-sm">Divide: &frac14; &divide; &frac12;</span>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-xs text-blue-200">Hint: Turn &frac12; to 2/1 and multiply. Simplify.</span>
+                                        <input type="text" class="quiz-input w-24 p-2 text-center font-bold rounded-lg" data-answer="1/2" placeholder="?/?">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex gap-4 w-full mt-2">
+                                <button onclick="openMoreExamples(2)" class="btn-more w-1/2 py-3 rounded-xl font-bold text-white text-md flex items-center justify-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                                    More Examples
+                                </button>
+                                <button onclick="openPdfExercise(2)" class="btn-exercise w-1/2 py-3 rounded-xl font-bold text-white text-md flex items-center justify-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                    Exercises
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- SKETCH SECTION -->
+                        <div class="flex justify-around items-center bg-black/20 p-4 rounded-2xl border border-white/10 shadow-inner w-full">
+                            <div class="text-center">
+                                <svg width="100" height="80" viewBox="0 0 100 80" class="drop-shadow-md">
+                                    <!-- Grid 3x2 -->
+                                    <rect x="10" y="10" width="80" height="60" fill="white" fill-opacity="0.1" stroke="white" stroke-width="2"/>
+                                    <rect x="10" y="10" width="26.6" height="60" fill="#93c5fd" fill-opacity="0.5"/>
+                                    <rect x="10" y="10" width="80" height="30" fill="#fca5a5" fill-opacity="0.5"/>
+                                    <rect x="10" y="10" width="26.6" height="30" fill="#a855f7" />
+                                    <line x1="36.6" y1="10" x2="36.6" y2="70" stroke="white" stroke-width="2"/>
+                                    <line x1="63.3" y1="10" x2="63.3" y2="70" stroke="white" stroke-width="2"/>
+                                    <line x1="10" y1="40" x2="90" y2="40" stroke="white" stroke-width="2"/>
+                                </svg>
+                                <span class="text-xs font-bold text-purple-200 mt-2 block">1/2 &times; 1/3 = 1/6</span>
+                            </div>
+                            <div class="text-center">
+                                <svg width="100" height="80" viewBox="0 0 100 80" class="drop-shadow-md">
+                                    <path d="M 10 60 A 40 40 0 0 1 90 60 Z" fill="#4ade80" stroke="white" stroke-width="2"/>
+                                    <line x1="50" y1="60" x2="50" y2="20" stroke="white" stroke-width="2" stroke-dasharray="4"/>
+                                    <text x="25" y="50" fill="white" font-size="12" font-weight="bold">1/4</text>
+                                    <text x="60" y="50" fill="white" font-size="12" font-weight="bold">1/4</text>
+                                </svg>
+                                <span class="text-xs font-bold text-green-200 mt-2 block">1/2 &divide; 1/4 = 2</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Level 3: Making it Easier -->
+            <div id="level-3" class="level-content hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Left: Study Material -->
+                    <div>
+                        <h2 class="text-3xl font-heading font-bold mb-6 flex items-center gap-3">
+                            <span class="bg-white text-blue-900 w-10 h-10 rounded-full flex items-center justify-center text-xl">3</span>
+                            Making Calculations Easier
+                        </h2>
+
+                        <div class="study-box">
+                            <h4 class="text-lg font-bold text-blue-300 mb-2">7.5 Using Factors & Equivalence</h4>
+                            <ul class="list-disc ml-5 space-y-2 text-sm text-blue-50">
+                                <li>Break a fraction into parts using <b>factors</b>. E.g., &frac14; is &frac12; &times; &frac12;. So &frac14; of 600 means halving 600, then halving it again.</li>
+                                <li>Use <b>equivalent fractions</b>. E.g., &frac35; &times; 120 is easier as 6/10 &times; 120. (120 &divide; 10 = 12, then 12 &times; 6 = 72).</li>
+                            </ul>
+                        </div>
+                        <div class="study-box border-orange-400">
+                            <h4 class="text-lg font-bold text-orange-300 mb-2">Cancelling Same Factors</h4>
+                            <ul class="list-disc ml-5 space-y-2 text-sm text-blue-50">
+                                <li>Find factors that are the same in the numerator and denominator to cancel them out before multiplying.</li>
+                            </ul>
+                        </div>
+                        <!-- SOLVED EXAMPLE -->
+                        <div class="bg-blue-900/50 border-l-4 border-blue-400 p-4 rounded-r-xl mb-6 shadow-lg">
+                            <h4 class="font-bold text-blue-200 mb-2 text-lg">Solved Examples</h4>
+                            <p class="text-sm font-bold mt-2">Solve: &#x215e; &times; &frac45;</p>
+                            <ul class="list-decimal ml-5 text-sm text-blue-100 space-y-1 mb-3">
+                                <li>Replace 8 with 2 &times; 4: (7 &times; 4) / (2 &times; 4 &times; 5).</li>
+                                <li>Rearrange to cancel the 4s: (7 &times; 4) / (10 &times; 4).</li>
+                                <li>Cancel 4/4 to leave 7/10.</li>
+                            </ul>
+                            <p class="text-sm font-bold mt-4">Solve: 1/14 &times; 700</p>
+                            <ul class="list-decimal ml-5 text-sm text-blue-100 space-y-1">
+                                <li>Split 1/14 into 1/7 &times; &frac12;.</li>
+                                <li>700 &divide; 7 = 100. Then 100 &divide; 2 = 50.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Right: Interactive Component -->
+                    <div class="flex flex-col gap-6">
+                        <div class="bg-black/20 rounded-3xl p-6 border border-white/20 flex flex-col items-center justify-center gap-4 shadow-inner">
+                            <h3 class="text-2xl mb-4 font-heading text-center text-blue-100">Smart Shortcuts</h3>
+                            <p class="text-center font-bold text-sm text-blue-200 mb-2">Use factors and equivalence to solve these quickly.</p>
+                            
+                            <div class="flex flex-col gap-4 w-full">
+                                <div class="flex flex-col w-full bg-white/10 p-4 rounded-xl border border-white/20 gap-3">
+                                    <span class="font-bold text-sm">Find &frac14; of 520 (using &frac12; &times; &frac12;)</span>
+                                    <div class="flex justify-between items-center mt-2">
+                                        <span class="text-xs text-blue-200">Hint: Half of 520, then half again.</span>
+                                        <input type="text" class="quiz-input w-24 p-2 text-center font-bold rounded-lg" data-answer="130" placeholder="?">
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col w-full bg-white/10 p-4 rounded-xl border border-white/20 gap-3">
+                                    <span class="font-bold text-sm">Find &frac15; of 340 (using 2/10)</span>
+                                    <div class="flex justify-between items-center mt-2">
+                                        <span class="text-xs text-blue-200">Hint: Divide by 10, multiply by 2.</span>
+                                        <input type="text" class="quiz-input w-24 p-2 text-center font-bold rounded-lg" data-answer="68" placeholder="?">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-4 w-full mt-2">
+                                <button onclick="openMoreExamples(3)" class="btn-more w-1/2 py-3 rounded-xl font-bold text-white text-md flex items-center justify-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                                    More Examples
+                                </button>
+                                <button onclick="openPdfExercise(3)" class="btn-exercise w-1/2 py-3 rounded-xl font-bold text-white text-md flex items-center justify-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                    Exercises
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- SKETCH SECTION -->
+                        <div class="flex justify-around items-center bg-black/20 p-4 rounded-2xl border border-white/10 shadow-inner w-full">
+                            <div class="text-center">
+                                <svg width="120" height="80" viewBox="0 0 120 80" class="drop-shadow-md">
+                                    <text x="60" y="20" fill="white" font-size="14" font-weight="bold" text-anchor="middle">&frac14; of 120</text>
+                                    <line x1="60" y1="25" x2="30" y2="45" stroke="white" stroke-width="2"/>
+                                    <line x1="60" y1="25" x2="90" y2="45" stroke="white" stroke-width="2"/>
+                                    <text x="30" y="60" fill="#93c5fd" font-size="12" font-weight="bold" text-anchor="middle">&frac12; of 120</text>
+                                    <text x="90" y="60" fill="#fca5a5" font-size="12" font-weight="bold" text-anchor="middle">then &frac12;</text>
+                                    <text x="60" y="75" fill="#4ade80" font-size="14" font-weight="bold" text-anchor="middle">= 30</text>
+                                </svg>
+                                <span class="text-xs font-bold text-orange-200 mt-2 block">Using Factors</span>
+                            </div>
+                            <div class="text-center">
+                                <svg width="120" height="80" viewBox="0 0 120 80" class="drop-shadow-md">
+                                    <text x="60" y="25" fill="white" font-size="16" font-weight="bold" text-anchor="middle">7 &times; 4</text>
+                                    <line x1="30" y1="35" x2="90" y2="35" stroke="white" stroke-width="2"/>
+                                    <text x="60" y="55" fill="white" font-size="16" font-weight="bold" text-anchor="middle">8 &times; 5</text>
+                                    
+                                    <!-- Strike throughs -->
+                                    <line x1="70" y1="15" x2="85" y2="25" stroke="#f87171" stroke-width="2"/>
+                                    <line x1="35" y1="45" x2="50" y2="55" stroke="#f87171" stroke-width="2"/>
+                                    <text x="85" y="15" fill="#f87171" font-size="12" font-weight="bold">1</text>
+                                    <text x="35" y="65" fill="#f87171" font-size="12" font-weight="bold">2</text>
+                                </svg>
+                                <span class="text-xs font-bold text-orange-200 mt-2 block">Cancelling</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MORE EXAMPLES SECONDARY MODAL -->
+    <div id="examples-modal" class="modal-overlay hidden items-center justify-center z-[70]">
+        <div class="glass-panel w-full max-w-2xl rounded-3xl p-6 md:p-8 relative">
+            <button onclick="closeMoreExamples()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-colors border border-white/40 z-10">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <h3 class="text-2xl font-heading font-bold mb-6 text-white text-center border-b border-white/20 pb-4 flex items-center justify-center gap-3">
+                <svg class="w-7 h-7 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/></svg>
+                Bonus Examples
+            </h3>
+
+            <!-- Extra Examples for Level 1 -->
+            <div id="extra-level-1" class="extra-content space-y-4 hidden">
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Compare: &frac14; and 2/8</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="=" placeholder="<, >, =">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Which is larger: 21/4 or 16/3?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="16/3" placeholder="?/?">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Add mixed numbers: 2&frac49; + 1&frac49;</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="3 8/9" placeholder="? ?/?">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Convert to decimal: 11/8</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="1.375" placeholder="?">
+                </div>
+            </div>
+
+            <!-- Extra Examples for Level 2 -->
+            <div id="extra-level-2" class="extra-content space-y-4 hidden">
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Multiply: &frac34; &times; &frac34;</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="9/16" placeholder="?/?">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Divide: &frac13; &divide; 5/6</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="2/5" placeholder="?/?">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Area of a rectangle with sides 3/4m and 2/5m?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="3/10" placeholder="?/?">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Divide: &frac34; &divide; &frac12; (Give mixed number)</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="1 1/2" placeholder="? ?/?">
+                </div>
+            </div>
+
+            <!-- Extra Examples for Level 3 -->
+            <div id="extra-level-3" class="extra-content space-y-4 hidden">
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Simplify: &frac16; &times; 90 using &frac12; &times; &frac13;</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="15" placeholder="?">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Simplify: 1/15 &times; 210 using 1/3 &times; 1/5</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="14" placeholder="?">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Find 2/5 of 160 using 4/10.</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="64" placeholder="?">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Solve &frac38; &times; &#x2156; by cancelling common factors.</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="5/16" placeholder="?/?">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- PDF EXERCISE MODAL (NEW) -->
+    <div id="pdf-exercise-modal" class="modal-overlay hidden items-center justify-center z-[80]">
+        <div class="glass-panel w-full max-w-5xl rounded-3xl p-6 md:p-8 relative h-[90vh] flex flex-col">
+            <button onclick="closePdfExercise()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-colors border border-white/40 z-10">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <h3 class="text-3xl font-heading font-bold mb-6 text-white text-center border-b border-white/20 pb-4 flex items-center justify-center gap-3 shrink-0">
+                <svg class="w-8 h-8 text-purple-400" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4zm0 15l3-3.86 2.14 2.58 3-3.86L18 19H6z"/></svg>
+                Complete PDF Exercises
+            </h3>
+
+            <!-- REPLACED SCROLL CONTAINER WITH RELATIVE FLEX CONTAINER -->
+            <div class="relative flex-grow flex flex-col overflow-hidden pb-16">
+                
+                <!-- PDF Exercise Level 1 -->
+                <div id="pdf-level-1" class="pdf-content hidden h-full overflow-y-auto custom-scroll pr-4">
+                    
+                    <!-- Focus -->
+                    <div class="exercise-page bg-blue-900/40 p-5 rounded-2xl border border-blue-400/30">
+                        <h4 class="text-xl font-bold text-blue-300 mb-4 border-b border-blue-400/30 pb-2">Focus (Easy)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q1. Write the correct symbol (= or &ne;) between the fractions: 27/29 and 29/27.</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">Answer:</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="!="></div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q2. Write the correct symbol (= or &ne;): 0.60 and 0.6.</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">Answer:</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="="></div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q3. Complete equivalent fraction: 2/3 = ?/9</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">Answer:</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="6/9|6"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q4. Write the improper fraction as a mixed number: 7/3.</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">Answer:</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="2 1/3"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Practice -->
+                    <div class="exercise-page hidden bg-purple-900/40 p-5 rounded-2xl border border-purple-400/30">
+                        <h4 class="text-xl font-bold text-purple-300 mb-4 border-b border-purple-400/30 pb-2">Practice (Medium)</h4>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm">Q5. Write correct inequality (< or >): 2/3 and 10/15. (Write the sign).</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">Answer:</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="="></div>
+                                </div>
+
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm">Q6. Compare using < or >: 21/4 and 5&frac34;.</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">Answer:</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="<"></div>
+                                </div>
+
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm">Q7. Add mixed numbers: 2&frac49; + 1&frac49;.</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">Answer:</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="3 8/9"></div>
+                                </div>
+
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm">Q8. Add mixed numbers: 7&#x215b; + 3&frac38;.</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">Answer:</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="10 1/2"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Challenge -->
+                    <div class="exercise-page hidden bg-red-900/40 p-5 rounded-2xl border border-red-400/30">
+                        <h4 class="text-xl font-bold text-red-300 mb-4 border-b border-red-400/30 pb-2">Challenge (Hard)</h4>
+                        <div class="space-y-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm w-full">Q9. Work out the perimeter of a triangle with sides 3&frac29;m, 5&#x215d;m, and 7&#x215e;m.</span>
+                                <div class="flex items-center justify-between w-full">
+                                    <span class="text-xs">Answer:</span>
+                                    <input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="16 2/3" placeholder="? ?/?">
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm w-full">Q10. Andrew uses two pieces of wood. One is 2&#x215d;m and the other is 1&frac34;m. What is the total length?</span>
+                                <div class="flex items-center justify-between w-full">
+                                    <span class="text-xs">Answer:</span>
+                                    <input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="4 3/8" placeholder="? ?/?">
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm w-full">Q11. Awen runs 17&frac12;km on Saturday and 14&#x215e;km on Sunday. Total distance?</span>
+                                <div class="flex items-center justify-between w-full">
+                                    <span class="text-xs">Answer:</span>
+                                    <input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="32 3/8" placeholder="? ?/?">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PDF Exercise Level 2 -->
+                <div id="pdf-level-2" class="pdf-content hidden h-full overflow-y-auto custom-scroll pr-4">
+                    
+                    <!-- Focus -->
+                    <div class="exercise-page bg-blue-900/40 p-5 rounded-2xl border border-blue-400/30">
+                        <h4 class="text-xl font-bold text-blue-300 mb-4 border-b border-blue-400/30 pb-2">Focus (Easy)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3 items-center">
+                                <span class="font-bold text-sm w-full">Q1. Multiply: &frac14; &times; &frac12;</span>
+                                <input type="text" class="quiz-input w-full p-2 text-center text-sm font-bold rounded-lg" data-answer="1/8" placeholder="?/?">
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3 items-center">
+                                <span class="font-bold text-sm w-full">Q2. Multiply: &frac34; &times; &frac14;</span>
+                                <input type="text" class="quiz-input w-full p-2 text-center text-sm font-bold rounded-lg" data-answer="3/16" placeholder="?/?">
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3 items-center">
+                                <span class="font-bold text-sm w-full">Q3. Divide: &frac14; &divide; &frac13;</span>
+                                <input type="text" class="quiz-input w-full p-2 text-center text-sm font-bold rounded-lg" data-answer="3/4" placeholder="?/?">
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3 items-center">
+                                <span class="font-bold text-sm w-full">Q4. Divide: 1/6 &divide; 1/5</span>
+                                <input type="text" class="quiz-input w-full p-2 text-center text-sm font-bold rounded-lg" data-answer="5/6" placeholder="?/?">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Practice -->
+                    <div class="exercise-page hidden bg-purple-900/40 p-5 rounded-2xl border border-purple-400/30">
+                        <h4 class="text-xl font-bold text-purple-300 mb-4 border-b border-purple-400/30 pb-2">Practice (Medium)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q5. Multiply and simplify: &frac34; &times; &frac25;</span>
+                                <div class="flex items-center justify-between"><span class="text-xs">Answer:</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="3/10"></div>
+                            </div>
+                            
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q6. Multiply and simplify: 7/9 &times; &frac23;</span>
+                                <div class="flex items-center justify-between"><span class="text-xs">Answer:</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="14/27"></div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q7. Divide: &frac14; &divide; &frac23;</span>
+                                <div class="flex items-center justify-between"><span class="text-xs">Answer:</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="3/8"></div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q8. Divide: &frac45; &divide; 1/9 (Give mixed number).</span>
+                                <div class="flex items-center justify-between"><span class="text-xs">Answer:</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="7 1/5"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Challenge -->
+                    <div class="exercise-page hidden bg-red-900/40 p-5 rounded-2xl border border-red-400/30">
+                        <h4 class="text-xl font-bold text-red-300 mb-4 border-b border-red-400/30 pb-2">Challenge (Hard)</h4>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between w-full bg-white/5 p-4 rounded-xl border border-white/10">
+                                <span class="font-bold text-sm mr-4 w-3/4">Q9. Area of a rectangle is 2/15 m&sup2;. Width is 3/10 m. What is the length?</span>
+                                <input type="text" class="quiz-input w-24 p-2 text-center text-sm font-bold rounded-lg" data-answer="4/9" placeholder="?/?">
+                            </div>
+
+                            <div class="flex items-center justify-between w-full bg-white/5 p-4 rounded-xl border border-white/10">
+                                <span class="font-bold text-sm mr-4 w-3/4">Q10. At a hotel, 5/9 of staff are part-time. 3/7 of part-time staff are men. What fraction of staff are part-time men?</span>
+                                <input type="text" class="quiz-input w-24 p-2 text-center text-sm font-bold rounded-lg" data-answer="5/21" placeholder="?/?">
+                            </div>
+
+                            <div class="flex items-center justify-between w-full bg-white/5 p-4 rounded-xl border border-white/10">
+                                <span class="font-bold text-sm mr-4 w-3/4">Q11. Calculate the area of a rectangle with sides 3/5m and 3&frac34;m.</span>
+                                <input type="text" class="quiz-input w-24 p-2 text-center text-sm font-bold rounded-lg" data-answer="2 1/4" placeholder="? ?/?">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PDF Exercise Level 3 -->
+                <div id="pdf-level-3" class="pdf-content hidden h-full overflow-y-auto custom-scroll pr-4">
+                    
+                    <!-- Focus -->
+                    <div class="exercise-page bg-blue-900/40 p-5 rounded-2xl border border-blue-400/30">
+                        <h4 class="text-xl font-bold text-blue-300 mb-4 border-b border-blue-400/30 pb-2">Focus (Easy)</h4>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm">Q1. Write as a product of two factors: 6 = 2 &times; ?</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">Ans = </span><input type="text" class="quiz-input w-20 p-1 text-center text-xs font-bold rounded-lg" data-answer="3"></div>
+                                </div>
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm">Q2. Write 1/6 as a product of two fractions: 1/2 &times; ?/?</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">Ans = </span><input type="text" class="quiz-input w-20 p-1 text-center text-xs font-bold rounded-lg" data-answer="1/3"></div>
+                                </div>
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm">Q3. Simplify using factors: 1/4 &times; 120 = 1/2 &times; 1/2 &times; 120. Half of 120 is 60, half of 60 is?</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">Ans = </span><input type="text" class="quiz-input w-20 p-1 text-center text-xs font-bold rounded-lg" data-answer="30"></div>
+                                </div>
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm">Q4. Simplify using factors: 1/6 &times; 90.</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">Ans = </span><input type="text" class="quiz-input w-20 p-1 text-center text-xs font-bold rounded-lg" data-answer="15"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Practice -->
+                    <div class="exercise-page hidden bg-purple-900/40 p-5 rounded-2xl border border-purple-400/30">
+                        <h4 class="text-xl font-bold text-purple-300 mb-4 border-b border-purple-400/30 pb-2">Practice (Medium)</h4>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm w-full">Q5. Simplify: 1/5 &times; 340 (Use 2/10).</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs font-bold">Ans = </span>
+                                        <input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="68" placeholder="#">
+                                    </div>
+                                </div>
+                                
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm w-full">Q6. Simplify: 2/5 &times; 160 (Use 4/10).</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs font-bold">Ans = </span>
+                                        <input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="64" placeholder="#">
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm w-full">Q7. Find factors that are the same in top and bottom: 5/6 &times; 2/3.</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs font-bold">Ans = </span>
+                                        <input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="5/9" placeholder="?/?">
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm w-full">Q8. Use factors: 3/5 &times; 10/17.</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs font-bold">Ans = </span>
+                                        <input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="6/17" placeholder="?/?">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Challenge -->
+                    <div class="exercise-page hidden bg-red-900/40 p-5 rounded-2xl border border-red-400/30">
+                        <h4 class="text-xl font-bold text-red-300 mb-4 border-b border-red-400/30 pb-2">Challenge (Hard)</h4>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-1 gap-4">
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm w-full">Q9. Approximately 1/12 of the population of 408 people are left-handed. How many?</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs">Ans = </span>
+                                        <input type="text" class="quiz-input w-20 p-2 text-center text-xs font-bold rounded-lg" data-answer="34" placeholder="?">
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm w-full">Q10. 4/5 of girls have blue eyes. There are 820 girls. How many have blue eyes?</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs">Ans = </span>
+                                        <input type="text" class="quiz-input w-20 p-2 text-center text-xs font-bold rounded-lg" data-answer="656" placeholder="#">
+                                    </div>
+                                </div>
+                                
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm w-full">Q11. Calculate (2/5)&sup2; &times; 400.</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs">Ans = </span>
+                                        <input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="64" placeholder="#">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- NAVIGATION BUTTONS FOOTER -->
+                <div class="absolute bottom-0 left-0 right-0 flex justify-between items-center pt-4 bg-transparent z-10 border-t border-white/20">
+                    <button id="ex-prev-btn" onclick="prevExercisePage()" class="px-6 py-2 bg-white/20 hover:bg-white/30 rounded-xl font-bold transition-all text-white flex items-center gap-2 invisible">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg> Previous
+                    </button>
+                    <span id="ex-page-indicator" class="text-white/60 font-bold text-sm tracking-wide"></span>
+                    <button id="ex-next-btn" onclick="nextExercisePage()" class="px-6 py-2 bg-purple-600 hover:bg-purple-500 shadow-lg rounded-xl font-bold transition-all text-white flex items-center gap-2 invisible">
+                        Next <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('quest-modal');
+        const nextBtn = document.getElementById('next-level-btn');
+        const prevBtn = document.getElementById('prev-level-btn');
+        const contentPanel = document.getElementById('modal-content-panel');
+        let currentLevel = 1;
+        const totalLevels = 3;
+        let currentTopicSubPage = 0;
+        const level1TopicPaths = [
+            '7 Fractions › 7.1 Ordering fractions',
+            '7 Fractions › 7.2 Adding mixed numbers',
+            '7 Fractions › Interactive: Compare fractions',
+        ];
+
+        function setTopicSubPage(index) {
+            currentTopicSubPage = Math.max(0, Math.min(level1TopicPaths.length - 1, index));
+            for (let i = 0; i < level1TopicPaths.length; i++) {
+                const page = document.getElementById(`l1-topic-page-${i}`);
+                if (page) page.classList.toggle('hidden', i !== currentTopicSubPage);
+            }
+            const pathEl = document.getElementById('topic-path-label');
+            if (pathEl) pathEl.textContent = level1TopicPaths[currentTopicSubPage];
+            const subPrev = document.getElementById('topic-sub-prev');
+            const subNext = document.getElementById('topic-sub-next');
+            if (subPrev) subPrev.disabled = currentTopicSubPage <= 0;
+            if (subNext) subNext.disabled = currentTopicSubPage >= level1TopicPaths.length - 1;
+        }
+
+        function nextTopicSubPage(e) {
+            e.stopPropagation();
+            if (currentLevel !== 1 || currentTopicSubPage >= level1TopicPaths.length - 1) return;
+            setTopicSubPage(currentTopicSubPage + 1);
+        }
+
+        function prevTopicSubPage(e) {
+            e.stopPropagation();
+            if (currentLevel !== 1 || currentTopicSubPage <= 0) return;
+            setTopicSubPage(currentTopicSubPage - 1);
+        }
+
+        function openLevel(level) {
+            document.querySelectorAll('.quest-node').forEach((n, i) => n.classList.toggle('active', i + 1 === level));
+            
+            document.querySelectorAll('.level-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
+            });
+            
+            const targetLevel = document.getElementById(`level-${level}`);
+            if (targetLevel) {
+                targetLevel.classList.remove('hidden');
+                targetLevel.classList.add('block');
+            }
+            
+            currentLevel = level;
+            if (level === 1) setTopicSubPage(0);
+            
+            modal.style.display = 'flex';
+            
+            nextBtn.classList.toggle('hidden', level >= totalLevels);
+            prevBtn.classList.toggle('hidden', level <= 1);
+
+            const showTopicNav = level === 1;
+            document.getElementById('topic-sub-prev')?.classList.toggle('hidden', !showTopicNav);
+            document.getElementById('topic-sub-next')?.classList.toggle('hidden', !showTopicNav);
+            document.getElementById('topic-path-label')?.classList.toggle('hidden', !showTopicNav);
+        }
+
+        function slide(dir) {
+            const nextLvl = currentLevel + dir;
+            if (nextLvl < 1 || nextLvl > totalLevels) return;
+            
+            contentPanel.style.opacity = '0';
+            contentPanel.style.transform = `translateX(${dir * -40}px)`;
+            
+            setTimeout(() => {
+                openLevel(nextLvl);
+                contentPanel.style.transition = 'none';
+                contentPanel.style.transform = `translateX(${dir * 40}px)`;
+                void contentPanel.offsetWidth; 
+                contentPanel.style.transition = 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+                contentPanel.style.opacity = '1';
+                contentPanel.style.transform = 'translateX(0)';
+            }, 300);
+        }
+
+        function nextLevel(e) { e.stopPropagation(); slide(1); }
+        function prevLevel(e) { e.stopPropagation(); slide(-1); }
+        
+        function closeModal() { 
+            modal.style.display = 'none';
+        }
+        
+        const examplesModal = document.getElementById('examples-modal');
+        const pdfExerciseModal = document.getElementById('pdf-exercise-modal');
+
+        function openMoreExamples(level) {
+            document.querySelectorAll('.extra-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
+            });
+            
+            const extraTarget = document.getElementById(`extra-level-${level}`);
+            if (extraTarget) {
+                extraTarget.classList.remove('hidden');
+                extraTarget.classList.add('block');
+            }
+            
+            examplesModal.style.display = 'flex';
+        }
+        
+        function closeMoreExamples() {
+            examplesModal.style.display = 'none';
+        }
+
+        let currentExercisePage = 0;
+        let activeExercisePages = [];
+
+        function openPdfExercise(level) {
+            document.querySelectorAll('.pdf-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
+            });
+            
+            const levelContainer = document.getElementById(`pdf-level-${level}`);
+            if (levelContainer) {
+                levelContainer.classList.remove('hidden');
+                levelContainer.classList.add('block');
+                
+                activeExercisePages = Array.from(levelContainer.querySelectorAll('.exercise-page'));
+                currentExercisePage = 0;
+                
+                updateExercisePagination();
+                
+                pdfExerciseModal.style.display = 'flex';
+            }
+        }
+
+        function updateExercisePagination() {
+            activeExercisePages.forEach((page, index) => {
+                if (index === currentExercisePage) {
+                    page.classList.remove('hidden');
+                    page.classList.add('block');
+                } else {
+                    page.classList.add('hidden');
+                    page.classList.remove('block');
+                }
+            });
+
+            const exPrevBtn = document.getElementById('ex-prev-btn');
+            const exNextBtn = document.getElementById('ex-next-btn');
+            const indicator = document.getElementById('ex-page-indicator');
+
+            if (exPrevBtn) exPrevBtn.style.visibility = currentExercisePage > 0 ? 'visible' : 'hidden';
+            if (exNextBtn) exNextBtn.style.visibility = currentExercisePage < activeExercisePages.length - 1 ? 'visible' : 'hidden';
+            
+            if (indicator && activeExercisePages.length > 0) {
+                indicator.textContent = `Section ${currentExercisePage + 1} of ${activeExercisePages.length}`;
+            }
+        }
+
+        function nextExercisePage() {
+            if (currentExercisePage < activeExercisePages.length - 1) {
+                currentExercisePage++;
+                updateExercisePagination();
+            }
+        }
+
+        function prevExercisePage() {
+            if (currentExercisePage > 0) {
+                currentExercisePage--;
+                updateExercisePagination();
+            }
+        }
+
+        function closePdfExercise() {
+            pdfExerciseModal.style.display = 'none';
+        }
+
+        // Global Drag & Drop
+        function allowDrop(ev) { ev.preventDefault(); }
+        function drag(ev) { ev.dataTransfer.setData("text", ev.target.id); }
+
+        // L1 Matching
+        let l1Correct = 0;
+        function dropL1(ev) {
+            ev.preventDefault();
+            const data = ev.dataTransfer.getData("text");
+            const el = document.getElementById(data);
+            const expected = ev.target.getAttribute('data-expected');
+            
+            if(el.getAttribute('data-val') === expected && !ev.target.hasChildNodes()) {
+                ev.target.appendChild(el);
+                el.draggable = false;
+                el.classList.add('!bg-green-500/40', '!border-green-400');
+                ev.target.classList.add('filled', 'border-green-400', 'bg-green-500/10');
+                l1Correct++;
+                if(l1Correct === 3) document.getElementById('l1-success').classList.remove('hidden');
+            } else {
+                el.classList.add('animate-[flashRed_0.4s_ease]');
+                setTimeout(() => el.classList.remove('animate-[flashRed_0.4s_ease]'), 400);
+            }
+        }
+
+        // Auto-Check Inputs
+        document.querySelectorAll('.quiz-input').forEach(input => {
+            input.addEventListener('input', function() {
+                const val = this.value.trim().toLowerCase().replace(/\s/g, "");
+                let answers = this.getAttribute('data-answer');
+                
+                if (!answers) return;
+                
+                answers = answers.toLowerCase().split('|');
+                this.classList.remove('correct', 'incorrect');
+                if (val !== '') {
+                    if (answers.includes(val)) {
+                        this.classList.add('correct');
+                    } else {
+                        this.classList.add('incorrect');
+                    }
+                }
+            });
+        });
+        function applyEmbedMode() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get("embed") === "1") {
+                document.body.classList.add("embed-mode");
+            }
+            const levelParam = params.get("level") || params.get("tab");
+            if (levelParam && typeof openLevel === "function") {
+                const level = Math.max(1, Math.min(3, parseInt(levelParam, 10) || 1));
+                setTimeout(() => openLevel(level), 150);
+            }
+        }
+
+        window.addEventListener("load", applyEmbedMode);
+    </script>
+</body>
+</html>

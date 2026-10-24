@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" role="img">
+  <rect width="800" height="500" fill="#e0f2fe"/>
+  <rect x="0" y="320" width="800" height="180" fill="#0284c7"/>
+  <text x="720" y="350" fill="#bae6fd" font-size="12">water Á = 1.0 g/cm³</text>
+  <path d="M 180 320 L 220 220 L 580 220 L 620 320 Z" fill="#64748b" stroke="#334155" stroke-width="2"/>
+  <rect x="260" y="240" width="280" height="70" fill="#f8fafc" stroke="#94a3b8" stroke-width="2" stroke-dasharray="8 4"/>
+  <text x="400" y="280" text-anchor="middle" fill="#475569" font-size="13" font-weight="600">Large air spaces inside</text>
+  <line x1="400" y1="220" x2="400" y2="120" stroke="#ea580c" stroke-width="2"/>
+  <rect x="320" y="95" width="160" height="36" rx="6" fill="#fff7ed" stroke="#ea580c"/>
+  <text x="400" y="118" text-anchor="middle" fill="#9a3412" font-size="12" font-weight="600">Steel is dense</text>
+  <rect x="200" y="360" width="400" height="48" rx="8" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+  <text x="400" y="390" text-anchor="middle" fill="#065f46" font-size="14" font-weight="600">Average density of whole ship &lt; water ’ floats</text>
+  <text x="400" y="440" text-anchor="middle" fill="#0f172a" font-size="13">Load cargo ’ mass up ’ sits lower (load lines)</text>
+</svg>

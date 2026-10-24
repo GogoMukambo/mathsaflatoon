@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Year 8 Science — Chapter 1 Photosynthesis and the carbon cycle</title>
+  <style>
+    :root {
+      --green: #047857;
+      --green-deep: #064e3b;
+      --leaf: #d1fae5;
+      --ink: #134e4a;
+      --card: #ffffff;
+      --line: #a7f3d0;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Nunito, sans-serif;
+      color: var(--ink);
+      background: #ecfdf5;
+      line-height: 1.5;
+    }
+    header {
+      background: linear-gradient(90deg, #047857, #0f766e);
+      color: white;
+      padding: 1.25rem 1.5rem;
+    }
+    header p { margin: 0; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.8rem; opacity: 0.9; }
+    header h1 { margin: 0.25rem 0 0; font-size: 1.8rem; }
+    main { max-width: 52rem; margin: 0 auto; padding: 1.25rem; }
+    nav { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+    nav button {
+      border: 0;
+      border-radius: 999px;
+      padding: 0.55rem 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      background: white;
+      color: var(--green-deep);
+    }
+    nav button.on { background: var(--green); color: white; }
+    section {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 1rem;
+      padding: 1.25rem 1.35rem 1.5rem;
+    }
+    section h2 { margin-top: 0; color: var(--green-deep); }
+    .idea {
+      background: var(--leaf);
+      border-left: 4px solid var(--green);
+      padding: 0.8rem 1rem;
+      border-radius: 0 0.75rem 0.75rem 0;
+    }
+    .grid { display: grid; gap: 0.75rem; }
+    @media (min-width: 700px) { .grid.two { grid-template-columns: 1fr 1fr; } }
+    article {
+      border: 1px solid var(--line);
+      border-radius: 0.8rem;
+      padding: 0.8rem 1rem;
+      background: #f8fffb;
+    }
+    article h3 { margin: 0 0 0.35rem; }
+    label { display: block; margin: 0.8rem 0; font-weight: 700; }
+    input[type="text"], input[type="range"] { width: 100%; }
+    input[type="text"] {
+      margin-top: 0.35rem;
+      padding: 0.65rem 0.75rem;
+      border-radius: 0.7rem;
+      border: 2px solid #d1fae5;
+      font: inherit;
+      font-weight: 600;
+    }
+    input.ok { border-color: #059669; background: #ecfdf5; }
+    input.bad { border-color: #e11d48; background: #fff1f2; }
+    button.check {
+      background: var(--green);
+      color: white;
+      border: 0;
+      border-radius: 999px;
+      padding: 0.6rem 1rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .bar { height: 0.7rem; background: #d1fae5; border-radius: 999px; overflow: hidden; }
+    .bar span { display: block; height: 100%; background: #059669; width: 0; }
+    svg { width: 100%; height: auto; background: #f0f9ff; border-radius: 0.8rem; }
+    ol { padding-left: 1.2rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <p>Year 8 · Science · Biology</p>
+    <h1>Chapter 1 — Photosynthesis and the carbon cycle</h1>
+  </header>
+  <main>
+    <nav aria-label="Sections">
+      <button type="button" class="on" data-tab="s11">1.1 Photosynthesis</button>
+      <button type="button" data-tab="s12">1.2 More about photosynthesis</button>
+      <button type="button" data-tab="s13">1.3 The carbon cycle</button>
+      <button type="button" data-tab="s14">1.4 Climate change</button>
+    </nav>
+
+    <section id="s11">
+      <h2>1.1 Photosynthesis</h2>
+      <p class="idea">Green plants use light energy to make glucose from carbon dioxide and water. Oxygen is released. Chlorophyll, inside chloroplasts, absorbs the light.</p>
+      <svg viewBox="0 0 360 200" role="img" aria-label="A leaf taking in light, carbon dioxide and water">
+        <ellipse cx="180" cy="110" rx="120" ry="58" fill="#22c55e"/>
+        <ellipse cx="180" cy="110" rx="88" ry="36" fill="#16a34a"/>
+        <path d="M70 110 H290" stroke="#14532d" stroke-width="3" fill="none"/>
+        <circle cx="64" cy="40" r="16" fill="#facc15"/>
+        <text x="88" y="46" font-size="14" fill="#854d0e">light</text>
+        <text x="16" y="100" font-size="14" fill="#0369a1">CO₂ in</text>
+        <text x="268" y="78" font-size="14" fill="#0369a1">O₂ out</text>
+        <text x="118" y="186" font-size="14" fill="#0f766e">water from the roots</text>
+      </svg>
+      <ul>
+        <li><strong>Word equation:</strong> carbon dioxide + water → glucose + oxygen</li>
+        <li>It needs light and chlorophyll.</li>
+        <li>Chlorophyll absorbs mainly red and blue light and reflects green, so leaves look green.</li>
+        <li>Broad, thin leaves catch light and give gases a short path into the cells.</li>
+        <li>The glucose feeds the plant and almost every food chain. The oxygen is used in aerobic respiration.</li>
+      </ul>
+      <form data-quiz>
+        <h3>Check 1.1</h3>
+        <label>Where in a leaf cell does photosynthesis happen?
+          <input type="text" data-answer="chloroplast|chloroplasts" placeholder="Your answer">
+        </label>
+        <label>Which gas is released?
+          <input type="text" data-answer="oxygen|o2" placeholder="Your answer">
+        </label>
+        <p class="msg" aria-live="polite"></p>
+        <button class="check" type="submit">Check answers</button>
+      </form>
+    </section>
+
+    <section id="s12" hidden>
+      <h2>1.2 More about photosynthesis</h2>
+      <p class="idea">The rate is limited by whichever of light, carbon dioxide or temperature is in shortest supply. Glucose may be respired, stored as starch, or built into cellulose, proteins and oils.</p>
+      <h3>Limiting factor</h3>
+      <label>Light <input id="light" type="range" min="0" max="100" value="80"></label>
+      <label>Carbon dioxide <input id="co2" type="range" min="0" max="100" value="40"></label>
+      <label>Temperature suitability <input id="temp" type="range" min="0" max="100" value="70"></label>
+      <div class="bar" aria-hidden="true"><span id="rate"></span></div>
+      <p id="limit-note"></p>
+      <h3>Starch test</h3>
+      <ol>
+        <li>Boil the leaf to stop reactions.</li>
+        <li>Warm it in ethanol to remove chlorophyll. Ethanol is flammable, so a teacher does this step.</li>
+        <li>Rinse the leaf.</li>
+        <li>Add iodine. Blue-black means starch is present.</li>
+      </ol>
+      <p>Magnesium is needed to make chlorophyll. Nitrate is used to make amino acids and proteins. Stomata are pores that let carbon dioxide in and oxygen and water vapour out.</p>
+      <form data-quiz>
+        <h3>Check 1.2</h3>
+        <label>A leaf kept in the dark does not make starch. What was missing?
+          <input type="text" data-answer="light" placeholder="Your answer">
+        </label>
+        <label>Iodine turns blue-black if which store is present?
+          <input type="text" data-answer="starch" placeholder="Your answer">
+        </label>
+        <p class="msg" aria-live="polite"></p>
+        <button class="check" type="submit">Check answers</button>
+      </form>
+    </section>
+
+    <section id="s13" hidden>
+      <h2>1.3 The carbon cycle</h2>
+      <p class="idea">Carbon atoms are reused. Photosynthesis takes carbon dioxide into plants. Feeding moves carbon along food chains. Respiration, decomposition and combustion return carbon dioxide to the air.</p>
+      <div class="grid two">
+        <article><h3>Photosynthesis</h3><p>Removes CO₂ from the air and stores carbon in glucose and other biomass.</p></article>
+        <article><h3>Feeding</h3><p>Animals take in carbon compounds when they eat plants or other animals.</p></article>
+        <article><h3>Respiration and decay</h3><p>Living things and decomposers release CO₂. Decomposers also return minerals to the soil.</p></article>
+        <article><h3>Combustion</h3><p>Burning, including fossil fuels, returns carbon that was stored for a very long time.</p></article>
+      </div>
+      <p>A carbon atom does not change into a different element. Over millions of years some remains become fossil fuels or rocks such as limestone.</p>
+      <form data-quiz>
+        <h3>Check 1.3</h3>
+        <label>Which process removes carbon dioxide from the air?
+          <input type="text" data-answer="photosynthesis" placeholder="Your answer">
+        </label>
+        <label>Which organisms break down dead material and release CO₂?
+          <input type="text" data-answer="decomposers|decomposer" placeholder="Your answer">
+        </label>
+        <p class="msg" aria-live="polite"></p>
+        <button class="check" type="submit">Check answers</button>
+      </form>
+    </section>
+
+    <section id="s14" hidden>
+      <h2>1.4 Climate change</h2>
+      <p class="idea">Greenhouse gases such as carbon dioxide and methane trap some of the energy Earth radiates. Extra greenhouse gases from human activity trap more heat, so average temperatures and weather patterns shift.</p>
+      <div class="grid two">
+        <article>
+          <h3>Activities that add greenhouse gases</h3>
+          <ul>
+            <li>Burning fossil fuels</li>
+            <li>Deforestation</li>
+            <li>Some farming, including methane from livestock and rice paddies</li>
+          </ul>
+        </article>
+        <article>
+          <h3>Likely effects</h3>
+          <ul>
+            <li>Rising sea level as ice melts and seawater expands</li>
+            <li>More extreme weather</li>
+            <li>Habitat loss and pressure on farming</li>
+          </ul>
+        </article>
+      </div>
+      <p>Earth’s climate has changed before. The rapid rise now is linked to carbon that used to be locked in fossil fuels. Trees store carbon while they grow, but they can burn or be cut, so cutting emissions still matters.</p>
+      <form data-quiz>
+        <h3>Check 1.4</h3>
+        <label>Name one greenhouse gas.
+          <input type="text" data-answer="carbon dioxide|methane|co2" placeholder="Your answer">
+        </label>
+        <label>Do trees, on their own, replace the need to cut emissions? Type yes or no.
+          <input type="text" data-answer="no" placeholder="yes or no">
+        </label>
+        <p class="msg" aria-live="polite"></p>
+        <button class="check" type="submit">Check answers</button>
+      </form>
+    </section>
+  </main>
+  <script>
+    document.querySelectorAll("nav button").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        document.querySelectorAll("nav button").forEach(function (b) { b.classList.remove("on"); });
+        btn.classList.add("on");
+        document.querySelectorAll("main section").forEach(function (section) {
+          section.hidden = section.id !== btn.dataset.tab;
+        });
+      });
+    });
+
+    function clean(value) {
+      return value.trim().toLowerCase().replace(/\s+/g, " ");
+    }
+
+    document.querySelectorAll("[data-quiz]").forEach(function (form) {
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        var correct = 0;
+        var inputs = form.querySelectorAll("input[data-answer]");
+        inputs.forEach(function (input) {
+          var ok = input.dataset.answer.split("|").indexOf(clean(input.value)) !== -1;
+          input.classList.toggle("ok", ok);
+          input.classList.toggle("bad", !ok);
+          if (ok) correct += 1;
+        });
+        form.querySelector(".msg").textContent = correct + " / " + inputs.length + " correct";
+      });
+    });
+
+    function updateLimit() {
+      var light = Number(document.getElementById("light").value);
+      var co2 = Number(document.getElementById("co2").value);
+      var temp = Number(document.getElementById("temp").value);
+      var rate = Math.min(light, co2, temp);
+      document.getElementById("rate").style.width = rate + "%";
+      var named = [
+        { name: "light", value: light },
+        { name: "carbon dioxide", value: co2 },
+        { name: "temperature", value: temp }
+      ].sort(function (a, b) { return a.value - b.value; })[0];
+      document.getElementById("limit-note").textContent =
+        "Rate is about " + rate + "%. The limiting factor right now is " + named.name + ".";
+    }
+
+    ["light", "co2", "temp"].forEach(function (id) {
+      document.getElementById(id).addEventListener("input", updateLimit);
+    });
+    updateLimit();
+  </script>
+</body>
+</html>

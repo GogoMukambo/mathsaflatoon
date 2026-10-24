@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abhyaas — Integers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Importing a playful, rounded font for headings and clean font for body */
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f0f7ff;
+            /* Fun, subtle SVG math pattern background */
+            background-image: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='15' y='35' font-family='Fredoka' font-size='20' fill='%23bfdbfe' font-weight='bold' opacity='0.6'%3E+%3C/text%3E%3Ctext x='75' y='25' font-family='Fredoka' font-size='24' fill='%23bfdbfe' font-weight='bold' opacity='0.5'%3E-%3C/text%3E%3Ctext x='35' y='85' font-family='Fredoka' font-size='22' fill='%23bfdbfe' font-weight='bold' opacity='0.6'%3E%C3%97%3C/text%3E%3Ctext x='95' y='95' font-family='Fredoka' font-size='20' fill='%23bfdbfe' font-weight='bold' opacity='0.6'%3E%C3%B7%3C/text%3E%3Ctext x='50' y='50' font-family='Fredoka' font-size='18' fill='%23a5b4fc' font-weight='bold' opacity='0.5'%3E%E2%88%9A%3C/text%3E%3Ctext x='90' y='55' font-family='Fredoka' font-size='16' fill='%23a5b4fc' font-weight='bold' opacity='0.4'%3E%C2%B2%3C/text%3E%3Ctext x='10' y='100' font-family='Fredoka' font-size='18' fill='%2393c5fd' font-weight='bold' opacity='0.5'%3E=%3C/text%3E%3C/svg%3E");
+            background-attachment: fixed;
+        }
+
+        h1, h2, h3, h4, .font-heading {
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        canvas {
+            touch-action: none;
+        }
+
+        .tab-scroll::-webkit-scrollbar { height: 6px; }
+        .tab-scroll::-webkit-scrollbar-thumb { background-color: #93c5fd; border-radius: 6px; }
+
+        /* Bouncy input transition */
+        .quiz-input {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .quiz-input:focus {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col relative">
+
+    <!-- Header (hidden when embedded in Abhyaas reader) -->
+    <header id="module-header" class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg sticky top-0 z-50 border-b-4 border-indigo-800">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <svg class="w-8 h-8 text-yellow-300 drop-shadow-md" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"></path></svg>
+                <h1 class="text-3xl font-bold tracking-wider drop-shadow-sm">Abhyaas</h1>
+            </div>
+            <span class="text-sm font-bold bg-white text-indigo-700 py-1.5 px-4 rounded-full shadow-md uppercase tracking-wide border-2 border-indigo-200">Math: Integers</span>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-5xl mx-auto w-full px-4 py-8 relative z-10">
+        
+        <!-- Tab Navigation -->
+        <div class="bg-white/90 backdrop-blur-sm rounded-t-3xl shadow-md border border-slate-200 overflow-hidden">
+            <nav class="flex overflow-x-auto tab-scroll" aria-label="Tabs" id="tab-nav">
+                <button type="button" data-tab-index="0" onclick="openTab(event, 'tab-add-sub')" class="tab-btn active text-blue-700 border-b-4 border-blue-600 font-heading text-lg px-6 py-4 whitespace-nowrap bg-blue-50 focus:outline-none transition-all">Adding & Subtracting</button>
+                <button type="button" data-tab-index="1" onclick="openTab(event, 'tab-mul-div')" class="tab-btn text-slate-500 border-b-4 border-transparent hover:text-blue-600 hover:bg-blue-50 font-heading text-lg px-6 py-4 whitespace-nowrap focus:outline-none transition-all">Multiplying & Dividing</button>
+                <button type="button" data-tab-index="2" onclick="openTab(event, 'tab-lcm')" class="tab-btn text-slate-500 border-b-4 border-transparent hover:text-blue-600 hover:bg-blue-50 font-heading text-lg px-6 py-4 whitespace-nowrap focus:outline-none transition-all">Common Multiples (LCM)</button>
+                <button type="button" data-tab-index="3" onclick="openTab(event, 'tab-hcf')" class="tab-btn text-slate-500 border-b-4 border-transparent hover:text-blue-600 hover:bg-blue-50 font-heading text-lg px-6 py-4 whitespace-nowrap focus:outline-none transition-all">Common Factors (HCF)</button>
+                <button type="button" data-tab-index="4" onclick="openTab(event, 'tab-div')" class="tab-btn text-slate-500 border-b-4 border-transparent hover:text-blue-600 hover:bg-blue-50 font-heading text-lg px-6 py-4 whitespace-nowrap focus:outline-none transition-all">Divisibility Tests</button>
+                <button type="button" data-tab-index="5" onclick="openTab(event, 'tab-roots')" class="tab-btn text-slate-500 border-b-4 border-transparent hover:text-blue-600 hover:bg-blue-50 font-heading text-lg px-6 py-4 whitespace-nowrap focus:outline-none transition-all">Square & Cube Roots</button>
+            </nav>
+        </div>
+
+        <div class="bg-white/95 backdrop-blur-md p-6 md:p-10 rounded-b-3xl shadow-xl border border-t-0 border-slate-200 min-h-[500px]">
+
+            <!-- TAB 1: Adding & Subtracting -->
+            <div id="tab-add-sub" class="tab-content block animate-fade-in">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="bg-blue-500 text-white p-2 rounded-xl shadow-md"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg></div>
+                    <h2 class="text-3xl text-indigo-900 drop-shadow-sm">Adding & Subtracting Integers</h2>
+                </div>
+                
+                <p class="text-slate-700 mb-6 text-lg font-medium bg-indigo-50 border-l-4 border-indigo-400 p-4 rounded-r-xl shadow-sm">
+                    Integers are positive and negative whole numbers, together with zero. 
+                    To subtract an integer, you add its <strong>inverse</strong>! 
+                    (e.g., <code class="bg-white text-indigo-700 px-2 py-1 rounded shadow-sm font-bold">-4 - (-3) = -4 + 3</code>).
+                </p>
+
+                <!-- Interactive Number Line Canvas -->
+                <div class="mb-10 border-2 border-blue-200 rounded-3xl p-5 bg-white shadow-md relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-bl-xl shadow-sm">INTERACTIVE</div>
+                    <h3 class="text-xl text-blue-800 mb-1">The Number Line</h3>
+                    <p class="text-sm text-slate-500 mb-4 font-semibold">Drag the blue marker left for negative, right for positive!</p>
+                    <div id="canvas-container" class="w-full relative h-[140px] rounded-2xl bg-slate-50 border-2 border-dashed border-slate-300 cursor-pointer overflow-hidden">
+                        <canvas id="numberLine" class="w-full h-full absolute top-0 left-0"></canvas>
+                    </div>
+                    <div class="text-center mt-4 text-xl font-heading text-indigo-700 bg-indigo-50 inline-block px-6 py-2 rounded-full shadow-inner mx-auto block w-max">
+                        Value: <span id="current-pos-text" class="text-2xl font-black">0</span>
+                    </div>
+                </div>
+
+                <!-- Addition Pyramid Quiz -->
+                <div class="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-3xl p-6 border-2 border-yellow-200 shadow-md">
+                    <h3 class="text-2xl text-orange-600 mb-2 flex items-center gap-2">
+                        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2z"/></svg>
+                        Addition Pyramid Challenge
+                    </h3>
+                    <p class="text-slate-600 font-semibold mb-6">Add the two numbers directly below to find the value of the block above them!</p>
+                    
+                    <div class="flex flex-col items-center gap-3">
+                        <!-- Top Row -->
+                        <div class="flex gap-3">
+                            <input type="text" class="quiz-input w-20 h-20 text-center text-3xl shadow-inner bg-white rounded-2xl border-4" data-answer="-6" placeholder="?">
+                        </div>
+                        <!-- Middle Row -->
+                        <div class="flex gap-3">
+                            <div class="w-20 h-20 flex items-center justify-center bg-white shadow-md rounded-2xl border-4 border-orange-100 text-3xl font-black text-slate-700">-2</div>
+                            <input type="text" class="quiz-input w-20 h-20 text-center text-3xl shadow-inner bg-white rounded-2xl border-4" data-answer="-4" placeholder="?">
+                        </div>
+                        <!-- Bottom Row -->
+                        <div class="flex gap-3">
+                            <div class="w-20 h-20 flex items-center justify-center bg-white shadow-md rounded-2xl border-4 border-orange-100 text-3xl font-black text-slate-700">3</div>
+                            <div class="w-20 h-20 flex items-center justify-center bg-white shadow-md rounded-2xl border-4 border-orange-100 text-3xl font-black text-slate-700">-5</div>
+                            <div class="w-20 h-20 flex items-center justify-center bg-white shadow-md rounded-2xl border-4 border-orange-100 text-3xl font-black text-slate-700">1</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: Multiplying & Dividing -->
+            <div id="tab-mul-div" class="tab-content hidden animate-fade-in">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="bg-purple-500 text-white p-2 rounded-xl shadow-md"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></div>
+                    <h2 class="text-3xl text-indigo-900 drop-shadow-sm">Multiplying & Dividing</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-purple-50 rounded-2xl p-5 border border-purple-100 shadow-sm">
+                        <p class="text-slate-700 mb-4 font-semibold">The rules for the signs:</p>
+                        <ul class="space-y-3 font-bold">
+                            <li class="flex items-center gap-2"><span class="bg-green-100 text-green-700 px-2 py-1 rounded w-8 text-center">+</span> × <span class="bg-green-100 text-green-700 px-2 py-1 rounded w-8 text-center">+</span> = <span class="text-green-600">Positive</span></li>
+                            <li class="flex items-center gap-2"><span class="bg-red-100 text-red-700 px-2 py-1 rounded w-8 text-center">-</span> × <span class="bg-red-100 text-red-700 px-2 py-1 rounded w-8 text-center">-</span> = <span class="text-green-600">Positive</span></li>
+                            <li class="flex items-center gap-2"><span class="bg-green-100 text-green-700 px-2 py-1 rounded w-8 text-center">+</span> × <span class="bg-red-100 text-red-700 px-2 py-1 rounded w-8 text-center">-</span> = <span class="text-red-600">Negative</span></li>
+                        </ul>
+                    </div>
+                    <div class="bg-yellow-100 border-4 border-yellow-300 p-5 rounded-2xl text-yellow-900 shadow-sm relative transform rotate-1 hover:rotate-0 transition-transform">
+                        <div class="absolute -top-3 -right-3 text-3xl">⭐</div>
+                        <h4 class="text-xl font-heading mb-2">Golden Rule</h4>
+                        <p class="font-medium">When one integer is positive and the other is negative, the product or quotient is always <strong class="text-red-600 bg-red-100 px-1 rounded">negative</strong>.</p>
+                        <p class="mt-3 text-lg font-black bg-white/70 p-2 text-center rounded-xl">Example: -20 ÷ 5 = -4</p>
+                    </div>
+                </div>
+
+                <!-- Multiplication Grid Quiz -->
+                <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-3xl p-6 border-2 border-indigo-200 shadow-md">
+                    <h3 class="text-2xl text-indigo-700 mb-2 font-heading">Multiplication Grid Challenge</h3>
+                    <p class="text-slate-600 font-semibold mb-6">Multiply the column header by the row header to fill in the blank squares.</p>
+                    
+                    <div class="flex justify-center">
+                        <div class="grid grid-cols-3 gap-3 w-full max-w-sm">
+                            <div class="bg-slate-700 text-white font-black text-2xl p-4 rounded-2xl text-center shadow flex items-center justify-center">×</div>
+                            <div class="bg-indigo-500 text-white font-black text-2xl p-4 rounded-2xl text-center shadow flex items-center justify-center">-3</div>
+                            <div class="bg-indigo-500 text-white font-black text-2xl p-4 rounded-2xl text-center shadow flex items-center justify-center">-5</div>
+
+                            <div class="bg-indigo-500 text-white font-black text-2xl p-4 rounded-2xl text-center shadow flex items-center justify-center">5</div>
+                            <input type="text" class="quiz-input w-full h-16 text-center text-2xl font-black shadow-inner bg-white rounded-2xl border-4" data-answer="-15" placeholder="?">
+                            <input type="text" class="quiz-input w-full h-16 text-center text-2xl font-black shadow-inner bg-white rounded-2xl border-4" data-answer="-25" placeholder="?">
+
+                            <div class="bg-indigo-500 text-white font-black text-2xl p-4 rounded-2xl text-center shadow flex items-center justify-center">7</div>
+                            <input type="text" class="quiz-input w-full h-16 text-center text-2xl font-black shadow-inner bg-white rounded-2xl border-4" data-answer="-21" placeholder="?">
+                            <input type="text" class="quiz-input w-full h-16 text-center text-2xl font-black shadow-inner bg-white rounded-2xl border-4" data-answer="-35" placeholder="?">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: Lowest Common Multiples -->
+            <div id="tab-lcm" class="tab-content hidden animate-fade-in">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="bg-emerald-500 text-white p-2 rounded-xl shadow-md"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg></div>
+                    <h2 class="text-3xl text-indigo-900 drop-shadow-sm">Lowest Common Multiples (LCM)</h2>
+                </div>
+                
+                <p class="text-slate-700 text-lg mb-6 bg-emerald-50 border-l-4 border-emerald-400 p-4 rounded-r-xl font-medium shadow-sm">
+                    The <strong>Lowest Common Multiple (LCM)</strong> of two numbers is the smallest non-zero number that is a multiple of both.
+                </p>
+                
+                <div class="bg-white border-2 border-emerald-200 shadow-md rounded-2xl p-5 mb-8 text-lg font-bold text-slate-700 relative overflow-hidden">
+                    <div class="absolute right-0 top-0 opacity-10"><svg class="w-32 h-32" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L22 22H2L12 2Z"/></svg></div>
+                    <div class="flex flex-wrap items-center gap-2 mb-3">
+                        <span class="w-32 text-slate-500">Multiples of 4:</span>
+                        <span>4, 8,</span>
+                        <span class="bg-emerald-200 text-emerald-800 px-2 py-1 rounded-lg border-2 border-emerald-400">12</span>
+                        <span>, 16, 20,</span>
+                        <span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded-lg">24</span>
+                        <span>...</span>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2 mb-4">
+                        <span class="w-32 text-slate-500">Multiples of 6:</span>
+                        <span>6,</span>
+                        <span class="bg-emerald-200 text-emerald-800 px-2 py-1 rounded-lg border-2 border-emerald-400">12</span>
+                        <span>, 18,</span>
+                        <span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded-lg">24</span>
+                        <span>, 30...</span>
+                    </div>
+                    <p class="text-emerald-700 font-heading text-xl">The LCM of 4 and 6 is <span class="bg-emerald-500 text-white px-3 py-1 rounded-lg shadow">12</span></p>
+                </div>
+
+                <div class="bg-slate-50 rounded-3xl p-6 border-2 border-slate-200 shadow-inner">
+                    <h3 class="text-2xl text-slate-700 mb-4 font-heading">Quick LCM Challenge</h3>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="flex items-center justify-between bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                            <span class="font-bold text-lg text-slate-600">LCM of 6 & 10</span>
+                            <input type="text" class="quiz-input w-20 h-12 text-center text-xl font-black bg-slate-50 rounded-xl border-4" data-answer="30" placeholder="?">
+                        </div>
+                        <div class="flex items-center justify-between bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                            <span class="font-bold text-lg text-slate-600">LCM of 3 & 5</span>
+                            <input type="text" class="quiz-input w-20 h-12 text-center text-xl font-black bg-slate-50 rounded-xl border-4" data-answer="15" placeholder="?">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: Highest Common Factors -->
+            <div id="tab-hcf" class="tab-content hidden animate-fade-in">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="bg-rose-500 text-white p-2 rounded-xl shadow-md"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg></div>
+                    <h2 class="text-3xl text-indigo-900 drop-shadow-sm">Highest Common Factors (HCF)</h2>
+                </div>
+
+                <p class="text-slate-700 text-lg mb-6 bg-rose-50 border-l-4 border-rose-400 p-4 rounded-r-xl font-medium shadow-sm">
+                    A factor divides perfectly into another number. The <strong>Highest Common Factor (HCF)</strong> is the largest common factor between two numbers. It is great for simplifying fractions!
+                </p>
+
+                <div class="bg-white border-2 border-rose-200 shadow-md rounded-2xl p-5 mb-8 text-lg font-bold text-slate-700">
+                    <div class="flex flex-wrap items-center gap-2 mb-3">
+                        <span class="w-32 text-slate-500">Factors of 18:</span>
+                        <span>1, 2, 3, 6,</span>
+                        <span class="bg-rose-200 text-rose-800 px-2 py-1 rounded-lg border-2 border-rose-400">9</span>
+                        <span>, 18</span>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2 mb-4">
+                        <span class="w-32 text-slate-500">Factors of 27:</span>
+                        <span>1, 3,</span>
+                        <span class="bg-rose-200 text-rose-800 px-2 py-1 rounded-lg border-2 border-rose-400">9</span>
+                        <span>, 27</span>
+                    </div>
+                    <p class="text-rose-700 font-heading text-xl">The HCF of 18 and 27 is <span class="bg-rose-500 text-white px-3 py-1 rounded-lg shadow">9</span></p>
+                </div>
+
+                <div class="bg-slate-50 rounded-3xl p-6 border-2 border-slate-200 shadow-inner">
+                    <h3 class="text-2xl text-slate-700 mb-4 font-heading">Find the HCF</h3>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="flex items-center justify-between bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                            <span class="font-bold text-lg text-slate-600">HCF of 28 & 42</span>
+                            <input type="text" class="quiz-input w-20 h-12 text-center text-xl font-black bg-slate-50 rounded-xl border-4" data-answer="14" placeholder="?">
+                        </div>
+                        <div class="flex items-center justify-between bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                            <span class="font-bold text-lg text-slate-600">HCF of 16 & 40</span>
+                            <input type="text" class="quiz-input w-20 h-12 text-center text-xl font-black bg-slate-50 rounded-xl border-4" data-answer="8" placeholder="?">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 5: Divisibility Tests -->
+            <div id="tab-div" class="tab-content hidden animate-fade-in">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="bg-cyan-500 text-white p-2 rounded-xl shadow-md"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg></div>
+                    <h2 class="text-3xl text-indigo-900 drop-shadow-sm">Tests for Divisibility</h2>
+                </div>
+                
+                <p class="text-slate-600 font-medium mb-6 text-lg">Use these quick rules to check if a large number can be evenly divided!</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                    <div class="bg-white p-4 border-b-4 border-cyan-400 rounded-2xl shadow hover:-translate-y-1 transition-transform">
+                        <div class="text-2xl font-black text-cyan-600 mb-1">÷ 2</div>
+                        <p class="text-slate-600 font-semibold text-sm">Last digit is 0, 2, 4, 6, or 8.</p>
+                    </div>
+                    <div class="bg-white p-4 border-b-4 border-blue-400 rounded-2xl shadow hover:-translate-y-1 transition-transform">
+                        <div class="text-2xl font-black text-blue-600 mb-1">÷ 3</div>
+                        <p class="text-slate-600 font-semibold text-sm">Sum of all digits is a multiple of 3.</p>
+                    </div>
+                    <div class="bg-white p-4 border-b-4 border-indigo-400 rounded-2xl shadow hover:-translate-y-1 transition-transform">
+                        <div class="text-2xl font-black text-indigo-600 mb-1">÷ 4</div>
+                        <p class="text-slate-600 font-semibold text-sm">Last two digits are divisible by 4.</p>
+                    </div>
+                    <div class="bg-white p-4 border-b-4 border-purple-400 rounded-2xl shadow hover:-translate-y-1 transition-transform">
+                        <div class="text-2xl font-black text-purple-600 mb-1">÷ 5</div>
+                        <p class="text-slate-600 font-semibold text-sm">Last digit is 0 or 5.</p>
+                    </div>
+                    <div class="bg-white p-4 border-b-4 border-pink-400 rounded-2xl shadow hover:-translate-y-1 transition-transform">
+                        <div class="text-2xl font-black text-pink-600 mb-1">÷ 9</div>
+                        <p class="text-slate-600 font-semibold text-sm">Sum of all digits is a multiple of 9.</p>
+                    </div>
+                    <div class="bg-white p-4 border-b-4 border-rose-400 rounded-2xl shadow hover:-translate-y-1 transition-transform">
+                        <div class="text-2xl font-black text-rose-600 mb-1">÷ 10</div>
+                        <p class="text-slate-600 font-semibold text-sm">Last digit is 0.</p>
+                    </div>
+                </div>
+
+                <div class="bg-cyan-50 rounded-3xl p-6 border-2 border-cyan-200 shadow-inner">
+                    <h3 class="text-2xl text-cyan-800 mb-4 font-heading">True or False? (Type 'yes' or 'no')</h3>
+                    <div class="space-y-3 max-w-xl mx-auto">
+                        <div class="flex items-center justify-between bg-white p-3 rounded-xl shadow-sm">
+                            <span class="font-bold text-slate-700">Is 87,654 divisible by 2?</span>
+                            <input type="text" class="quiz-input w-24 p-2 text-center font-bold bg-slate-50 rounded-lg border-2" data-answer="yes" placeholder="?">
+                        </div>
+                        <div class="flex items-center justify-between bg-white p-3 rounded-xl shadow-sm">
+                            <span class="font-bold text-slate-700">Is 25,764 divisible by 5?</span>
+                            <input type="text" class="quiz-input w-24 p-2 text-center font-bold bg-slate-50 rounded-lg border-2" data-answer="no" placeholder="?">
+                        </div>
+                        <div class="flex items-center justify-between bg-white p-3 rounded-xl shadow-sm">
+                            <span class="font-bold text-slate-700">Is 123 divisible by 3?</span>
+                            <input type="text" class="quiz-input w-24 p-2 text-center font-bold bg-slate-50 rounded-lg border-2" data-answer="yes" placeholder="?">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 6: Square & Cube Roots -->
+            <div id="tab-roots" class="tab-content hidden animate-fade-in">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="bg-fuchsia-500 text-white p-2 rounded-xl shadow-md"><span class="text-xl font-bold font-serif leading-none block px-1">√</span></div>
+                    <h2 class="text-3xl text-indigo-900 drop-shadow-sm">Square & Cube Roots</h2>
+                </div>
+
+                <div class="flex flex-col md:flex-row gap-6 mb-8">
+                    <!-- Squares -->
+                    <div class="flex-1 bg-white border-2 border-slate-200 rounded-3xl p-6 shadow-md hover:shadow-lg transition-shadow relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-blue-100 rounded-bl-full -mr-4 -mt-4 opacity-50"></div>
+                        <h4 class="text-2xl font-heading text-blue-700 mb-2">Squares ( x² )</h4>
+                        <p class="text-slate-600 mb-4 font-semibold">A number multiplied by itself.</p>
+                        <ul class="font-mono text-lg space-y-2 text-slate-700 font-bold">
+                            <li class="bg-slate-50 p-2 rounded-lg">2 × 2 = <span class="text-blue-600">4</span></li>
+                            <li class="bg-slate-50 p-2 rounded-lg">5 × 5 = <span class="text-blue-600">25</span></li>
+                            <li class="pt-3 mt-3 border-t-2 border-dashed border-slate-200 text-blue-800 text-xl">√25 = 5</li>
+                        </ul>
+                    </div>
+                    <!-- Cubes -->
+                    <div class="flex-1 bg-white border-2 border-slate-200 rounded-3xl p-6 shadow-md hover:shadow-lg transition-shadow relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-fuchsia-100 rounded-bl-full -mr-4 -mt-4 opacity-50"></div>
+                        <h4 class="text-2xl font-heading text-fuchsia-700 mb-2">Cubes ( x³ )</h4>
+                        <p class="text-slate-600 mb-4 font-semibold">A number multiplied by itself twice.</p>
+                        <ul class="font-mono text-lg space-y-2 text-slate-700 font-bold">
+                            <li class="bg-slate-50 p-2 rounded-lg">2 × 2 × 2 = <span class="text-fuchsia-600">8</span></li>
+                            <li class="bg-slate-50 p-2 rounded-lg">3 × 3 × 3 = <span class="text-fuchsia-600">27</span></li>
+                            <li class="pt-3 mt-3 border-t-2 border-dashed border-slate-200 text-fuchsia-800 text-xl">∛27 = 3</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="bg-slate-100 rounded-3xl p-6 border-2 border-slate-200 shadow-inner">
+                    <h3 class="text-2xl text-slate-700 mb-4 font-heading">Find the Root</h3>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <div class="flex items-center gap-4 bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
+                            <span class="font-black text-2xl text-blue-600 font-serif">√81 = </span>
+                            <input type="text" class="quiz-input w-20 h-14 text-center text-2xl font-black bg-slate-50 rounded-xl border-4" data-answer="9" placeholder="?">
+                        </div>
+                        <div class="flex items-center gap-4 bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
+                            <span class="font-black text-2xl text-fuchsia-600 font-serif">∛64 = </span>
+                            <input type="text" class="quiz-input w-20 h-14 text-center text-2xl font-black bg-slate-50 rounded-xl border-4" data-answer="4" placeholder="?">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // --- TAB LOGIC ---
+        const TAB_IDS = [
+            "tab-add-sub",
+            "tab-mul-div",
+            "tab-lcm",
+            "tab-hcf",
+            "tab-div",
+            "tab-roots",
+        ];
+
+        const TAB_BTN_ACTIVE =
+            " text-blue-700 border-blue-600 bg-blue-50";
+        const TAB_BTN_IDLE =
+            " text-slate-500 border-transparent hover:text-blue-600 hover:bg-blue-50";
+
+        function activateTab(tabId, activeButton) {
+            const contents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].style.display = "none";
+            }
+
+            const buttons = document.getElementsByClassName("tab-btn");
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].className = buttons[i].className.replace(
+                    TAB_BTN_ACTIVE,
+                    TAB_BTN_IDLE,
+                );
+            }
+
+            const panel = document.getElementById(tabId);
+            if (panel) panel.style.display = "block";
+
+            if (activeButton) {
+                activeButton.className = activeButton.className.replace(
+                    TAB_BTN_IDLE,
+                    "",
+                );
+                activeButton.className += TAB_BTN_ACTIVE;
+            }
+
+            if (tabId === "tab-add-sub") {
+                setTimeout(resizeCanvas, 50);
+            }
+        }
+
+        function openTabByIndex(index) {
+            const i = Math.max(0, Math.min(TAB_IDS.length - 1, Number(index) || 0));
+            const tabId = TAB_IDS[i];
+            const btn = document.querySelector(
+                '#tab-nav button[data-tab-index="' + i + '"]',
+            );
+            activateTab(tabId, btn);
+        }
+
+        function openTab(evt, tabId) {
+            activateTab(tabId, evt && evt.currentTarget ? evt.currentTarget : null);
+        }
+
+        // --- QUIZ LOGIC ---
+        const baseClasses = "quiz-input text-center font-black shadow-inner rounded-xl border-4 outline-none transition-all ";
+        const defaultClasses = baseClasses + "bg-white border-slate-200 text-slate-700 focus:border-blue-400";
+        const correctClasses = baseClasses + "bg-green-100 border-green-500 text-green-700 scale-105 shadow-md";
+        const incorrectClasses = baseClasses + "bg-red-50 border-red-400 text-red-600";
+
+        document.querySelectorAll('.quiz-input').forEach(input => {
+            // Setup initial classes but retain sizing classes applied in HTML
+            const sizeClasses = Array.from(input.classList).filter(c => c.startsWith('w-') || c.startsWith('h-') || c.startsWith('text-')).join(' ');
+            input.setAttribute('data-size', sizeClasses);
+            
+            input.className = defaultClasses + " " + sizeClasses;
+            
+            input.addEventListener('input', function(e) {
+                const val = this.value.trim().toLowerCase();
+                const answer = this.getAttribute('data-answer').toLowerCase();
+                const sizes = this.getAttribute('data-size');
+                
+                if (val === '') {
+                    this.className = defaultClasses + " " + sizes;
+                } else if (val === answer) {
+                    this.className = correctClasses + " " + sizes;
+                    // Mini celebration effect
+                    this.style.transform = "scale(1.1) rotate(2deg)";
+                    setTimeout(() => { this.style.transform = ""; }, 200);
+                } else {
+                    this.className = incorrectClasses + " " + sizes;
+                }
+            });
+        });
+
+        // --- CANVAS NUMBER LINE LOGIC ---
+        const canvas = document.getElementById('numberLine');
+        const ctx = canvas.getContext('2d');
+        const posText = document.getElementById('current-pos-text');
+        
+        let currentValue = 0;
+        let isDragging = false;
+
+        function initCanvas() {
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            
+            canvas.addEventListener('mousedown', startDrag);
+            canvas.addEventListener('mousemove', drag);
+            window.addEventListener('mouseup', endDrag);
+            canvas.addEventListener('mouseleave', endDrag);
+
+            canvas.addEventListener('touchstart', startDrag, {passive: false});
+            canvas.addEventListener('touchmove', drag, {passive: false});
+            window.addEventListener('touchend', endDrag);
+        }
+
+        function resizeCanvas() {
+            const container = canvas.parentElement;
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+            draw();
+        }
+
+        function getXFromValue(val) {
+            const padding = 40;
+            const width = canvas.width - (padding * 2);
+            const unitWidth = width / 20; 
+            return padding + ((val + 10) * unitWidth);
+        }
+
+        function getValueFromX(clientX) {
+            const rect = canvas.getBoundingClientRect();
+            const canvasX = clientX - rect.left;
+            
+            const padding = 40;
+            const width = canvas.width - (padding * 2);
+            const unitWidth = width / 20;
+            
+            let rawValue = ((canvasX - padding) / unitWidth) - 10;
+            let val = Math.round(rawValue);
+            return Math.max(-10, Math.min(10, val));
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const padding = 40;
+            const centerY = canvas.height / 2;
+            
+            // Draw Main Line
+            ctx.beginPath();
+            ctx.moveTo(padding, centerY);
+            ctx.lineTo(canvas.width - padding, centerY);
+            ctx.strokeStyle = '#cbd5e1'; 
+            ctx.lineWidth = 6;
+            ctx.lineCap = 'round';
+            ctx.stroke();
+
+            // Draw Ticks and Labels
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'top';
+            ctx.font = 'bold 14px Nunito, sans-serif';
+            
+            for (let i = -10; i <= 10; i++) {
+                const x = getXFromValue(i);
+                
+                ctx.beginPath();
+                ctx.moveTo(x, centerY - 12);
+                ctx.lineTo(x, centerY + 12);
+                
+                if (i === 0) {
+                    ctx.strokeStyle = '#475569'; 
+                    ctx.lineWidth = 4;
+                } else {
+                    ctx.strokeStyle = '#94a3b8'; 
+                    ctx.lineWidth = 2.5;
+                }
+                ctx.stroke();
+
+                if (i === 0) {
+                    ctx.fillStyle = '#1e293b'; 
+                } else if (i < 0) {
+                    ctx.fillStyle = '#ef4444'; 
+                } else {
+                    ctx.fillStyle = '#10b981'; 
+                }
+                
+                if (canvas.width < 600 && i % 2 !== 0 && i !== 0) continue;
+                
+                ctx.fillText(i.toString(), x, centerY + 20);
+            }
+
+            // Draw Marker
+            const markerX = getXFromValue(currentValue);
+            
+            // Marker Shadow
+            ctx.beginPath();
+            ctx.arc(markerX, centerY + 2, 18, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(0,0,0,0.15)';
+            ctx.fill();
+
+            // Marker Body
+            ctx.beginPath();
+            ctx.arc(markerX, centerY, 18, 0, Math.PI * 2);
+            ctx.fillStyle = '#3b82f6'; // blue-500
+            ctx.fill();
+            
+            // Marker border
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = '#ffffff';
+            ctx.stroke();
+            
+            // Text Update
+            posText.textContent = currentValue;
+            posText.className = "text-2xl font-black " + (currentValue < 0 ? 'text-red-600' : (currentValue > 0 ? 'text-emerald-600' : 'text-blue-600'));
+        }
+
+        function getEventX(e) { return e.touches && e.touches.length > 0 ? e.touches[0].clientX : e.clientX; }
+
+        function startDrag(e) {
+            e.preventDefault();
+            const clickX = getEventX(e);
+            currentValue = getValueFromX(clickX);
+            isDragging = true;
+            draw();
+        }
+
+        function drag(e) {
+            if (!isDragging) return;
+            e.preventDefault();
+            const clickX = getEventX(e);
+            const val = getValueFromX(clickX);
+            if (val !== currentValue) {
+                currentValue = val;
+                draw();
+            }
+        }
+
+        function endDrag() { isDragging = false; }
+
+        function applyEmbedMode() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get("embed") === "1") {
+                const header = document.getElementById("module-header");
+                if (header) header.classList.add("hidden");
+                document.body.classList.remove("min-h-screen");
+                document.body.classList.add("min-h-0");
+            }
+            const tabParam = params.get("tab");
+            if (tabParam !== null && tabParam !== "") {
+                openTabByIndex(parseInt(tabParam, 10));
+            }
+        }
+
+        // Start initialization
+        window.onload = function() {
+            initCanvas();
+            applyEmbedMode();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,231 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="100%" height="100%">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&amp;family=Patrick+Hand&amp;display=swap');
+
+      /* Board and Global Styles */
+      .board-bg { fill: #ffffff; }
+      .board-frame { fill: none; stroke: #d9d3c7; stroke-width: 14; rx: 12px; }
+      .inner-border { fill: none; stroke: #e6e1d6; stroke-width: 2; rx: 6px; }
+      
+      text {
+        font-family: 'Patrick Hand', 'Caveat', 'Comic Sans MS', cursive, sans-serif;
+        fill: #1c2430;
+        text-anchor: middle;
+        user-select: none;
+      }
+      
+      .chalk-yellow { fill: #1b3a6b; }
+      .chalk-cyan { fill: #0c6e78; }
+      .chalk-green { fill: #1a7a42; }
+      .chalk-orange { fill: #b45309; }
+      
+      .branch-line {
+        stroke: #1c2430;
+        stroke-width: 3.5;
+        stroke-linecap: round;
+        stroke-dasharray: 100;
+        stroke-dashoffset: 100;
+      }
+
+      .prime-circle {
+        fill: none;
+        stroke: #1a7a42;
+        stroke-width: 3.5;
+        stroke-dasharray: 130;
+        stroke-dashoffset: 130;
+      }
+
+      /* 30-Second Continuous Chalkboard Timeline Animation */
+      
+      /* Step 0: Title */
+      .t-title {
+        animation: fadeIn 30s ease-in-out infinite;
+      }
+
+      /* Step 1: 0s - 4s -> Root Number 60 */
+      .n60 {
+        animation: popIn 30s ease-out infinite;
+      }
+
+      /* Step 2: 4s - 8s -> Split to 6 and 10 */
+      .b-60-6, .b-60-10 {
+        animation: drawBranch 30s ease-in-out infinite;
+      }
+      .n6, .n10 {
+        animation: pop6_10 30s ease-out infinite;
+      }
+
+      /* Step 3: 8s - 13s -> Split to Primes (2, 3) and (2, 5) */
+      .b-lower {
+        animation: drawLowerBranches 30s ease-in-out infinite;
+      }
+      .p2a, .p3, .p2b, .p5 {
+        animation: popPrimes 30s ease-out infinite;
+      }
+
+      /* Step 4: 13s - 18s -> Circle the Primes in green */
+      .prime-circle {
+        animation: circlePrime 30s ease-in-out infinite;
+      }
+
+      /* Step 5: 18s - 23s -> Write Prime Factor Product */
+      .t-product {
+        animation: showProduct 30s ease-in-out infinite;
+      }
+
+      /* Step 6: 23s - 30s -> Final Index Form and Summary Banner */
+      .t-index {
+        animation: showIndex 30s ease-in-out infinite;
+      }
+      .t-subtext {
+        animation: showSubtext 30s ease-in-out infinite;
+      }
+
+      /* Keyframes */
+      @keyframes popIn {
+        0%, 100% { opacity: 0; clip-path: inset(0 100% 0 0); transform: scale(0.6); }
+        3%, 94% { opacity: 1; clip-path: inset(0 0 0 0); transform: scale(1); }
+        98% { opacity: 0; clip-path: inset(0 100% 0 0); }
+      }
+
+      @keyframes drawBranch {
+        0%, 8% { stroke-dashoffset: 100; opacity: 0; }
+        12%, 94% { stroke-dashoffset: 0; opacity: 1; }
+        98% { opacity: 0; clip-path: inset(0 100% 0 0); }
+      }
+
+      @keyframes pop6_10 {
+        0%, 12% { opacity: 0; clip-path: inset(0 100% 0 0); transform: translateY(-8px); }
+        16%, 94% { opacity: 1; clip-path: inset(0 0 0 0); transform: translateY(0); }
+        98% { opacity: 0; clip-path: inset(0 100% 0 0); }
+      }
+
+      @keyframes drawLowerBranches {
+        0%, 23% { stroke-dashoffset: 100; opacity: 0; }
+        28%, 94% { stroke-dashoffset: 0; opacity: 1; }
+        98% { opacity: 0; clip-path: inset(0 100% 0 0); }
+      }
+
+      @keyframes popPrimes {
+        0%, 28% { opacity: 0; clip-path: inset(0 100% 0 0); transform: scale(0.5); }
+        33%, 94% { opacity: 1; clip-path: inset(0 0 0 0); transform: scale(1); }
+        98% { opacity: 0; clip-path: inset(0 100% 0 0); }
+      }
+
+      @keyframes circlePrime {
+        0%, 38% { stroke-dashoffset: 130; opacity: 0; }
+        45%, 94% { stroke-dashoffset: 0; opacity: 1; }
+        98% { opacity: 0; clip-path: inset(0 100% 0 0); }
+      }
+
+      @keyframes showProduct {
+        0%, 54% { opacity: 0; clip-path: inset(0 100% 0 0); transform: translateY(10px); }
+        60%, 94% { opacity: 1; clip-path: inset(0 0 0 0); transform: translateY(0); }
+        98% { opacity: 0; clip-path: inset(0 100% 0 0); }
+      }
+
+      @keyframes showIndex {
+        0%, 72% { opacity: 0; clip-path: inset(0 100% 0 0); transform: scale(0.85); }
+        78%, 94% { opacity: 1; clip-path: inset(0 0 0 0); transform: scale(1); }
+        98% { opacity: 0; clip-path: inset(0 100% 0 0); }
+      }
+
+      @keyframes showSubtext {
+        0%, 78% { opacity: 0; clip-path: inset(0 100% 0 0); }
+        83%, 94% { opacity: 1; clip-path: inset(0 0 0 0); }
+        98% { opacity: 0; clip-path: inset(0 100% 0 0); }
+      }
+    </style>
+  </defs>
+
+  <!-- Blackboard Base -->
+  <rect x="15" y="15" width="770" height="470" class="board-bg" />
+  <rect x="25" y="25" width="750" height="450" class="inner-border" />
+  <rect x="10" y="10" width="780" height="480" class="board-frame" />
+
+  <!-- Chalkboard Header (Teacher Style) -->
+  <g class="t-title">
+    <text x="400" y="55" font-size="28" font-weight="bold" class="chalk-yellow" letter-spacing="1.5">
+      UNIT 1.1: PRIME FACTOR TREES
+    </text>
+    <path d="M 240,64 Q 400,69 560,64" stroke="#1b3a6b" stroke-width="2" fill="none" stroke-linecap="round" />
+  </g>
+
+  <!-- ================= FACTOR TREE AREA ================= -->
+
+  <!-- Top Root: 60 -->
+  <g class="n60">
+    <text x="400" y="115" font-size="38" font-weight="bold">60</text>
+  </g>
+
+  <!-- First Layer Branches -->
+  <path class="branch-line b-60-6" d="M 380,125 L 290,165" />
+  <path class="branch-line b-60-10" d="M 420,125 L 510,165" />
+
+  <!-- Composite Children: 6 and 10 -->
+  <g class="n6">
+    <text x="280" y="195" font-size="34" class="chalk-cyan">6</text>
+  </g>
+  <g class="n10">
+    <text x="520" y="195" font-size="34" class="chalk-cyan">10</text>
+  </g>
+
+  <!-- Second Layer Branches -->
+  <!-- Under 6 -> 2 and 3 -->
+  <path class="branch-line b-lower" d="M 265,205 L 205,245" />
+  <path class="branch-line b-lower" d="M 295,205 L 345,245" />
+
+  <!-- Under 10 -> 2 and 5 -->
+  <path class="branch-line b-lower" d="M 505,205 L 455,245" />
+  <path class="branch-line b-lower" d="M 535,205 L 595,245" />
+
+  <!-- Leaf Primes: 2, 3, 2, 5 -->
+  <g class="p2a">
+    <text x="195" y="275" font-size="32" font-weight="bold">2</text>
+    <circle cx="195" cy="265" r="20" class="prime-circle" />
+  </g>
+
+  <g class="p3">
+    <text x="355" y="275" font-size="32" font-weight="bold">3</text>
+    <circle cx="355" cy="265" r="20" class="prime-circle" />
+  </g>
+
+  <g class="p2b">
+    <text x="445" y="275" font-size="32" font-weight="bold">2</text>
+    <circle cx="445" cy="265" r="20" class="prime-circle" />
+  </g>
+
+  <g class="p5">
+    <text x="605" y="275" font-size="32" font-weight="bold">5</text>
+    <circle cx="605" cy="265" r="20" class="prime-circle" />
+  </g>
+
+  <!-- ================= LESSON CONCLUSION / WRITING ================= -->
+
+  <!-- Teacher's Note pointing to circles -->
+  <g class="t-product">
+    <path d="M 140,240 Q 155,255 170,262" fill="none" stroke="#1a7a42" stroke-width="2.5" stroke-linecap="round" />
+    <text x="105" y="235" font-size="18" class="chalk-green">Prime! Stop!</text>
+
+    <!-- Product line -->
+    <text x="400" y="340" font-size="26">
+      Product of Primes: <tspan class="chalk-green" font-weight="bold">2 × 2 × 3 × 5</tspan>
+    </text>
+  </g>
+
+  <!-- Final Index Form Box -->
+  <g class="t-index">
+    <!-- Box Outline -->
+    <rect x="235" y="370" width="330" height="65" rx="8" fill="#fff8ee" stroke="#b45309" stroke-width="2.5" stroke-dasharray="6,4" />
+    <text x="400" y="412" font-size="30" font-weight="bold" class="chalk-orange">
+      Index Form: 2² × 3 × 5
+    </text>
+  </g>
+
+  <g class="t-subtext">
+    <text x="400" y="460" font-size="20" fill="#a0b2a6">
+      ✓ Ready to find HCF &amp; LCM!
+    </text>
+  </g>
+</svg>

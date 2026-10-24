@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abhyaas — Ratio Quest</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap');
+        
+        :root {
+            --brand-blue: #0f4c81;
+            --light-blue: #e0f2fe;
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.3);
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #020617, #1e3a8a, #3b82f6);
+            background-attachment: fixed;
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+            user-select: none;
+        }
+
+        h1, h2, h3, h4, .font-heading {
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        .bg-pattern {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: -1;
+            background-image: url("data:image/svg+xml,%3Csvg width='300' height='300' viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cg font-family='Fredoka, sans-serif' font-weight='bold' fill='rgba(255,255,255,0.05)'%3E%3Ctext x='30' y='60' font-size='40'%3E:%3C/text%3E%3Ctext x='200' y='90' font-size='50'%3E=%3C/text%3E%3Ctext x='100' y='180' font-size='45'%3E%E2%88%9D%3C/text%3E%3Ctext x='240' y='220' font-size='40'%3E%C3%B7%3C/text%3E%3Ctext x='150' y='50' font-size='35'%3Ex%3C/text%3E%3Ctext x='50' y='260' font-size='35'%3E+%3C/text%3E%3Ctext x='180' y='280' font-size='30'%3E1%3A2%3C/text%3E%3C/g%3E%3C/svg%3E");
+            animation: floatPattern 60s linear infinite;
+        }
+
+        @keyframes floatPattern {
+            0% { background-position: 0 0; }
+            100% { background-position: 300px 300px; }
+        }
+
+        @keyframes pulseNode {
+            0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 255, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes flashRed {
+            0%, 100% { background-color: rgba(239, 68, 68, 0.4); border-color: #f87171; transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .quest-node {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            border: 3px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+
+        .quest-node.active, .quest-node:hover {
+            background: white;
+            color: var(--brand-blue);
+            transform: translate(-50%, -50%) scale(1.15);
+            animation: pulseNode 2s infinite;
+        }
+
+        .quest-node-label {
+            position: absolute;
+            top: 70px;
+            width: 140px;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            pointer-events: none;
+        }
+
+        .quiz-input {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+        .quiz-input:focus { outline: none; background: rgba(255, 255, 255, 0.3); border-color: white; }
+        .quiz-input.correct {
+            background: rgba(34, 197, 94, 0.4) !important;
+            color: #ffffff;
+            border-color: #4ade80 !important;
+            box-shadow: 0 0 20px rgba(74, 222, 128, 0.7);
+            transform: scale(1.05);
+            pointer-events: none;
+        }
+        .quiz-input.incorrect {
+            animation: flashRed 0.4s ease;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 15, 40, 0.4);
+            backdrop-filter: blur(8px);
+            z-index: 50;
+            overflow-y: auto;
+            padding: 2rem 1rem;
+        }
+
+
+        body.embed-mode header.glass-panel {
+            display: none;
+        }
+
+        body.embed-mode main {
+            min-height: 85vh;
+            padding-top: 1.5rem;
+        }
+
+        body.embed-mode #quest-modal {
+            padding-top: 0.5rem;
+        }
+
+        /* Interactive Specific Styles */
+        .drag-card {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.6);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1rem;
+            border-radius: 0.75rem;
+            cursor: grab;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: transform 0.2s;
+            user-select: none;
+            text-align: center;
+        }
+        .drag-card:active { cursor: grabbing; transform: scale(0.95); }
+        
+        .drop-slot {
+            width: 100px;
+            height: 50px;
+            border: 2px dashed rgba(255,255,255,0.4);
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .drop-slot.filled { border-style: solid; }
+
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="bg-pattern"></div>
+
+    <header class="glass-panel sticky top-0 z-40 border-b-0 border-white/20">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <svg class="w-8 h-8 text-white drop-shadow-md" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"></path></svg>
+                <h1 class="text-3xl font-bold tracking-wider drop-shadow-sm font-heading">Abhyaas</h1>
+            </div>
+            <span class="text-sm font-bold bg-white/10 text-white py-1.5 px-4 rounded-full shadow-md uppercase tracking-wide border border-white/30">Math Quest: Chapter 12</span>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto w-full px-4 py-12 relative flex flex-col items-center justify-center min-h-[70vh]">
+        
+        <div class="text-center mb-10">
+            <h2 class="text-5xl font-heading font-bold mb-4 drop-shadow-lg">Ratio and Proportion</h2>
+            <p class="text-xl text-blue-100/80 font-bold max-w-2xl mx-auto">Master simplifying ratios, sharing amounts, and using direct proportion.</p>
+        </div>
+
+        <div class="relative w-full max-w-4xl h-[300px] mt-8">
+            <svg class="absolute top-0 left-0 w-full h-full drop-shadow-[0_0_10px_rgba(255,255,255,0.4)]" viewBox="0 0 1000 300" preserveAspectRatio="none">
+                <path d="M 150 150 C 300 150, 300 60, 500 60 C 700 60, 700 240, 850 240" 
+                      fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="8" stroke-linecap="round" stroke-dasharray="15, 15" />
+            </svg>
+
+            <button class="quest-node pulse" style="left: 15%; top: 50%;" onclick="openLevel(1)">1<span class="quest-node-label">Simplifying Ratios</span></button>
+            <button class="quest-node" style="left: 50%; top: 20%;" onclick="openLevel(2)">2<span class="quest-node-label">Sharing in a Ratio</span></button>
+            <button class="quest-node" style="left: 85%; top: 80%;" onclick="openLevel(3)">3<span class="quest-node-label">Direct Proportion</span></button>
+        </div>
+    </main>
+
+    <!-- MODAL -->
+    <div id="quest-modal" class="modal-overlay flex items-center justify-center">
+        <button onclick="prevLevel(event)" class="fixed left-2 md:left-8 top-1/2 -translate-y-1/2 w-14 h-14 md:w-20 md:h-20 rounded-full bg-white/20 backdrop-blur-md hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-all duration-300 border-2 border-white/40 shadow-[0_0_20px_rgba(255,255,255,0.3)] z-[60] cursor-pointer" id="prev-level-btn"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path></svg></button>
+        <button onclick="nextLevel(event)" class="fixed right-2 md:right-8 top-1/2 -translate-y-1/2 w-14 h-14 md:w-20 md:h-20 rounded-full bg-white/20 backdrop-blur-md hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-all duration-300 border-2 border-white/40 shadow-[0_0_20px_rgba(255,255,255,0.3)] z-[60] cursor-pointer" id="next-level-btn"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg></button>
+
+        <div id="modal-content-panel" class="glass-panel w-full max-w-4xl rounded-3xl p-6 md:p-10 relative">
+            <button onclick="closeModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-colors border border-white/40 z-10"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+
+            <!-- Level 1: Simplifying Ratios -->
+            <div id="level-1" class="level-content hidden">
+                <h2 class="text-3xl font-heading font-bold mb-6 flex items-center gap-3">
+                    <span class="bg-white text-blue-900 w-10 h-10 rounded-full flex items-center justify-center text-xl">1</span>
+                    Simplifying Ratios
+                </h2>
+                
+                <p class="text-lg mb-6 bg-white/10 border-l-4 border-white p-4 rounded-r-xl font-bold">
+                    A ratio compares quantities. You write a ratio in its <strong>simplest form</strong> by dividing the numbers by their <strong>highest common factor</strong>. A simplified ratio must not contain fractions or decimals!
+                </p>
+
+                <!-- SOLVED EXAMPLE -->
+                <div class="bg-blue-900/50 border-l-4 border-blue-400 p-4 rounded-r-xl mb-6 shadow-lg">
+                    <h4 class="font-bold text-blue-200 mb-2 text-xl">Solved Example: Find the simplest form</h4>
+                    <p>Write the ratio 8:12 in its simplest form.</p>
+                    <ul class="list-decimal ml-5 text-sm text-blue-100 mt-2 space-y-1">
+                        <li>Find the highest common factor of 8 and 12, which is 4.</li>
+                        <li>Divide both numbers by 4.</li>
+                        <li>8 ÷ 4 = 2</li>
+                        <li>12 ÷ 4 = 3</li>
+                    </ul>
+                    <p class="font-bold mt-3 text-lg text-green-300">Answer: 2:3</p>
+                </div>
+
+                <!-- Interactive Component -->
+                <div class="bg-black/10 rounded-3xl p-6 border border-white/20 mb-6 flex flex-col items-center gap-6">
+                    <h3 class="text-xl font-heading text-center text-blue-100">Interactive: Match the Equivalent Ratio</h3>
+                    <p class="text-center font-bold text-sm text-blue-100 mb-4">Drag the correct simplified ratio to match the original.</p>
+                    
+                    <div id="l1-source" class="flex gap-4 min-h-[60px]">
+                        <div draggable="true" ondragstart="drag(event)" id="card1" data-val="1:4" class="drag-card shadow-lg bg-teal-500/40">1:4</div>
+                        <div draggable="true" ondragstart="drag(event)" id="card2" data-val="2:3" class="drag-card shadow-lg bg-orange-500/40">2:3</div>
+                        <div draggable="true" ondragstart="drag(event)" id="card3" data-val="4:1" class="drag-card shadow-lg bg-purple-500/40">4:1</div>
+                    </div>
+
+                    <div class="flex items-center gap-4 mt-4 bg-white/5 p-4 rounded-2xl border border-white/10 font-mono text-3xl font-bold">
+                        <span>24:6</span>
+                        <span class="text-blue-300">=</span>
+                        <div class="drop-slot !w-24 !h-12 !text-lg" ondrop="dropL1(event)" ondragover="allowDrop(event)" data-expected="4:1"></div>
+                    </div>
+
+                    <div id="l1-success" class="hidden text-green-300 font-bold text-xl animate-bounce mt-2">Correctly Simplified!</div>
+                </div>
+            </div>
+
+            <!-- Level 2: Sharing in a Ratio -->
+            <div id="level-2" class="level-content hidden">
+                <h2 class="text-3xl font-heading font-bold mb-6 flex items-center gap-3">
+                    <span class="bg-white text-blue-900 w-10 h-10 rounded-full flex items-center justify-center text-xl">2</span>
+                    Sharing in a Ratio
+                </h2>
+
+                <p class="text-lg mb-6 bg-white/10 border-l-4 border-white p-4 rounded-r-xl font-bold">
+                    To share an amount in a given ratio, first add the numbers in the ratio to find the <strong>total number of parts</strong>. Then divide the amount to find the value of one part.
+                </p>
+
+                <!-- SOLVED EXAMPLE -->
+                <div class="bg-blue-900/50 border-l-4 border-blue-400 p-4 rounded-r-xl mb-6 shadow-lg">
+                    <h4 class="font-bold text-blue-200 mb-2 text-xl">Solved Example: Share an amount</h4>
+                    <p>Share $9000 between Sally and Bob in the ratio 2:1.</p>
+                    <ul class="list-decimal ml-5 text-sm text-blue-100 mt-2 space-y-1">
+                        <li>Total number of parts: 2 + 1 = 3</li>
+                        <li>Value of one part: $9000 ÷ 3 = $3000</li>
+                        <li>Sally gets 2 parts: $3000 × 2 = $6000</li>
+                        <li>Bob gets 1 part: $3000 × 1 = $3000</li>
+                        <li>Check: $6000 + $3000 = $9000</li>
+                    </ul>
+                    <p class="font-bold mt-3 text-lg text-green-300">Answer: Sally gets $6000, Bob gets $3000</p>
+                </div>
+
+                <!-- Interactive Component -->
+                <div class="bg-black/10 rounded-3xl p-6 border border-white/20 mb-6 flex flex-col items-center">
+                    <h3 class="text-xl mb-4 font-heading text-center text-blue-100">Interactive: Sharing Challenge</h3>
+                    <p class="font-bold text-sm mb-4">Share $45 between Ethan and Julie in the ratio 1:4.</p>
+                    
+                    <div class="flex items-center gap-4 mb-6 text-xl font-bold">
+                        <div class="flex flex-col items-center border border-white/30 p-4 rounded-lg bg-white/5">
+                            <span class="text-blue-200 text-sm mb-2">Ethan's Share ($)</span>
+                            <input type="text" class="quiz-input w-24 p-2 text-center font-bold rounded-lg" data-answer="9" placeholder="?">
+                        </div>
+                        <span class="text-4xl">+</span>
+                        <div class="flex flex-col items-center border border-white/30 p-4 rounded-lg bg-white/5">
+                            <span class="text-blue-200 text-sm mb-2">Julie's Share ($)</span>
+                            <input type="text" class="quiz-input w-24 p-2 text-center font-bold rounded-lg" data-answer="36" placeholder="?">
+                        </div>
+                        <span class="text-4xl">=</span>
+                        <div class="flex flex-col items-center border border-white/30 p-4 rounded-lg bg-white/5">
+                            <span class="text-blue-200 text-sm mb-2">Total</span>
+                            <span class="text-2xl">$45</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Level 3: Direct Proportion -->
+            <div id="level-3" class="level-content hidden">
+                <h2 class="text-3xl font-heading font-bold mb-6 flex items-center gap-3">
+                    <span class="bg-white text-blue-900 w-10 h-10 rounded-full flex items-center justify-center text-xl">3</span>
+                    Using Direct Proportion
+                </h2>
+                <p class="text-lg mb-6 bg-white/10 border-l-4 border-white p-4 rounded-r-xl font-bold">
+                    Two quantities are in direct proportion when their ratio stays the same as they increase or decrease. You can use the <strong>unitary method</strong> (finding the cost of 1 item first).
+                </p>
+                
+                <!-- SOLVED EXAMPLE -->
+                <div class="bg-blue-900/50 border-l-4 border-blue-400 p-4 rounded-r-xl mb-6 shadow-lg">
+                    <h4 class="font-bold text-blue-200 mb-2 text-xl">Solved Example: Unitary Method</h4>
+                    <p>Three books cost $12. Work out the cost of 10 books.</p>
+                    <ul class="list-decimal ml-5 text-sm text-blue-100 mt-2 space-y-1">
+                        <li>Find the cost of one book: $12 ÷ 3 = $4</li>
+                        <li>Find the cost of 10 books: 10 × $4 = $40</li>
+                    </ul>
+                    <p class="font-bold mt-3 text-lg text-green-300">Answer: $40</p>
+                </div>
+
+                <!-- Original Inputs -->
+                <div class="bg-white/10 rounded-3xl p-6 border border-white/20">
+                    <h3 class="text-2xl mb-4 font-heading text-center">Proportion Challenge</h3>
+                    <div class="flex flex-col items-center gap-4">
+                        <div class="flex items-center justify-between w-full bg-white/10 p-3 rounded-xl border border-white/20">
+                            <span class="font-bold">The mass of 3 bananas is 375g. What is the mass of 8 bananas?</span>
+                            <input type="text" class="quiz-input w-24 p-2 text-center font-bold rounded-lg" data-answer="1000" placeholder="? g">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('quest-modal');
+        const nextBtn = document.getElementById('next-level-btn');
+        const prevBtn = document.getElementById('prev-level-btn');
+        const contentPanel = document.getElementById('modal-content-panel');
+        let currentLevel = 1;
+        const totalLevels = 3;
+
+        function openLevel(level) {
+            document.querySelectorAll('.quest-node').forEach((n, i) => n.classList.toggle('active', i + 1 === level));
+            document.querySelectorAll('.level-content').forEach(el => el.style.display = 'none');
+            document.getElementById(`level-${level}`).style.display = 'block';
+            currentLevel = level;
+            modal.style.display = 'flex';
+            nextBtn.classList.toggle('hidden', level >= totalLevels);
+            prevBtn.classList.toggle('hidden', level <= 1);
+        }
+
+        function slide(dir) {
+            const nextLvl = currentLevel + dir;
+            if (nextLvl < 1 || nextLvl > totalLevels) return;
+            contentPanel.style.opacity = '0';
+            contentPanel.style.transform = `translateX(${dir * -40}px)`;
+            setTimeout(() => {
+                openLevel(nextLvl);
+                contentPanel.style.transition = 'none';
+                contentPanel.style.transform = `translateX(${dir * 40}px)`;
+                void contentPanel.offsetWidth; 
+                contentPanel.style.transition = 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+                contentPanel.style.opacity = '1';
+                contentPanel.style.transform = 'translateX(0)';
+            }, 300);
+        }
+
+        function nextLevel(e) { e.stopPropagation(); slide(1); }
+        function prevLevel(e) { e.stopPropagation(); slide(-1); }
+        function closeModal() { modal.style.display = 'none'; }
+        modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+        // Global Drag & Drop
+        function allowDrop(ev) { ev.preventDefault(); }
+        function drag(ev) { ev.dataTransfer.setData("text", ev.target.id); }
+
+        // L1 Matching
+        let l1Correct = 0;
+        function dropL1(ev) {
+            ev.preventDefault();
+            const data = ev.dataTransfer.getData("text");
+            const el = document.getElementById(data);
+            const expected = ev.target.getAttribute('data-expected');
+            
+            if(el.getAttribute('data-val') === expected && !ev.target.hasChildNodes()) {
+                ev.target.appendChild(el);
+                el.draggable = false;
+                el.classList.add('!bg-green-500/40', '!border-green-400');
+                ev.target.classList.add('filled', 'border-green-400', 'bg-green-500/10');
+                l1Correct++;
+                if(l1Correct === 1) document.getElementById('l1-success').classList.remove('hidden');
+            } else {
+                el.classList.add('animate-[flashRed_0.4s_ease]');
+                setTimeout(() => el.classList.remove('animate-[flashRed_0.4s_ease]'), 400);
+            }
+        }
+
+        // Auto-Check Inputs
+        document.querySelectorAll('.quiz-input').forEach(input => {
+            input.addEventListener('input', function() {
+                const val = this.value.trim().toLowerCase().replace(/\s/g, "");
+                const answer = this.getAttribute('data-answer').toLowerCase().replace(/\s/g, "");
+                this.classList.remove('correct', 'incorrect');
+                if (val !== '') {
+                    if (val === answer) this.classList.add('correct');
+                    else this.classList.add('incorrect');
+                }
+            });
+        });
+        function applyEmbedMode() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get("embed") === "1") {
+                document.body.classList.add("embed-mode");
+            }
+            const levelParam = params.get("level");
+            if (levelParam) {
+                const level = Math.max(1, Math.min(3, parseInt(levelParam, 10) || 1));
+                setTimeout(() => openLevel(level), 150);
+            }
+        }
+
+        window.addEventListener("load", applyEmbedMode);
+    </script>
+</body>
+</html>

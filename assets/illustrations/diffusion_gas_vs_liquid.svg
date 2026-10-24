@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900">
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path d="M 0 1 L 9 5 L 0 9 z" fill="#111111" />
+</marker>
+
+</defs>
+<rect x="0" y="0" width="1200" height="900" fill="#ffffff" />
+<rect x="110" y="170" width="450" height="450" fill="none" stroke="#111111" stroke-width="4" />
+<circle cx="362.0376845728606" cy="300.6552004814148" r="12" fill="#111111" />
+<line x1="362.0376845728606" y1="300.6552004814148" x2="430.60186413509115" y2="248.74226104471745" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="265.16335248947144" cy="517.4426627159119" r="12" fill="#111111" />
+<line x1="265.16335248947144" y1="517.4426627159119" x2="324.33261448528515" y2="579.852585283327" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="333.00803154706955" cy="369.6344029903412" r="12" fill="#111111" />
+<line x1="333.00803154706955" y1="369.6344029903412" x2="256.02782450530657" y2="407.97560437745614" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="228.59057784080505" cy="280.6898030638695" r="12" fill="#111111" />
+<line x1="228.59057784080505" y1="280.6898030638695" x2="151.17527683296237" y2="318.14472490152804" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="388.8271874189377" cy="317.27214336395264" r="12" fill="#111111" />
+<line x1="388.8271874189377" y1="317.27214336395264" x2="363.6396549440857" y2="399.50102033444443" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="417.2360563278198" cy="261.43012523651123" r="12" fill="#111111" />
+<line x1="417.2360563278198" y1="261.43012523651123" x2="492.8957491500513" y2="302.31546346484896" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="199.15517389774323" cy="396.7879632115364" r="12" fill="#111111" />
+<line x1="199.15517389774323" y1="396.7879632115364" x2="138.16611197764394" y2="457.4207458139067" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="164.7965395450592" cy="211.22043937444687" r="12" fill="#111111" />
+<line x1="164.7965395450592" y1="211.22043937444687" x2="248.39688661750256" y2="191.046645250212" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="317.6556956768036" cy="510.4355847835541" r="12" fill="#111111" />
+<line x1="317.6556956768036" y1="510.4355847835541" x2="399.5975553022955" y2="536.5417457636019" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="171.0056933760643" cy="552.284716963768" r="12" fill="#111111" />
+<line x1="171.0056933760643" y1="552.284716963768" x2="239.78299521634966" y2="500.6544666102177" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="178.94742727279663" cy="429.0620991587639" r="12" fill="#111111" />
+<line x1="178.94742727279663" y1="429.0620991587639" x2="231.60250588538022" y2="361.06619710354704" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="476.3059413433075" cy="406.41783118247986" r="12" fill="#111111" />
+<line x1="476.3059413433075" y1="406.41783118247986" x2="486.26641313222194" y2="320.9965867421052" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="418.2235848903656" cy="265.07232546806335" r="12" fill="#111111" />
+<line x1="418.2235848903656" y1="265.07232546806335" x2="385.64986723980576" y2="344.6647429361966" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="389.6568536758423" cy="500.0284814834595" r="12" fill="#111111" />
+<line x1="389.6568536758423" y1="500.0284814834595" x2="450.4190070018518" y2="439.1683079445473" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="281.2755823135376" cy="339.24334049224854" r="12" fill="#111111" />
+<line x1="281.2755823135376" y1="339.24334049224854" x2="274.9415779497797" y2="253.4769112281134" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="435.43734073638916" cy="404.86719608306885" r="12" fill="#111111" />
+<line x1="435.43734073638916" y1="404.86719608306885" x2="520.7109744887067" y2="416.02100201089496" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<text x="335" y="690" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="34" font-weight="700" text-anchor="middle">gas</text>
+<text x="335" y="740" fill="#555555" font-family="Helvetica, Arial, sans-serif" font-size="26" font-weight="600" text-anchor="middle">far apart, moving fast</text>
+<rect x="640" y="170" width="450" height="450" fill="none" stroke="#111111" stroke-width="4" />
+<circle cx="821.4007206400856" cy="290.3229022026062" r="14" fill="#111111" />
+<line x1="821.4007206400856" y1="290.3229022026062" x2="804.9074875260266" y2="290.79540770025017" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="850.7983434200287" cy="254.74932551383972" r="14" fill="#111111" />
+<line x1="850.7983434200287" y1="254.74932551383972" x2="852.2563177461789" y2="238.31386656483903" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="1045.5416631698608" cy="250.59869289398193" r="14" fill="#111111" />
+<line x1="1045.5416631698608" y1="250.59869289398193" x2="1043.7071304827866" y2="234.20099519521773" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="695.9660828113556" cy="365.265596807003" r="14" fill="#111111" />
+<line x1="695.9660828113556" y1="365.265596807003" x2="680.844683751233" y2="358.6630752837876" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="696.7082285881042" cy="353.92010658979416" r="14" fill="#111111" />
+<line x1="696.7082285881042" y1="353.92010658979416" x2="712.6538919348003" y2="349.6791373098024" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="1007.2316825389862" cy="418.77381682395935" r="14" fill="#111111" />
+<line x1="1007.2316825389862" y1="418.77381682395935" x2="1004.4744565019105" y2="402.50582049434115" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="941.7300069332123" cy="494.75767970085144" r="14" fill="#111111" />
+<line x1="941.7300069332123" y1="494.75767970085144" x2="943.9084172752852" y2="478.40211403097777" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="1044.7206676006317" cy="433.8768994808197" r="14" fill="#111111" />
+<line x1="1044.7206676006317" y1="433.8768994808197" x2="1054.1852648401446" y2="420.3613011184162" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="812.7343499660492" cy="492.7027499675751" r="14" fill="#111111" />
+<line x1="812.7343499660492" y1="492.7027499675751" x2="825.4909901355476" y2="503.16784106063017" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="691.6532525420189" cy="543.9550918340683" r="14" fill="#111111" />
+<line x1="691.6532525420189" y1="543.9550918340683" x2="694.7637345889906" y2="527.750928744434" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="826.5706753730774" cy="574.1391968727112" r="14" fill="#111111" />
+<line x1="826.5706753730774" y1="574.1391968727112" x2="839.9343376121245" y2="564.4612564120209" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="958.431704044342" cy="384.26182985305786" r="14" fill="#111111" />
+<line x1="958.431704044342" y1="384.26182985305786" x2="974.8657347178457" y2="382.7878434819059" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="699.7407841682434" cy="227.91348904371262" r="14" fill="#111111" />
+<line x1="699.7407841682434" y1="227.91348904371262" x2="683.3147537661176" y2="226.35287210530612" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="864.3790578842163" cy="383.972373008728" r="14" fill="#111111" />
+<line x1="864.3790578842163" y1="383.972373008728" x2="865.3195417331583" y2="400.44554787363734" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="1043.1136962771416" cy="210.12768864631653" r="14" fill="#111111" />
+<line x1="1043.1136962771416" y1="210.12768864631653" x2="1057.9832791501904" y2="217.2792972193253" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="721.4137433469296" cy="355.85631996393204" r="14" fill="#111111" />
+<line x1="721.4137433469296" y1="355.85631996393204" x2="706.2132288770327" y2="349.43803671601756" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="958.0268549919128" cy="372.98240423202515" r="14" fill="#111111" />
+<line x1="958.0268549919128" y1="372.98240423202515" x2="970.6884040617791" y2="362.4024621172795" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="678.4504103660583" cy="245.453661121428" r="14" fill="#111111" />
+<line x1="678.4504103660583" y1="245.453661121428" x2="685.8672958516071" y2="260.19271840791197" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="744.5480039715767" cy="416.9576680660248" r="14" fill="#111111" />
+<line x1="744.5480039715767" y1="416.9576680660248" x2="757.6568822571402" y2="426.9780128751759" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="764.9357661604881" cy="293.8559865951538" r="14" fill="#111111" />
+<line x1="764.9357661604881" y1="293.8559865951538" x2="751.3219112111576" y2="284.5332748963727" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="853.5287964344025" cy="461.86699509620667" r="14" fill="#111111" />
+<line x1="853.5287964344025" y1="461.86699509620667" x2="845.5115868060005" y2="447.44567928334624" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="986.0364305973053" cy="359.51308369636536" r="14" fill="#111111" />
+<line x1="986.0364305973053" y1="359.51308369636536" x2="972.9911138241274" y2="349.41012817397274" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="776.3977062702179" cy="542.2197687625885" r="14" fill="#111111" />
+<line x1="776.3977062702179" y1="542.2197687625885" x2="761.206963533301" y2="535.7783919609408" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="749.5766890048981" cy="573.5311445593834" r="14" fill="#111111" />
+<line x1="749.5766890048981" y1="573.5311445593834" x2="763.3170351190544" y2="564.395889299502" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="837.4203324317932" cy="441.4539647102356" r="14" fill="#111111" />
+<line x1="837.4203324317932" y1="441.4539647102356" x2="853.3365268046704" y2="437.10370532891204" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="715.1395535469055" cy="411.50630444288254" r="14" fill="#111111" />
+<line x1="715.1395535469055" y1="411.50630444288254" x2="698.9138809800016" y2="408.51004848725694" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="780.171617269516" cy="273.21840167045593" r="14" fill="#111111" />
+<line x1="780.171617269516" y1="273.21840167045593" x2="794.5117792290938" y2="265.05692172052795" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="688.403058052063" cy="275.07375448942184" r="14" fill="#111111" />
+<line x1="688.403058052063" y1="275.07375448942184" x2="672.4849574134038" y2="279.41703344172475" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="947.8243380784988" cy="521.6597318649292" r="14" fill="#111111" />
+<line x1="947.8243380784988" y1="521.6597318649292" x2="962.9446192657737" y2="528.2648130012775" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="944.2219230532646" cy="542.4966728687286" r="14" fill="#111111" />
+<line x1="944.2219230532646" y1="542.4966728687286" x2="960.709361667665" y2="543.1403870416174" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="799.6941107884049" cy="371.72606110572815" r="14" fill="#111111" />
+<line x1="799.6941107884049" y1="371.72606110572815" x2="816.1602913102113" y2="372.7819488948829" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="942.5567311421037" cy="442.67990231513977" r="14" fill="#111111" />
+<line x1="942.5567311421037" y1="442.67990231513977" x2="930.1833732891463" y2="431.7643164196114" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="918.8208878040314" cy="346.18542313575745" r="14" fill="#111111" />
+<line x1="918.8208878040314" y1="346.18542313575745" x2="934.2093144960738" y2="340.2317415903911" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="764.1784060001373" cy="500.9532579779625" r="14" fill="#111111" />
+<line x1="764.1784060001373" y1="500.9532579779625" x2="763.2215122299984" y2="517.4254877697263" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="697.3916554450989" cy="449.4561144709587" r="14" fill="#111111" />
+<line x1="697.3916554450989" y1="449.4561144709587" x2="711.6370470666565" y2="441.13032216340883" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="1055.712217092514" cy="444.3410015106201" r="14" fill="#111111" />
+<line x1="1055.712217092514" y1="444.3410015106201" x2="1041.0360903723604" y2="451.8816450172444" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="871.5047359466553" cy="486.8358325958252" r="14" fill="#111111" />
+<line x1="871.5047359466553" y1="486.8358325958252" x2="867.7464562173597" y2="502.90211198703355" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="822.1827030181885" cy="555.8807277679443" r="14" fill="#111111" />
+<line x1="822.1827030181885" y1="555.8807277679443" x2="837.2152323321994" y2="549.0782971418078" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="780.3439617156982" cy="326.9715976715088" r="14" fill="#111111" />
+<line x1="780.3439617156982" y1="326.9715976715088" x2="795.769967943798" y2="332.8272216220906" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<circle cx="913.8403913378716" cy="508.1094229221344" r="14" fill="#111111" />
+<line x1="913.8403913378716" y1="508.1094229221344" x2="929.7058408335378" y2="503.57758970582285" stroke="#555555" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah)" />
+<text x="865" y="690" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="34" font-weight="700" text-anchor="middle">liquid</text>
+<text x="865" y="740" fill="#555555" font-family="Helvetica, Arial, sans-serif" font-size="26" font-weight="600" text-anchor="middle">close together, moving slower</text>
+</svg>

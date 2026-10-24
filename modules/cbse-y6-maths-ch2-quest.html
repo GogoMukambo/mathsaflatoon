@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abhyaas — Lines and Angles Quest</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap');
+        
+        :root {
+            --brand-blue: #0f4c81;
+            --light-blue: #e0f2fe;
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.3);
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #020617, #1e3a8a, #3b82f6);
+            background-attachment: fixed;
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+            user-select: none;
+        }
+
+        h1, h2, h3, h4, .font-heading {
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        .bg-pattern {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: -1;
+            background-image: url("data:image/svg+xml,%3Csvg width='300' height='300' viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cg font-family='Fredoka, sans-serif' font-weight='bold' fill='rgba(255,255,255,0.05)'%3E%3Ctext x='25' y='60' font-size='38'%3E90%C2%B0%3C/text%3E%3Ctext x='185' y='90' font-size='42'%3E%E2%88%A0ABC%3C/text%3E%3Ctext x='90' y='180' font-size='40'%3E180%C2%B0%3C/text%3E%3Ctext x='215' y='220' font-size='38'%3E360%C2%B0%3C/text%3E%3Ctext x='140' y='45' font-size='34'%3E%E2%8A%A5%3C/text%3E%3Ctext x='35' y='260' font-size='34'%3E22.5%C2%B0%3C/text%3E%3Ctext x='185' y='280' font-size='32'%3E%E2%88%A0AOB%3C/text%3E%3C/g%3E%3C/svg%3E");
+            animation: floatPattern 60s linear infinite;
+        }
+
+        @keyframes floatPattern {
+            0% { background-position: 0 0; }
+            100% { background-position: 300px 300px; }
+        }
+
+        @keyframes pulseNode {
+            0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(255, 255, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        }
+
+        @keyframes flashRed {
+            0%, 100% { background-color: rgba(239, 68, 68, 0.4); border-color: #f87171; transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .quest-node {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            border: 4px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+
+        .quest-node.active, .quest-node:hover {
+            background: white;
+            color: var(--brand-blue);
+            transform: translate(-50%, -50%) scale(1.15);
+            animation: pulseNode 2s infinite;
+        }
+
+        .quest-node-label {
+            position: absolute;
+            top: 90px;
+            width: 210px;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            pointer-events: none;
+        }
+
+        .quiz-input {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 3px solid rgba(255, 255, 255, 0.5);
+        }
+        .quiz-input:focus { outline: none; background: rgba(255, 255, 255, 0.3); border-color: white; }
+        .quiz-input.correct {
+            background: rgba(34, 197, 94, 0.4) !important;
+            color: #ffffff;
+            border-color: #4ade80 !important;
+            box-shadow: 0 0 25px rgba(74, 222, 128, 0.7);
+            transform: scale(1.05);
+            pointer-events: none;
+        }
+        .quiz-input.incorrect {
+            animation: flashRed 0.4s ease;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 15, 40, 0.7);
+            backdrop-filter: blur(12px);
+            z-index: 50;
+            overflow-y: auto;
+            padding: 2rem 1rem;
+        }
+
+        .study-box {
+            background: rgba(255,255,255,0.05);
+            border-left: 6px solid #3b82f6;
+            padding: 1.5rem 2rem;
+            border-radius: 0 1rem 1rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        .btn-more, .btn-exercise {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s;
+        }
+        .btn-more { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+        .btn-exercise { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+        .btn-more:hover, .btn-exercise:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4); }
+
+        .custom-scroll::-webkit-scrollbar { width: 10px; }
+        .custom-scroll::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 5px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); border-radius: 5px; }
+        
+        .topic-slide {
+            display: none;
+            animation: slideIn 0.4s ease forwards;
+        }
+        .topic-slide.active {
+            display: block;
+        }
+
+        /* Enlarge Pyramid Blocks for Kids */
+        .pyramid-row { display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
+        .pyramid-block { width: 95px; height: 95px; background: rgba(255,255,255,0.15); border: 3px solid rgba(255,255,255,0.4); display: flex; align-items: center; justify-content: center; font-size: 1.85rem; font-weight: bold; border-radius: 16px; transition: all 0.3s ease; box-shadow: 0 6px 12px rgba(0,0,0,0.2); }
+        .pyramid-block input { width: 100%; height: 100%; text-align: center; border-radius: 12px; background: transparent; outline: none; transition: all 0.3s; color: white; }
+        .pyramid-block input.correct { background: rgba(34, 197, 94, 0.5) !important; color: white; }
+        .pyramid-block input.incorrect { animation: flashRed 0.4s ease; background: rgba(239, 68, 68, 0.4); }
+
+        .slide-indicator-dots { display: flex; gap: 8px; justify-content: center; margin-top: 1.5rem; }
+        .slide-dot { width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,0.2); transition: all 0.3s; cursor: pointer; }
+        .slide-dot.active { background: white; transform: scale(1.3); }
+    
+        body.embed-mode header.glass-panel {
+            display: none;
+        }
+        body.embed-mode main {
+            min-height: 85vh;
+            padding-top: 1.5rem;
+        }
+        body.embed-mode #quest-modal {
+            padding-top: 0.5rem;
+        }
+        #modal-content-panel,
+        #examples-modal .glass-panel,
+        #pdf-exercise-modal .glass-panel {
+            background: rgba(8, 22, 58, 0.92);
+        }
+
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="bg-pattern pointer-events-none"></div>
+
+    <header class="glass-panel sticky top-0 z-40 border-b-0 border-white/20">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <svg class="w-10 h-10 text-white drop-shadow-md" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"></path></svg>
+                <h1 class="text-4xl font-bold tracking-wider drop-shadow-sm font-heading">Abhyaas</h1>
+            </div>
+            <span class="text-lg font-bold bg-white/10 text-white py-2 px-6 rounded-full shadow-md uppercase tracking-wide border border-white/30">Ganita Prakash: Chapter 2</span>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto w-full px-4 py-16 relative flex flex-col items-center justify-center min-h-[70vh]">
+        <div class="text-center mb-16">
+            <h2 class="text-5xl md:text-6xl font-heading font-bold mb-6 drop-shadow-lg">Lines and Angles</h2>
+            <p class="text-2xl text-blue-100/90 font-bold max-w-3xl mx-auto">Master points, line segments, lines, rays, angle classification, degree measures, and protractors.</p>
+        </div>
+
+        <div class="relative w-full max-w-5xl h-[350px] mt-8">
+            <svg class="absolute top-0 left-0 w-full h-full pointer-events-none drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]" viewBox="0 0 1000 300" preserveAspectRatio="none">
+                <path d="M 150 150 C 300 150, 300 60, 500 60 C 700 60, 700 240, 850 240" 
+                      fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="10" stroke-linecap="round" stroke-dasharray="20, 20" />
+            </svg>
+            <button class="quest-node pulse" style="left: 15%; top: 50%;" onclick="openLevel(1)">1<span class="quest-node-label">Points, Lines, Rays &amp; Angles</span></button>
+            <button class="quest-node" style="left: 50%; top: 20%;" onclick="openLevel(2)">2<span class="quest-node-label">Angle Types &amp; Degree Measures</span></button>
+            <button class="quest-node" style="left: 85%; top: 80%;" onclick="openLevel(3)">3<span class="quest-node-label">Protractors, Clocks &amp; Puzzles</span></button>
+        </div>
+    </main>
+
+    <!-- MAIN QUEST MODAL -->
+    <div id="quest-modal" class="modal-overlay hidden items-center justify-center">
+        
+        <!-- Main External Navigation Arrows -->
+        <button onclick="prevSlide(event)" class="fixed left-2 md:left-6 top-1/2 -translate-y-1/2 w-16 h-16 md:w-24 md:h-24 rounded-full bg-white/20 backdrop-blur-md hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-all duration-300 border-4 border-white/40 shadow-[0_0_25px_rgba(255,255,255,0.3)] z-[60] cursor-pointer" id="prev-btn"><svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M15 19l-7-7 7-7"></path></svg></button>
+        
+        <button onclick="nextSlide(event)" class="fixed right-2 md:right-6 top-1/2 -translate-y-1/2 w-16 h-16 md:w-24 md:h-24 rounded-full bg-white/20 backdrop-blur-md hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-all duration-300 border-4 border-white/40 shadow-[0_0_25px_rgba(255,255,255,0.3)] z-[60] cursor-pointer" id="next-btn"><svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M9 5l7 7-7 7"></path></svg></button>
+
+        <div id="modal-content-panel" class="glass-panel w-full max-w-5xl rounded-[2rem] p-8 md:p-12 relative flex flex-col min-h-[60vh] justify-between">
+            <button onclick="closeModal()" class="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/20 hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-colors border-2 border-white/40 z-20"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+
+            <div id="slides-container" class="w-full flex-grow mt-4">
+                
+                <!-- ================= LEVEL 1 ================= -->
+                <!-- L1 Slide 1 -->
+                <div class="topic-slide level-1-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 flex items-center gap-4 text-white">
+                        <span class="bg-white text-blue-900 w-14 h-14 rounded-full flex items-center justify-center text-3xl shrink-0">1</span>
+                        Points, Line Segments, Lines &amp; Rays
+                    </h2>
+                    
+                    <div class="study-box border-blue-400">
+                        <h4 class="text-3xl font-bold text-blue-300 mb-6">Building Blocks of Plane Geometry (Sections 2.1 &ndash; 2.4)</h4>
+                        <ul class="list-disc ml-8 space-y-3 text-xl text-blue-50">
+                            <li><strong>Point:</strong> Determines an exact location (like the tip of a compass or needle) with no length, breadth, or height. Denoted by a capital letter: <strong>Point P, Point Z, Point T</strong>.</li>
+                            <li><strong>Line Segment (AB or BA):</strong> The shortest path between two points <strong>A</strong> and <strong>B</strong> (called its <em>end points</em>).</li>
+                            <li><strong>Line (AB or line <em>m</em>):</strong> A line segment extended endlessly in <em>both</em> directions. <strong>Infinitely many lines</strong> pass through 1 point, but <strong>exactly 1 unique line</strong> passes through 2 distinct points!</li>
+                            <li><strong>Ray (AP):</strong> Starts at a fixed <strong>starting point</strong> A and goes endlessly in one direction through P. Ray <strong>OA</strong> cannot be written as Ray <strong>AO</strong> because the starting point must come first!</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-blue-900/60 border-l-8 border-blue-400 p-8 rounded-r-2xl shadow-xl mt-6">
+                        <h4 class="font-bold text-white mb-4 text-3xl flex items-center gap-3">
+                            <svg class="w-8 h-8 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                            Solved Example (Fig. 2.4 &amp; Fig. 2.5 from Textbook)
+                        </h4>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
+                            <div class="bg-black/20 p-5 rounded-xl border border-white/10">
+                                <p class="text-lg font-bold text-blue-100 mb-2">1. Line Segments in Path L&ndash;M&ndash;P&ndash;Q&ndash;R (Fig. 2.4):</p>
+                                <svg class="w-full h-24 mb-2" viewBox="0 0 320 80">
+                                    <polyline points="30,65 75,25 140,48 185,15 280,35" fill="none" stroke="#60a5fa" stroke-width="3"/>
+                                    <circle cx="30" cy="65" r="4" fill="#4ade80"/><text x="20" y="75" fill="#fff" font-size="13" font-weight="bold">L</text>
+                                    <circle cx="75" cy="25" r="4" fill="#fbbf24"/><text x="70" y="16" fill="#fff" font-size="13" font-weight="bold">M</text>
+                                    <circle cx="140" cy="48" r="4" fill="#fbbf24"/><text x="136" y="66" fill="#fff" font-size="13" font-weight="bold">P</text>
+                                    <circle cx="185" cy="15" r="4" fill="#fbbf24"/><text x="182" y="11" fill="#fff" font-size="13" font-weight="bold">Q</text>
+                                    <circle cx="280" cy="35" r="4" fill="#4ade80"/><text x="288" y="40" fill="#fff" font-size="13" font-weight="bold">R</text>
+                                </svg>
+                                <p class="text-sm text-blue-50">&bull; <strong>4 Line Segments:</strong> LM, MP, PQ, QR.<br>&bull; On <strong>1 segment</strong>: <strong class="text-green-300">L, R</strong>. &nbsp; On <strong>2 segments</strong>: <strong class="text-amber-300">M, P, Q</strong>.</p>
+                            </div>
+                            <div class="bg-black/20 p-5 rounded-xl border border-white/10">
+                                <p class="text-lg font-bold text-blue-100 mb-2">2. Naming Rays &amp; Starting Points (Fig. 2.5):</p>
+                                <svg class="w-full h-24 mb-2" viewBox="0 0 320 80">
+                                    <line x1="60" y1="60" x2="170" y2="12" stroke="#f472b6" stroke-width="3"/>
+                                    <polygon points="175,10 164,11 169,19" fill="#f472b6"/>
+                                    <line x1="60" y1="60" x2="255" y2="60" stroke="#38bdf8" stroke-width="3"/>
+                                    <polygon points="262,60 252,55 252,65" fill="#38bdf8"/>
+                                    <circle cx="60" cy="60" r="4" fill="#fff"/><text x="45" y="65" fill="#fff" font-size="13" font-weight="bold">T</text>
+                                    <circle cx="135" cy="27" r="4" fill="#fff"/><text x="125" y="20" fill="#fff" font-size="13" font-weight="bold">A</text>
+                                    <circle cx="145" cy="60" r="4" fill="#fff"/><text x="140" y="76" fill="#fff" font-size="13" font-weight="bold">N</text>
+                                    <circle cx="210" cy="60" r="4" fill="#fff"/><text x="206" y="76" fill="#fff" font-size="13" font-weight="bold">B</text>
+                                </svg>
+                                <p class="text-sm text-blue-50">&bull; <strong>Rays shown:</strong> TA, TN, TB, and NB.<br>&bull; T is the starting point of <strong>TA, TN, TB</strong>, but <strong>not</strong> of Ray <strong>NB</strong> (which starts at N)!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- L1 Slide 2 -->
+                <div class="topic-slide level-1-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 flex items-center gap-4 text-white">
+                        <span class="bg-white text-blue-900 w-14 h-14 rounded-full flex items-center justify-center text-3xl shrink-0">1</span>
+                        Angles, Vertex, Arms &amp; Superimposition
+                    </h2>
+                    
+                    <div class="study-box border-teal-400">
+                        <h4 class="text-3xl font-bold text-teal-300 mb-6">Understanding &amp; Comparing Angles (Sections 2.5 &ndash; 2.7)</h4>
+                        <ul class="list-disc ml-8 space-y-3 text-xl text-blue-50">
+                            <li><strong>Angle (&angle;DBE or &angle;EBD):</strong> Formed by two rays (the <strong>arms</strong> BD and BE) sharing a common starting point (the <strong>vertex</strong> B). The vertex letter is <strong class="text-white bg-teal-500/30 px-2 rounded">always written in the middle</strong>!</li>
+                            <li><strong>Why can&rsquo;t &angle;APB be called &angle;P when 3 rays meet at P?</strong> Because multiple angles (&angle;APB, &angle;BPC, &angle;APC) share vertex P, so &angle;P is ambiguous!</li>
+                            <li><strong>Size of an Angle = Amount of Rotation:</strong> Shortening or lengthening the arms (like snipping paper straws) <strong>never changes the angle size</strong>!</li>
+                            <li><strong>Comparing Angles:</strong> We can compare angles by <strong>superimposition</strong> (overlapping vertices and one arm) or by placing a transparent circle centred at the vertex.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-blue-900/60 border-l-8 border-teal-400 p-8 rounded-r-2xl shadow-xl mt-6">
+                        <h4 class="font-bold text-white mb-4 text-3xl flex items-center gap-3">
+                            <svg class="w-8 h-8 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                            Solved Example: Lines &amp; Angles from 3 and 4 Points (Page 20&ndash;21)
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                            <div class="bg-black/25 p-4 rounded-xl border border-white/10">
+                                <p class="text-lg font-bold text-amber-300 mb-2">3 Non-Collinear Points (A, B, C):</p>
+                                <p class="text-base text-blue-50">&bull; Pairs of points give <strong>3 lines</strong>: AB, BC, and CA.<br>&bull; They form <strong>3 interior angles</strong>: <strong>&angle;ABC, &angle;BCA, &angle;CAB</strong>.</p>
+                            </div>
+                            <div class="bg-black/25 p-4 rounded-xl border border-white/10">
+                                <p class="text-lg font-bold text-pink-300 mb-2">4 Points (No 3 on a Line: A, B, C, D):</p>
+                                <p class="text-base text-blue-50">&bull; Pairs of points give <strong>6 lines</strong>: AB, BC, CD, DA, AC, BD.<br>&bull; Using letters A, B, C, D, we can name <strong>12 angles</strong> (3 at each vertex)!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- L1 Slide 3 -->
+                <div class="topic-slide level-1-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 text-center text-white">
+                        Interactive Challenge
+                    </h2>
+                    
+                    <div class="bg-black/20 rounded-3xl p-8 md:p-10 border border-white/20 flex flex-col items-center justify-center shadow-inner mt-4">
+                        <h3 class="text-3xl font-heading text-center text-blue-100 mb-3">Lines, Rays &amp; Angles Explorer</h3>
+                        <p class="text-center font-bold text-lg text-blue-200 mb-8 max-w-2xl">Test your understanding of points, lines, rays, and angle naming rules from Sections 2.1&ndash;2.6!</p>
+                        
+                        <div class="flex flex-col gap-5 w-full max-w-3xl">
+                            <div class="flex items-center justify-between bg-white/10 p-5 rounded-2xl border border-white/20">
+                                <div class="pr-4">
+                                    <span class="font-bold text-xl block">1. Sheetal marked 2 points on a paper. How many different straight lines can pass through BOTH points?</span>
+                                    <span class="text-sm text-blue-200">Hint: Any two points determine a unique line!</span>
+                                </div>
+                                <input type="text" class="quiz-input w-28 p-3 text-center text-2xl font-bold rounded-xl shrink-0" data-answer="1|one" placeholder="#">
+                            </div>
+
+                            <div class="flex items-center justify-between bg-white/10 p-5 rounded-2xl border border-white/20">
+                                <div class="pr-4">
+                                    <span class="font-bold text-xl block">2. In angle &angle;DBE, which single capital letter is the VERTEX of the angle?</span>
+                                    <span class="text-sm text-blue-200">Hint: The vertex is always written as the middle letter!</span>
+                                </div>
+                                <input type="text" class="quiz-input w-28 p-3 text-center text-2xl font-bold rounded-xl shrink-0" data-answer="b" placeholder="?">
+                            </div>
+
+                            <div class="flex items-center justify-between bg-white/10 p-5 rounded-2xl border border-white/20">
+                                <div class="pr-4">
+                                    <span class="font-bold text-xl block">3. Four points A, B, C, D are marked so no three are on one line. How many lines can be drawn through pairs of these points?</span>
+                                    <span class="text-sm text-blue-200">Hint: 4 sides (AB, BC, CD, DA) + 2 diagonals (AC, BD).</span>
+                                </div>
+                                <input type="text" class="quiz-input w-28 p-3 text-center text-2xl font-bold rounded-xl shrink-0" data-answer="6|six" placeholder="#">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-6 w-full mt-10 justify-center max-w-3xl mx-auto">
+                        <button onclick="openMoreExamples(1)" class="btn-more flex-1 py-4 rounded-2xl font-bold text-white text-xl flex items-center justify-center gap-3">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                            More Examples
+                        </button>
+                        <button onclick="openPdfExercise(1)" class="btn-exercise flex-1 py-4 rounded-2xl font-bold text-white text-xl flex items-center justify-center gap-3">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            Exercises
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ================= LEVEL 2 ================= -->
+                <!-- L2 Slide 1 -->
+                <div class="topic-slide level-2-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 flex items-center gap-4 text-white">
+                        <span class="bg-white text-blue-900 w-14 h-14 rounded-full flex items-center justify-center text-3xl shrink-0">2</span>
+                        Special Angles &amp; Classifying Angles
+                    </h2>
+                    
+                    <div class="study-box border-blue-400">
+                        <h4 class="text-3xl font-bold text-blue-300 mb-4">Five Key Types of Angles (Sections 2.8 &amp; 2.11)</h4>
+                        <ul class="list-disc ml-8 space-y-3 text-xl text-blue-50">
+                            <li><strong>Full Turn (Complete Angle = 360&deg;):</strong> One complete rotation around a circle.</li>
+                            <li><strong>Straight Angle (180&deg;):</strong> Half of a full turn (&frac12; turn); the two arms form a straight line.</li>
+                            <li><strong>Right Angle (90&deg;):</strong> Half of a straight angle (&frac14; of a full turn); forms an &lsquo;L&rsquo; corner. Two lines meeting at 90&deg; are <strong>perpendicular lines</strong>.</li>
+                            <li><strong>Acute Angle (0&deg; &lt; angle &lt; 90&deg;):</strong> Sharp angle smaller than a right angle (less than a quarter turn).</li>
+                            <li><strong>Obtuse Angle (90&deg; &lt; angle &lt; 180&deg;):</strong> Blunt angle greater than 90&deg; and less than 180&deg;.</li>
+                            <li><strong>Reflex Angle (180&deg; &lt; angle &lt; 360&deg;):</strong> Greater than a straight angle and less than a full turn!</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-blue-900/60 border-l-8 border-blue-400 p-8 rounded-r-2xl shadow-xl mt-6">
+                        <h4 class="font-bold text-white mb-4 text-3xl flex items-center gap-3">
+                            <svg class="w-8 h-8 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                            Solved Example: Nested Triangle Acute Angles Pattern (Page 32 Q4)
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center mt-4">
+                            <svg class="w-full h-36 bg-black/25 rounded-xl p-2 border border-white/10" viewBox="0 0 420 120">
+                                <!-- Fig 1 -->
+                                <polygon points="60,15 20,90 100,90" fill="none" stroke="#4ade80" stroke-width="2.5"/>
+                                <text x="60" y="112" fill="#fff" font-size="13" text-anchor="middle" font-weight="bold">Fig 1: 3 acute</text>
+                                <!-- Fig 2 -->
+                                <polygon points="195,15 155,90 235,90" fill="none" stroke="#38bdf8" stroke-width="2.5"/>
+                                <polygon points="175,52.5 215,52.5 195,90" fill="none" stroke="#fbbf24" stroke-width="2"/>
+                                <text x="195" y="112" fill="#fff" font-size="13" text-anchor="middle" font-weight="bold">Fig 2: 12 acute</text>
+                                <!-- Fig 3 -->
+                                <polygon points="340,15 300,90 380,90" fill="none" stroke="#f472b6" stroke-width="2.5"/>
+                                <polygon points="320,52.5 360,52.5 340,90" fill="none" stroke="#fbbf24" stroke-width="2"/>
+                                <polygon points="330,71.25 350,71.25 340,52.5" fill="none" stroke="#4ade80" stroke-width="1.8"/>
+                                <text x="340" y="112" fill="#fff" font-size="13" text-anchor="middle" font-weight="bold">Fig 3: 21 acute</text>
+                            </svg>
+                            <div class="bg-black/25 p-5 rounded-xl border border-white/10 space-y-2">
+                                <p class="text-lg text-blue-100">&bull; <strong>Fig 1 (0 inner triangles):</strong> <strong>3</strong> acute angles.</p>
+                                <p class="text-lg text-blue-100">&bull; <strong>Fig 2 (1 inner triangle):</strong> 3 + 9 = <strong>12</strong> acute angles.</p>
+                                <p class="text-lg text-blue-100">&bull; <strong>Fig 3 (2 inner triangles):</strong> 12 + 9 = <strong>21</strong> acute angles.</p>
+                                <p class="text-lg text-green-300 font-bold">&bull; Next Figure (3 inner triangles): 21 + 9 = 30 acute angles!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- L2 Slide 2 -->
+                <div class="topic-slide level-2-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 flex items-center gap-4 text-white">
+                        <span class="bg-white text-blue-900 w-14 h-14 rounded-full flex items-center justify-center text-3xl shrink-0">2</span>
+                        Degree Measures (360&deg;) &amp; Paper Folding Bisectors
+                    </h2>
+                    
+                    <div class="study-box border-purple-400">
+                        <ul class="list-disc ml-8 space-y-4 text-xl text-blue-50">
+                            <li><strong>Why 360 Degrees?</strong> Ancient texts like the <em>Rigveda</em> (Verse 1.164.48) describe a wheel with 360 spokes. Practically, <strong>360</strong> is the smallest number evenly divisible by every number from 1 to 10 except 7 (plus 12 and 24)!</li>
+                            <li><strong>Dividing a 360&deg; Circle into Equal Parts (Page 34):</strong><br>
+                                <span class="text-blue-200">1 part = 360&deg;, 2 parts = 180&deg;, 3 parts = 120&deg;, 4 parts = 90&deg;, 5 parts = 72&deg;, 6 parts = 60&deg;, 8 parts = 45&deg;, 9 parts = 40&deg;, 10 parts = 36&deg;, 12 parts = 30&deg;.</span></li>
+                            <li><strong>Angle Bisector &amp; Handmade Protractor (Pages 38&ndash;40):</strong> Folding an angle in half is called <strong>bisecting the angle</strong>:
+                                <br><span class="text-green-300 font-bold">Full turn (360&deg;) &rarr; &frac12; turn (180&deg;) &rarr; &frac14; turn (90&deg;) &rarr; &#8539; turn (45&deg;) &rarr; 1/16 turn (22.5&deg;)!</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-blue-900/60 border-l-8 border-purple-400 p-8 rounded-r-2xl shadow-xl mt-6">
+                        <h4 class="font-bold text-white mb-4 text-3xl flex items-center gap-3">
+                            <svg class="w-8 h-8 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                            Solved Example: Handmade Semicircle Protractor (Fig. 2.20)
+                        </h4>
+                        <p class="text-xl text-blue-100 mt-2">When a 180&deg; semicircle is folded in half 3 times, it is divided into <strong>8 equal sectors</strong> of <strong class="text-white">180&deg; &divide; 8 = 22.5&deg;</strong> each! The creases mark: <strong>0&deg;, 22.5&deg;, 45&deg;, 67.5&deg;, 90&deg;, 112.5&deg;, 135&deg;, 157.5&deg;, and 180&deg;</strong>.</p>
+                    </div>
+                </div>
+
+                <!-- L2 Slide 3 -->
+                <div class="topic-slide level-2-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 text-center text-white">
+                        Interactive Challenge
+                    </h2>
+                    
+                    <div class="bg-black/20 rounded-3xl p-8 md:p-10 border border-white/20 flex flex-col items-center justify-center shadow-inner mt-4">
+                        <h3 class="text-3xl font-heading text-center text-blue-100 mb-3">Angle Bisector Pyramid &amp; Degree Challenge</h3>
+                        <p class="text-center font-bold text-lg text-blue-200 mb-6 max-w-2xl">Part A: Each block in this pyramid is the sum of the two equal bisected angles directly beneath it. Fill in the missing degree numbers!</p>
+                        
+                        <div class="flex flex-col items-center gap-3 w-full mb-8">
+                            <!-- Row 3 (Top: Straight Angle) -->
+                            <div class="pyramid-row">
+                                <div class="pyramid-block"><input type="text" class="quiz-input" data-answer="180" placeholder="?"></div>
+                            </div>
+                            <!-- Row 2 (Right Angles) -->
+                            <div class="pyramid-row">
+                                <div class="pyramid-block"><input type="text" class="quiz-input" data-answer="90" placeholder="?"></div>
+                                <div class="pyramid-block"><input type="text" class="quiz-input" data-answer="90" placeholder="?"></div>
+                            </div>
+                            <!-- Row 1 (Bottom: 45 deg creases) -->
+                            <div class="pyramid-row">
+                                <div class="pyramid-block bg-blue-600 border-blue-400 text-white">45</div>
+                                <div class="pyramid-block bg-blue-600 border-blue-400 text-white">45</div>
+                                <div class="pyramid-block bg-blue-600 border-blue-400 text-white">45</div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-3xl">
+                            <div class="flex items-center justify-between bg-white/10 p-4 rounded-2xl border border-white/20">
+                                <div>
+                                    <span class="font-bold text-lg block">360&deg; divided into 5 equal parts:</span>
+                                    <span class="text-sm text-blue-200">Hint: 360 &divide; 5 = ?</span>
+                                </div>
+                                <input type="text" class="quiz-input w-24 p-3 text-center text-xl font-bold rounded-xl" data-answer="72|72°" placeholder="#">
+                            </div>
+                            <div class="flex items-center justify-between bg-white/10 p-4 rounded-2xl border border-white/20">
+                                <div>
+                                    <span class="font-bold text-lg block">Acute angles in 4th Triangle Fig:</span>
+                                    <span class="text-sm text-blue-200">Hint: Pattern is 3, 12, 21, ? (+9)</span>
+                                </div>
+                                <input type="text" class="quiz-input w-24 p-3 text-center text-xl font-bold rounded-xl" data-answer="30" placeholder="#">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-6 w-full mt-10 justify-center max-w-3xl mx-auto">
+                        <button onclick="openMoreExamples(2)" class="btn-more flex-1 py-4 rounded-2xl font-bold text-white text-xl flex items-center justify-center gap-3">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                            More Examples
+                        </button>
+                        <button onclick="openPdfExercise(2)" class="btn-exercise flex-1 py-4 rounded-2xl font-bold text-white text-xl flex items-center justify-center gap-3">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            Exercises
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ================= LEVEL 3 ================= -->
+                <!-- L3 Slide 1 -->
+                <div class="topic-slide level-3-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 flex items-center gap-4 text-white">
+                        <span class="bg-white text-blue-900 w-14 h-14 rounded-full flex items-center justify-center text-3xl shrink-0">3</span>
+                        Reading Protractors &amp; Subtracting Scales
+                    </h2>
+                    
+                    <div class="study-box border-blue-400">
+                        <ul class="list-disc ml-8 space-y-4 text-xl text-blue-50">
+                            <li><strong>Two Scales (Inner &amp; Outer):</strong> A standard protractor has two sets of markings from 0&deg; to 180&deg; (one increasing right-to-left, and one left-to-right) so you can measure angles opening in either direction!</li>
+                            <li><strong>Measuring by Subtraction:</strong> If two rays pass through <strong>20&deg;</strong> and <strong>55&deg;</strong> on the same scale, the angle between them is <strong>55&deg; &minus; 20&deg; = 35&deg;</strong>.</li>
+                            <li><strong>Measuring Reflex Angles (Page 41 Q4):</strong> Since a standard protractor goes up to 180&deg;, measure the smaller unmarked interior angle (e.g., 100&deg;) and subtract from 360&deg;: <strong>360&deg; &minus; 100&deg; = 260&deg;</strong>!</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-blue-900/60 border-l-8 border-blue-400 p-8 rounded-r-2xl shadow-xl mt-6">
+                        <h4 class="font-bold text-white mb-4 text-3xl flex items-center gap-3">
+                            <svg class="w-8 h-8 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                            Solved Example: Multi-Ray Protractor (Page 42 Q6)
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center mt-4">
+                            <svg class="w-full h-36 bg-black/25 rounded-xl p-2 border border-white/10" viewBox="0 0 320 130">
+                                <!-- Semicircle Protractor -->
+                                <path d="M 40 110 A 120 120 0 0 1 280 110 Z" fill="rgba(255,255,255,0.08)" stroke="#93c5fd" stroke-width="2"/>
+                                <!-- Base AXE -->
+                                <line x1="20" y1="110" x2="300" y2="110" stroke="#f87171" stroke-width="3"/>
+                                <!-- Ray XB at 65 deg from A (115 deg from E) -->
+                                <line x1="160" y1="110" x2="105" y2="12" stroke="#f87171" stroke-width="2.5"/>
+                                <!-- Ray XC at 95 deg from A (85 deg from E) -->
+                                <line x1="160" y1="110" x2="170" y2="5" stroke="#f87171" stroke-width="2.5"/>
+                                <circle cx="160" cy="110" r="4" fill="#fff"/>
+                                <text x="30" y="125" fill="#fff" font-size="13" font-weight="bold">A (0&deg;)</text>
+                                <text x="155" y="126" fill="#fff" font-size="13" font-weight="bold">X</text>
+                                <text x="275" y="125" fill="#fff" font-size="13" font-weight="bold">E (0&deg;)</text>
+                                <text x="75" y="22" fill="#fde047" font-size="13" font-weight="bold">B (65&deg;/115&deg;)</text>
+                                <text x="176" y="18" fill="#4ade80" font-size="13" font-weight="bold">C (95&deg;/85&deg;)</text>
+                            </svg>
+                            <div class="bg-black/25 p-4 rounded-xl border border-white/10 space-y-2 text-lg">
+                                <div>&bull; <strong>&angle;AXB</strong> (outer scale from A) = <strong class="text-amber-300">65&deg;</strong></div>
+                                <div>&bull; <strong>&angle;CXE</strong> (inner scale from E) = <strong class="text-green-300">85&deg;</strong></div>
+                                <div>&bull; <strong>&angle;BXE</strong> (inner scale from E) = <strong class="text-white">115&deg;</strong></div>
+                                <div>&bull; <strong>&angle;BXC</strong> = 115&deg; &minus; 85&deg; = <strong class="text-sky-300">30&deg;</strong></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- L3 Slide 2 -->
+                <div class="topic-slide level-3-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 flex items-center gap-4 text-white">
+                        <span class="bg-white text-blue-900 w-14 h-14 rounded-full flex items-center justify-center text-3xl shrink-0">3</span>
+                        Clocks, Ashoka Chakra &amp; Angle Puzzles
+                    </h2>
+                    
+                    <div class="study-box border-orange-400">
+                        <ul class="list-disc ml-8 space-y-3 text-xl text-blue-50">
+                            <li><strong>Angles in a Clock (Page 45):</strong> A 360&deg; clock face has <strong>12 equal hour divisions</strong>, so each hour step is <strong>360&deg; &divide; 12 = 30&deg;</strong>!
+                                <br><span class="text-blue-200">&rarr; 1 o&rsquo;clock = 30&deg;, 2 o&rsquo;clock = 60&deg;, 3 o&rsquo;clock = 90&deg;, 4 o&rsquo;clock = 120&deg;, 6 o&rsquo;clock = 180&deg;.</span></li>
+                            <li><strong>The Ashoka Chakra (Page 54 Q6):</strong> Has <strong>24 equally spaced spokes</strong>.
+                                <br><span class="text-blue-200">&rarr; Angle between two adjacent spokes = <strong>360&deg; &divide; 24 = 15&deg;</strong>.</span>
+                                <br><span class="text-blue-200">&rarr; Largest <strong>acute angle</strong> between two spokes = 5 &times; 15&deg; = <strong>75&deg;</strong> (since 6 &times; 15&deg; = 90&deg; is a right angle!).</span></li>
+                            <li><strong>Triangle Angle Sum (Page 43 Q9):</strong> Adding the three interior angles of any triangle always gives <strong>180&deg;</strong>!</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-blue-900/60 border-l-8 border-orange-400 p-8 rounded-r-2xl shadow-xl mt-6">
+                        <h4 class="font-bold text-white mb-4 text-3xl flex items-center gap-3">
+                            <svg class="w-8 h-8 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                            Solved Example: The Textbook Angle Puzzle (Page 54 Q7)
+                        </h4>
+                        <p class="text-xl text-blue-100 mt-2"><em>&ldquo;I am an acute angle. If you double, triple, or quadruple (4&times;) my measure, you still get an acute angle (&lt; 90&deg;)! But if you multiply my measure by 5, you get an obtuse angle (&gt; 90&deg;).&rdquo;</em></p>
+                        <ul class="list-decimal ml-8 text-lg text-blue-100 space-y-2 mt-3">
+                            <li>Since 4 &times; angle &lt; 90&deg;, the whole-number angle must be <strong>22&deg; or less</strong> (4 &times; 22&deg; = 88&deg;).</li>
+                            <li>Since 5 &times; angle &gt; 90&deg;, the angle must be <strong>greater than 18&deg;</strong> (5 &times; 18&deg; = 90&deg;).</li>
+                            <li>Possible integer measures: <strong class="text-white bg-green-500/40 px-2 py-0.5 rounded">19&deg;, 20&deg;, 21&deg;, and 22&deg;</strong>!</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- L3 Slide 3 -->
+                <div class="topic-slide level-3-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 text-center text-white">
+                        Interactive Challenge
+                    </h2>
+                    
+                    <div class="bg-black/20 rounded-3xl p-8 md:p-10 border border-white/20 flex flex-col items-center justify-center shadow-inner mt-4">
+                        <p class="text-center font-bold text-2xl text-blue-200 mb-8">Test your mastery of Clocks, the Ashoka Chakra, and Protractor calculations!</p>
+                        
+                        <div class="flex flex-col gap-6 w-full max-w-3xl">
+                            <div class="flex flex-col w-full bg-white/10 p-5 rounded-2xl border border-white/20 gap-2">
+                                <span class="font-bold text-xl">1. What is the angle (in degrees) between the hands of a clock at 4 o&rsquo;clock?</span>
+                                <div class="flex justify-between items-center mt-1">
+                                    <span class="text-base text-blue-200">Hint: Each hour mark is 30&deg;, so multiply 4 &times; 30&deg;.</span>
+                                    <input type="text" class="quiz-input w-32 p-3 text-center text-2xl font-bold rounded-xl" data-answer="120|120°" placeholder="#">
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/10 p-5 rounded-2xl border border-white/20 gap-2">
+                                <span class="font-bold text-xl">2. The Ashoka Chakra has 24 spokes. What is the largest ACUTE angle formed between two spokes?</span>
+                                <div class="flex justify-between items-center mt-1">
+                                    <span class="text-base text-blue-200">Hint: Adjacent spokes are 15&deg; apart; 6 spokes give 90&deg;, so take 5 spokes!</span>
+                                    <input type="text" class="quiz-input w-32 p-3 text-center text-2xl font-bold rounded-xl" data-answer="75|75°" placeholder="#">
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/10 p-5 rounded-2xl border border-white/20 gap-2">
+                                <span class="font-bold text-xl">3. On a straight line REB (180&deg;), if &angle;TER = 80&deg;, what is the measure of &angle;BET?</span>
+                                <div class="flex justify-between items-center mt-1">
+                                    <span class="text-base text-blue-200">Hint: Subtract 80&deg; from the straight angle 180&deg; (Page 53 Let&rsquo;s Explore).</span>
+                                    <input type="text" class="quiz-input w-32 p-3 text-center text-2xl font-bold rounded-xl" data-answer="100|100°" placeholder="#">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-6 w-full mt-10 justify-center max-w-3xl mx-auto">
+                        <button onclick="openMoreExamples(3)" class="btn-more flex-1 py-4 rounded-2xl font-bold text-white text-xl flex items-center justify-center gap-3">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                            More Examples
+                        </button>
+                        <button onclick="openPdfExercise(3)" class="btn-exercise flex-1 py-4 rounded-2xl font-bold text-white text-xl flex items-center justify-center gap-3">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            Exercises
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Global Slide Navigation Dots -->
+            <div id="slide-indicators" class="slide-indicator-dots">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MORE EXAMPLES SECONDARY MODAL -->
+    <div id="examples-modal" class="modal-overlay hidden items-center justify-center z-[70]">
+        <div class="glass-panel w-full max-w-2xl rounded-3xl p-6 md:p-8 relative">
+            <button onclick="closeMoreExamples()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-colors border border-white/40 z-10">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <h3 class="text-2xl font-heading font-bold mb-6 text-white text-center border-b border-white/20 pb-4 flex items-center justify-center gap-3">
+                <svg class="w-7 h-7 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/></svg>
+                Bonus Examples
+            </h3>
+
+            <!-- Extra Examples for Level 1 -->
+            <div id="extra-level-1" class="extra-content space-y-4 hidden">
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Ray OA starts at O and passes through B and A. Can it also be named Ray OB? (yes/no)</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="yes" placeholder="?">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Can Ray OA be written as Ray AO? (yes/no)</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="no" placeholder="?">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">In an angle with arms ST and SR, what is the vertex letter?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="s" placeholder="?">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">If you cut the paper straw arms of a 50&deg; angle shorter, what is the new angle in degrees?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="50|50°" placeholder="#">
+                </div>
+            </div>
+
+            <!-- Extra Examples for Level 2 -->
+            <div id="extra-level-2" class="extra-content space-y-4 hidden">
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">How many right angles (90&deg;) make one straight angle (180&deg;)?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="2|two" placeholder="#">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">When two lines intersect perpendicularly on a paper, how many right angles are formed around the point?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="4|four" placeholder="#">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Classify an angle of 134&deg; (acute / right / obtuse / reflex):</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="obtuse" placeholder="type">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Classify an angle of 258&deg; (acute / right / obtuse / reflex):</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="reflex" placeholder="type">
+                </div>
+            </div>
+
+            <!-- Extra Examples for Level 3 -->
+            <div id="extra-level-3" class="extra-content space-y-4 hidden">
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">On a protractor, Ray OT is at 20&deg; and Ray OS is at 55&deg;. Find &angle;TOS:</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="35|35°" placeholder="#">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">What is the angle between the hands of a clock at 6 o&rsquo;clock?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="180|180°" placeholder="#">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">What is the angle between two adjacent spokes of the 24-spoke Ashoka Chakra?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="15|15°" placeholder="#">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">In a triangle, two angles are 60&deg; and 50&deg;. What is the third angle (since sum = 180&deg;)?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="70|70°" placeholder="#">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- PDF EXERCISE MODAL -->
+    <div id="pdf-exercise-modal" class="modal-overlay hidden items-center justify-center z-[80]">
+        <div class="glass-panel w-full max-w-5xl rounded-3xl p-6 md:p-8 relative h-[90vh] flex flex-col">
+            <button onclick="closePdfExercise()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-colors border border-white/40 z-10">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <h3 class="text-3xl font-heading font-bold mb-6 text-white text-center border-b border-white/20 pb-4 flex items-center justify-center gap-3 shrink-0">
+                <svg class="w-8 h-8 text-purple-400" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4zm0 15l3-3.86 2.14 2.58 3-3.86L18 19H6z"/></svg>
+                Complete PDF Exercises (Figure it Out &amp; Extra Practice)
+            </h3>
+
+            <div class="relative flex-grow flex flex-col overflow-hidden pb-16">
+                
+                <!-- PDF Exercise Level 1 -->
+                <div id="pdf-level-1" class="pdf-content hidden h-full overflow-y-auto custom-scroll pr-4">
+                    
+                    <!-- Focus -->
+                    <div class="exercise-page bg-blue-900/40 p-5 rounded-2xl border border-blue-400/30">
+                        <h4 class="text-xl font-bold text-blue-300 mb-4 border-b border-blue-400/30 pb-2">Focus (Easy) &mdash; Points, Segments &amp; Rays (Pages 15 &ndash; 17)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q1. Lines &amp; Line Segments (Page 15&ndash;16 Q1 &amp; Q2):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) How many lines can Sheetal draw through 2 points?</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="1|one"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) How many line segments are in path L-M-P-Q-R (Fig 2.4)?</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="4|four"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) How many points (M, P, Q) lie on TWO segments in Fig 2.4?</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="3|three"></div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q2. Rays &amp; Starting Points (Page 16&ndash;17 Q3 &amp; Q6):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) In Fig 2.5 (rays TA, TN, TB, NB), is T the start of all rays? (yes/no)</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="no"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) Which point is the starting point of Ray NB?</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="n"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) Can Ray OA (passing through B) also be called Ray OB? (yes/no)</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="yes"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Practice -->
+                    <div class="exercise-page hidden bg-purple-900/40 p-5 rounded-2xl border border-purple-400/30">
+                        <h4 class="text-xl font-bold text-purple-300 mb-4 border-b border-purple-400/30 pb-2">Practice (Medium) &mdash; Naming Angles &amp; Lines (Pages 19 &ndash; 21)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q3. Vertex &amp; Arms of Angles (Pages 19&ndash;20 Q1, Q2, Q4):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) In bicycle frame angle &angle;BDC (Page 19 Q1), what is the vertex?</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="d"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) An angle has arms ST and SR. Write its 3-letter name (&angle;...):</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="tsr|rst|∠tsr|∠rst"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) In Fig 2.8 (Page 20 Q4), vertex T has rays TP, TQ, TR. Largest angle is &angle;P_:</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="tr|ptr|rtp"></div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q4. Lines &amp; Angles from 3 &amp; 4 Points (Pages 20&ndash;21 Q5 &amp; Q6):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) How many lines go through pairs of 3 non-collinear points A, B, C?</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="3|three"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) How many interior angles are formed in triangle ABC?</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="3|three"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) With 4 points A, B, C, D (no 3 collinear), how many angles are named in the solution?</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="12|twelve"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Challenge -->
+                    <div class="exercise-page hidden bg-red-900/40 p-5 rounded-2xl border border-red-400/30">
+                        <h4 class="text-xl font-bold text-red-300 mb-4 border-b border-red-400/30 pb-2">Challenge (Hard) &mdash; Comparing by Superimposition (Page 23 Q2 &amp; Q3)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q5. Comparing Superimposed Angles (Page 23 Q2):</span>
+                                <p class="text-xs text-blue-100">Rays OX and OY lie inside &angle;AOB, and point C lies on ray OB:</p>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) Which is greater: &angle;AOB or &angle;XOY? (write AOB or XOY)</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="aob|∠aob"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) Which is greater: &angle;AOB or &angle;XOB? (write AOB or XOB)</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="aob|∠aob"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) Are &angle;XOB and &angle;XOC equal or different? (equal/different)</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="equal"></div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q6. Rotating Arms &amp; Slit Test (Pages 25&ndash;27):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) Does a rotating arm with a 60&deg; angle pass through a 45&deg; slit without rotating? (yes/no)</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="no"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) Does increasing the length of an angle&rsquo;s arms increase the angle size? (yes/no)</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="no"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PDF Exercise Level 2 -->
+                <div id="pdf-level-2" class="pdf-content hidden h-full overflow-y-auto custom-scroll pr-4">
+                    
+                    <!-- Focus -->
+                    <div class="exercise-page bg-blue-900/40 p-5 rounded-2xl border border-blue-400/30">
+                        <h4 class="text-xl font-bold text-blue-300 mb-4 border-b border-blue-400/30 pb-2">Focus (Easy) &mdash; Turns, Straight &amp; Right Angles (Pages 27 &ndash; 33)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q1. Turns and Degrees (Pages 29 &amp; 33):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) Measure of a full turn in degrees:</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="360|360°"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) Measure of a straight angle (&frac12; turn) in degrees:</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="180|180°"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) Measure of a right angle (&frac14; turn) in degrees:</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="90|90°"></div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q2. Dividing a 360&deg; Circle into Parts (Page 34):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) Circle divided into 3 equal parts (360&deg; &divide; 3):</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="120|120°"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) Circle divided into 6 equal parts (360&deg; &divide; 6):</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="60|60°"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) Circle divided into 8 equal parts (360&deg; &divide; 8):</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="45|45°"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Practice -->
+                    <div class="exercise-page hidden bg-purple-900/40 p-5 rounded-2xl border border-purple-400/30">
+                        <h4 class="text-xl font-bold text-purple-300 mb-4 border-b border-purple-400/30 pb-2">Practice (Medium) &mdash; Circle Divisions &amp; Handmade Protractor (Pages 34 &ndash; 40)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q3. More Circle Divisions (Page 34):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) Circle divided into 9 equal parts (360&deg; &divide; 9):</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="40|40°"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) Circle divided into 10 equal parts (360&deg; &divide; 10):</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="36|36°"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) Circle divided into 12 equal parts (360&deg; &divide; 12):</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="30|30°"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q4. Paper Protractor Creases (Pages 39 &ndash; 40):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) Half of 45&deg; (1/16 of a full circle) is:</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="22.5|22.5°"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) 90&deg; + 45&deg; crease on the semicircle marks:</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="135|135°"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) 45&deg; + 22.5&deg; crease on the semicircle marks:</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="67.5|67.5°"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Challenge -->
+                    <div class="exercise-page hidden bg-red-900/40 p-5 rounded-2xl border border-red-400/30">
+                        <h4 class="text-xl font-bold text-red-300 mb-4 border-b border-red-400/30 pb-2">Challenge (Hard) &mdash; Acute Angle Pattern &amp; Angle Classification (Pages 32 &amp; 52)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q5. Subdivided Triangle Pattern (Page 32 Q4):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) Acute angles in 3rd figure (2 inner triangles):</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="21"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) Acute angles in 4th figure (3 inner triangles):</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="30"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) Acute angles in 5th figure (4 inner triangles):</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="39"></div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q6. Classify Angles from Page 52 Q2 (acute/obtuse/reflex):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) &angle;PTQ = 60&deg; is:</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="acute"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) &angle;PTW = 102&deg; is:</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="obtuse"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) &angle;WTP = 258&deg; is:</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="reflex"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PDF Exercise Level 3 -->
+                <div id="pdf-level-3" class="pdf-content hidden h-full overflow-y-auto custom-scroll pr-4">
+                    
+                    <!-- Focus -->
+                    <div class="exercise-page bg-blue-900/40 p-5 rounded-2xl border border-blue-400/30">
+                        <h4 class="text-xl font-bold text-blue-300 mb-4 border-b border-blue-400/30 pb-2">Focus (Easy) &mdash; Protractor Readings (Pages 35, 36 &amp; 42)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q1. Unlabelled &amp; Labelled Protractor (Pages 35 &ndash; 36):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) Page 35 Q1: If &angle;KAL = 30&deg;, what is &angle;WAL (5 ten-degree marks)?</span><input type="text" class="quiz-input w-20 p-1 text-center text-xs font-bold rounded-lg" data-answer="50|50°"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) Page 36: Ray OP is at 0&deg;, OQ is at 35&deg;, OR is at 95&deg;. Find &angle;QOR:</span><input type="text" class="quiz-input w-20 p-1 text-center text-xs font-bold rounded-lg" data-answer="60|60°"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) Page 36: Ray OT is at 160&deg; and OU is at 180&deg;. Find &angle;TOU:</span><input type="text" class="quiz-input w-20 p-1 text-center text-xs font-bold rounded-lg" data-answer="20|20°"></div>
+                                </div>
+                            </div>
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q2. Protractor Angles in Page 42 Q6:</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) Measure of &angle;BXE:</span><input type="text" class="quiz-input w-20 p-1 text-center text-xs font-bold rounded-lg" data-answer="115|115°"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) Measure of &angle;CXE:</span><input type="text" class="quiz-input w-20 p-1 text-center text-xs font-bold rounded-lg" data-answer="85|85°"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) Measure of &angle;BXC (115&deg; &minus; 85&deg;):</span><input type="text" class="quiz-input w-20 p-1 text-center text-xs font-bold rounded-lg" data-answer="30|30°"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Practice -->
+                    <div class="exercise-page hidden bg-purple-900/40 p-5 rounded-2xl border border-purple-400/30">
+                        <h4 class="text-xl font-bold text-purple-300 mb-4 border-b border-purple-400/30 pb-2">Practice (Medium) &mdash; Clock Angles, Reflex Angles &amp; Linear Pairs (Pages 41, 45 &amp; 53)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm w-full">Q3. Angles of a Clock (Page 45 Q1):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) Angle between clock hands at 2 o&rsquo;clock:</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="60|60°"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) Angle between clock hands at 3 o&rsquo;clock:</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="90|90°"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) Angle between clock hands at 5 o&rsquo;clock (5 &times; 30&deg;):</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="150|150°"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm w-full">Q4. Reflex &amp; Complementary/Supplementary Angles (Pages 41 &amp; 53):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) Page 41 Q4: Unmarked angle is 100&deg;. Reflex angle = 360&deg; &minus; 100&deg; =</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="260|260°"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) Page 53 Let&rsquo;s Explore: &angle;RES = 90&deg; and &angle;TER = 80&deg;. Find &angle;SET:</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="10|10°"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) Sum of all 3 interior angles in any triangle (Page 43 Q9):</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="180|180°"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Challenge -->
+                    <div class="exercise-page hidden bg-red-900/40 p-5 rounded-2xl border border-red-400/30">
+                        <h4 class="text-xl font-bold text-red-300 mb-4 border-b border-red-400/30 pb-2">Challenge (Hard) &mdash; Ashoka Chakra &amp; Angle Multiplier Puzzle (Page 54 Q6 &amp; Q7)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm w-full">Q5. The 24-Spoke Ashoka Chakra (Page 54 Q6):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) Angle between 2 adjacent spokes (360&deg; &divide; 24):</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="15|15°"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) Largest acute angle between two spokes (5 &times; 15&deg;):</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="75|75°"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) Smallest obtuse angle between two spokes (7 &times; 15&deg;):</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="105|105°"></div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm w-full">Q6. Acute Angle Multiplier Puzzle (Page 54 Q7):</span>
+                                <p class="text-xs text-blue-100">2&times;, 3&times;, and 4&times; the angle are acute (&lt;90&deg;), but 5&times; the angle is obtuse (&gt;90&deg;):</p>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) Smallest whole-number solution (in degrees):</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="19|19°"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) Largest whole-number solution (in degrees):</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="22|22°"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) How many whole-number solutions exist (19&deg;, 20&deg;, 21&deg;, 22&deg;)?</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="4|four"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- NAVIGATION BUTTONS FOOTER -->
+                <div class="absolute bottom-0 left-0 right-0 flex justify-between items-center pt-4 bg-transparent z-10 border-t border-white/20">
+                    <button id="ex-prev-btn" onclick="prevExercisePage()" class="px-6 py-2 bg-white/20 hover:bg-white/30 rounded-xl font-bold transition-all text-white flex items-center gap-2 invisible">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg> Previous
+                    </button>
+                    <span id="ex-page-indicator" class="text-white/60 font-bold text-sm tracking-wide"></span>
+                    <button id="ex-next-btn" onclick="nextExercisePage()" class="px-6 py-2 bg-purple-600 hover:bg-purple-500 shadow-lg rounded-xl font-bold transition-all text-white flex items-center gap-2 invisible">
+                        Next <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('quest-modal');
+        const nextBtn = document.getElementById('next-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const slidesContainer = document.getElementById('slides-container');
+        const indicators = document.getElementById('slide-indicators');
+        
+        const examplesModal = document.getElementById('examples-modal');
+        const pdfExerciseModal = document.getElementById('pdf-exercise-modal');
+
+        let currentLevel = 1;
+        let currentSlideIndex = 0;
+        let allSlides = [];
+
+        function initSlides() {
+            allSlides = Array.from(document.querySelectorAll('.topic-slide'));
+        }
+
+        function openLevel(level) {
+            document.querySelectorAll('.quest-node').forEach((n, i) => n.classList.toggle('active', i + 1 === level));
+            currentLevel = level;
+            
+            const targetClass = `level-${level}-slide`;
+            currentSlideIndex = allSlides.findIndex(slide => slide.classList.contains(targetClass));
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            updateView();
+        }
+
+        function nextSlide(e) {
+            if(e) e.stopPropagation();
+            if (currentSlideIndex < allSlides.length - 1) {
+                currentSlideIndex++;
+                updateView();
+            }
+        }
+
+        function prevSlide(e) {
+            if(e) e.stopPropagation();
+            if (currentSlideIndex > 0) {
+                currentSlideIndex--;
+                updateView();
+            }
+        }
+
+        function updateView() {
+            allSlides.forEach((slide, index) => {
+                if (index === currentSlideIndex) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+
+            prevBtn.style.display = currentSlideIndex === 0 ? 'none' : 'flex';
+            nextBtn.style.display = currentSlideIndex === allSlides.length - 1 ? 'none' : 'flex';
+
+            const activeSlide = allSlides[currentSlideIndex];
+            for (let i = 1; i <= 3; i++) {
+                if (activeSlide.classList.contains(`level-${i}-slide`)) {
+                    currentLevel = i;
+                    document.querySelectorAll('.quest-node').forEach((n, idx) => n.classList.toggle('active', idx + 1 === currentLevel));
+                    break;
+                }
+            }
+
+            updateDots();
+        }
+
+        function updateDots() {
+            indicators.innerHTML = '';
+            const levelClass = `level-${currentLevel}-slide`;
+            const levelSlides = allSlides.filter(s => s.classList.contains(levelClass));
+            
+            let localIndex = 0;
+            const currentGlobalSlide = allSlides[currentSlideIndex];
+            localIndex = levelSlides.indexOf(currentGlobalSlide);
+
+            levelSlides.forEach((slideEl, idx) => {
+                const dot = document.createElement('div');
+                dot.className = `slide-dot ${idx === localIndex ? 'active' : ''}`;
+                dot.addEventListener('click', () => {
+                    currentSlideIndex = allSlides.indexOf(slideEl);
+                    updateView();
+                });
+                indicators.appendChild(dot);
+            });
+        }
+
+        function closeModal() { 
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            allSlides.forEach(s => s.classList.remove('active'));
+        }
+
+        // ====== MORE EXAMPLES LOGIC ======
+        function openMoreExamples(level) {
+            document.querySelectorAll('.extra-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
+            });
+            const extraTarget = document.getElementById(`extra-level-${level}`);
+            if (extraTarget) {
+                extraTarget.classList.remove('hidden');
+                extraTarget.classList.add('block');
+            }
+            examplesModal.classList.remove('hidden');
+            examplesModal.classList.add('flex');
+        }
+        
+        function closeMoreExamples() {
+            examplesModal.classList.add('hidden');
+            examplesModal.classList.remove('flex');
+        }
+
+        // ====== PDF EXERCISE LOGIC ======
+        let currentExercisePage = 0;
+        let activeExercisePages = [];
+
+        function openPdfExercise(level) {
+            document.querySelectorAll('.pdf-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
+            });
+            
+            const levelContainer = document.getElementById(`pdf-level-${level}`);
+            if (levelContainer) {
+                levelContainer.classList.remove('hidden');
+                levelContainer.classList.add('block');
+                
+                activeExercisePages = Array.from(levelContainer.querySelectorAll('.exercise-page'));
+                currentExercisePage = 0;
+                
+                updateExercisePagination();
+                
+                pdfExerciseModal.classList.remove('hidden');
+                pdfExerciseModal.classList.add('flex');
+            }
+        }
+
+        function updateExercisePagination() {
+            activeExercisePages.forEach((page, index) => {
+                if (index === currentExercisePage) {
+                    page.classList.remove('hidden');
+                    page.classList.add('block');
+                } else {
+                    page.classList.add('hidden');
+                    page.classList.remove('block');
+                }
+            });
+
+            const exPrevBtn = document.getElementById('ex-prev-btn');
+            const exNextBtn = document.getElementById('ex-next-btn');
+            const indicator = document.getElementById('ex-page-indicator');
+
+            if (exPrevBtn) exPrevBtn.style.visibility = currentExercisePage > 0 ? 'visible' : 'hidden';
+            if (exNextBtn) exNextBtn.style.visibility = currentExercisePage < activeExercisePages.length - 1 ? 'visible' : 'hidden';
+            
+            if (indicator && activeExercisePages.length > 0) {
+                indicator.textContent = `Section ${currentExercisePage + 1} of ${activeExercisePages.length}`;
+            }
+        }
+
+        function nextExercisePage() {
+            if (currentExercisePage < activeExercisePages.length - 1) {
+                currentExercisePage++;
+                updateExercisePagination();
+            }
+        }
+
+        function prevExercisePage() {
+            if (currentExercisePage > 0) {
+                currentExercisePage--;
+                updateExercisePagination();
+            }
+        }
+
+        function closePdfExercise() {
+            pdfExerciseModal.classList.add('hidden');
+            pdfExerciseModal.classList.remove('flex');
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initSlides();
+        });
+
+        document.querySelectorAll('.quiz-input').forEach(input => {
+            input.addEventListener('input', function() {
+                const val = this.value.trim().toLowerCase().replace(/\s/g, "");
+                let answers = this.getAttribute('data-answer');
+                
+                if (!answers) return;
+                
+                answers = answers.toLowerCase().split('|');
+                this.classList.remove('correct', 'incorrect');
+                if (val !== '') {
+                    if (answers.includes(val)) {
+                        this.classList.add('correct');
+                    } else {
+                        this.classList.add('incorrect');
+                    }
+                }
+            });
+        });
+        function applyEmbedMode() {
+            const params = new URLSearchParams(window.location.search);
+            let inFrame = false;
+            try { inFrame = window.self !== window.top; } catch (err) { inFrame = true; }
+            if (params.get("embed") === "1" || inFrame) {
+                document.body.classList.add("embed-mode");
+            }
+            const levelParam = params.get("level") || params.get("tab");
+            if (levelParam && typeof openLevel === "function") {
+                const level = Math.max(1, Math.min(3, parseInt(levelParam, 10) || 1));
+                setTimeout(() => openLevel(level), 150);
+            }
+        }
+        applyEmbedMode();
+        window.addEventListener("load", applyEmbedMode);
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" role="img">
+  <rect width="800" height="500" fill="#0f172a"/>
+  <text x="400" y="45" text-anchor="middle" fill="#f8fafc" font-size="20" font-weight="700">Energy conserved in a lamp</text>
+  <rect x="340" y="100" width="120" height="140" rx="60" fill="#fef08a" stroke="#facc15" stroke-width="3"/>
+  <rect x="365" y="240" width="70" height="30" fill="#64748b"/>
+  <path d="M 400 70 L 400 55" stroke="#94a3b8" stroke-width="4"/>
+  <text x="400" y="300" text-anchor="middle" fill="#94a3b8" font-size="13">Electric lamp</text>
+  <rect x="80" y="120" width="180" height="70" rx="8" fill="#1e3a8a" stroke="#60a5fa" stroke-width="2"/>
+  <text x="170" y="155" text-anchor="middle" fill="#bfdbfe" font-size="14" font-weight="600">INPUT</text>
+  <text x="170" y="178" text-anchor="middle" fill="#fff" font-size="16" font-weight="700">100 J electrical</text>
+  <path d="M 260 155 L 330 155" stroke="#60a5fa" stroke-width="3" marker-end="url(#arr)"/>
+  <defs><marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,1 L8,5 L0,9" fill="#60a5fa"/></marker></defs>
+  <rect x="520" y="90" width="200" height="55" rx="8" fill="#422006" stroke="#fbbf24" stroke-width="2"/>
+  <text x="620" y="122" text-anchor="middle" fill="#fde68a" font-size="13">10 J light (useful)</text>
+  <rect x="520" y="165" width="200" height="55" rx="8" fill="#450a0a" stroke="#f87171" stroke-width="2"/>
+  <text x="620" y="197" text-anchor="middle" fill="#fecaca" font-size="13">90 J thermal (wasted)</text>
+  <path d="M 460 180 L 510 180" stroke="#f87171" stroke-width="2"/>
+  <path d="M 460 130 L 510 115" stroke="#fbbf24" stroke-width="2"/>
+  <rect x="150" y="350" width="500" height="56" rx="10" fill="#14532d" stroke="#4ade80" stroke-width="2"/>
+  <text x="400" y="385" text-anchor="middle" fill="#bbf7d0" font-family="Consolas, monospace" font-size="18" font-weight="700">100 J in = 10 J + 90 J out</text>
+  <text x="400" y="440" text-anchor="middle" fill="#94a3b8" font-size="13">Energy cannot be created or destroyed  only transferred or changed store</text>
+</svg>

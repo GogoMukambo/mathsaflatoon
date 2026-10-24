@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900">
+  <rect width="1600" height="900" fill="#ffffff"/>
+  <rect width="1600" height="92" fill="#0f172a"/>
+  <text x="800" y="62" text-anchor="middle" fill="#ffffff" font-family="Segoe UI, Arial, sans-serif" font-size="42" font-weight="700" letter-spacing="3">POWERS OF 5</text>
+  <text x="800" y="148" text-anchor="middle" fill="#ea580c" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="600">Slide right: multiply by 5. Slide left: divide by 5. That is why 5&#8304; = 1.</text>
+  <g font-family="Segoe UI, Arial, sans-serif" text-anchor="middle">
+    <rect x="40" y="186" width="240" height="250" rx="18" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/>
+    <text x="160" y="236" fill="#c2410c" font-size="22" font-weight="700">n = 0</text>
+    <text x="160" y="310" fill="#0f172a" font-size="40" font-weight="700">5&#8304; = 1</text>
+    <text x="160" y="372" fill="#334155" font-size="20">5 &#247; 5 = 1</text>
+    <rect x="300" y="186" width="240" height="250" rx="18" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+    <text x="420" y="236" fill="#1d4ed8" font-size="22" font-weight="700">n = 1</text>
+    <text x="420" y="310" fill="#0f172a" font-size="40" font-weight="700">5&#185; = 5</text>
+    <text x="420" y="372" fill="#334155" font-size="20">25 &#247; 5 = 5</text>
+    <rect x="560" y="186" width="240" height="250" rx="18" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+    <text x="680" y="236" fill="#065f46" font-size="22" font-weight="700">n = 2</text>
+    <text x="680" y="310" fill="#0f172a" font-size="40" font-weight="700">5&#178; = 25</text>
+    <text x="680" y="372" fill="#334155" font-size="20">5 &#215; 5</text>
+    <rect x="820" y="186" width="240" height="250" rx="18" fill="#f0f9ff" stroke="#0284c7" stroke-width="2"/>
+    <text x="940" y="236" fill="#0369a1" font-size="22" font-weight="700">n = 3</text>
+    <text x="940" y="310" fill="#0f172a" font-size="36" font-weight="700">5&#179; = 125</text>
+    <text x="940" y="372" fill="#334155" font-size="20">5 &#215; 5 &#215; 5</text>
+    <rect x="1080" y="186" width="240" height="250" rx="18" fill="#faf5ff" stroke="#7c3aed" stroke-width="2"/>
+    <text x="1200" y="236" fill="#6d28d9" font-size="22" font-weight="700">n = 4</text>
+    <text x="1200" y="310" fill="#0f172a" font-size="36" font-weight="700">5&#8308; = 625</text>
+    <text x="1200" y="372" fill="#334155" font-size="20">125 &#215; 5</text>
+    <rect x="1340" y="186" width="220" height="250" rx="18" fill="#fdf2f8" stroke="#db2777" stroke-width="2"/>
+    <text x="1450" y="236" fill="#be185d" font-size="22" font-weight="700">n = 5</text>
+    <text x="1450" y="310" fill="#0f172a" font-size="32" font-weight="700">5&#8309; = 3125</text>
+    <text x="1450" y="372" fill="#334155" font-size="20">625 &#215; 5</text>
+  </g>
+  <g font-family="Segoe UI, Arial, sans-serif" text-anchor="middle" fill="#64748b" font-size="18" font-weight="700">
+    <text x="800" y="470">&#247; 5 to the left    ·    &#215; 5 to the right</text>
+  </g>
+  <rect x="60" y="500" width="1480" height="280" rx="16" fill="#0f172a"/>
+  <g font-family="Segoe UI, Arial, sans-serif" text-anchor="middle" fill="#f8fafc">
+    <text x="800" y="560" font-size="24" font-weight="700">Worked example 1.4</text>
+    <text x="800" y="630" font-size="30" font-weight="700">7&#179; = 7 &#215; 7 &#215; 7 = 343     ·     7&#8308; = 343 &#215; 7 = 2401     ·     7&#8304; = 1</text>
+    <text x="800" y="710" font-size="22" fill="#cbd5e1">If n is any positive integer, then n&#8304; = 1.</text>
+  </g>
+  <rect y="808" width="1600" height="92" fill="#0f172a"/>
+  <text x="800" y="864" text-anchor="middle" fill="#ffffff" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="600">KEY IDEA  |  A power counts repeats  |  Any positive integer to the power 0 is 1</text>
+</svg>

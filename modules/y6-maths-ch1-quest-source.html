@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoGoExams - The Integers Quest</title>
+    <style>
+        :root {
+            --text-color: #1E293B; /* Deep Charcoal */
+            --bg-color: #F8FAFC; /* Light Gray / Off-white */
+            --glass-bg: rgba(255, 255, 255, 0.6); /* High-opacity white glass */
+            --glass-border: rgba(30, 41, 59, 0.1); /* Subtle charcoal border */
+            --correct-color: #16A34A; /* Mint / Sage Green */
+            --correct-bg: rgba(22, 163, 74, 0.2);
+            --incorrect-color: #DC2626; /* Coral / Brick Red */
+            --incorrect-bg: rgba(220, 38, 38, 0.2);
+            --accent-color: #3B82F6; /* Soft blue */
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                linear-gradient(rgba(30, 41, 59, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(30, 41, 59, 0.04) 1px, transparent 1px);
+            background-size: 25px 25px;
+            background-position: center center;
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        .header {
+            text-align: center;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Glassmorphism Panel */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+            border-radius: 16px;
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 800px;
+            margin-bottom: 2rem;
+        }
+
+        /* Map Tracker */
+        .map-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto 2rem auto;
+            position: relative;
+        }
+
+        .map-container::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--glass-border);
+            z-index: 1;
+            transform: translateY(-50%);
+        }
+
+        .quest-node {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            border: 2px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+
+        .quest-node.active {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+            transform: scale(1.2);
+            background: var(--accent-color);
+            color: white;
+        }
+
+        /* Navigation Arrows */
+        .nav-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+            font-size: 1.5rem;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+            z-index: 100;
+            user-select: none;
+        }
+
+        .nav-arrow:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .nav-arrow.prev { left: 20px; }
+        .nav-arrow.next { right: 20px; }
+        .nav-arrow.hidden { opacity: 0; pointer-events: none; }
+
+        /* Level Content */
+        .level-section {
+            display: none;
+            animation: slideIn 0.4s ease-out forwards;
+        }
+        .level-section.active { display: block; }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Canvas & Quiz */
+        canvas {
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+            cursor: grab;
+            display: block;
+            margin: 1rem auto;
+            max-width: 100%;
+        }
+        
+        canvas:active { cursor: grabbing; }
+
+        .quiz-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
+            margin-top: 1.5rem;
+        }
+
+        .quiz-row {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .quiz-input {
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 0.5rem;
+            font-size: 1.1rem;
+            color: var(--text-color);
+            font-weight: 600;
+            width: 70px;
+            text-align: center;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.3);
+        }
+
+        .quiz-input.correct {
+            background: var(--correct-bg);
+            border-color: var(--correct-color);
+            color: var(--text-color);
+            box-shadow: 0 0 12px rgba(22, 163, 74, 0.3);
+        }
+
+        .quiz-input.incorrect {
+            background: var(--incorrect-bg);
+            border-color: var(--incorrect-color);
+            color: var(--text-color);
+            box-shadow: 0 0 12px rgba(220, 38, 38, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>GoGoExams: Integers Quest</h1>
+        <p>Master positive and negative numbers!</p>
+    </div>
+
+    <div class="nav-arrow prev hidden" onclick="changeLevel(-1)">&#10094;</div>
+    <div class="nav-arrow next" onclick="changeLevel(1)">&#10095;</div>
+
+    <div class="map-container" id="quest-map">
+        <div class="quest-node active" id="node-1">1</div>
+        <div class="quest-node" id="node-2">2</div>
+        <div class="quest-node" id="node-3">3</div>
+    </div>
+
+    <!-- Level 1: Number Line -->
+    <div class="glass-panel level-section active" id="level-1">
+        <h2>Level 1: Adding Integers</h2>
+        <p>Integers are positive and negative whole numbers, together with zero[cite: 2]. Use the number line to solve <strong>-4 + 6</strong>[cite: 2]. Start at -4, and drag the marker 6 spaces to the right.</p>
+        <canvas id="numberLine" width="600" height="150"></canvas>
+    </div>
+
+    <!-- Level 2: Multiplication Quiz -->
+    <div class="glass-panel level-section" id="level-2">
+        <h2>Level 2: Multiplying & Dividing</h2>
+        <p>The product of a positive and a negative integer is always negative[cite: 6]. Fill in the blanks to solve the pyramid[cite: 8].</p>
+        <div class="quiz-grid">
+            <div class="quiz-row">
+                (-3) × 4 = <input type="number" class="quiz-input" oninput="checkAnswer(this, -12)">
+            </div>
+            <div class="quiz-row">
+                20 ÷ (-10) = <input type="number" class="quiz-input" oninput="checkAnswer(this, -2)">
+            </div>
+        </div>
+    </div>
+
+    <!-- Level 3: Rules & Roots -->
+    <div class="glass-panel level-section" id="level-3">
+        <h2>Level 3: Roots & Divisibility</h2>
+        <p>A number is divisible by 6 when it is divisible by 2 and 3[cite: 14]. The symbol for square root is √[cite: 18].</p>
+        <div class="quiz-grid">
+            <div class="quiz-row">
+                Is 87,654 divisible by 5? (Type 0 for No, 1 for Yes) <input type="number" class="quiz-input" oninput="checkAnswer(this, 0)">
+            </div>
+            <div class="quiz-row">
+                √64 = <input type="number" class="quiz-input" oninput="checkAnswer(this, 8)">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation Logic
+        let currentLevel = 1;
+        const totalLevels = 3;
+
+        function changeLevel(step) {
+            document.getElementById(`level-${currentLevel}`).classList.remove('active');
+            document.getElementById(`node-${currentLevel}`).classList.remove('active');
+            
+            currentLevel += step;
+            
+            document.getElementById(`level-${currentLevel}`).classList.add('active');
+            document.getElementById(`node-${currentLevel}`).classList.add('active');
+
+            document.querySelector('.prev').classList.toggle('hidden', currentLevel === 1);
+            document.querySelector('.next').classList.toggle('hidden', currentLevel === totalLevels);
+            
+            if(currentLevel === 1) drawNumberLine();
+        }
+
+        // Quiz Logic
+        function checkAnswer(inputElement, correctAnswer) {
+            const val = parseInt(inputElement.value);
+            inputElement.classList.remove('correct', 'incorrect');
+            
+            if (!isNaN(val)) {
+                if (val === correctAnswer) {
+                    inputElement.classList.add('correct');
+                } else {
+                    inputElement.classList.add('incorrect');
+                }
+            }
+        }
+
+        // Draggable Number Line Logic
+        const canvas = document.getElementById('numberLine');
+        const ctx = canvas.getContext('2d');
+        let markerPos = 100; // Starting at -4 visually
+        let isDragging = false;
+
+        function drawNumberLine() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw Line
+            ctx.beginPath();
+            ctx.moveTo(50, 100);
+            ctx.lineTo(550, 100);
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = '#1E293B';
+            ctx.stroke();
+
+            // Draw Ticks
+            ctx.textAlign = 'center';
+            ctx.font = 'bold 16px Segoe UI';
+            ctx.fillStyle = '#1E293B';
+            
+            for (let i = -5; i <= 5; i++) {
+                let x = 300 + (i * 50); // Center is 0 at x=300
+                ctx.beginPath();
+                ctx.moveTo(x, 90);
+                ctx.lineTo(x, 110);
+                ctx.stroke();
+                ctx.fillText(i, x, 135);
+            }
+
+            // Draw Draggable Marker
+            ctx.beginPath();
+            ctx.arc(markerPos, 100, 15, 0, Math.PI * 2);
+            ctx.fillStyle = '#3B82F6';
+            ctx.fill();
+            ctx.strokeStyle = '#FFFFFF';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+            
+            // Show Current Value
+            let currentValue = Math.round((markerPos - 300) / 50);
+            ctx.fillStyle = '#1E293B';
+            ctx.fillText("Value: " + currentValue, markerPos, 70);
+        }
+
+        canvas.addEventListener('mousedown', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            if (Math.abs(mouseX - markerPos) < 20) {
+                isDragging = true;
+            }
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                const rect = canvas.getBoundingClientRect();
+                let newX = e.clientX - rect.left;
+                // Constrain to ticks -5 to 5
+                if (newX >= 50 && newX <= 550) {
+                    markerPos = newX;
+                    drawNumberLine();
+                }
+            }
+        });
+
+        canvas.addEventListener('mouseup', () => {
+            if (isDragging) {
+                isDragging = false;
+                // Snap to nearest tick
+                let tickIndex = Math.round((markerPos - 300) / 50);
+                markerPos = 300 + (tickIndex * 50);
+                drawNumberLine();
+            }
+        });
+        
+        canvas.addEventListener('mouseleave', () => { isDragging = false; });
+
+        // Init
+        drawNumberLine();
+    </script>
+</body>
+</html>

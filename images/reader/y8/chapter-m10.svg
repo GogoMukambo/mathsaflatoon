@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" width="1200" height="720">
+  <rect width="1200" height="720" fill="#f6f1e6"/>
+  
+    <text x="72" y="108" fill="#1e293b" font-family="Plus Jakarta Sans, Segoe UI, sans-serif" font-size="54" font-weight="700">10 Graphs</text>
+    <line x1="280" y1="540" x2="280" y2="200" stroke="#1e293b" stroke-width="6"/>
+    <line x1="280" y1="540" x2="980" y2="540" stroke="#1e293b" stroke-width="6"/>
+    <line x1="280" y1="480" x2="860" y2="220" stroke="#2563eb" stroke-width="8"/>
+    <circle cx="280" cy="480" r="10" fill="#dc2626"/>
+    <text x="720" y="180" text-anchor="middle" fill="#2563eb" font-family="Plus Jakarta Sans, Segoe UI, sans-serif" font-size="32" font-weight="700">y = 2x + 1</text>
+    <text x="600" y="640" text-anchor="middle" fill="#1e293b" font-family="Plus Jakarta Sans, Segoe UI, sans-serif" font-size="36" font-weight="700">gradient and intercept</text>
+  
+</svg>

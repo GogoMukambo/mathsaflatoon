@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900">
+  <rect width="1600" height="900" fill="#ffffff"/>
+  <rect width="1600" height="92" fill="#0f172a"/>
+  <text x="800" y="62" text-anchor="middle" fill="#ffffff" font-family="Segoe UI, Arial, sans-serif" font-size="42" font-weight="700" letter-spacing="3">BRACKETS FIRST</text>
+  <text x="800" y="148" text-anchor="middle" fill="#ea580c" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="600">Then multiply or divide the integers</text>
+
+  <g font-family="Segoe UI, Arial, sans-serif" text-anchor="middle">
+    <rect x="70" y="190" width="700" height="270" rx="18" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+    <circle cx="118" cy="238" r="24" fill="#2563eb"/>
+    <text x="118" y="247" fill="#ffffff" font-size="20" font-weight="700">1</text>
+    <text x="420" y="248" fill="#1e40af" font-size="22" font-weight="700">Do the bracket, then multiply</text>
+    <text x="420" y="310" fill="#0f172a" font-size="30" font-weight="700">(3 + 5)  &#215;  -4</text>
+    <text x="420" y="362" fill="#334155" font-size="26">8  &#215;  -4</text>
+    <text x="420" y="420" fill="#1d4ed8" font-size="34" font-weight="700">=  -32</text>
+
+    <rect x="830" y="190" width="700" height="270" rx="18" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+    <circle cx="878" cy="238" r="24" fill="#059669"/>
+    <text x="878" y="247" fill="#ffffff" font-size="20" font-weight="700">2</text>
+    <text x="1180" y="248" fill="#065f46" font-size="22" font-weight="700">Do the bracket, then divide</text>
+    <text x="1180" y="310" fill="#0f172a" font-size="30" font-weight="700">(-3 + 15)  &#247;  -4</text>
+    <text x="1180" y="362" fill="#334155" font-size="26">12  &#247;  -4</text>
+    <text x="1180" y="420" fill="#047857" font-size="34" font-weight="700">=  -3</text>
+
+    <rect x="70" y="490" width="700" height="270" rx="18" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/>
+    <circle cx="118" cy="538" r="24" fill="#ea580c"/>
+    <text x="118" y="547" fill="#ffffff" font-size="20" font-weight="700">3</text>
+    <text x="420" y="548" fill="#c2410c" font-size="22" font-weight="700">Different signs, then two negatives</text>
+    <text x="420" y="610" fill="#0f172a" font-size="30" font-weight="700">-4  &#215;  (5 - 8)</text>
+    <text x="420" y="662" fill="#334155" font-size="26">-4  &#215;  -3</text>
+    <text x="420" y="720" fill="#c2410c" font-size="34" font-weight="700">=  12</text>
+
+    <rect x="830" y="490" width="700" height="270" rx="18" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2"/>
+    <circle cx="878" cy="538" r="24" fill="#7c3aed"/>
+    <text x="878" y="547" fill="#ffffff" font-size="20" font-weight="700">4</text>
+    <text x="1180" y="548" fill="#5b21b6" font-size="22" font-weight="700">Same signs make a positive</text>
+    <text x="1180" y="610" fill="#0f172a" font-size="30" font-weight="700">(3  &#215;  -4)  &#247;  -2</text>
+    <text x="1180" y="662" fill="#334155" font-size="26">-12  &#247;  -2</text>
+    <text x="1180" y="720" fill="#6d28d9" font-size="34" font-weight="700">=  6</text>
+  </g>
+
+  <rect y="808" width="1600" height="92" fill="#0f172a"/>
+  <text x="800" y="864" text-anchor="middle" fill="#ffffff" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="600">KEY IDEAS  |  BIDMAS  |  Brackets, then multiply and divide</text>
+</svg>

@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abhyaas — Integers Quest</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap');
+
+        :root {
+            --brand-blue: #0f4c81;
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.3);
+        }
+
+        html, body {
+            height: 100%;
+            max-height: 100vh;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #020617, #1e3a8a, #3b82f6);
+            background-attachment: fixed;
+            color: white;
+            user-select: none;
+        }
+
+        h1, h2, h3, h4, .font-heading { font-family: 'Fredoka', sans-serif; }
+
+        .bg-pattern {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background-image: url("data:image/svg+xml,%3Csvg width='300' height='300' viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cg font-family='Fredoka, sans-serif' font-weight='bold' fill='rgba(255,255,255,0.05)'%3E%3Ctext x='30' y='60' font-size='40'%3E-15%3C/text%3E%3Ctext x='200' y='90' font-size='50'%3E%E2%88%9A64%3C/text%3E%3Ctext x='100' y='180' font-size='45'%3ELCM%3C/text%3E%3Ctext x='240' y='220' font-size='40'%3EHCF%3C/text%3E%3C/g%3E%3C/svg%3E");
+            animation: floatPattern 60s linear infinite;
+        }
+
+        @keyframes floatPattern {
+            0% { background-position: 0 0; }
+            100% { background-position: 300px 300px; }
+        }
+        @keyframes pulseNode {
+            0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 255, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        }
+        @keyframes flashRed {
+            0%, 100% { background-color: rgba(239, 68, 68, 0.4); border-color: #f87171; transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .quest-node {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            border: 3px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+        .quest-node.active, .quest-node:hover {
+            background: white;
+            color: var(--brand-blue);
+            transform: translate(-50%, -50%) scale(1.15);
+            animation: pulseNode 2s infinite;
+        }
+        .quest-node-label {
+            position: absolute;
+            top: 70px;
+            width: 140px;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            pointer-events: none;
+        }
+
+        .quiz-input {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+        .quiz-input:focus { outline: none; background: rgba(255, 255, 255, 0.3); border-color: white; }
+        .quiz-input.correct {
+            background: rgba(34, 197, 94, 0.4) !important;
+            color: #ffffff;
+            border-color: #4ade80 !important;
+            box-shadow: 0 0 20px rgba(74, 222, 128, 0.7);
+            transform: scale(1.05);
+            pointer-events: none;
+        }
+        .quiz-input.incorrect { animation: flashRed 0.4s ease; }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 15, 40, 0.72);
+            backdrop-filter: blur(12px);
+            z-index: 50;
+            overflow: hidden;
+            padding: 1.25rem 1rem;
+        }
+        #modal-content-panel,
+        #examples-modal .glass-panel,
+        #pdf-exercise-modal .glass-panel {
+            background: rgba(8, 22, 58, 0.92);
+            max-height: calc(100vh - 2.5rem);
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .study-box {
+            background: rgba(255,255,255,0.05);
+            border-left: 6px solid #3b82f6;
+            padding: 1.5rem 2rem;
+            border-radius: 0 1rem 1rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .topic-slide { display: none; animation: slideIn 0.4s ease forwards; }
+        .topic-slide.active { display: block; }
+
+        .slide-indicator-dots { display: flex; gap: 8px; justify-content: center; margin-top: 1.5rem; }
+        .slide-dot { width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,0.2); transition: all 0.3s; }
+        .slide-dot.active { background: white; transform: scale(1.3); }
+
+        .btn-more, .btn-exercise { box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); transition: all 0.2s; }
+        .btn-more { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+        .btn-exercise { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+        .btn-more:hover, .btn-exercise:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); }
+
+        .custom-scroll::-webkit-scrollbar { width: 8px; }
+        .custom-scroll::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
+
+        .chapter-landing-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 72rem;
+            align-items: center;
+        }
+        @media (min-width: 768px) {
+            .chapter-landing-grid { grid-template-columns: 1fr 1fr; }
+        }
+        .chapter-hero-info h2 { font-size: clamp(2.4rem, 5vw, 3.6rem); line-height: 1.1; }
+        .chapter-hero-info .chapter-tagline { font-size: 1.35rem; font-weight: 700; }
+
+        body.embed-mode header.glass-panel { display: none; }
+        body.embed-mode main.landing-main,
+        body:not(.embed-mode) main.landing-main {
+            height: 100vh;
+            max-height: 100vh;
+            min-height: 0;
+            padding: 1rem;
+            overflow: hidden;
+            justify-content: center;
+        }
+        body:not(.embed-mode) main.landing-main { height: calc(100vh - 4.5rem); }
+        body.embed-mode #quest-modal { padding-top: 0.5rem; }
+        .chapter-quest-map { height: min(260px, 36vh); min-height: 200px; }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="bg-pattern pointer-events-none"></div>
+
+    <header class="glass-panel sticky top-0 z-40">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"></path></svg>
+                <h1 class="text-3xl font-bold tracking-wider font-heading">Abhyaas</h1>
+            </div>
+            <span class="text-sm font-bold bg-white/10 py-1.5 px-4 rounded-full uppercase tracking-wide border border-white/30">Math Quest: Chapter 1</span>
+        </div>
+    </header>
+
+    <main class="landing-main max-w-7xl mx-auto w-full px-4 relative flex flex-col items-center justify-center">
+        <div class="chapter-landing-grid">
+            <div class="chapter-hero-info">
+                <p class="text-base font-bold uppercase tracking-widest text-blue-200/90 mb-2">Year 6 Mathematics</p>
+                <h2 class="font-heading font-bold mb-4">1 Integers</h2>
+                <p class="chapter-tagline text-blue-100/90 mb-6 max-w-xl">Master integer operations, multiples, factors, and roots on the number line.</p>
+                <div class="glass-panel chapter-panel p-6 rounded-2xl max-w-xl text-blue-50">
+                    <h3 class="font-bold text-blue-200 mb-3 border-b border-white/10 pb-2">Chapter introduction</h3>
+                    <p class="mb-5 leading-relaxed">Integers are whole numbers — positive, negative, and zero — used for temperatures, bank balances, and positions on a number line.</p>
+                    <h3 class="font-bold text-purple-300 mb-3 border-b border-white/10 pb-2">Chapter modules</h3>
+                    <ul class="list-disc ml-6 space-y-2 font-semibold">
+                        <li>Add and subtract positive and negative integers.</li>
+                        <li>Multiply and divide with integers.</li>
+                        <li>Lowest common multiples and highest common factors.</li>
+                        <li>Divisibility tests, square roots and cube roots.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="relative w-full chapter-quest-map">
+                <svg class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 1000 300" preserveAspectRatio="none">
+                    <path d="M 150 150 C 300 150, 300 60, 500 60 C 700 60, 700 240, 850 240" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="8" stroke-linecap="round" stroke-dasharray="15, 15" />
+                </svg>
+                <button class="quest-node pulse" style="left: 15%; top: 50%;" onclick="openLevel(1)">1<span class="quest-node-label">Integer Operations</span></button>
+                <button class="quest-node" style="left: 50%; top: 20%;" onclick="openLevel(2)">2<span class="quest-node-label">Factors &amp; Multiples</span></button>
+                <button class="quest-node" style="left: 85%; top: 80%;" onclick="openLevel(3)">3<span class="quest-node-label">Divisibility &amp; Roots</span></button>
+            </div>
+        </div>
+    </main>
+
+    <!--
+      SLIDE RULES
+      - Each slide is <div class="topic-slide level-N-slide">. Keep slides in level order.
+      - Copy a slide to add another page. Dots and arrows update automatically.
+      - Checked answers: <input class="quiz-input" data-answer="7|-7"> (use | for alternatives).
+      - More Examples looks for #extra-level-N. Exercises look for #pdf-level-N.
+      - Raise the 3 in applyEmbedMode if you add a fourth quest node.
+    -->
+    <div id="quest-modal" class="modal-overlay hidden items-center justify-center">
+        <button onclick="prevSlide(event)" id="prev-btn" class="fixed left-2 md:left-6 top-1/2 -translate-y-1/2 w-16 h-16 md:w-24 md:h-24 rounded-full bg-white/20 hover:bg-white text-white hover:text-blue-900 flex items-center justify-center border-4 border-white/40 z-[60]">
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M15 19l-7-7 7-7"></path></svg>
+        </button>
+        <button onclick="nextSlide(event)" id="next-btn" class="fixed right-2 md:right-6 top-1/2 -translate-y-1/2 w-16 h-16 md:w-24 md:h-24 rounded-full bg-white/20 hover:bg-white text-white hover:text-blue-900 flex items-center justify-center border-4 border-white/40 z-[60]">
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M9 5l7 7-7 7"></path></svg>
+        </button>
+
+        <div id="modal-content-panel" class="glass-panel w-full max-w-5xl rounded-[2rem] p-8 md:p-12 relative flex flex-col min-h-[60vh] justify-between">
+            <button onclick="closeModal()" class="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/20 hover:bg-white text-white hover:text-blue-900 flex items-center justify-center border-2 border-white/40 z-20">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+
+            <div id="slides-container" class="w-full flex-grow mt-4">
+                <div class="topic-slide level-1-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 flex items-center gap-4">
+                        <span class="bg-white text-blue-900 w-14 h-14 rounded-full flex items-center justify-center text-3xl shrink-0">1</span>
+                        Addition &amp; Subtraction
+                    </h2>
+                    <div class="study-box">
+                        <h4 class="text-3xl font-bold text-blue-300 mb-6">Rules of Integers</h4>
+                        <ul class="list-disc ml-8 space-y-4 text-xl text-blue-50">
+                            <li>Integers are positive and negative whole numbers, together with zero.</li>
+                            <li>To subtract an integer, add its inverse.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-black/20 rounded-3xl p-8 border border-white/20">
+                        <p class="font-bold text-2xl text-blue-200 mb-6">Work out −3 + 8</p>
+                        <input type="text" class="quiz-input w-32 p-4 text-center text-2xl font-bold rounded-xl" data-answer="5" placeholder="#">
+                    </div>
+                </div>
+
+                <div class="topic-slide level-1-slide">
+                    <h2 class="text-4xl font-heading font-bold mb-8 text-center">Check your understanding</h2>
+                    <div class="flex flex-col sm:flex-row gap-6 w-full mt-8 justify-center max-w-3xl mx-auto">
+                        <button onclick="openMoreExamples(1)" class="btn-more flex-1 py-4 rounded-2xl font-bold text-xl">More Examples</button>
+                        <button onclick="openPdfExercise(1)" class="btn-exercise flex-1 py-4 rounded-2xl font-bold text-xl">Exercises</button>
+                    </div>
+                </div>
+
+                <div class="topic-slide level-2-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 flex items-center gap-4">
+                        <span class="bg-white text-blue-900 w-14 h-14 rounded-full flex items-center justify-center text-3xl shrink-0">2</span>
+                        Factors &amp; Multiples
+                    </h2>
+                    <div class="study-box">
+                        <h4 class="text-3xl font-bold text-blue-300 mb-6">LCM and HCF</h4>
+                        <ul class="list-disc ml-8 space-y-4 text-xl text-blue-50">
+                            <li>The highest common factor is the largest number that divides both numbers.</li>
+                            <li>The lowest common multiple is the smallest shared multiple.</li>
+                        </ul>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-6 max-w-3xl">
+                        <button onclick="openMoreExamples(2)" class="btn-more flex-1 py-4 rounded-2xl font-bold text-xl">More Examples</button>
+                        <button onclick="openPdfExercise(2)" class="btn-exercise flex-1 py-4 rounded-2xl font-bold text-xl">Exercises</button>
+                    </div>
+                </div>
+
+                <div class="topic-slide level-3-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 flex items-center gap-4">
+                        <span class="bg-white text-blue-900 w-14 h-14 rounded-full flex items-center justify-center text-3xl shrink-0">3</span>
+                        Divisibility &amp; Roots
+                    </h2>
+                    <div class="study-box">
+                        <h4 class="text-3xl font-bold text-blue-300 mb-6">Tests and roots</h4>
+                        <ul class="list-disc ml-8 space-y-4 text-xl text-blue-50">
+                            <li>A number is divisible by 3 when its digit sum is divisible by 3.</li>
+                            <li>The square root of a square number is the number that was multiplied by itself.</li>
+                        </ul>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-6 max-w-3xl">
+                        <button onclick="openMoreExamples(3)" class="btn-more flex-1 py-4 rounded-2xl font-bold text-xl">More Examples</button>
+                        <button onclick="openPdfExercise(3)" class="btn-exercise flex-1 py-4 rounded-2xl font-bold text-xl">Exercises</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="slide-indicators" class="slide-indicator-dots"></div>
+        </div>
+    </div>
+
+    <div id="examples-modal" class="modal-overlay hidden items-center justify-center z-[70]">
+        <div class="glass-panel w-full max-w-2xl rounded-3xl p-6 md:p-8 relative">
+            <button onclick="closeMoreExamples()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white text-white hover:text-blue-900 flex items-center justify-center border border-white/40">×</button>
+            <h3 class="text-2xl font-heading font-bold mb-6 text-center border-b border-white/20 pb-4">Bonus Examples</h3>
+            <div id="extra-level-1" class="extra-content space-y-4 hidden">
+                <div class="flex items-center justify-between bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold">Work out 10 × −3</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center font-bold rounded-lg" data-answer="-30" placeholder="#">
+                </div>
+            </div>
+            <div id="extra-level-2" class="extra-content space-y-4 hidden">
+                <div class="flex items-center justify-between bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold">HCF of 12 and 30</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center font-bold rounded-lg" data-answer="6" placeholder="#">
+                </div>
+            </div>
+            <div id="extra-level-3" class="extra-content space-y-4 hidden">
+                <div class="flex items-center justify-between bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold">Square root of 36</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center font-bold rounded-lg" data-answer="6" placeholder="#">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="pdf-exercise-modal" class="modal-overlay hidden items-center justify-center z-[80]">
+        <div class="glass-panel w-full max-w-5xl rounded-3xl p-6 md:p-8 relative h-[90vh] flex flex-col">
+            <button onclick="closePdfExercise()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white text-white hover:text-blue-900 flex items-center justify-center border border-white/40">×</button>
+            <h3 class="text-3xl font-heading font-bold mb-6 text-center border-b border-white/20 pb-4 shrink-0">Exercises</h3>
+            <div class="relative flex-grow overflow-hidden pb-16">
+                <div id="pdf-level-1" class="pdf-content hidden h-full overflow-y-auto custom-scroll pr-4">
+                    <div class="exercise-page bg-blue-900/40 p-5 rounded-2xl border border-blue-400/30 space-y-3">
+                        <h4 class="font-bold text-lg">Addition and subtraction</h4>
+                        <div class="flex items-center justify-between"><span>a) −3 + −4</span><input type="text" class="quiz-input w-24 p-2 text-center rounded-lg" data-answer="-7"></div>
+                    </div>
+                    <div class="exercise-page hidden bg-purple-900/40 p-5 rounded-2xl border border-purple-400/30 mt-4">
+                        <h4 class="font-bold text-lg">Missing numbers</h4>
+                        <div class="flex items-center justify-between"><span>8 + □ = 1</span><input type="text" class="quiz-input w-24 p-2 text-center rounded-lg" data-answer="-7"></div>
+                    </div>
+                </div>
+                <div id="pdf-level-2" class="pdf-content hidden h-full overflow-y-auto custom-scroll pr-4">
+                    <div class="exercise-page bg-blue-900/40 p-5 rounded-2xl border border-blue-400/30">
+                        <div class="flex items-center justify-between"><span>LCM of 10 and 15</span><input type="text" class="quiz-input w-24 p-2 text-center rounded-lg" data-answer="30"></div>
+                    </div>
+                </div>
+                <div id="pdf-level-3" class="pdf-content hidden h-full overflow-y-auto custom-scroll pr-4">
+                    <div class="exercise-page bg-blue-900/40 p-5 rounded-2xl border border-blue-400/30">
+                        <div class="flex items-center justify-between"><span>Is 87,654 divisible by 3? (yes/no)</span><input type="text" class="quiz-input w-24 p-2 text-center rounded-lg" data-answer="yes"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="absolute bottom-4 left-0 right-0 flex items-center justify-between px-8">
+                <button id="ex-prev-btn" onclick="prevExercisePage()" class="px-4 py-2 rounded-xl bg-white/20 font-bold">Previous</button>
+                <span id="ex-page-indicator" class="font-bold"></span>
+                <button id="ex-next-btn" onclick="nextExercisePage()" class="px-4 py-2 rounded-xl bg-white/20 font-bold">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('quest-modal');
+        const nextBtn = document.getElementById('next-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const indicators = document.getElementById('slide-indicators');
+        const examplesModal = document.getElementById('examples-modal');
+        const pdfExerciseModal = document.getElementById('pdf-exercise-modal');
+        const MAX_LEVEL = 3;
+
+        let currentLevel = 1;
+        let currentSlideIndex = 0;
+        let allSlides = [];
+        let currentExercisePage = 0;
+        let activeExercisePages = [];
+
+        function initSlides() {
+            allSlides = Array.from(document.querySelectorAll('.topic-slide'));
+        }
+
+        function openLevel(level) {
+            document.querySelectorAll('.quest-node').forEach((n, i) => n.classList.toggle('active', i + 1 === level));
+            currentLevel = level;
+            currentSlideIndex = allSlides.findIndex(slide => slide.classList.contains('level-' + level + '-slide'));
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            updateView();
+        }
+
+        function nextSlide(e) {
+            if (e) e.stopPropagation();
+            if (currentSlideIndex < allSlides.length - 1) {
+                currentSlideIndex++;
+                updateView();
+            }
+        }
+
+        function prevSlide(e) {
+            if (e) e.stopPropagation();
+            if (currentSlideIndex > 0) {
+                currentSlideIndex--;
+                updateView();
+            }
+        }
+
+        function updateView() {
+            allSlides.forEach((slide, index) => slide.classList.toggle('active', index === currentSlideIndex));
+            prevBtn.style.display = currentSlideIndex === 0 ? 'none' : 'flex';
+            nextBtn.style.display = currentSlideIndex === allSlides.length - 1 ? 'none' : 'flex';
+            const activeSlide = allSlides[currentSlideIndex];
+            for (let i = 1; i <= MAX_LEVEL; i++) {
+                if (activeSlide.classList.contains('level-' + i + '-slide')) {
+                    currentLevel = i;
+                    document.querySelectorAll('.quest-node').forEach((n, idx) => n.classList.toggle('active', idx + 1 === currentLevel));
+                    break;
+                }
+            }
+            updateDots();
+        }
+
+        function updateDots() {
+            indicators.innerHTML = '';
+            const levelSlides = allSlides.filter(s => s.classList.contains('level-' + currentLevel + '-slide'));
+            const localIndex = levelSlides.indexOf(allSlides[currentSlideIndex]);
+            levelSlides.forEach((_, idx) => {
+                const dot = document.createElement('div');
+                dot.className = 'slide-dot' + (idx === localIndex ? ' active' : '');
+                indicators.appendChild(dot);
+            });
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            allSlides.forEach(s => s.classList.remove('active'));
+        }
+
+        function openMoreExamples(level) {
+            document.querySelectorAll('.extra-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
+            });
+            const extraTarget = document.getElementById('extra-level-' + level);
+            if (extraTarget) {
+                extraTarget.classList.remove('hidden');
+                extraTarget.classList.add('block');
+            }
+            examplesModal.classList.remove('hidden');
+            examplesModal.classList.add('flex');
+        }
+
+        function closeMoreExamples() {
+            examplesModal.classList.add('hidden');
+            examplesModal.classList.remove('flex');
+        }
+
+        function openPdfExercise(level) {
+            document.querySelectorAll('.pdf-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
+            });
+            const levelContainer = document.getElementById('pdf-level-' + level);
+            if (!levelContainer) return;
+            levelContainer.classList.remove('hidden');
+            levelContainer.classList.add('block');
+            activeExercisePages = Array.from(levelContainer.querySelectorAll('.exercise-page'));
+            currentExercisePage = 0;
+            updateExercisePagination();
+            pdfExerciseModal.classList.remove('hidden');
+            pdfExerciseModal.classList.add('flex');
+        }
+
+        function updateExercisePagination() {
+            activeExercisePages.forEach((page, index) => {
+                page.classList.toggle('hidden', index !== currentExercisePage);
+                page.classList.toggle('block', index === currentExercisePage);
+            });
+            const exPrevBtn = document.getElementById('ex-prev-btn');
+            const exNextBtn = document.getElementById('ex-next-btn');
+            const indicator = document.getElementById('ex-page-indicator');
+            if (exPrevBtn) exPrevBtn.style.visibility = currentExercisePage > 0 ? 'visible' : 'hidden';
+            if (exNextBtn) exNextBtn.style.visibility = currentExercisePage < activeExercisePages.length - 1 ? 'visible' : 'hidden';
+            if (indicator && activeExercisePages.length) {
+                indicator.textContent = 'Section ' + (currentExercisePage + 1) + ' of ' + activeExercisePages.length;
+            }
+        }
+
+        function nextExercisePage() {
+            if (currentExercisePage < activeExercisePages.length - 1) {
+                currentExercisePage++;
+                updateExercisePagination();
+            }
+        }
+
+        function prevExercisePage() {
+            if (currentExercisePage > 0) {
+                currentExercisePage--;
+                updateExercisePagination();
+            }
+        }
+
+        function closePdfExercise() {
+            pdfExerciseModal.classList.add('hidden');
+            pdfExerciseModal.classList.remove('flex');
+        }
+
+        function bindQuizInputs(root) {
+            (root || document).querySelectorAll('.quiz-input').forEach(input => {
+                if (input.dataset.bound === '1') return;
+                input.dataset.bound = '1';
+                input.addEventListener('input', function () {
+                    const val = this.value.trim().toLowerCase().replace(/\s/g, '');
+                    const answers = (this.getAttribute('data-answer') || '').toLowerCase().split('|').filter(Boolean);
+                    this.classList.remove('correct', 'incorrect');
+                    if (!val || !answers.length) return;
+                    this.classList.add(answers.includes(val) ? 'correct' : 'incorrect');
+                });
+            });
+        }
+
+        function applyEmbedMode() {
+            const params = new URLSearchParams(window.location.search);
+            let inFrame = false;
+            try { inFrame = window.self !== window.top; } catch (err) { inFrame = true; }
+            if (params.get('embed') === '1' || inFrame) document.body.classList.add('embed-mode');
+            const levelParam = params.get('level') || params.get('tab');
+            if (levelParam) {
+                const level = Math.max(1, Math.min(MAX_LEVEL, parseInt(levelParam, 10) || 1));
+                setTimeout(() => openLevel(level), 150);
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initSlides();
+            bindQuizInputs(document);
+        });
+        applyEmbedMode();
+        window.addEventListener('load', applyEmbedMode);
+    </script>
+</body>
+</html>

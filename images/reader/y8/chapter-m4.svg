@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" width="1200" height="720">
+  <rect width="1200" height="720" fill="#f6f1e6"/>
+  
+    <text x="72" y="108" fill="#1e293b" font-family="Plus Jakarta Sans, Segoe UI, sans-serif" font-size="54" font-weight="700">4 Equations</text>
+    <rect x="150" y="250" width="340" height="140" rx="28" fill="#dbeafe"/>
+    <text x="320" y="332" text-anchor="middle" fill="#2563eb" font-family="Plus Jakarta Sans, Segoe UI, sans-serif" font-size="46" font-weight="700">2x + 3</text>
+    <text x="580" y="332" text-anchor="middle" fill="#1e293b" font-family="Plus Jakarta Sans, Segoe UI, sans-serif" font-size="56" font-weight="700">=</text>
+    <rect x="680" y="250" width="340" height="140" rx="28" fill="#ccfbf1"/>
+    <text x="850" y="332" text-anchor="middle" fill="#0f766e" font-family="Plus Jakarta Sans, Segoe UI, sans-serif" font-size="56" font-weight="700">11</text>
+    <line x1="260" y1="500" x2="940" y2="500" stroke="#1e293b" stroke-width="6"/>
+    <circle cx="620" cy="500" r="12" fill="#dc2626"/>
+    <text x="620" y="460" text-anchor="middle" fill="#dc2626" font-family="Plus Jakarta Sans, Segoe UI, sans-serif" font-size="28" font-weight="700">x &gt; 2</text>
+    <text x="600" y="640" text-anchor="middle" fill="#1e293b" font-family="Plus Jakarta Sans, Segoe UI, sans-serif" font-size="36" font-weight="700">keep both sides equal</text>
+  
+</svg>

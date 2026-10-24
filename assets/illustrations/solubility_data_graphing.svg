@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900">
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path d="M 0 1 L 9 5 L 0 9 z" fill="#111111" />
+</marker>
+
+</defs>
+<rect x="0" y="0" width="1200" height="900" fill="#ffffff" />
+<text x="600" y="72" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="34" font-weight="700" text-anchor="middle">Solubility against temperature</text>
+<line x1="170" y1="700" x2="1050" y2="700" stroke="#111111" stroke-width="3" stroke-linecap="round" />
+<line x1="170" y1="700" x2="170" y2="120" stroke="#111111" stroke-width="3" stroke-linecap="round" />
+<text x="610" y="768" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="27" font-weight="600" text-anchor="middle">Temperature (°C)</text>
+<text x="60" y="410" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="27" font-weight="600" text-anchor="middle" transform="rotate(-90 60 410)">Solubility (g per 100 g water)</text>
+<line x1="170" y1="584" x2="1050" y2="584" stroke="#d4d4d4" stroke-width="1.5" stroke-linecap="round" />
+<line x1="170" y1="468" x2="1050" y2="468" stroke="#d4d4d4" stroke-width="1.5" stroke-linecap="round" />
+<line x1="170" y1="352" x2="1050" y2="352" stroke="#d4d4d4" stroke-width="1.5" stroke-linecap="round" />
+<line x1="170" y1="236" x2="1050" y2="236" stroke="#d4d4d4" stroke-width="1.5" stroke-linecap="round" />
+<line x1="170" y1="120" x2="1050" y2="120" stroke="#d4d4d4" stroke-width="1.5" stroke-linecap="round" />
+<line x1="170" y1="700" x2="170" y2="712" stroke="#111111" stroke-width="2" stroke-linecap="round" />
+<text x="170" y="742" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="24" font-weight="500" text-anchor="middle">0</text>
+<line x1="346" y1="700" x2="346" y2="712" stroke="#111111" stroke-width="2" stroke-linecap="round" />
+<text x="346" y="742" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="24" font-weight="500" text-anchor="middle">20</text>
+<line x1="522" y1="700" x2="522" y2="712" stroke="#111111" stroke-width="2" stroke-linecap="round" />
+<text x="522" y="742" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="24" font-weight="500" text-anchor="middle">40</text>
+<line x1="698" y1="700" x2="698" y2="712" stroke="#111111" stroke-width="2" stroke-linecap="round" />
+<text x="698" y="742" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="24" font-weight="500" text-anchor="middle">60</text>
+<line x1="874" y1="700" x2="874" y2="712" stroke="#111111" stroke-width="2" stroke-linecap="round" />
+<text x="874" y="742" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="24" font-weight="500" text-anchor="middle">80</text>
+<line x1="1050" y1="700" x2="1050" y2="712" stroke="#111111" stroke-width="2" stroke-linecap="round" />
+<text x="1050" y="742" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="24" font-weight="500" text-anchor="middle">100</text>
+<text x="148" y="708" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="24" font-weight="500" text-anchor="end">0</text>
+<text x="148" y="596.4615384615385" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="24" font-weight="500" text-anchor="end">50</text>
+<text x="148" y="484.9230769230769" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="24" font-weight="500" text-anchor="end">100</text>
+<text x="148" y="373.3846153846154" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="24" font-weight="500" text-anchor="end">150</text>
+<text x="148" y="261.8461538461538" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="24" font-weight="500" text-anchor="end">200</text>
+<text x="148" y="150.30769230769226" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="24" font-weight="500" text-anchor="end">250</text>
+<path d="M 170 671 L 346 628.6153846153846 L 522 557.2307692307693 L 698 454.61538461538464 L 874 323 L 1050 151.23076923076928" fill="none" stroke="#111111" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round" />
+<line x1="159" y1="660" x2="181" y2="682" stroke="#111111" stroke-width="3" stroke-linecap="round" />
+<line x1="159" y1="682" x2="181" y2="660" stroke="#111111" stroke-width="3" stroke-linecap="round" />
+<line x1="335" y1="617.6153846153846" x2="357" y2="639.6153846153846" stroke="#111111" stroke-width="3" stroke-linecap="round" />
+<line x1="335" y1="639.6153846153846" x2="357" y2="617.6153846153846" stroke="#111111" stroke-width="3" stroke-linecap="round" />
+<line x1="511" y1="546.2307692307693" x2="533" y2="568.2307692307693" stroke="#111111" stroke-width="3" stroke-linecap="round" />
+<line x1="511" y1="568.2307692307693" x2="533" y2="546.2307692307693" stroke="#111111" stroke-width="3" stroke-linecap="round" />
+<line x1="687" y1="443.61538461538464" x2="709" y2="465.61538461538464" stroke="#111111" stroke-width="3" stroke-linecap="round" />
+<line x1="687" y1="465.61538461538464" x2="709" y2="443.61538461538464" stroke="#111111" stroke-width="3" stroke-linecap="round" />
+<line x1="863" y1="312" x2="885" y2="334" stroke="#111111" stroke-width="3" stroke-linecap="round" />
+<line x1="863" y1="334" x2="885" y2="312" stroke="#111111" stroke-width="3" stroke-linecap="round" />
+<line x1="1039" y1="140.23076923076928" x2="1061" y2="162.23076923076928" stroke="#111111" stroke-width="3" stroke-linecap="round" />
+<line x1="1039" y1="162.23076923076928" x2="1061" y2="140.23076923076928" stroke="#111111" stroke-width="3" stroke-linecap="round" />
+</svg>

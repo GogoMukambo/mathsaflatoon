@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abhyaas — Probability Quest</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap');
+        
+        :root {
+            --brand-blue: #0f4c81;
+            --light-blue: #e0f2fe;
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.3);
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #020617, #1e3a8a, #3b82f6);
+            background-attachment: fixed;
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+            user-select: none;
+        }
+
+        h1, h2, h3, h4, .font-heading {
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        .bg-pattern {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: -1;
+            background-image: url("data:image/svg+xml,%3Csvg width='300' height='300' viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cg font-family='Fredoka, sans-serif' font-weight='bold' fill='rgba(255,255,255,0.05)'%3E%3Ctext x='30' y='60' font-size='40'%3EP(A)%3C/text%3E%3Ctext x='200' y='90' font-size='50'%3E0.5%3C/text%3E%3Ctext x='100' y='180' font-size='45'%3E1%3C/text%3E%3Ctext x='240' y='220' font-size='40'%3E0%3C/text%3E%3Ctext x='150' y='50' font-size='35'%3E%E2%88%91%3C/text%3E%3Ctext x='50' y='260' font-size='35'%3E%25%3C/text%3E%3Ctext x='180' y='280' font-size='30'%3E%E2%86%94%3C/text%3E%3C/g%3E%3C/svg%3E");
+            animation: floatPattern 60s linear infinite;
+        }
+
+        @keyframes floatPattern {
+            0% { background-position: 0 0; }
+            100% { background-position: 300px 300px; }
+        }
+
+        @keyframes pulseNode {
+            0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 255, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes flashRed {
+            0%, 100% { background-color: rgba(239, 68, 68, 0.4); border-color: #f87171; transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .quest-node {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            border: 3px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+
+        .quest-node.active, .quest-node:hover {
+            background: white;
+            color: var(--brand-blue);
+            transform: translate(-50%, -50%) scale(1.15);
+            animation: pulseNode 2s infinite;
+        }
+
+        .quest-node-label {
+            position: absolute;
+            top: 70px;
+            width: 140px;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            pointer-events: none;
+        }
+
+        .quiz-input {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+        .quiz-input:focus { outline: none; background: rgba(255, 255, 255, 0.3); border-color: white; }
+        .quiz-input.correct {
+            background: rgba(34, 197, 94, 0.4) !important;
+            color: #ffffff;
+            border-color: #4ade80 !important;
+            box-shadow: 0 0 20px rgba(74, 222, 128, 0.7);
+            transform: scale(1.05);
+            pointer-events: none;
+        }
+        .quiz-input.incorrect {
+            animation: flashRed 0.4s ease;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 15, 40, 0.4);
+            backdrop-filter: blur(8px);
+            z-index: 50;
+            overflow-y: auto;
+            padding: 2rem 1rem;
+        }
+
+
+        body.embed-mode header.glass-panel {
+            display: none;
+        }
+
+        body.embed-mode main {
+            min-height: 85vh;
+            padding-top: 1.5rem;
+        }
+
+        body.embed-mode #quest-modal {
+            padding-top: 0.5rem;
+        }
+
+        /* Interactive Specific Styles */
+        .drag-card {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.6);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1rem;
+            border-radius: 0.75rem;
+            cursor: grab;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: transform 0.2s;
+            user-select: none;
+            text-align: center;
+        }
+        .drag-card:active { cursor: grabbing; transform: scale(0.95); }
+        
+        .drop-slot {
+            width: 150px;
+            height: 60px;
+            border: 2px dashed rgba(255,255,255,0.4);
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .drop-slot.filled { border-style: solid; }
+
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="bg-pattern"></div>
+
+    <header class="glass-panel sticky top-0 z-40 border-b-0 border-white/20">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <svg class="w-8 h-8 text-white drop-shadow-md" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"></path></svg>
+                <h1 class="text-3xl font-bold tracking-wider drop-shadow-sm font-heading">Abhyaas</h1>
+            </div>
+            <span class="text-sm font-bold bg-white/10 text-white py-1.5 px-4 rounded-full shadow-md uppercase tracking-wide border border-white/30">Math Quest: Chapter 13</span>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto w-full px-4 py-12 relative flex flex-col items-center justify-center min-h-[70vh]">
+        
+        <div class="text-center mb-10">
+            <h2 class="text-5xl font-heading font-bold mb-4 drop-shadow-lg">Probability</h2>
+            <p class="text-xl text-blue-100/80 font-bold max-w-2xl mx-auto">Master probability scales, outcomes, and experimental probability.</p>
+        </div>
+
+        <div class="relative w-full max-w-4xl h-[300px] mt-8">
+            <svg class="absolute top-0 left-0 w-full h-full drop-shadow-[0_0_10px_rgba(255,255,255,0.4)]" viewBox="0 0 1000 300" preserveAspectRatio="none">
+                <path d="M 150 150 C 300 150, 300 60, 500 60 C 700 60, 700 240, 850 240" 
+                      fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="8" stroke-linecap="round" stroke-dasharray="15, 15" />
+            </svg>
+
+            <button class="quest-node pulse" style="left: 15%; top: 50%;" onclick="openLevel(1)">1<span class="quest-node-label">The Probability Scale</span></button>
+            <button class="quest-node" style="left: 50%; top: 20%;" onclick="openLevel(2)">2<span class="quest-node-label">Mutually Exclusive Outcomes</span></button>
+            <button class="quest-node" style="left: 85%; top: 80%;" onclick="openLevel(3)">3<span class="quest-node-label">Experimental Probabilities</span></button>
+        </div>
+    </main>
+
+    <!-- MODAL -->
+    <div id="quest-modal" class="modal-overlay flex items-center justify-center">
+        <button onclick="prevLevel(event)" class="fixed left-2 md:left-8 top-1/2 -translate-y-1/2 w-14 h-14 md:w-20 md:h-20 rounded-full bg-white/20 backdrop-blur-md hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-all duration-300 border-2 border-white/40 shadow-[0_0_20px_rgba(255,255,255,0.3)] z-[60] cursor-pointer" id="prev-level-btn"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path></svg></button>
+        <button onclick="nextLevel(event)" class="fixed right-2 md:right-8 top-1/2 -translate-y-1/2 w-14 h-14 md:w-20 md:h-20 rounded-full bg-white/20 backdrop-blur-md hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-all duration-300 border-2 border-white/40 shadow-[0_0_20px_rgba(255,255,255,0.3)] z-[60] cursor-pointer" id="next-level-btn"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg></button>
+
+        <div id="modal-content-panel" class="glass-panel w-full max-w-4xl rounded-3xl p-6 md:p-10 relative">
+            <button onclick="closeModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-colors border border-white/40 z-10"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+
+            <!-- Level 1: Probability Scale -->
+            <div id="level-1" class="level-content hidden">
+                <h2 class="text-3xl font-heading font-bold mb-6 flex items-center gap-3">
+                    <span class="bg-white text-blue-900 w-10 h-10 rounded-full flex items-center justify-center text-xl">1</span>
+                    The Probability Scale
+                </h2>
+                
+                <p class="text-lg mb-6 bg-white/10 border-l-4 border-white p-4 rounded-r-xl font-bold">
+                    Probability is a number between 0 and 1 representing the likelihood of an event. 0 is <strong>impossible</strong>, 0.5 is an <strong>even chance</strong>, and 1 is <strong>certain</strong>.
+                </p>
+
+                <!-- SOLVED EXAMPLE -->
+                <div class="bg-blue-900/50 border-l-4 border-blue-400 p-4 rounded-r-xl mb-6 shadow-lg">
+                    <h4 class="font-bold text-blue-200 mb-2 text-xl">Solved Example: Comparing Probabilities</h4>
+                    <p>The probability Tigers win is 45%. The probability Lions win is 4/5. Which is more likely to win?</p>
+                    <ul class="list-decimal ml-5 text-sm text-blue-100 mt-2 space-y-1">
+                        <li>Convert Lions probability to a percentage: 4/5 = 0.8 = 80%.</li>
+                        <li>Compare the percentages: 80% is greater than 45%.</li>
+                    </ul>
+                    <p class="font-bold mt-3 text-lg text-green-300">Answer: Lions are more likely to win.</p>
+                </div>
+
+                <!-- Interactive Component -->
+                <div class="bg-black/10 rounded-3xl p-6 border border-white/20 mb-6 flex flex-col items-center gap-6">
+                    <h3 class="text-xl font-heading text-center text-blue-100">Interactive: Sort the Likelihoods</h3>
+                    <p class="text-center font-bold text-sm text-blue-100 mb-4">Drag the events to the correct position on the probability scale.</p>
+                    
+                    <div id="l1-source" class="flex gap-4 min-h-[60px] flex-wrap justify-center">
+                        <div draggable="true" ondragstart="drag(event)" id="card1" data-val="0" class="drag-card shadow-lg bg-red-500/40 !text-sm">Rolling a 7 on a standard dice</div>
+                        <div draggable="true" ondragstart="drag(event)" id="card2" data-val="0.5" class="drag-card shadow-lg bg-teal-500/40 !text-sm">Flipping a coin and getting heads</div>
+                        <div draggable="true" ondragstart="drag(event)" id="card3" data-val="1" class="drag-card shadow-lg bg-green-500/40 !text-sm">The day after Monday is Tuesday</div>
+                    </div>
+
+                    <div class="flex items-center gap-4 mt-4 w-full justify-between px-4">
+                        <div class="flex flex-col items-center gap-2">
+                            <div class="drop-slot !w-40 !h-16" ondrop="dropL1(event)" ondragover="allowDrop(event)" data-expected="0"></div>
+                            <span class="font-bold text-blue-200">0 (Impossible)</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-2">
+                            <div class="drop-slot !w-40 !h-16" ondrop="dropL1(event)" ondragover="allowDrop(event)" data-expected="0.5"></div>
+                            <span class="font-bold text-blue-200">0.5 (Even Chance)</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-2">
+                            <div class="drop-slot !w-40 !h-16" ondrop="dropL1(event)" ondragover="allowDrop(event)" data-expected="1"></div>
+                            <span class="font-bold text-blue-200">1 (Certain)</span>
+                        </div>
+                    </div>
+                    <div id="l1-success" class="hidden text-green-300 font-bold text-xl animate-bounce mt-2">Perfectly Placed!</div>
+                </div>
+
+            </div>
+
+            <!-- Level 2: Mutually Exclusive -->
+            <div id="level-2" class="level-content hidden">
+                <h2 class="text-3xl font-heading font-bold mb-6 flex items-center gap-3">
+                    <span class="bg-white text-blue-900 w-10 h-10 rounded-full flex items-center justify-center text-xl">2</span>
+                    Mutually Exclusive Outcomes
+                </h2>
+
+                <p class="text-lg mb-6 bg-white/10 border-l-4 border-white p-4 rounded-r-xl font-bold">
+                    When two outcomes cannot happen at the same time they are <strong>mutually exclusive</strong>. If outcomes are <strong>equally likely</strong> (like rolling a fair dice), you can calculate theoretical probabilities.
+                </p>
+
+                <!-- SOLVED EXAMPLE -->
+                <div class="bg-blue-900/50 border-l-4 border-blue-400 p-4 rounded-r-xl mb-6 shadow-lg">
+                    <h4 class="font-bold text-blue-200 mb-2 text-xl">Solved Example: Theoretical Probability</h4>
+                    <p>There are 10 cards numbered 2, 5, 8, 5, 9, 8, 5, 3, 8, 5. What is the probability of choosing a 5?</p>
+                    <ul class="list-decimal ml-5 text-sm text-blue-100 mt-2 space-y-1">
+                        <li>There are 10 cards in total, so each card has a 1/10 chance of being chosen.</li>
+                        <li>Four cards have the number 5.</li>
+                        <li>The probability is 4/10.</li>
+                        <li>Simplified, this is 2/5 or 40%.</li>
+                    </ul>
+                    <p class="font-bold mt-3 text-lg text-green-300">Answer: 40%</p>
+                </div>
+
+                <!-- Original Inputs -->
+                <div class="bg-white/10 rounded-3xl p-6 border border-white/20">
+                    <h3 class="text-2xl mb-4 font-heading text-center">Probability Challenge</h3>
+                    <div class="flex flex-col items-center gap-4">
+                        <div class="flex items-center justify-between w-full bg-white/10 p-3 rounded-xl border border-white/20">
+                            <span class="font-bold">Using the 10 cards above, what is the probability of picking an odd number? (as a fraction)</span>
+                            <input type="text" class="quiz-input w-24 p-2 text-center font-bold rounded-lg" data-answer="3/5" placeholder="?">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Level 3: Experimental Probabilities -->
+            <div id="level-3" class="level-content hidden">
+                <h2 class="text-3xl font-heading font-bold mb-6 flex items-center gap-3">
+                    <span class="bg-white text-blue-900 w-10 h-10 rounded-full flex items-center justify-center text-xl">3</span>
+                    Experimental Probabilities
+                </h2>
+                <p class="text-lg mb-6 bg-white/10 border-l-4 border-white p-4 rounded-r-xl font-bold">
+                    When outcomes are not equally likely, you can use an experiment to estimate probabilities by calculating the <strong>relative frequency</strong>: (Frequency of outcome / Total number of trials).
+                </p>
+                
+                <!-- SOLVED EXAMPLE -->
+                <div class="bg-blue-900/50 border-l-4 border-blue-400 p-4 rounded-r-xl mb-6 shadow-lg">
+                    <h4 class="font-bold text-blue-200 mb-2 text-xl">Solved Example: Relative Frequency</h4>
+                    <p>124 drawing pins are dropped. 48 land point up. Find the experimental probability of a pin landing point up.</p>
+                    <ul class="list-decimal ml-5 text-sm text-blue-100 mt-2 space-y-1">
+                        <li>The frequency of point up is 48.</li>
+                        <li>The total number of trials is 124.</li>
+                        <li>The relative frequency is 48 / 124 = 0.39 (to 2 decimal places).</li>
+                    </ul>
+                    <p class="font-bold mt-3 text-lg text-green-300">Answer: 39%</p>
+                </div>
+
+                <!-- Original Inputs -->
+                <div class="bg-white/10 rounded-3xl p-6 border border-white/20">
+                    <h3 class="text-2xl mb-4 font-heading text-center">Experimental Challenge</h3>
+                    <div class="flex flex-col items-center gap-4">
+                        <div class="flex items-center justify-between w-full bg-white/10 p-3 rounded-xl border border-white/20">
+                            <span class="font-bold">Of 400 cars, 140 traveled faster than 60km/h. What is the experimental probability the next car will travel faster than 60km/h? (as a decimal)</span>
+                            <input type="text" class="quiz-input w-24 p-2 text-center font-bold rounded-lg" data-answer="0.35" placeholder="?">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('quest-modal');
+        const nextBtn = document.getElementById('next-level-btn');
+        const prevBtn = document.getElementById('prev-level-btn');
+        const contentPanel = document.getElementById('modal-content-panel');
+        let currentLevel = 1;
+        const totalLevels = 3;
+
+        function openLevel(level) {
+            document.querySelectorAll('.quest-node').forEach((n, i) => n.classList.toggle('active', i + 1 === level));
+            document.querySelectorAll('.level-content').forEach(el => el.style.display = 'none');
+            document.getElementById(`level-${level}`).style.display = 'block';
+            currentLevel = level;
+            modal.style.display = 'flex';
+            nextBtn.classList.toggle('hidden', level >= totalLevels);
+            prevBtn.classList.toggle('hidden', level <= 1);
+        }
+
+        function slide(dir) {
+            const nextLvl = currentLevel + dir;
+            if (nextLvl < 1 || nextLvl > totalLevels) return;
+            contentPanel.style.opacity = '0';
+            contentPanel.style.transform = `translateX(${dir * -40}px)`;
+            setTimeout(() => {
+                openLevel(nextLvl);
+                contentPanel.style.transition = 'none';
+                contentPanel.style.transform = `translateX(${dir * 40}px)`;
+                void contentPanel.offsetWidth; 
+                contentPanel.style.transition = 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+                contentPanel.style.opacity = '1';
+                contentPanel.style.transform = 'translateX(0)';
+            }, 300);
+        }
+
+        function nextLevel(e) { e.stopPropagation(); slide(1); }
+        function prevLevel(e) { e.stopPropagation(); slide(-1); }
+        function closeModal() { modal.style.display = 'none'; }
+        modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+        // Global Drag & Drop
+        function allowDrop(ev) { ev.preventDefault(); }
+        function drag(ev) { ev.dataTransfer.setData("text", ev.target.id); }
+
+        // L1 Matching
+        let l1Correct = 0;
+        function dropL1(ev) {
+            ev.preventDefault();
+            const data = ev.dataTransfer.getData("text");
+            const el = document.getElementById(data);
+            const expected = ev.target.getAttribute('data-expected');
+            
+            if(el.getAttribute('data-val') === expected && !ev.target.hasChildNodes()) {
+                ev.target.appendChild(el);
+                el.draggable = false;
+                el.classList.add('!bg-green-500/40', '!border-green-400');
+                ev.target.classList.add('filled', 'border-green-400', 'bg-green-500/10');
+                l1Correct++;
+                if(l1Correct === 3) document.getElementById('l1-success').classList.remove('hidden');
+            } else {
+                el.classList.add('animate-[flashRed_0.4s_ease]');
+                setTimeout(() => el.classList.remove('animate-[flashRed_0.4s_ease]'), 400);
+            }
+        }
+
+        // Auto-Check Inputs
+        document.querySelectorAll('.quiz-input').forEach(input => {
+            input.addEventListener('input', function() {
+                const val = this.value.trim().toLowerCase().replace(/\s/g, "");
+                const answer = this.getAttribute('data-answer').toLowerCase().replace(/\s/g, "");
+                this.classList.remove('correct', 'incorrect');
+                if (val !== '') {
+                    if (val === answer) this.classList.add('correct');
+                    else this.classList.add('incorrect');
+                }
+            });
+        });
+        function applyEmbedMode() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get("embed") === "1") {
+                document.body.classList.add("embed-mode");
+            }
+            const levelParam = params.get("level");
+            if (levelParam) {
+                const level = Math.max(1, Math.min(3, parseInt(levelParam, 10) || 1));
+                setTimeout(() => openLevel(level), 150);
+            }
+        }
+
+        window.addEventListener("load", applyEmbedMode);
+    </script>
+</body>
+</html>

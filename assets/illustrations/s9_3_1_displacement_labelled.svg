@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" role="img">
+  <rect width="800" height="500" fill="#f0f9ff"/>
+  <text x="400" y="38" text-anchor="middle" font-size="20" font-weight="700" fill="#0c4a6e">Displacement method  irregular objects</text>
+  <rect x="280" y="70" width="120" height="320" rx="6" fill="#e0f2fe" stroke="#0284c7" stroke-width="3"/>
+  <rect x="284" y="200" width="112" height="186" fill="#38bdf8" fill-opacity="0.5"/>
+  <line x1="284" y1="200" x2="420" y2="200" stroke="#dc2626" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="430" y="205" fill="#dc2626" font-size="14" font-weight="600">56 cm≥</text>
+  <line x1="284" y1="386" x2="420" y2="386" stroke="#64748b" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="430" y="391" fill="#64748b" font-size="14">40 cm≥ before</text>
+  <ellipse cx="340" cy="260" rx="45" ry="35" fill="#78716c" stroke="#44403c" stroke-width="2"/>
+  <text x="340" y="265" text-anchor="middle" fill="#fff" font-size="12">rock</text>
+  <rect x="80" y="120" width="160" height="200" rx="8" fill="#fff" stroke="#334155" stroke-width="2"/>
+  <text x="160" y="150" text-anchor="middle" font-size="13" font-weight="600">Step 1</text>
+  <text x="160" y="180" text-anchor="middle" font-size="12">Read water level</text>
+  <text x="160" y="200" text-anchor="middle" font-size="12">with eye level</text>
+  <text x="160" y="230" text-anchor="middle" font-size="16" font-weight="700" fill="#0369a1">VÅ = 40 cm≥</text>
+  <rect x="540" y="120" width="180" height="200" rx="8" fill="#fff" stroke="#334155" stroke-width="2"/>
+  <text x="630" y="150" text-anchor="middle" font-size="13" font-weight="600">Step 2</text>
+  <text x="630" y="185" text-anchor="middle" font-size="12">Object fully under water</text>
+  <text x="630" y="230" text-anchor="middle" font-size="16" font-weight="700" fill="#0369a1">VÇ = 56 cm≥</text>
+  <rect x="120" y="410" width="560" height="56" rx="8" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+  <text x="400" y="445" text-anchor="middle" font-family="Consolas, monospace" font-size="18" font-weight="700" fill="#065f46">volume = 56  40 = 16 cm≥</text>
+</svg>

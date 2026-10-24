@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900">
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path d="M 0 1 L 9 5 L 0 9 z" fill="#111111" />
+</marker>
+
+</defs>
+<rect x="0" y="0" width="1200" height="900" fill="#ffffff" />
+<line x1="90" y1="720" x2="1110" y2="720" stroke="#111111" stroke-width="3" stroke-linecap="round" />
+<path d="M 155 400 L 170 718 L 330 718 L 345 400" fill="none" stroke="#111111" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" />
+<path d="M 164 520 L 170 718 L 330 718 L 336 520 Z" fill="#d4d4d4" stroke="#555555" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" />
+<line x1="164" y1="520" x2="336" y2="520" stroke="#555555" stroke-width="2" stroke-linecap="round" />
+<line x1="310" y1="560" x2="336" y2="560" stroke="#999999" stroke-width="1.5" stroke-linecap="round" />
+<line x1="310" y1="598" x2="336" y2="598" stroke="#999999" stroke-width="1.5" stroke-linecap="round" />
+<line x1="310" y1="636" x2="336" y2="636" stroke="#999999" stroke-width="1.5" stroke-linecap="round" />
+<line x1="310" y1="674" x2="336" y2="674" stroke="#999999" stroke-width="1.5" stroke-linecap="round" />
+<rect x="236" y="330" width="28" height="330" rx="14" fill="#ffffff" stroke="#111111" stroke-width="2.5" />
+<circle cx="250" cy="660" r="20" fill="#111111" />
+<rect x="244" y="560" width="12" height="80" fill="#111111" stroke="none" stroke-width="0" />
+<path d="M 360 300 L 400 300" fill="none" stroke="#555555" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" />
+<path d="M 505 400 L 520 718 L 680 718 L 695 400" fill="none" stroke="#111111" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" />
+<path d="M 514 520 L 520 718 L 680 718 L 686 520 Z" fill="#d4d4d4" stroke="#555555" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" />
+<line x1="514" y1="520" x2="686" y2="520" stroke="#555555" stroke-width="2" stroke-linecap="round" />
+<line x1="660" y1="560" x2="686" y2="560" stroke="#999999" stroke-width="1.5" stroke-linecap="round" />
+<line x1="660" y1="598" x2="686" y2="598" stroke="#999999" stroke-width="1.5" stroke-linecap="round" />
+<line x1="660" y1="636" x2="686" y2="636" stroke="#999999" stroke-width="1.5" stroke-linecap="round" />
+<line x1="660" y1="674" x2="686" y2="674" stroke="#999999" stroke-width="1.5" stroke-linecap="round" />
+<rect x="586" y="330" width="28" height="330" rx="14" fill="#ffffff" stroke="#111111" stroke-width="2.5" />
+<circle cx="600" cy="660" r="20" fill="#111111" />
+<rect x="594" y="490" width="12" height="150" fill="#111111" stroke="none" stroke-width="0" />
+<path d="M 710 300 L 750 300" fill="none" stroke="#555555" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" />
+<path d="M 855 400 L 870 718 L 1030 718 L 1045 400" fill="none" stroke="#111111" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" />
+<path d="M 864 520 L 870 718 L 1030 718 L 1036 520 Z" fill="#d4d4d4" stroke="#555555" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" />
+<line x1="864" y1="520" x2="1036" y2="520" stroke="#555555" stroke-width="2" stroke-linecap="round" />
+<line x1="1010" y1="560" x2="1036" y2="560" stroke="#999999" stroke-width="1.5" stroke-linecap="round" />
+<line x1="1010" y1="598" x2="1036" y2="598" stroke="#999999" stroke-width="1.5" stroke-linecap="round" />
+<line x1="1010" y1="636" x2="1036" y2="636" stroke="#999999" stroke-width="1.5" stroke-linecap="round" />
+<line x1="1010" y1="674" x2="1036" y2="674" stroke="#999999" stroke-width="1.5" stroke-linecap="round" />
+<rect x="936" y="330" width="28" height="330" rx="14" fill="#ffffff" stroke="#111111" stroke-width="2.5" />
+<circle cx="950" cy="660" r="20" fill="#111111" />
+<rect x="944" y="420" width="12" height="220" fill="#111111" stroke="none" stroke-width="0" />
+<path d="M 1060 300 L 1100 300" fill="none" stroke="#555555" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" />
+<text x="250" y="250" fill="#555555" font-family="Helvetica, Arial, sans-serif" font-size="28" font-weight="600" text-anchor="middle">cool</text>
+<text x="600" y="250" fill="#555555" font-family="Helvetica, Arial, sans-serif" font-size="28" font-weight="600" text-anchor="middle">warm</text>
+<text x="950" y="250" fill="#555555" font-family="Helvetica, Arial, sans-serif" font-size="28" font-weight="600" text-anchor="middle">hot</text>
+<text x="600" y="800" fill="#555555" font-family="Helvetica, Arial, sans-serif" font-size="28" font-weight="600" text-anchor="middle">same solvent volume in every beaker</text>
+</svg>

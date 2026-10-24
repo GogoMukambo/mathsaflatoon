@@ -1,0 +1,61 @@
+/* Year 6 Maths Ch1 — Nice Blue Integers Quest (embedded shell) */
+
+#reader.panel.y6-ch1-integers-theme {
+  background: linear-gradient(135deg, #020617, #1e3a8a, #3b82f6);
+  background-attachment: fixed;
+  border: none;
+  box-shadow: none;
+}
+
+#reader.y6-ch1-integers-theme .reader-doc {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0 0.5rem 0.75rem;
+}
+
+#reader.y6-ch1-integers-theme .reader-header,
+#reader.y6-ch1-integers-theme .reader-topic-bar {
+  display: none;
+}
+
+#reader.y6-ch1-integers-theme .y6-ch1-quest-shell {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+#reader.y6-ch1-integers-theme .y6-integers-module-wrap {
+  margin: 0;
+}
+
+#reader.y6-ch1-integers-theme .y6-integers-module-frame {
+  display: block;
+  width: 100%;
+  min-height: min(92vh, 960px);
+  height: min(92vh, 960px);
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  box-shadow: none;
+}
+
+#reader.y6-ch1-integers-theme .reader-chapter-nav {
+  margin-top: 0.65rem;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 14px;
+  color: #fff;
+}
+
+#reader.y6-ch1-integers-theme .reader-chapter-nav .ghost,
+#reader.y6-ch1-integers-theme .reader-chapter-nav .primary {
+  border-radius: 999px;
+  font-weight: 800;
+}
+
+#reader.y6-ch1-integers-theme .reader-topic-status {
+  color: rgba(255, 255, 255, 0.9);
+}

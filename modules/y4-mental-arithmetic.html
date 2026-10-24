@@ -1,0 +1,1851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Year 4 Mental Maths Quest</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Nunito', sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+    
+    .font-brand {
+      font-family: 'Fredoka', cursive;
+    }
+
+    .btn-3d {
+      transition: all 0.1s ease-in-out;
+      position: relative;
+    }
+    .btn-3d:active {
+      transform: translateY(3px);
+    }
+
+    .keypad-btn {
+      transition: transform 0.08s ease, filter 0.08s ease;
+      box-shadow: 0 5px 0 rgba(0, 0, 0, 0.35);
+    }
+    .keypad-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
+    }
+
+    @keyframes floaty {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-8px) rotate(2deg); }
+    }
+    .animate-float {
+      animation: floaty 3.2s ease-in-out infinite;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 14px rgba(251, 191, 36, 0.45); }
+      50% { box-shadow: 0 0 30px rgba(245, 158, 11, 0.9); }
+    }
+    .streak-glow {
+      animation: pulseGlow 1.2s infinite;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-10px); }
+      40%, 80% { transform: translateX(10px); }
+    }
+    .shake-error {
+      animation: shake 0.35s ease-in-out;
+    }
+
+    @keyframes popCorrect {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.06); }
+      100% { transform: scale(1); }
+    }
+    .pop-success {
+      animation: popCorrect 0.32s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    @media print {
+      body {
+        background: white !important;
+        color: black !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      #modalStats {
+        position: static !important;
+        background: white !important;
+        color: black !important;
+        padding: 0 !important;
+        display: block !important;
+      }
+      #modalStats > div {
+        border: none !important;
+        box-shadow: none !important;
+        max-width: 100% !important;
+        background: white !important;
+        color: black !important;
+      }
+      .text-white, .text-purple-100, .text-purple-200, .text-purple-300, .text-amber-300 {
+        color: #111827 !important;
+      }
+      .bg-white\/5, .bg-black\/30, .bg-black\/40 {
+        background: #f3f4f6 !important;
+        border: 1px solid #d1d5db !important;
+      }
+    }
+
+    html, body {
+      height: 100%;
+      max-height: 100vh;
+    }
+
+    main.y4-mental-main {
+      min-height: 0;
+      overflow-y: auto;
+    }
+
+    body.embed-mode header.y4-mental-quest-header {
+      display: none !important;
+    }
+
+    body.embed-mode {
+      overflow: hidden;
+    }
+
+    body.embed-mode main.y4-mental-main {
+      max-height: 100vh;
+      height: 100vh;
+      padding-top: 0.75rem;
+      padding-bottom: 1rem;
+    }
+
+    body:not(.embed-mode) main.y4-mental-main {
+      max-height: calc(100vh - 7rem);
+    }
+  </style>
+</head>
+
+<body class="bg-gradient-to-b from-slate-950 via-teal-950 to-blue-950 text-white min-h-screen w-full flex flex-col justify-between p-4 md:p-6 lg:p-8 select-none">
+
+  <!-- ============================================== -->
+  <!-- TOP NAVIGATION HEADER & ACTIVE PLAYER PROFILE  -->
+  <!-- ============================================== -->
+  <header class="y4-mental-quest-header w-full max-w-7xl mx-auto flex items-center justify-between py-3.5 px-6 md:px-8 bg-white/10 backdrop-blur-md rounded-3xl border border-white/15 shadow-2xl mb-4 no-print">
+    <div class="flex items-center gap-3 md:gap-4 min-w-0">
+      <a href="../?year=4" class="no-print shrink-0 w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/15 flex items-center justify-center text-lg font-bold text-amber-200" title="Back to subjects" aria-label="Back to subjects">←</a>
+      <div class="flex items-center gap-4 cursor-pointer min-w-0" onclick="goHome()">
+      <div class="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br from-amber-400 via-orange-500 to-rose-500 flex items-center justify-center text-3xl md:text-4xl shadow-lg transform hover:rotate-6 transition shrink-0">
+        ⚡
+      </div>
+      <div class="min-w-0">
+        <h1 class="font-brand font-bold text-2xl md:text-3xl lg:text-4xl leading-tight tracking-wide text-amber-300">Year 4 Maths Quest</h1>
+        <p class="text-sm md:text-base text-cyan-200 font-semibold truncate sm:whitespace-normal">Mental Arithmetic & Times Tables Mastery</p>
+      </div>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3 md:gap-4">
+      <!-- Player Profile Pill Button -->
+      <button onclick="openUserModal()" class="flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-teal-900/80 hover:bg-teal-800 border border-teal-400/40 text-base md:text-lg font-bold shadow-md active:scale-95 transition" title="Switch or edit player profile">
+        <span id="headerPlayerAvatar" class="text-2xl md:text-3xl">🦁</span>
+        <span id="headerPlayerName" class="max-w-[140px] md:max-w-[200px] truncate text-amber-200">Leo</span>
+        <span class="text-xs bg-white/20 px-2 py-0.5 rounded-lg text-cyan-200 uppercase font-extrabold tracking-wider">Switch</span>
+      </button>
+
+      <!-- Stats Comparison Modal Trigger -->
+      <button onclick="openStatsModal()" class="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-emerald-600/80 hover:bg-emerald-500 border border-emerald-400/40 text-base md:text-lg font-bold text-emerald-100 shadow-md active:scale-95 transition" title="View Progress & Diagnostic Stats">
+        <span>📊</span>
+        <span>Stats</span>
+      </button>
+
+      <!-- Sound Toggle -->
+      <button id="soundToggleBtn" onclick="toggleMute()" class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-teal-800/60 hover:bg-teal-700 border border-teal-400/30 flex items-center justify-center text-xl md:text-2xl shadow active:scale-95 transition" title="Toggle Sound">
+        🔊
+      </button>
+
+      <!-- Trophy Cabinet Modal -->
+      <button onclick="showBadgesModal()" class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-amber-500/30 hover:bg-amber-500/40 border border-amber-300/40 flex items-center justify-center text-xl md:text-2xl text-amber-300 shadow active:scale-95 transition" title="Trophy Cabinet">
+        🏆
+      </button>
+    </div>
+  </header>
+
+  <!-- ============================================== -->
+  <!-- MAIN FULL-SCREEN APP CONTAINER                 -->
+  <!-- ============================================== -->
+  <main class="y4-mental-main w-full flex-1 flex flex-col justify-center items-center relative z-10 px-2 md:px-4">
+    
+    <!-- ============================================== -->
+    <!-- SCREEN 1: MAIN MENU (YEAR 4 MODULE DASHBOARD)  -->
+    <!-- ============================================== -->
+    <div id="screenMenu" class="w-full max-w-7xl flex flex-col items-center gap-5">
+      
+      <!-- Welcome Hero Card & Calibrated Percentile Medal Targets -->
+      <div class="w-full bg-gradient-to-br from-teal-900/90 via-slate-900/90 to-blue-950/90 p-5 md:p-8 rounded-3xl border border-teal-400/30 shadow-2xl backdrop-blur-md text-center relative overflow-hidden">
+        <div class="absolute -right-8 -bottom-8 w-44 h-44 bg-cyan-500/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-8 -top-8 w-44 h-44 bg-amber-400/15 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="flex items-center justify-center gap-4 mb-3">
+          <div class="inline-block p-3.5 bg-white/10 rounded-3xl animate-float shadow-inner">
+            <span class="text-4xl md:text-5xl" id="mascotIcon">🦊</span>
+          </div>
+          <div class="text-left">
+            <h2 class="text-2xl md:text-4xl font-brand font-bold text-amber-300 tracking-wide">
+              Ready, <span id="welcomePlayerName">Leo</span>?
+            </h2>
+            <p class="text-cyan-100 text-base md:text-lg font-semibold">
+              Master Year 4 multiplication tables and arithmetic! Beat high scores across all modules!
+            </p>
+          </div>
+        </div>
+
+        <!-- Calibrated Percentile Targets Legend (10% Gold / 30% Silver / 70% Bronze) -->
+        <div class="mt-4 pt-4 border-t border-white/15 flex flex-wrap items-center justify-center gap-4 md:gap-6 text-sm md:text-base font-bold">
+          <span class="text-cyan-200 font-brand text-lg">🎯 Medal Standards:</span>
+          <span class="inline-flex items-center gap-1.5 bg-amber-400/20 border border-amber-300/40 text-amber-300 px-3.5 py-1 rounded-xl">
+            🥇 Gold: Top 10% (&gt;240 pts)
+          </span>
+          <span class="inline-flex items-center gap-1.5 bg-slate-300/20 border border-slate-300/40 text-slate-200 px-3.5 py-1 rounded-xl">
+            🥈 Silver: Top 30% (&gt;140 pts)
+          </span>
+          <span class="inline-flex items-center gap-1.5 bg-amber-700/30 border border-amber-600/40 text-amber-200 px-3.5 py-1 rounded-xl">
+            🥉 Bronze: Top 70% (&gt;50 pts)
+          </span>
+        </div>
+      </div>
+
+      <!-- Quick Session Options: Timed Blitz vs 15-Question Mastery -->
+      <div class="w-full flex items-center justify-between p-3.5 md:p-4 bg-white/5 rounded-3xl border border-white/10">
+        <div class="flex items-center gap-3">
+          <span class="text-base md:text-lg font-bold text-cyan-200 font-brand">Mode:</span>
+          <span class="text-sm md:text-base text-teal-200" id="modeDescription">60 seconds fast challenge</span>
+        </div>
+        <div class="flex gap-3">
+          <button id="modeTimedBtn" onclick="setSessionType('timed')" class="px-5 py-2.5 text-sm md:text-base font-bold rounded-2xl bg-amber-400 text-slate-950 shadow-lg font-brand active:scale-95 transition">
+            ⏱️ 60s Blitz
+          </button>
+          <button id="modePracticeBtn" onclick="setSessionType('practice')" class="px-5 py-2.5 text-sm md:text-base font-bold rounded-2xl bg-white/10 text-white hover:bg-white/20 font-brand active:scale-95 transition">
+            🌱 15 Qs Quest
+          </button>
+        </div>
+      </div>
+
+      <!-- 5 Core Year 4 Curriculum Modules Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+        
+        <!-- Module 1: Times Tables Safari (up to 12x12) -->
+        <div class="bg-gradient-to-r from-emerald-950/90 to-teal-950/90 border border-emerald-500/30 hover:border-emerald-400 rounded-3xl p-5 shadow-xl flex flex-col justify-between transition group">
+          <div>
+            <div class="flex items-center gap-3 mb-2">
+              <div class="text-3xl p-2.5 bg-emerald-500/20 rounded-2xl group-hover:scale-110 transition">🦁</div>
+              <h3 class="font-bold text-lg md:text-xl text-white font-brand">Times Tables Safari</h3>
+            </div>
+            <p class="text-sm text-emerald-200">Instant recall of multiplication facts from 2× up to 12×12</p>
+          </div>
+          
+          <div class="mt-4 pt-3 border-t border-emerald-800/60">
+            <div class="flex items-center justify-between mb-3 text-sm">
+              <div>
+                <span class="text-emerald-300 font-semibold">High Score:</span>
+                <span id="cardScore_tables" class="font-black text-amber-300 text-lg ml-1">0</span>
+                <span id="cardMedalBadge_tables" class="ml-1 inline-flex items-center px-2 py-0.5 rounded-lg text-xs font-bold bg-white/10">⭐ No Medal</span>
+              </div>
+              <div id="targetBadge_tables" class="bg-emerald-950/80 border border-emerald-400/40 text-emerald-300 px-2.5 py-1 rounded-xl text-xs font-bold">
+                🥉 Need 51+ for Bronze
+              </div>
+            </div>
+            <button onclick="startGame('tables')" class="btn-3d w-full py-3 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 border-b-4 border-emerald-800 rounded-2xl font-bold text-base shadow-lg font-brand">
+              Conquer Tables ➔
+            </button>
+          </div>
+        </div>
+
+        <!-- Module 2: Division Detective -->
+        <div class="bg-gradient-to-r from-blue-950/90 to-cyan-950/90 border border-cyan-500/30 hover:border-cyan-400 rounded-3xl p-5 shadow-xl flex flex-col justify-between transition group">
+          <div>
+            <div class="flex items-center gap-3 mb-2">
+              <div class="text-3xl p-2.5 bg-cyan-500/20 rounded-xl group-hover:scale-110 transition">🔍</div>
+              <h3 class="font-bold text-lg md:text-xl text-white font-brand">Division Detective</h3>
+            </div>
+            <p class="text-sm text-cyan-200">Inverse division facts up to 144 ÷ 12 and missing factor puzzles</p>
+          </div>
+          
+          <div class="mt-4 pt-3 border-t border-cyan-800/60">
+            <div class="flex items-center justify-between mb-3 text-sm">
+              <div>
+                <span class="text-cyan-300 font-semibold">High Score:</span>
+                <span id="cardScore_division" class="font-black text-amber-300 text-lg ml-1">0</span>
+                <span id="cardMedalBadge_division" class="ml-1 inline-flex items-center px-2 py-0.5 rounded-lg text-xs font-bold bg-white/10">⭐ No Medal</span>
+              </div>
+              <div id="targetBadge_division" class="bg-cyan-950/80 border border-cyan-400/40 text-cyan-300 px-2.5 py-1 rounded-xl text-xs font-bold">
+                🥉 Need 51+ for Bronze
+              </div>
+            </div>
+            <button onclick="startGame('division')" class="btn-3d w-full py-2.5 md:py-3 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 border-b-4 border-cyan-800 rounded-2xl font-bold text-base shadow-lg font-brand">
+              Solve Inverses ➔
+            </button>
+          </div>
+        </div>
+
+        <!-- Module 3: Addition Archer (Mental Bridging & Sums) -->
+        <div class="bg-gradient-to-r from-teal-950/90 to-indigo-950/90 border border-teal-500/30 hover:border-teal-400 rounded-3xl p-5 shadow-xl flex flex-col justify-between transition group">
+          <div>
+            <div class="flex items-center gap-3 mb-2">
+              <div class="text-3xl p-2.5 bg-teal-500/20 rounded-xl group-hover:scale-110 transition">🏹</div>
+              <h3 class="font-bold text-lg md:text-xl text-white font-brand">Addition Archer</h3>
+            </div>
+            <p class="text-sm text-teal-200">2-digit bridging (47 + 38) and 3-digit mental sums (350 + 280)</p>
+          </div>
+          
+          <div class="mt-4 pt-3 border-t border-teal-800/60">
+            <div class="flex items-center justify-between mb-3 text-sm">
+              <div>
+                <span class="text-teal-300 font-semibold">High Score:</span>
+                <span id="cardScore_addition" class="font-black text-amber-300 text-lg ml-1">0</span>
+                <span id="cardMedalBadge_addition" class="ml-1 inline-flex items-center px-2 py-0.5 rounded-lg text-xs font-bold bg-white/10">⭐ No Medal</span>
+              </div>
+              <div id="targetBadge_addition" class="bg-teal-950/80 border border-teal-400/40 text-teal-300 px-2.5 py-1 rounded-xl text-xs font-bold">
+                🥉 Need 51+ for Bronze
+              </div>
+            </div>
+            <button onclick="startGame('addition')" class="btn-3d w-full py-2.5 md:py-3 bg-gradient-to-r from-teal-500 to-indigo-500 hover:from-teal-400 hover:to-indigo-400 border-b-4 border-teal-800 rounded-2xl font-bold text-base shadow-lg font-brand">
+              Add Swiftly ➔
+            </button>
+          </div>
+        </div>
+
+        <!-- Module 4: Subtraction Sprint -->
+        <div class="bg-gradient-to-r from-amber-950/90 to-orange-950/90 border border-amber-500/30 hover:border-amber-400 rounded-3xl p-5 shadow-xl flex flex-col justify-between transition group">
+          <div>
+            <div class="flex items-center gap-3 mb-2">
+              <div class="text-3xl p-2.5 bg-amber-500/20 rounded-xl group-hover:scale-110 transition">⚡</div>
+              <h3 class="font-bold text-lg md:text-xl text-white font-brand">Subtraction Sprint</h3>
+            </div>
+            <p class="text-sm text-amber-200">Mental differences with bridging (92 - 47) and multiples of 10 & 100</p>
+          </div>
+          
+          <div class="mt-4 pt-3 border-t border-amber-800/60">
+            <div class="flex items-center justify-between mb-3 text-sm">
+              <div>
+                <span class="text-amber-300 font-semibold">High Score:</span>
+                <span id="cardScore_subtraction" class="font-black text-amber-300 text-lg ml-1">0</span>
+                <span id="cardMedalBadge_subtraction" class="ml-1 inline-flex items-center px-2 py-0.5 rounded-lg text-xs font-bold bg-white/10">⭐ No Medal</span>
+              </div>
+              <div id="targetBadge_subtraction" class="bg-amber-950/80 border border-amber-400/40 text-amber-300 px-2.5 py-1 rounded-xl text-xs font-bold">
+                🥉 Need 51+ for Bronze
+              </div>
+            </div>
+            <button onclick="startGame('subtraction')" class="btn-3d w-full py-2.5 md:py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 border-b-4 border-amber-800 rounded-2xl font-bold text-base shadow-lg font-brand">
+              Sprint Differences ➔
+            </button>
+          </div>
+        </div>
+
+        <!-- Module 5: Grand Champion Mixed Dash (Expanded Span) -->
+        <div class="md:col-span-2 lg:col-span-2 bg-gradient-to-r from-fuchsia-950/90 via-rose-950/90 to-purple-950/90 border-2 border-fuchsia-500/40 hover:border-fuchsia-400 rounded-3xl p-5 shadow-2xl flex flex-col justify-between group">
+          <div class="flex items-start gap-4 mb-2">
+            <div class="text-4xl p-3 bg-fuchsia-500/20 rounded-2xl group-hover:scale-110 transition">👑</div>
+            <div>
+              <h3 class="font-bold text-xl md:text-2xl text-white font-brand">Grand Champion Mixed Dash</h3>
+              <p class="text-sm text-pink-200 mt-1">Rapid-fire combined challenge: tables, division, addition, and subtraction</p>
+            </div>
+          </div>
+          
+          <div class="mt-4 pt-3 border-t border-fuchsia-800/60 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+              <span class="text-pink-300 text-sm font-semibold">High Score:</span>
+              <span id="cardScore_grandchampion" class="font-black text-amber-300 text-2xl">0</span>
+              <span id="cardMedalBadge_grandchampion" class="inline-flex items-center px-2.5 py-0.5 rounded-lg text-xs font-bold bg-white/10">⭐ No Medal</span>
+              <span id="targetBadge_grandchampion" class="text-xs text-pink-300 font-bold ml-2">🥉 Need 51+ for Bronze</span>
+            </div>
+            <button onclick="startGame('grandchampion')" class="btn-3d py-3 px-8 w-full sm:w-auto bg-gradient-to-r from-fuchsia-500 to-rose-500 hover:from-fuchsia-400 hover:to-rose-400 border-b-4 border-rose-800 rounded-2xl font-bold text-base shadow-xl font-brand whitespace-nowrap">
+              Challenge All Operations ➔
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Quick Action: Diagnostic Analytics & Report -->
+      <button onclick="openStatsModal()" class="w-full py-3.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-3xl text-base md:text-lg font-bold text-cyan-200 flex items-center justify-center gap-3 transition">
+        <span>📈</span>
+        <span>View Year 4 Diagnostic Assessment & Module Comparison</span>
+      </button>
+
+    </div>
+
+    <!-- ============================================== -->
+    <!-- SCREEN 2: ACTIVE GAMEPLAY (FULL SCREEN)        -->
+    <!-- ============================================== -->
+    <div id="screenGame" class="hidden w-full max-w-6xl flex flex-col gap-4">
+      
+      <!-- Top Game Bar: Exit Button, Score, Next Medal Target, and Timer -->
+      <div class="w-full bg-white/10 backdrop-blur-md p-4 md:p-5 rounded-3xl border border-white/10 flex items-center justify-between gap-4">
+        
+        <!-- Cancel / Exit Quest Button -->
+        <button onclick="requestExitQuest()" class="px-4 py-2.5 md:px-5 md:py-3 rounded-2xl bg-rose-600/80 hover:bg-rose-500 border border-rose-400/40 text-sm md:text-base font-bold text-rose-100 shadow flex items-center gap-2 active:scale-95 transition" title="Exit Quest">
+          <span>🚪</span>
+          <span>Exit Quest</span>
+        </button>
+
+        <!-- Current Score & Medal Tracker -->
+        <div class="flex items-center gap-4 md:gap-6">
+          <div class="text-left">
+            <span class="text-xs uppercase font-extrabold text-cyan-300 tracking-wider block">Score</span>
+            <span id="scoreDisplay" class="text-2xl md:text-4xl font-black text-amber-300">0</span>
+          </div>
+
+          <!-- Current Medal Tracker -->
+          <div class="text-left border-l border-white/20 pl-4">
+            <span class="text-xs uppercase font-extrabold text-cyan-300 tracking-wider block">Current Medal</span>
+            <span id="inGameMedalBadge" class="text-base md:text-lg font-bold text-amber-200">⭐ Need 51+</span>
+          </div>
+
+          <div id="streakBadge" class="hidden px-3 py-1 md:px-4 md:py-1.5 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 font-extrabold text-sm md:text-base text-white shadow-lg streak-glow">
+            🔥 <span id="streakCount">0</span>x Streak!
+          </div>
+        </div>
+
+        <!-- Mascot & Timer / Counter -->
+        <div class="flex items-center gap-3 md:gap-4 text-right">
+          <span id="mascotReaction" class="text-3xl md:text-4xl animate-bounce">🤔</span>
+          <div>
+            <span id="timeLabel" class="text-xs uppercase font-extrabold text-cyan-300 tracking-wider block">Time Left</span>
+            <span id="timeDisplay" class="text-2xl md:text-4xl font-black text-emerald-400">60s</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- In-Game Medal Progress Bar Indicator -->
+      <div class="w-full bg-white/5 rounded-2xl border border-white/10 px-5 py-2.5 flex items-center justify-between text-sm md:text-base">
+        <div class="flex items-center gap-2">
+          <span class="text-cyan-300 font-bold">Target:</span>
+          <span id="inGameMedalDistance" class="font-bold text-amber-300">Need 51 pts for Bronze 🥉 (Top 70%)</span>
+        </div>
+        <div class="text-teal-200 hidden sm:block font-semibold">
+          Bronze &gt;50 | Silver &gt;140 | Gold &gt;240
+        </div>
+      </div>
+
+      <!-- Time or Question Progress Bar -->
+      <div class="w-full bg-slate-900/90 rounded-full h-3 md:h-4 p-0.5 overflow-hidden border border-white/10 shadow-inner">
+        <div id="progressBar" class="bg-gradient-to-r from-emerald-400 via-yellow-400 to-amber-500 h-full rounded-full w-full transition-all duration-300"></div>
+      </div>
+
+      <!-- Large Question Card Area -->
+      <div id="questionCard" class="w-full bg-gradient-to-br from-teal-950/90 via-slate-900/90 to-blue-950/90 border-2 border-teal-400/40 rounded-3xl p-6 md:p-10 shadow-2xl flex flex-col items-center justify-center relative min-h-[220px] md:min-h-[260px]">
+        
+        <!-- Feedback badge popup -->
+        <div id="feedbackToast" class="absolute top-3 transition-all duration-300 opacity-0 transform -translate-y-2 pointer-events-none text-base md:text-lg font-bold px-5 py-1.5 rounded-full shadow-xl">
+          Brilliant!
+        </div>
+
+        <!-- Question Category / Module Name -->
+        <div class="text-cyan-200 text-sm md:text-base font-semibold tracking-wider uppercase mb-2 font-brand" id="topicLabel">
+          Year 4 Arithmetic
+        </div>
+        
+        <!-- Large Equation Display -->
+        <div class="flex items-center justify-center gap-4 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-white py-2 font-brand text-center">
+          <span id="mathQuestion">7 × 8 = ?</span>
+        </div>
+
+        <!-- User Answer Display Box -->
+        <div class="mt-4 w-72 md:w-96 h-14 md:h-16 rounded-3xl bg-black/50 border-2 border-amber-400/70 flex items-center justify-center text-3xl md:text-4xl font-black text-amber-300 tracking-widest shadow-inner">
+          <span id="userAnswerText">_</span>
+        </div>
+      </div>
+
+      <!-- Full-Width Responsive Numeric Keypad -->
+      <div class="w-full max-w-2xl mx-auto grid grid-cols-3 gap-3 md:gap-4 pt-1" id="keypadGrid">
+        <!-- Rendered by JS -->
+      </div>
+
+      <div class="text-center text-sm md:text-base text-cyan-200 mt-1">
+        💡 Keyboard supported: <span class="font-bold text-amber-300">0–9</span>, <span class="font-bold text-amber-300">Backspace</span>, <span class="font-bold text-amber-300">Enter</span>, and <span class="font-bold text-amber-300">Esc</span> to exit!
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- SCREEN 3: RESULTS & MISTAKE REVIEW             -->
+    <!-- ============================================== -->
+    <div id="screenSummary" class="hidden w-full max-w-4xl flex flex-col gap-5">
+      <div class="w-full bg-gradient-to-b from-teal-950 via-slate-900 to-blue-950 p-6 md:p-10 rounded-3xl border border-teal-400/30 text-center shadow-2xl relative overflow-hidden">
+        
+        <!-- Large Medal Icon & Earned Medal Banner -->
+        <div class="text-7xl md:text-8xl mb-2" id="summaryMedal">🌟</div>
+        
+        <div class="inline-flex items-center gap-2.5 px-5 py-1.5 rounded-full text-base md:text-lg font-black mb-2 font-brand" id="summaryEarnedMedalBadge">
+          <!-- Populated by JS -->
+        </div>
+
+        <h2 class="text-3xl md:text-5xl font-brand font-bold text-amber-300" id="summaryTitle">Quest Complete!</h2>
+        <p class="text-cyan-100 text-base md:text-lg mt-1" id="summaryFeedback">Outstanding mathematical reasoning!</p>
+
+        <!-- Medal Distance Status Banner -->
+        <div id="summaryMedalDistanceBanner" class="my-3 p-3 bg-white/5 border border-white/10 rounded-2xl text-sm md:text-base font-semibold text-cyan-200">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- New High Score Alert Banner -->
+        <div id="newHighScoreBanner" class="hidden my-3 p-3 bg-gradient-to-r from-amber-500/30 to-orange-500/30 border border-amber-400 rounded-2xl flex items-center justify-center gap-3 streak-glow">
+          <span class="text-3xl">🎉</span>
+          <span class="text-base md:text-lg font-black text-amber-200 font-brand">NEW PERSONAL RECORD BEATEN IN THIS MODULE!</span>
+        </div>
+
+        <!-- Stats Breakdown Matrix -->
+        <div class="grid grid-cols-3 gap-3 md:gap-4 my-4 max-w-xl mx-auto">
+          <div class="bg-black/40 p-3 md:p-4 rounded-2xl border border-white/10">
+            <span class="text-xs md:text-sm font-bold text-cyan-300 block">Round Score</span>
+            <span class="text-2xl md:text-4xl font-black text-amber-400" id="sumFinalScore">0</span>
+          </div>
+          <div class="bg-black/40 p-3 md:p-4 rounded-2xl border border-white/10">
+            <span class="text-xs md:text-sm font-bold text-cyan-300 block">Accuracy</span>
+            <span class="text-2xl md:text-4xl font-black text-emerald-400" id="sumAccuracy">0%</span>
+          </div>
+          <div class="bg-black/40 p-3 md:p-4 rounded-2xl border border-white/10">
+            <span class="text-xs md:text-sm font-bold text-cyan-300 block">Best Streak</span>
+            <span class="text-2xl md:text-4xl font-black text-orange-400" id="sumStreak">0🔥</span>
+          </div>
+        </div>
+
+        <!-- Badges Earned Banner -->
+        <div id="newBadgeAwarded" class="hidden my-3 p-3.5 bg-amber-400/20 border border-amber-300/40 rounded-2xl flex items-center justify-center gap-4">
+          <span class="text-4xl" id="awardedBadgeIcon">🎖️</span>
+          <div class="text-left">
+            <div class="text-xs md:text-sm uppercase font-extrabold text-amber-300 font-brand">New Trophy Unlocked!</div>
+            <div class="text-base md:text-lg font-bold text-white" id="awardedBadgeName">Times Tables Master</div>
+          </div>
+        </div>
+
+        <!-- Mistakes Review List -->
+        <div id="mistakesContainer" class="text-left mt-4 border-t border-white/10 pt-4">
+          <h4 class="text-base md:text-lg font-bold text-cyan-200 mb-3 flex items-center gap-2 font-brand">
+            <span>📝</span> Mistakes Review:
+          </h4>
+          <div id="mistakesList" class="max-h-48 overflow-y-auto no-scrollbar space-y-2">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row gap-3 mt-6">
+          <button onclick="restartCurrentMode()" class="btn-3d flex-1 py-3.5 bg-gradient-to-r from-amber-500 to-orange-500 border-b-4 border-orange-700 rounded-2xl font-bold text-base md:text-lg shadow-lg hover:brightness-110 font-brand">
+            Try to Beat Score 🔄
+          </button>
+          <button onclick="openStatsModal()" class="btn-3d flex-1 py-3.5 bg-emerald-600 hover:bg-emerald-500 border-b-4 border-emerald-800 rounded-2xl font-bold text-base md:text-lg shadow-lg font-brand">
+            View Diagnostic Stats 📊
+          </button>
+          <button onclick="goHome()" class="btn-3d flex-1 py-3.5 bg-teal-700 hover:bg-teal-600 border-b-4 border-teal-900 rounded-2xl font-bold text-base md:text-lg shadow-lg font-brand">
+            Main Menu 🏠
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ============================================== -->
+  <!-- MODAL 1: EXIT / CANCEL QUEST CONFIRMATION      -->
+  <!-- ============================================== -->
+  <div id="modalCancelQuest" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-slate-950 border-2 border-rose-500/60 w-full max-w-md rounded-3xl p-6 md:p-8 shadow-2xl text-center">
+      <div class="text-5xl mb-3">⚠️</div>
+      <h3 class="text-2xl md:text-3xl font-bold font-brand text-rose-300">Cancel This Quest?</h3>
+      <p class="text-base text-cyan-100 mt-2 mb-5">
+        Do you really want to exit? Your ongoing round progress and current streak will not be saved!
+      </p>
+
+      <div class="flex flex-col gap-3">
+        <button onclick="resumeQuest()" class="btn-3d w-full py-3 bg-emerald-600 hover:bg-emerald-500 border-b-4 border-emerald-800 rounded-2xl font-bold text-base md:text-lg font-brand text-white shadow">
+          Keep Playing! 🚀
+        </button>
+        <button onclick="confirmExitQuest()" class="btn-3d w-full py-2.5 bg-rose-700 hover:bg-rose-600 border-b-3 border-rose-900 rounded-2xl font-bold text-sm md:text-base font-brand text-rose-100">
+          Yes, Quit to Menu
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- MODAL 2: USER PROFILE & CHILD SWITCHER         -->
+  <!-- ============================================== -->
+  <div id="modalUsers" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-slate-950 border border-teal-400/40 w-full max-w-lg rounded-3xl p-6 shadow-2xl flex flex-col max-h-[90vh]">
+      <div class="flex justify-between items-center mb-4">
+        <div class="flex items-center gap-3">
+          <span class="text-3xl">👥</span>
+          <h3 class="text-2xl font-bold font-brand text-amber-300">Player Profiles</h3>
+        </div>
+        <button onclick="closeUserModal()" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center font-bold text-lg">✕</button>
+      </div>
+
+      <p class="text-sm md:text-base text-cyan-200 mb-4">Select or create a Year 4 profile to store high scores and diagnostic reports:</p>
+
+      <!-- Existing Users List -->
+      <div id="usersList" class="flex flex-col gap-2.5 overflow-y-auto max-h-56 pr-1 no-scrollbar mb-4">
+        <!-- Populated by JS -->
+      </div>
+
+      <!-- Add New Player Form -->
+      <div class="p-4 bg-white/5 rounded-2xl border border-white/10">
+        <h4 class="text-sm md:text-base font-bold text-cyan-200 mb-2 font-brand">Add New Year 4 Student:</h4>
+        <div class="flex items-center gap-2 mb-3">
+          <input id="newPlayerNameInput" type="text" placeholder="Enter name..." maxlength="15" class="flex-1 bg-black/40 border border-teal-400/40 rounded-xl px-4 py-2.5 text-base text-white placeholder-cyan-300/50 focus:outline-none focus:border-amber-400">
+          <select id="newPlayerAvatarSelect" class="bg-teal-950 border border-teal-400/40 rounded-xl px-3 py-2.5 text-xl focus:outline-none">
+            <option value="🦁">🦁</option>
+            <option value="🚀">🚀</option>
+            <option value="🦉">🦉</option>
+            <option value="🦊">🦊</option>
+            <option value="⚡">⚡</option>
+            <option value="🐬">🐬</option>
+            <option value="🦄">🦄</option>
+            <option value="🏆">🏆</option>
+          </select>
+        </div>
+        <button onclick="addNewPlayer()" class="btn-3d w-full py-2.5 bg-gradient-to-r from-emerald-500 to-green-600 border-b-3 border-green-800 rounded-xl font-bold text-base font-brand text-white shadow">
+          + Create Profile
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- MODAL 3: YEAR 4 STATS & DIAGNOSTIC DASHBOARD   -->
+  <!-- ============================================== -->
+  <div id="modalStats" class="fixed inset-0 bg-black/85 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-slate-950 border border-teal-400/40 w-full max-w-4xl rounded-3xl p-6 md:p-8 shadow-2xl flex flex-col max-h-[92vh] overflow-hidden">
+      
+      <!-- Modal Header -->
+      <div class="flex justify-between items-center pb-3 border-b border-white/10">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-cyan-500/30 border border-cyan-400/40 flex items-center justify-center text-2xl">
+            📈
+          </div>
+          <div>
+            <h3 class="text-xl md:text-2xl font-bold font-brand text-amber-300">
+              <span id="statsPlayerNameTitle">Leo</span>'s Year 4 Diagnostic Report
+            </h3>
+            <p class="text-sm text-cyan-200">Mental Arithmetic Mastery & Medal Standings</p>
+          </div>
+        </div>
+        <button onclick="closeStatsModal()" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center font-bold text-lg no-print">✕</button>
+      </div>
+
+      <!-- Printable and Scrollable Content Area -->
+      <div class="flex-1 overflow-y-auto no-scrollbar py-4 space-y-4" id="statsScrollContainer">
+        
+        <!-- Summary Top Cards -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+          <div class="bg-white/5 p-3 rounded-2xl border border-white/10">
+            <span class="text-xs text-cyan-300 block font-semibold">Total Quests</span>
+            <span id="statsTotalGames" class="text-2xl md:text-3xl font-black text-amber-300">0</span>
+          </div>
+          <div class="bg-white/5 p-3 rounded-2xl border border-white/10">
+            <span class="text-xs text-cyan-300 block font-semibold">Questions Solved</span>
+            <span id="statsTotalQuestions" class="text-2xl md:text-3xl font-black text-emerald-400">0</span>
+          </div>
+          <div class="bg-white/5 p-3 rounded-2xl border border-white/10">
+            <span class="text-xs text-cyan-300 block font-semibold">Overall Accuracy</span>
+            <span id="statsOverallAccuracy" class="text-2xl md:text-3xl font-black text-cyan-400">0%</span>
+          </div>
+          <div class="bg-white/5 p-3 rounded-2xl border border-white/10">
+            <span class="text-xs text-cyan-300 block font-semibold">Total High Points</span>
+            <span id="statsTotalScore" class="text-2xl md:text-3xl font-black text-pink-400">0</span>
+          </div>
+        </div>
+
+        <!-- Medal Standards Reference Box -->
+        <div class="p-3 bg-white/5 rounded-2xl border border-white/10 flex flex-wrap items-center justify-between text-sm gap-2">
+          <span class="font-bold text-cyan-200 font-brand">Medal Standards:</span>
+          <div class="flex items-center gap-3">
+            <span class="text-amber-300 font-bold bg-amber-400/10 px-2.5 py-1 rounded-lg border border-amber-400/30">🥇 Gold: Top 10% (&gt;240 pts)</span>
+            <span class="text-slate-200 font-bold bg-slate-300/10 px-2.5 py-1 rounded-lg border border-slate-300/30">🥈 Silver: Top 30% (&gt;140 pts)</span>
+            <span class="text-amber-200 font-bold bg-amber-600/10 px-2.5 py-1 rounded-lg border border-amber-600/30">🥉 Bronze: Top 70% (&gt;50 pts)</span>
+          </div>
+        </div>
+
+        <!-- Strengths vs Focus Area Assessment Card -->
+        <div class="p-4 bg-gradient-to-r from-slate-900/80 via-teal-950/80 to-blue-900/80 rounded-2xl border border-teal-400/30 flex flex-col sm:flex-row gap-4 items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="text-3xl">🧠</span>
+            <div>
+              <div class="text-sm font-bold text-amber-300 font-brand">Diagnostic Insight:</div>
+              <div id="statsInsightText" class="text-sm text-cyan-100 mt-0.5">
+                Play sessions across multiple modules to unlock personalized Year 4 focus recommendations!
+              </div>
+            </div>
+          </div>
+          <div id="statsMasteryPill" class="px-3 py-1.5 rounded-xl bg-amber-400/20 border border-amber-300/40 text-xs font-bold text-amber-300 whitespace-nowrap">
+            Cadet Mathlete ⭐
+          </div>
+        </div>
+
+        <!-- Module-by-Module Comparative Breakdown -->
+        <div>
+          <h4 class="text-base font-bold text-amber-200 mb-3 font-brand flex items-center justify-between">
+            <span>Year 4 Curriculum Module Standings:</span>
+            <span class="text-xs text-cyan-300 font-normal">Independent High Scores</span>
+          </h4>
+          <div id="moduleStatsBars" class="space-y-3">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer Action Buttons: Print, Reset, Back -->
+      <div class="pt-4 border-t border-white/10 flex flex-wrap gap-3 justify-between items-center no-print">
+        <button onclick="resetActivePlayerStats()" class="px-4 py-2 text-sm text-rose-300 hover:text-rose-100 hover:bg-rose-900/50 rounded-xl border border-rose-500/30 transition">
+          Reset Player Stats
+        </button>
+
+        <div class="flex gap-3">
+          <button onclick="window.print()" class="px-4 py-2 bg-teal-800 hover:bg-teal-700 text-cyan-100 rounded-xl text-sm font-bold flex items-center gap-1.5">
+            🖨️ Print / Save PDF
+          </button>
+          <button onclick="closeStatsModal()" class="px-5 py-2 bg-gradient-to-r from-emerald-500 to-green-600 rounded-xl text-sm font-bold text-white shadow font-brand">
+            Done
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- MODAL 4: TROPHY & BADGES CABINET               -->
+  <!-- ============================================== -->
+  <div id="badgesModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-slate-950 border border-teal-400/40 w-full max-w-2xl rounded-3xl p-6 shadow-2xl flex flex-col max-h-[85vh]">
+      <div class="flex justify-between items-center mb-4">
+        <div class="flex items-center gap-3">
+          <span class="text-3xl">🏆</span>
+          <h3 class="text-2xl font-bold font-brand text-amber-300">Trophy Cabinet</h3>
+        </div>
+        <button onclick="closeBadgesModal()" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center font-bold text-lg">✕</button>
+      </div>
+      
+      <p class="text-sm md:text-base text-cyan-200 mb-4">Earn trophies as you beat records and master Year 4 mental arithmetic!</p>
+
+      <div id="badgesGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 overflow-y-auto pr-1 no-scrollbar flex-1">
+        <!-- Rendered by JS -->
+      </div>
+
+      <div class="mt-4 pt-3 border-t border-white/10 text-center">
+        <button onclick="closeBadgesModal()" class="w-full py-3 bg-teal-800 hover:bg-teal-700 rounded-2xl font-bold text-base font-brand">
+          Close Cabinet 🚀
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- Calibrated Percentile Medal Rules (10% Gold, 30% Silver, 70% Bronze) ---
+    // Blitz: Gold > 240, Silver > 140, Bronze > 50
+    // Practice: Gold >= 14/15, Silver >= 11/15, Bronze >= 6/15
+    function getMedalForScore(score, sessionType = 'timed', correctCount = 0) {
+      if (sessionType === 'practice') {
+        if (correctCount >= 14) {
+          return { tier: 'gold', name: 'Gold Medal', icon: '🥇', badgeClass: 'bg-amber-500/20 text-amber-300 border border-amber-300/40', desc: 'Top 10% Mastery (14+ / 15)' };
+        } else if (correctCount >= 11) {
+          return { tier: 'silver', name: 'Silver Medal', icon: '🥈', badgeClass: 'bg-slate-300/20 text-slate-200 border border-slate-300/40', desc: 'Top 30% Mastery (11+ / 15)' };
+        } else if (correctCount >= 6) {
+          return { tier: 'bronze', name: 'Bronze Medal', icon: '🥉', badgeClass: 'bg-amber-700/20 text-amber-200 border border-amber-600/40', desc: 'Top 70% Mastery (6+ / 15)' };
+        } else {
+          return { tier: 'none', name: 'Training Star', icon: '⭐', badgeClass: 'bg-white/10 text-cyan-200 border border-white/10', desc: 'Need 6+ correct for Bronze' };
+        }
+      }
+
+      if (score > 240) {
+        return {
+          tier: 'gold',
+          name: 'Gold Medal',
+          icon: '🥇',
+          badgeClass: 'bg-amber-500/20 text-amber-300 border border-amber-300/40',
+          desc: 'Top 10% Elite Blitz Score! (>240 pts)'
+        };
+      } else if (score > 140) {
+        return {
+          tier: 'silver',
+          name: 'Silver Medal',
+          icon: '🥈',
+          badgeClass: 'bg-slate-300/20 text-slate-200 border border-slate-300/40',
+          desc: 'Top 30% High Score! (>140 pts)'
+        };
+      } else if (score > 50) {
+        return {
+          tier: 'bronze',
+          name: 'Bronze Medal',
+          icon: '🥉',
+          badgeClass: 'bg-amber-700/20 text-amber-200 border border-amber-600/40',
+          desc: 'Top 70% Medal Achieved! (>50 pts)'
+        };
+      } else {
+        return {
+          tier: 'none',
+          name: 'Training Star',
+          icon: '⭐',
+          badgeClass: 'bg-white/10 text-cyan-200 border border-white/10',
+          desc: 'Target: >50 pts for Bronze!'
+        };
+      }
+    }
+
+    function getNextMedalDistance(score) {
+      if (score > 240) {
+        return '🥇 Top 10% Gold Champion! Max tier reached!';
+      } else if (score > 140) {
+        const diff = 241 - score;
+        return `Only ${diff} more point${diff > 1 ? 's' : ''} to reach Gold 🥇 (Top 10%)`;
+      } else if (score > 50) {
+        const diff = 141 - score;
+        return `Only ${diff} more point${diff > 1 ? 's' : ''} to reach Silver 🥈 (Top 30%)`;
+      } else {
+        const diff = 51 - score;
+        return `${diff} more point${diff > 1 ? 's' : ''} needed for Bronze 🥉 (Top 70%)`;
+      }
+    }
+
+    // --- Web Audio Synthesizer ---
+    let audioCtx = null;
+    let isSoundMuted = false;
+
+    function initAudio() {
+      if (!audioCtx) {
+        const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioCtxClass();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playTone(freq, type = 'sine', duration = 0.15, gainVal = 0.08) {
+      if (isSoundMuted) return;
+      try {
+        initAudio();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(gainVal, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {
+        console.warn("Audio error:", e);
+      }
+    }
+
+    const SoundFX = {
+      tap() { playTone(540, 'sine', 0.04, 0.04); },
+      correct() {
+        if (isSoundMuted) return;
+        initAudio();
+        [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+          setTimeout(() => playTone(freq, 'triangle', 0.14, 0.08), idx * 45);
+        });
+      },
+      wrong() {
+        if (isSoundMuted) return;
+        initAudio();
+        playTone(220, 'sawtooth', 0.15, 0.07);
+        setTimeout(() => playTone(180, 'sawtooth', 0.2, 0.07), 110);
+      },
+      combo() {
+        if (isSoundMuted) return;
+        initAudio();
+        [440, 554, 659, 880].forEach((f, i) => setTimeout(() => playTone(f, 'sine', 0.18, 0.1), i * 40));
+      },
+      gameover() {
+        if (isSoundMuted) return;
+        initAudio();
+        [587, 740, 880, 1174].forEach((f, i) => setTimeout(() => playTone(f, 'triangle', 0.22, 0.1), i * 75));
+      }
+    };
+
+    function toggleMute() {
+      isSoundMuted = !isSoundMuted;
+      document.getElementById('soundToggleBtn').textContent = isSoundMuted ? '🔇' : '🔊';
+    }
+
+    // --- Year 4 Module Definitions ---
+    const MODULES = {
+      tables: { id: 'tables', name: 'Times Tables Safari', icon: '🦁', desc: 'Recall tables facts from 2x up to 12x12' },
+      division: { id: 'division', name: 'Division Detective', icon: '🔍', desc: 'Inverse facts up to 144 ÷ 12' },
+      addition: { id: 'addition', name: 'Addition Archer', icon: '🏹', desc: '2-digit and 3-digit mental sums with bridging' },
+      subtraction: { id: 'subtraction', name: 'Subtraction Sprint', icon: '⚡', desc: '2-digit and 3-digit mental differences' },
+      grandchampion: { id: 'grandchampion', name: 'Grand Champion Mixed Dash', icon: '👑', desc: 'All 4 operations combined in rapid fire' }
+    };
+
+    const STORAGE_KEY = 'maths_quest_y4_profiles_v1';
+    const ACTIVE_PLAYER_KEY = 'maths_quest_y4_active_id';
+
+    function createBlankModuleStats() {
+      return {
+        highScore: 0,
+        bestAccuracy: 0,
+        gamesPlayed: 0,
+        totalQuestions: 0,
+        correctQuestions: 0,
+        bestStreak: 0
+      };
+    }
+
+    function createDefaultPlayer(name, avatar) {
+      const statsObj = {};
+      Object.keys(MODULES).forEach(m => statsObj[m] = createBlankModuleStats());
+      return {
+        id: 'p4_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
+        name: name,
+        avatar: avatar,
+        stats: statsObj,
+        badges: {
+          firstWin: false,
+          firstGold: false,
+          speedy: false,
+          streak5: false,
+          streak10: false,
+          recordBreaker: false,
+          tablesMaster: false,
+          divDetective: false,
+          additionArcher: false,
+          perfect100: false
+        }
+      };
+    }
+
+    let players = [];
+    let activePlayer = null;
+
+    function loadProfiles() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          players = JSON.parse(raw);
+        }
+      } catch (e) {
+        players = [];
+      }
+
+      if (!players || players.length === 0) {
+        const defaultPlayer = createDefaultPlayer('Leo', '🦁');
+        players = [defaultPlayer];
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(players));
+      }
+
+      const savedActiveId = localStorage.getItem(ACTIVE_PLAYER_KEY);
+      activePlayer = players.find(p => p.id === savedActiveId) || players[0];
+      localStorage.setItem(ACTIVE_PLAYER_KEY, activePlayer.id);
+
+      Object.keys(MODULES).forEach(m => {
+        if (!activePlayer.stats[m]) {
+          activePlayer.stats[m] = createBlankModuleStats();
+        }
+      });
+
+      syncPlayerUI();
+    }
+
+    function saveProfiles() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(players));
+        if (activePlayer) {
+          localStorage.setItem(ACTIVE_PLAYER_KEY, activePlayer.id);
+        }
+      } catch (e) {
+        console.warn("Storage restricted", e);
+      }
+      syncPlayerUI();
+    }
+
+    function syncPlayerUI() {
+      if (!activePlayer) return;
+      document.getElementById('headerPlayerName').textContent = activePlayer.name;
+      document.getElementById('headerPlayerAvatar').textContent = activePlayer.avatar;
+      document.getElementById('welcomePlayerName').textContent = activePlayer.name;
+
+      Object.keys(MODULES).forEach(modId => {
+        const modStat = activePlayer.stats[modId] || createBlankModuleStats();
+        const scoreEl = document.getElementById(`cardScore_${modId}`);
+        const medalBadgeEl = document.getElementById(`cardMedalBadge_${modId}`);
+        const targetBadgeEl = document.getElementById(`targetBadge_${modId}`);
+
+        if (scoreEl) scoreEl.textContent = modStat.highScore;
+
+        const earnedMedal = getMedalForScore(modStat.highScore);
+        if (medalBadgeEl) {
+          medalBadgeEl.innerHTML = `${earnedMedal.icon} ${earnedMedal.name}`;
+          medalBadgeEl.className = `ml-1 inline-flex items-center px-2 py-0.5 rounded-lg text-xs font-bold ${earnedMedal.badgeClass}`;
+        }
+
+        if (targetBadgeEl) {
+          if (modStat.highScore > 240) {
+            targetBadgeEl.textContent = '🥇 Gold Champion!';
+          } else if (modStat.highScore > 140) {
+            targetBadgeEl.textContent = `🥇 Need ${241 - modStat.highScore} for Gold`;
+          } else if (modStat.highScore > 50) {
+            targetBadgeEl.textContent = `🥈 Need ${141 - modStat.highScore} for Silver`;
+          } else {
+            targetBadgeEl.textContent = `🥉 Need ${51 - modStat.highScore} for Bronze`;
+          }
+        }
+      });
+    }
+
+    // --- Active Gameplay State ---
+    const gameState = {
+      active: false,
+      isPaused: false,
+      currentMode: 'tables',
+      sessionType: 'timed',
+      score: 0,
+      streak: 0,
+      bestStreak: 0,
+      totalAnswered: 0,
+      correctCount: 0,
+      currentQuestion: null,
+      currentInput: '',
+      timeLeft: 60,
+      timerInterval: null,
+      practiceLimit: 15,
+      mistakes: [],
+      isNewRecord: false
+    };
+
+    const MASCOTS = ['🦊', '🦁', '🦉', '⚡', '🐬', '🦄', '🏆', '🚀'];
+    const ENCOURAGEMENTS = ['Phenomenal! 🌟', 'Super Quick! 🎯', 'Brilliant! 👏', 'Lightning mind! ⚡', 'Genius step! 🏹', 'Mastery! 🎖️'];
+
+    const BADGE_DEFINITIONS = {
+      firstWin: { name: 'First Quest Completed', icon: '🌟', desc: 'Finished your first Year 4 adventure' },
+      firstGold: { name: 'Gold Grandmaster', icon: '🥇', desc: 'Scored in the top 10% (>240 pts) in any Year 4 module!' },
+      speedy: { name: 'Speed Champion', icon: '⚡', desc: 'Solved 12+ correct answers in a 60s Blitz' },
+      streak5: { name: 'Focus Maestro', icon: '🔥', desc: 'Achieved a 5-question answer streak' },
+      streak10: { name: 'Unstoppable Mathlete', icon: '👑', desc: 'Achieved a 10-question unbroken streak' },
+      recordBreaker: { name: 'Record Crusher', icon: '🏆', desc: 'Beat your previous high score in any Year 4 module' },
+      tablesMaster: { name: 'Times Tables Master', icon: '🦁', desc: 'Scored 240+ points in Times Tables Safari' },
+      divDetective: { name: 'Division Ace', icon: '🔍', desc: 'Scored 240+ points in Division Detective' },
+      additionArcher: { name: 'Archer Ace', icon: '🏹', desc: 'Scored 240+ points in Addition Archer' },
+      perfect100: { name: 'Flawless 100%', icon: '🛡️', desc: 'Achieved 100% accuracy in a quest of 10+ questions' }
+    };
+
+    // --- Year 4 Question Generator Engine ---
+    function generateQuestion() {
+      let qText = '';
+      let answer = 0;
+      let topic = '';
+
+      let mode = gameState.currentMode;
+      if (mode === 'grandchampion') {
+        const pool = ['tables', 'division', 'addition', 'subtraction'];
+        mode = pool[Math.floor(Math.random() * pool.length)];
+      }
+
+      if (mode === 'tables') {
+        topic = 'Times Tables Safari';
+        // Tables up to 12 x 12
+        const a = Math.floor(Math.random() * 11) + 2; // 2 to 12
+        const b = Math.floor(Math.random() * 11) + 2; // 2 to 12
+        
+        if (Math.random() < 0.25) {
+          // Missing factor format
+          if (Math.random() < 0.5) {
+            qText = `${a} × ? = ${a * b}`;
+            answer = b;
+          } else {
+            qText = `? × ${b} = ${a * b}`;
+            answer = a;
+          }
+        } else {
+          qText = `${a} × ${b}`;
+          answer = a * b;
+        }
+      }
+      else if (mode === 'division') {
+        topic = 'Division Detective';
+        const divisor = Math.floor(Math.random() * 11) + 2; // 2 to 12
+        const quotient = Math.floor(Math.random() * 11) + 2; // 2 to 12
+        const dividend = divisor * quotient;
+
+        if (Math.random() < 0.25) {
+          qText = `${dividend} ÷ ? = ${quotient}`;
+          answer = divisor;
+        } else {
+          qText = `${dividend} ÷ ${divisor}`;
+          answer = quotient;
+        }
+      }
+      else if (mode === 'addition') {
+        topic = 'Addition Archer';
+        const roll = Math.random();
+        if (roll < 0.5) {
+          // 2-digit bridging: e.g. 47 + 38 or 58 + 25
+          const a = Math.floor(Math.random() * 70) + 18;
+          const b = Math.floor(Math.random() * 70) + 15;
+          qText = `${a} + ${b}`;
+          answer = a + b;
+        } else {
+          // 3-digit mental sums with multiples of 10 or 50: e.g. 350 + 280, 420 + 90
+          const a = (Math.floor(Math.random() * 40) + 12) * 10;
+          const b = (Math.floor(Math.random() * 30) + 8) * 10;
+          qText = `${a} + ${b}`;
+          answer = a + b;
+        }
+      }
+      else if (mode === 'subtraction') {
+        topic = 'Subtraction Sprint';
+        const roll = Math.random();
+        if (roll < 0.5) {
+          // 2-digit mental subtraction with bridging: e.g. 84 - 37
+          const a = Math.floor(Math.random() * 65) + 32;
+          const b = Math.floor(Math.random() * (a - 15)) + 12;
+          qText = `${a} - ${b}`;
+          answer = a - b;
+        } else {
+          // 3-digit subtraction multiples: e.g. 620 - 250, 500 - 140
+          const a = (Math.floor(Math.random() * 50) + 25) * 10;
+          const b = (Math.floor(Math.random() * 20) + 6) * 10;
+          qText = `${a} - ${b}`;
+          answer = a - b;
+        }
+      }
+
+      gameState.currentQuestion = { text: qText, answer: answer, topic: topic };
+      
+      let displayPrompt = qText;
+      if (!displayPrompt.includes('=') && !displayPrompt.includes('?')) {
+        displayPrompt = `${qText} = ?`;
+      }
+
+      document.getElementById('mathQuestion').textContent = displayPrompt;
+      document.getElementById('topicLabel').textContent = MODULES[gameState.currentMode].name;
+      gameState.currentInput = '';
+      updateAnswerDisplay();
+    }
+
+    function renderKeypad() {
+      const grid = document.getElementById('keypadGrid');
+      grid.innerHTML = '';
+      
+      // Clean positive-integer keypad for Year 4
+      const keys = [
+        '1', '2', '3',
+        '4', '5', '6',
+        '7', '8', '9',
+        '⌫', '0', '✔'
+      ];
+
+      keys.forEach(k => {
+        const btn = document.createElement('button');
+        if (k === '⌫') {
+          btn.innerHTML = '⌫ Del';
+          btn.className = 'keypad-btn h-14 md:h-16 lg:h-20 bg-rose-700 hover:bg-rose-600 rounded-3xl text-lg md:text-xl font-bold text-rose-100 flex items-center justify-center font-brand';
+          btn.onclick = clearAnswer;
+        } else if (k === '✔') {
+          btn.innerHTML = 'Submit ✔';
+          btn.className = 'keypad-btn h-14 md:h-16 lg:h-20 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 rounded-3xl text-lg md:text-xl font-bold text-white shadow-xl flex items-center justify-center font-brand';
+          btn.onclick = submitAnswer;
+        } else {
+          btn.textContent = k;
+          btn.className = 'keypad-btn h-14 md:h-16 lg:h-20 bg-teal-700 hover:bg-teal-600 rounded-3xl text-2xl md:text-3xl lg:text-4xl font-black text-white font-brand';
+          btn.onclick = () => pressDigit(k);
+        }
+        grid.appendChild(btn);
+      });
+    }
+
+    function pressDigit(char) {
+      if (!gameState.active || gameState.isPaused) return;
+      SoundFX.tap();
+      if (gameState.currentInput.length >= 6) return;
+      gameState.currentInput += char;
+      updateAnswerDisplay();
+    }
+
+    function clearAnswer() {
+      if (!gameState.active || gameState.isPaused) return;
+      SoundFX.tap();
+      gameState.currentInput = gameState.currentInput.slice(0, -1);
+      updateAnswerDisplay();
+    }
+
+    function updateAnswerDisplay() {
+      const display = document.getElementById('userAnswerText');
+      display.textContent = gameState.currentInput === '' ? '_' : gameState.currentInput;
+    }
+
+    function showFeedback(text, isGood) {
+      const toast = document.getElementById('feedbackToast');
+      toast.textContent = text;
+      toast.className = `absolute top-3 transition-all duration-300 font-bold px-5 py-1.5 rounded-full shadow-xl opacity-100 transform translate-y-0 text-base md:text-lg ${
+        isGood ? 'bg-emerald-500 text-white' : 'bg-rose-500 text-white'
+      }`;
+      setTimeout(() => {
+        toast.className = 'absolute top-3 transition-all duration-300 opacity-0 transform -translate-y-2 pointer-events-none text-base md:text-lg font-bold px-5 py-1.5 rounded-full shadow-xl';
+      }, 750);
+    }
+
+    function submitAnswer() {
+      if (!gameState.active || gameState.isPaused) return;
+      if (gameState.currentInput.trim() === '') return;
+      
+      const given = parseInt(gameState.currentInput, 10);
+      const expected = parseInt(gameState.currentQuestion.answer, 10);
+      const card = document.getElementById('questionCard');
+      const mascot = document.getElementById('mascotReaction');
+
+      gameState.totalAnswered++;
+
+      const isCorrect = (given === expected);
+
+      if (isCorrect) {
+        SoundFX.correct();
+        gameState.correctCount++;
+        gameState.streak++;
+        if (gameState.streak > gameState.bestStreak) {
+          gameState.bestStreak = gameState.streak;
+        }
+
+        let points = 10;
+        if (gameState.streak >= 3) points += 5;
+        if (gameState.streak >= 5) points += 10;
+        if (gameState.streak >= 10) points += 20;
+        gameState.score += points;
+
+        card.classList.remove('pop-success');
+        void card.offsetWidth;
+        card.classList.add('pop-success');
+
+        mascot.textContent = '🥳';
+        const phrase = ENCOURAGEMENTS[Math.floor(Math.random() * ENCOURAGEMENTS.length)];
+        showFeedback(phrase, true);
+
+        if (gameState.streak === 5) {
+          SoundFX.combo();
+          unlockBadge('streak5');
+        }
+        if (gameState.streak === 10) {
+          SoundFX.combo();
+          unlockBadge('streak10');
+        }
+      } else {
+        SoundFX.wrong();
+        gameState.mistakes.push({
+          question: gameState.currentQuestion.text,
+          userAns: given,
+          correctAns: expected
+        });
+        gameState.streak = 0;
+
+        card.classList.remove('shake-error');
+        void card.offsetWidth;
+        card.classList.add('shake-error');
+
+        mascot.textContent = '😅';
+        showFeedback(`Correct: ${expected}`, false);
+      }
+
+      updateHUD();
+
+      if (gameState.sessionType === 'practice' && gameState.totalAnswered >= gameState.practiceLimit) {
+        setTimeout(endGame, 500);
+      } else {
+        setTimeout(() => {
+          mascot.textContent = '🤔';
+          generateQuestion();
+        }, 400);
+      }
+    }
+
+    function updateHUD() {
+      document.getElementById('scoreDisplay').textContent = gameState.score;
+      
+      const currentMedal = getMedalForScore(gameState.score, gameState.sessionType, gameState.correctCount);
+      const inGameBadge = document.getElementById('inGameMedalBadge');
+      inGameBadge.textContent = `${currentMedal.icon} ${currentMedal.name}`;
+
+      const distanceText = getNextMedalDistance(gameState.score);
+      document.getElementById('inGameMedalDistance').textContent = distanceText;
+
+      const streakBadge = document.getElementById('streakBadge');
+      if (gameState.streak >= 2) {
+        streakBadge.classList.remove('hidden');
+        document.getElementById('streakCount').textContent = gameState.streak;
+      } else {
+        streakBadge.classList.add('hidden');
+      }
+
+      if (gameState.sessionType === 'practice') {
+        const percent = Math.min(100, (gameState.totalAnswered / gameState.practiceLimit) * 100);
+        document.getElementById('progressBar').style.width = `${percent}%`;
+        document.getElementById('timeDisplay').textContent = `${gameState.totalAnswered}/${gameState.practiceLimit}`;
+      }
+    }
+
+    function setSessionType(type) {
+      gameState.sessionType = type;
+      const timedBtn = document.getElementById('modeTimedBtn');
+      const practiceBtn = document.getElementById('modePracticeBtn');
+      const desc = document.getElementById('modeDescription');
+
+      if (type === 'timed') {
+        timedBtn.className = 'px-5 py-2.5 text-sm md:text-base font-bold rounded-2xl bg-amber-400 text-slate-950 shadow-lg font-brand active:scale-95 transition';
+        practiceBtn.className = 'px-5 py-2.5 text-sm md:text-base font-bold rounded-2xl bg-white/10 text-white hover:bg-white/20 font-brand active:scale-95 transition';
+        desc.textContent = '60 seconds fast challenge';
+      } else {
+        practiceBtn.className = 'px-5 py-2.5 text-sm md:text-base font-bold rounded-2xl bg-amber-400 text-slate-950 shadow-lg font-brand active:scale-95 transition';
+        timedBtn.className = 'px-5 py-2.5 text-sm md:text-base font-bold rounded-2xl bg-white/10 text-white hover:bg-white/20 font-brand active:scale-95 transition';
+        desc.textContent = '15 questions untimed quest';
+      }
+      SoundFX.tap();
+    }
+
+    function startGame(mode) {
+      initAudio();
+      gameState.active = true;
+      gameState.isPaused = false;
+      gameState.currentMode = mode;
+      gameState.score = 0;
+      gameState.streak = 0;
+      gameState.bestStreak = 0;
+      gameState.totalAnswered = 0;
+      gameState.correctCount = 0;
+      gameState.mistakes = [];
+      gameState.isNewRecord = false;
+
+      document.getElementById('screenMenu').classList.add('hidden');
+      document.getElementById('screenSummary').classList.add('hidden');
+      document.getElementById('screenGame').classList.remove('hidden');
+
+      if (gameState.sessionType === 'timed') {
+        gameState.timeLeft = 60;
+        document.getElementById('timeLabel').textContent = 'Time Left';
+        document.getElementById('timeDisplay').textContent = '60s';
+        document.getElementById('progressBar').style.width = '100%';
+        startTimer();
+      } else {
+        document.getElementById('timeLabel').textContent = 'Progress';
+        document.getElementById('timeDisplay').textContent = `0/${gameState.practiceLimit}`;
+        document.getElementById('progressBar').style.width = '0%';
+      }
+
+      renderKeypad();
+      updateHUD();
+      generateQuestion();
+    }
+
+    function startTimer() {
+      clearInterval(gameState.timerInterval);
+      const totalSeconds = 60;
+      gameState.timerInterval = setInterval(() => {
+        if (gameState.isPaused) return;
+
+        gameState.timeLeft--;
+        const display = document.getElementById('timeDisplay');
+        display.textContent = `${gameState.timeLeft}s`;
+
+        const percent = (gameState.timeLeft / totalSeconds) * 100;
+        document.getElementById('progressBar').style.width = `${percent}%`;
+
+        if (gameState.timeLeft <= 10) {
+          display.className = 'text-2xl md:text-4xl font-black text-rose-400 animate-pulse';
+        } else {
+          display.className = 'text-2xl md:text-4xl font-black text-emerald-400';
+        }
+
+        if (gameState.timeLeft <= 0) {
+          clearInterval(gameState.timerInterval);
+          endGame();
+        }
+      }, 1000);
+    }
+
+    // --- Safety Exit / Cancellation Logic ---
+    function requestExitQuest() {
+      if (!gameState.active) return;
+      SoundFX.tap();
+      gameState.isPaused = true;
+      document.getElementById('modalCancelQuest').classList.remove('hidden');
+    }
+
+    function resumeQuest() {
+      SoundFX.tap();
+      gameState.isPaused = false;
+      document.getElementById('modalCancelQuest').classList.add('hidden');
+    }
+
+    function confirmExitQuest() {
+      SoundFX.tap();
+      gameState.active = false;
+      gameState.isPaused = false;
+      clearInterval(gameState.timerInterval);
+      document.getElementById('modalCancelQuest').classList.add('hidden');
+      goHome();
+    }
+
+    function endGame() {
+      gameState.active = false;
+      clearInterval(gameState.timerInterval);
+      SoundFX.gameover();
+
+      document.getElementById('screenGame').classList.add('hidden');
+      document.getElementById('screenSummary').classList.remove('hidden');
+      document.getElementById('newBadgeAwarded').classList.add('hidden');
+
+      const modeId = gameState.currentMode;
+      const accuracy = gameState.totalAnswered > 0 ? Math.round((gameState.correctCount / gameState.totalAnswered) * 100) : 0;
+
+      const pStats = activePlayer.stats[modeId];
+      pStats.gamesPlayed = (pStats.gamesPlayed || 0) + 1;
+      pStats.totalQuestions = (pStats.totalQuestions || 0) + gameState.totalAnswered;
+      pStats.correctQuestions = (pStats.correctQuestions || 0) + gameState.correctCount;
+      if (gameState.bestStreak > (pStats.bestStreak || 0)) {
+        pStats.bestStreak = gameState.bestStreak;
+      }
+      if (accuracy > (pStats.bestAccuracy || 0)) {
+        pStats.bestAccuracy = accuracy;
+      }
+
+      // Check Beat High Score
+      const bannerRecord = document.getElementById('newHighScoreBanner');
+      if (gameState.score > (pStats.highScore || 0)) {
+        pStats.highScore = gameState.score;
+        bannerRecord.classList.remove('hidden');
+        unlockBadge('recordBreaker');
+        triggerConfetti(0.85);
+      } else {
+        bannerRecord.classList.add('hidden');
+      }
+
+      // Calculate Earned Medal with Percentile Calibration
+      const earnedMedal = getMedalForScore(gameState.score, gameState.sessionType, gameState.correctCount);
+      const medalBadgeEl = document.getElementById('summaryEarnedMedalBadge');
+      medalBadgeEl.innerHTML = `${earnedMedal.icon} ${earnedMedal.name.toUpperCase()} EARNED`;
+      medalBadgeEl.className = `inline-flex items-center gap-2.5 px-5 py-1.5 rounded-full text-base md:text-lg font-black mb-2 font-brand ${earnedMedal.badgeClass}`;
+
+      const medalDistEl = document.getElementById('summaryMedalDistanceBanner');
+      medalDistEl.textContent = getNextMedalDistance(gameState.score);
+
+      // Badges
+      unlockBadge('firstWin');
+      if (gameState.score > 240) {
+        unlockBadge('firstGold');
+        triggerConfetti(0.9);
+      }
+      if (gameState.sessionType === 'timed' && gameState.correctCount >= 12) unlockBadge('speedy');
+      if (modeId === 'tables' && gameState.score > 240) unlockBadge('tablesMaster');
+      if (modeId === 'division' && gameState.score > 240) unlockBadge('divDetective');
+      if (modeId === 'addition' && gameState.score > 240) unlockBadge('additionArcher');
+      if (gameState.totalAnswered >= 10 && accuracy === 100) unlockBadge('perfect100');
+
+      saveProfiles();
+
+      document.getElementById('sumFinalScore').textContent = gameState.score;
+      document.getElementById('sumAccuracy').textContent = `${accuracy}%`;
+      document.getElementById('sumStreak').textContent = `${gameState.bestStreak}🔥`;
+
+      const medalIcon = document.getElementById('summaryMedal');
+      const title = document.getElementById('summaryTitle');
+      const feedback = document.getElementById('summaryFeedback');
+
+      medalIcon.textContent = earnedMedal.icon;
+
+      if (earnedMedal.tier === 'gold') {
+        title.textContent = 'Top 10% Gold Grandmaster!';
+        feedback.textContent = `Astonishing high score (>240 pts) in ${MODULES[modeId].name}! Elite speed and accuracy!`;
+      } else if (earnedMedal.tier === 'silver') {
+        title.textContent = 'Top 30% Silver Mathlete!';
+        feedback.textContent = `Tremendous score (>140 pts)! Can you push past 240 for Gold?`;
+        triggerConfetti(0.4);
+      } else if (earnedMedal.tier === 'bronze') {
+        title.textContent = 'Top 70% Bronze Achiever!';
+        feedback.textContent = `Well done reaching medal tier (>50 pts)! Aim for Silver next.`;
+        triggerConfetti(0.2);
+      } else {
+        title.textContent = 'Training Session Done!';
+        feedback.textContent = `Keep practicing! Score 51+ points to claim your Bronze Medal.`;
+      }
+
+      // Render Mistakes List
+      const listEl = document.getElementById('mistakesList');
+      const containerEl = document.getElementById('mistakesContainer');
+      listEl.innerHTML = '';
+
+      if (gameState.mistakes.length === 0) {
+        containerEl.classList.add('hidden');
+      } else {
+        containerEl.classList.remove('hidden');
+        gameState.mistakes.forEach(item => {
+          const row = document.createElement('div');
+          row.className = 'bg-black/40 p-3 rounded-2xl border border-white/10 flex items-center justify-between text-sm md:text-base';
+          row.innerHTML = `
+            <span class="font-bold text-white font-brand">${item.question}</span>
+            <div class="flex items-center gap-3">
+              <span class="text-rose-400 font-semibold">Your answer: ${item.userAns}</span>
+              <span class="text-emerald-300 font-bold bg-emerald-950/70 px-3 py-1 rounded-xl border border-emerald-500/40">Correct: ${item.correctAns}</span>
+            </div>
+          `;
+          listEl.appendChild(row);
+        });
+      }
+    }
+
+    function unlockBadge(badgeKey) {
+      if (!activePlayer.badges[badgeKey]) {
+        activePlayer.badges[badgeKey] = true;
+        saveProfiles();
+        const def = BADGE_DEFINITIONS[badgeKey];
+        if (def) {
+          const badgeAwardEl = document.getElementById('newBadgeAwarded');
+          if (badgeAwardEl) {
+            document.getElementById('awardedBadgeIcon').textContent = def.icon;
+            document.getElementById('awardedBadgeName').textContent = def.name;
+            badgeAwardEl.classList.remove('hidden');
+          }
+        }
+      }
+    }
+
+    function restartCurrentMode() {
+      startGame(gameState.currentMode);
+    }
+
+    function goHome() {
+      gameState.active = false;
+      gameState.isPaused = false;
+      clearInterval(gameState.timerInterval);
+      document.getElementById('screenGame').classList.add('hidden');
+      document.getElementById('screenSummary').classList.add('hidden');
+      document.getElementById('screenMenu').classList.remove('hidden');
+      syncPlayerUI();
+    }
+
+    // --- User Profile Handlers ---
+    function openUserModal() {
+      SoundFX.tap();
+      renderUsersList();
+      document.getElementById('modalUsers').classList.remove('hidden');
+    }
+
+    function closeUserModal() {
+      document.getElementById('modalUsers').classList.add('hidden');
+    }
+
+    function renderUsersList() {
+      const container = document.getElementById('usersList');
+      container.innerHTML = '';
+
+      players.forEach(p => {
+        const isCurrent = p.id === activePlayer.id;
+        const row = document.createElement('div');
+        row.className = `p-3.5 rounded-2xl border flex items-center justify-between ${
+          isCurrent 
+            ? 'bg-amber-500/20 border-amber-400/60 text-white' 
+            : 'bg-white/5 border-white/10 hover:bg-white/10 text-cyan-200'
+        }`;
+        
+        row.innerHTML = `
+          <div class="flex items-center gap-3 cursor-pointer flex-1" onclick="selectPlayer('${p.id}')">
+            <span class="text-3xl">${p.avatar}</span>
+            <div class="text-left">
+              <span class="font-bold text-base md:text-lg text-white font-brand block">${p.name}</span>
+              <span class="text-xs text-cyan-300">
+                ${isCurrent ? 'Active Player' : 'Tap to switch'}
+              </span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            ${players.length > 1 ? `
+              <button onclick="deletePlayer('${p.id}')" class="text-rose-400 hover:text-rose-300 p-1.5 text-base" title="Delete Profile">🗑️</button>
+            ` : ''}
+          </div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    function selectPlayer(id) {
+      const found = players.find(p => p.id === id);
+      if (found) {
+        activePlayer = found;
+        saveProfiles();
+        closeUserModal();
+        SoundFX.tap();
+      }
+    }
+
+    function addNewPlayer() {
+      const input = document.getElementById('newPlayerNameInput');
+      const avatarSelect = document.getElementById('newPlayerAvatarSelect');
+      const name = input.value.trim();
+
+      if (!name) return;
+
+      const newPlayer = createDefaultPlayer(name, avatarSelect.value);
+      players.push(newPlayer);
+      activePlayer = newPlayer;
+      saveProfiles();
+      input.value = '';
+      closeUserModal();
+      SoundFX.correct();
+    }
+
+    function deletePlayer(id) {
+      if (players.length <= 1) return;
+      players = players.filter(p => p.id !== id);
+      if (activePlayer.id === id) {
+        activePlayer = players[0];
+      }
+      saveProfiles();
+      renderUsersList();
+    }
+
+    // --- Diagnostic Comparison Stats Modal ---
+    function openStatsModal() {
+      SoundFX.tap();
+      renderStatsDashboard();
+      document.getElementById('modalStats').classList.remove('hidden');
+    }
+
+    function closeStatsModal() {
+      document.getElementById('modalStats').classList.add('hidden');
+    }
+
+    function renderStatsDashboard() {
+      if (!activePlayer) return;
+
+      document.getElementById('statsPlayerNameTitle').textContent = activePlayer.name;
+
+      let grandTotalGames = 0;
+      let grandTotalQuestions = 0;
+      let grandTotalCorrect = 0;
+      let grandTotalScore = 0;
+
+      let bestAccuracyModule = null;
+      let highestAccuracyVal = -1;
+      let lowestAccuracyModule = null;
+      let lowestAccuracyVal = 101;
+
+      const barsContainer = document.getElementById('moduleStatsBars');
+      barsContainer.innerHTML = '';
+
+      Object.keys(MODULES).forEach(modId => {
+        const mod = MODULES[modId];
+        const s = activePlayer.stats[modId] || createBlankModuleStats();
+
+        grandTotalGames += (s.gamesPlayed || 0);
+        grandTotalQuestions += (s.totalQuestions || 0);
+        grandTotalCorrect += (s.correctQuestions || 0);
+        grandTotalScore += (s.highScore || 0);
+
+        const modAccuracy = s.totalQuestions > 0 ? Math.round((s.correctQuestions / s.totalQuestions) * 100) : 0;
+        const medal = getMedalForScore(s.highScore || 0);
+        const distanceText = getNextMedalDistance(s.highScore || 0);
+
+        const medalProgressPct = Math.min(100, Math.round(((s.highScore || 0) / 240) * 100));
+
+        if (s.gamesPlayed > 0) {
+          if (modAccuracy > highestAccuracyVal) {
+            highestAccuracyVal = modAccuracy;
+            bestAccuracyModule = mod.name;
+          }
+          if (modAccuracy < lowestAccuracyVal) {
+            lowestAccuracyVal = modAccuracy;
+            lowestAccuracyModule = mod.name;
+          }
+        }
+
+        const card = document.createElement('div');
+        card.className = 'p-4 bg-white/5 rounded-2xl border border-white/10 flex flex-col gap-2';
+        card.innerHTML = `
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <span class="text-2xl">${mod.icon}</span>
+              <div>
+                <span class="text-sm md:text-base font-bold text-white font-brand">${mod.name}</span>
+                <span class="text-xs text-cyan-300 block">${s.gamesPlayed || 0} Quests Played • ${s.totalQuestions || 0} Questions Solved</span>
+              </div>
+            </div>
+            <div class="text-right">
+              <span class="text-base md:text-lg font-black text-amber-300">${s.highScore || 0} pts</span>
+              <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-lg text-xs font-bold ${medal.badgeClass}">${medal.icon} ${medal.name}</span>
+            </div>
+          </div>
+
+          <div class="space-y-1.5">
+            <div class="w-full bg-black/40 rounded-full h-3 overflow-hidden border border-white/10 relative">
+              <div class="bg-gradient-to-r from-amber-600 via-slate-300 to-amber-400 h-full rounded-full transition-all duration-500" style="width: ${medalProgressPct}%"></div>
+            </div>
+            <div class="flex items-center justify-between text-xs md:text-sm text-cyan-200 font-semibold">
+              <span>${distanceText}</span>
+              <span>${modAccuracy}% Accuracy</span>
+            </div>
+          </div>
+        `;
+        barsContainer.appendChild(card);
+      });
+
+      const overallAcc = grandTotalQuestions > 0 ? Math.round((grandTotalCorrect / grandTotalQuestions) * 100) : 0;
+      document.getElementById('statsTotalGames').textContent = grandTotalGames;
+      document.getElementById('statsTotalQuestions').textContent = grandTotalQuestions;
+      document.getElementById('statsOverallAccuracy').textContent = `${overallAcc}%`;
+      document.getElementById('statsTotalScore').textContent = grandTotalScore;
+
+      const insightEl = document.getElementById('statsInsightText');
+      const rankEl = document.getElementById('statsMasteryPill');
+
+      if (grandTotalGames === 0) {
+        insightEl.textContent = 'No Year 4 quests played yet! Complete a few rounds to unlock diagnostic strengths & focus recommendations.';
+        rankEl.textContent = 'Apprentice Mathlete 🧭';
+      } else {
+        let msg = '';
+        if (bestAccuracyModule) {
+          msg += `🌟 Strongest Skill: ${bestAccuracyModule} (${highestAccuracyVal}%). `;
+        }
+        if (lowestAccuracyModule && lowestAccuracyVal < 80) {
+          msg += `🎯 Recommended Focus: Practice ${lowestAccuracyModule} to boost speed and recall!`;
+        } else {
+          msg += `🏆 Remarkable all-round arithmetic fluency across Year 4 topics!`;
+        }
+        insightEl.textContent = msg;
+
+        if (grandTotalQuestions >= 100 && overallAcc >= 90) rankEl.textContent = 'Year 4 Grandmaster 👑';
+        else if (grandTotalQuestions >= 50 && overallAcc >= 80) rankEl.textContent = 'Arithmetic Expert ⚡';
+        else if (grandTotalQuestions >= 20) rankEl.textContent = 'Rising Scholar 🚀';
+        else rankEl.textContent = 'Apprentice Mathlete ⭐';
+      }
+    }
+
+    function resetActivePlayerStats() {
+      if (!confirm(`Are you sure you want to reset all Year 4 stats and high scores for ${activePlayer.name}?`)) return;
+      Object.keys(MODULES).forEach(m => {
+        activePlayer.stats[m] = createBlankModuleStats();
+      });
+      saveProfiles();
+      renderStatsDashboard();
+      SoundFX.tap();
+    }
+
+    // --- Trophy Cabinet Display ---
+    function showBadgesModal() {
+      initAudio();
+      SoundFX.tap();
+      const grid = document.getElementById('badgesGrid');
+      grid.innerHTML = '';
+
+      Object.keys(BADGE_DEFINITIONS).forEach(key => {
+        const b = BADGE_DEFINITIONS[key];
+        const isUnlocked = activePlayer.badges[key] || false;
+        const item = document.createElement('div');
+        item.className = `p-4 rounded-2xl border flex items-center gap-3.5 ${
+          isUnlocked 
+            ? 'bg-amber-500/20 border-amber-400/50 text-white' 
+            : 'bg-white/5 border-white/10 opacity-40 text-cyan-200'
+        }`;
+        item.innerHTML = `
+          <div class="text-4xl">${isUnlocked ? b.icon : '🔒'}</div>
+          <div>
+            <div class="font-extrabold text-sm md:text-base text-amber-200 font-brand">${b.name}</div>
+            <div class="text-xs md:text-sm text-cyan-200">${b.desc}</div>
+          </div>
+        `;
+        grid.appendChild(item);
+      });
+
+      document.getElementById('badgesModal').classList.remove('hidden');
+    }
+
+    function closeBadgesModal() {
+      document.getElementById('badgesModal').classList.add('hidden');
+    }
+
+    function triggerConfetti(intensity = 0.5) {
+      if (typeof confetti !== 'undefined') {
+        confetti({
+          particleCount: Math.floor(80 * intensity),
+          spread: 80,
+          origin: { y: 0.6 }
+        });
+      }
+    }
+
+    // --- Keyboard Event Listeners ---
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && gameState.active) {
+        if (!document.getElementById('modalCancelQuest').classList.contains('hidden')) {
+          resumeQuest();
+        } else {
+          requestExitQuest();
+        }
+        return;
+      }
+
+      if (!gameState.active || gameState.isPaused) return;
+
+      if (e.key >= '0' && e.key <= '9') {
+        pressDigit(e.key);
+      } else if (e.key === 'Backspace') {
+        clearAnswer();
+      } else if (e.key === 'Enter') {
+        submitAnswer();
+      }
+    });
+
+    setInterval(() => {
+      const mascot = document.getElementById('mascotIcon');
+      if (mascot) {
+        mascot.textContent = MASCOTS[Math.floor(Math.random() * MASCOTS.length)];
+      }
+    }, 6000);
+
+    function applyEmbedMode() {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("embed") === "1") {
+        document.body.classList.add("embed-mode");
+      }
+    }
+
+    function bindQuestBack() {
+      const link = document.querySelector("a[aria-label='Back to subjects']");
+      if (!link || link.dataset.bound) return;
+      link.dataset.bound = "1";
+      link.addEventListener("click", function (event) {
+        if (window.parent && window.parent !== window) {
+          event.preventDefault();
+          window.parent.postMessage({ type: "mental-quest-back" }, window.location.origin);
+        }
+      });
+    }
+
+    window.onload = function() {
+      applyEmbedMode();
+      bindQuestBack();
+      loadProfiles();
+      renderKeypad();
+    };
+    bindQuestBack();
+  </script>
+</body>
+</html>

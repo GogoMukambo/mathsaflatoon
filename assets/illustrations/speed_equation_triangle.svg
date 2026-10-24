@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900">
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path d="M 0 1 L 9 5 L 0 9 z" fill="#111111" />
+</marker>
+
+</defs>
+<rect x="0" y="0" width="1200" height="900" fill="#ffffff" />
+<path d="M 600 170 L 300 720 L 900 720 Z" fill="none" stroke="#111111" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" />
+<line x1="435" y1="470" x2="765" y2="470" stroke="#111111" stroke-width="4" stroke-linecap="round" />
+<line x1="600" y1="470" x2="600" y2="720" stroke="#111111" stroke-width="4" stroke-linecap="round" />
+<text x="600" y="405" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="96" font-weight="700" text-anchor="middle">d</text>
+<text x="508" y="630" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="86" font-weight="700" text-anchor="middle">s</text>
+<text x="692" y="630" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="86" font-weight="700" text-anchor="middle">t</text>
+<text x="600" y="820" fill="#555555" font-family="Helvetica, Arial, sans-serif" font-size="30" font-weight="600" text-anchor="middle">distance  ÷  speed  ×  time</text>
+</svg>

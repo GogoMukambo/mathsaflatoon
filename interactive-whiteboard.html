@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 5: Angles and Constructions - Interactive Whiteboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    .font-marker {
+      font-family: 'Caveat', cursive, sans-serif;
+    }
+    .whiteboard-surface {
+      background-color: #ffffff;
+      background-image: 
+        radial-gradient(#e2e8f0 1.2px, transparent 1.2px), 
+        radial-gradient(#f1f5f9 1.2px, #ffffff 1.2px);
+      background-size: 24px 24px;
+      background-position: 0 0, 12px 12px;
+    }
+    /* Stroke drawing animation transition */
+    .wb-path {
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: stroke-dashoffset 0.9s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease;
+    }
+    .wb-fade {
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .wb-fade-hidden {
+      opacity: 0;
+      transform: scale(0.9);
+      pointer-events: none;
+    }
+    .wb-fade-visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+    /* Custom compass sweep pulse */
+    @keyframes compassPulse {
+      0% { r: 4px; stroke-opacity: 0.8; }
+      50% { r: 9px; stroke-opacity: 0.3; }
+      100% { r: 4px; stroke-opacity: 0.8; }
+    }
+    .compass-pivot {
+      animation: compassPulse 2s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col font-sans antialiased selection:bg-amber-100 selection:text-amber-900">
+
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center font-bold text-xl shadow-sm">
+          📐
+        </div>
+        <div>
+          <h1 class="text-lg sm:text-xl font-bold tracking-tight text-slate-900">Chapter 5: Angles & Constructions</h1>
+          <p class="text-xs text-slate-500 font-medium">Interactive Whiteboard Geometry Lesson</p>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="flex items-center p-1 bg-slate-100 rounded-xl border border-slate-200/80 text-sm font-semibold w-full sm:w-auto overflow-x-auto">
+        <button id="tab-5-1" onclick="switchTopic('5.1')" class="px-4 py-2 rounded-lg transition-all duration-200 text-slate-600 hover:text-slate-900 whitespace-nowrap">
+          5.1 Parallel Lines
+        </button>
+        <button id="tab-5-2" onclick="switchTopic('5.2')" class="px-4 py-2 rounded-lg transition-all duration-200 text-slate-600 hover:text-slate-900 whitespace-nowrap">
+          5.2 Exterior Angle
+        </button>
+        <button id="tab-5-3" onclick="switchTopic('5.3')" class="px-4 py-2 rounded-lg transition-all duration-200 text-slate-600 hover:text-slate-900 whitespace-nowrap">
+          5.3 Constructions
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 flex-1 flex flex-col gap-6">
+    <!-- Sub-topic pills / variant picker -->
+    <div id="subtopic-bar" class="flex flex-wrap items-center justify-between gap-3 bg-white p-3 rounded-2xl border border-slate-200 shadow-xs">
+      <div class="flex items-center gap-2" id="subtopic-buttons">
+        <!-- Rendered dynamically -->
+      </div>
+      <div class="flex items-center gap-2 text-xs font-semibold px-3 py-1.5 bg-amber-50 text-amber-700 rounded-lg border border-amber-200/60">
+        <span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
+        <span id="current-badge-text">5.1 Parallel Lines</span>
+      </div>
+    </div>
+
+    <!-- Whiteboard Board Workspace -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      
+      <!-- SVG Whiteboard Frame -->
+      <div class="lg:col-span-8 flex flex-col gap-3">
+        <div class="relative w-full whiteboard-surface rounded-3xl border-4 border-slate-700/80 shadow-xl overflow-hidden aspect-[16/10] sm:aspect-[16/9] flex items-center justify-center">
+          
+          <!-- Marker Tray aesthetic element -->
+          <div class="absolute top-3 left-4 flex items-center gap-2 text-xs font-marker text-slate-400 select-none text-lg">
+            <span>● DRY ERASE BOARD</span>
+            <span class="text-slate-300">|</span>
+            <span id="board-watermark">Section 5.1</span>
+          </div>
+
+          <!-- Master Animated SVG Element -->
+          <svg id="wb-canvas" class="w-full h-full select-none" viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <!-- Arrow marker for lines -->
+              <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#334155" />
+              </marker>
+              <marker id="arrow-red" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#ef4444" />
+              </marker>
+              <filter id="marker-roughness" x="-5%" y="-5%" width="110%" height="110%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise" />
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.5" />
+              </filter>
+            </defs>
+
+            <!-- Dynamic group where all lines, arcs and annotations are injected -->
+            <g id="wb-drawing-layer" filter="url(#marker-roughness)"></g>
+          </svg>
+
+          <!-- Marker simulation indicator badge -->
+          <div id="drawing-indicator" class="absolute bottom-4 right-4 bg-slate-900/80 backdrop-blur-md text-white text-xs px-3 py-1.5 rounded-full flex items-center gap-2 opacity-0 transition-opacity duration-300 pointer-events-none">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            Drawing marker active...
+          </div>
+        </div>
+
+        <!-- Player Controls Strip -->
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-4">
+          <div class="flex items-center gap-2">
+            <button onclick="previousStep()" id="btn-prev" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold transition disabled:opacity-40 disabled:cursor-not-allowed">
+              ◀ Previous
+            </button>
+            <button onclick="togglePlayPause()" id="btn-play" class="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold transition shadow-sm flex items-center gap-2">
+              <span id="play-icon">▶</span>
+              <span id="play-label">Play Step</span>
+            </button>
+            <button onclick="nextStep()" id="btn-next" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold transition disabled:opacity-40 disabled:cursor-not-allowed">
+              Next ▶
+            </button>
+            <button onclick="restartScene()" title="Restart" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 transition">
+              ↺
+            </button>
+          </div>
+
+          <!-- Step Progression tracker -->
+          <div class="flex items-center gap-3">
+            <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Step Progress</span>
+            <div id="step-indicator-dots" class="flex items-center gap-1.5">
+              <!-- Dots added dynamically -->
+            </div>
+            <span id="step-counter-text" class="text-xs font-bold text-slate-600 ml-1">1 / 4</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-4 flex flex-col gap-5">
+        <!-- Teacher narration card -->
+        <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-xs relative overflow-hidden">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-xl">
+              👨‍🏫
+            </div>
+            <div>
+              <h2 class="text-base font-bold text-slate-900" id="teacher-title">Teacher's Explanation</h2>
+              <p class="text-xs text-slate-400" id="teacher-subtitle">Step-by-step breakdown</p>
+            </div>
+          </div>
+
+          <div class="p-4 bg-amber-50/70 border border-amber-200/80 rounded-2xl mb-4">
+            <p id="teacher-narration" class="font-marker text-2xl text-slate-800 leading-snug">
+              Loading explanation...
+            </p>
+          </div>
+
+          <!-- Key Geometry Rule Callout -->
+          <div class="rounded-2xl bg-slate-50 border border-slate-200 p-4">
+            <div class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1 flex items-center gap-1.5">
+              <span>💡</span> Key Rule to Remember
+            </div>
+            <div id="teacher-rule" class="text-sm font-semibold text-slate-700">
+              Vertically opposite angles are equal.
+            </div>
+          </div>
+
+          <!-- Interactive Test / Question button -->
+          <div id="quiz-box" class="mt-5 p-4 bg-emerald-50 border border-emerald-200/70 rounded-2xl">
+            <span class="text-xs font-bold uppercase text-emerald-800 flex items-center gap-1">
+              <span>✍️</span> Practice Check
+            </span>
+            <p id="quiz-question" class="text-xs font-medium text-emerald-950 mt-1">
+              If an interior angle is 65°, what is its co-interior pair?
+            </p>
+            <div class="mt-2.5 flex items-center gap-2">
+              <button onclick="revealAnswer()" id="quiz-btn" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold transition">
+                Show Answer
+              </button>
+              <span id="quiz-answer" class="text-xs font-bold text-emerald-900 hidden">
+                115° (because 180° − 65° = 115°)
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Summary Card for Current Section -->
+        <div class="bg-white rounded-3xl p-5 border border-slate-200 shadow-xs">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Chapter 5 Concept Index</h3>
+          <ul class="text-xs space-y-2 text-slate-600 font-medium">
+            <li class="flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+              <strong>Parallel Lines:</strong> F (Corresponding), Z (Alternate), C (Co-interior).
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+              <strong>Exterior Angle:</strong> \( d = a + b \) (remote interior angles).
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              <strong>Constructions:</strong> Perpendicular & Angle Bisectors using twin compass arcs.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    // Chapter 5 Lesson State & Definitions
+    const LESSON_DATA = {
+      "5.1": {
+        title: "5.1 Angles with Parallel Lines",
+        watermark: "Section 5.1: Parallel & Transversal Lines",
+        subtopics: [
+          { id: "vert_opp", label: "Vertically Opposite" },
+          { id: "corresponding", label: "Corresponding (F-shape)" },
+          { id: "alternate", label: "Alternate (Z-shape)" },
+          { id: "cointerior", label: "Co-interior (C-shape)" }
+        ],
+        scenes: {
+          "vert_opp": [
+            {
+              narration: "Let's draw two straight lines that intersect at a single vertex point.",
+              rule: "Intersecting lines create pairs of opposite angles.",
+              quizQ: "If angle a = 70°, what is the vertically opposite angle d?",
+              quizA: "Angle d = 70° (Vertically opposite angles are equal).",
+              elements: [
+                { type: "line", id: "l1", d: "M 150 130 L 650 370", stroke: "#334155", width: 4 },
+                { type: "line", id: "l2", d: "M 150 370 L 650 130", stroke: "#334155", width: 4 },
+                { type: "point", cx: 400, cy: 250, r: 5, fill: "#0f172a" }
+              ]
+            },
+            {
+              narration: "Notice angle 'a' at the top and angle 'd' directly opposite at the bottom.",
+              rule: "Vertically opposite angles are always strictly equal: a = d.",
+              quizQ: "If angle a = 115°, what is angle d?",
+              quizA: "Angle d = 115°.",
+              elements: [
+                { type: "arc", d: "M 360 220 A 45 45 0 0 1 440 220", stroke: "#ef4444", width: 5, fill: "none" },
+                { type: "text", x: 395, y: 195, text: "a", color: "#ef4444", size: 28 },
+                { type: "arc", d: "M 440 280 A 45 45 0 0 1 360 280", stroke: "#ef4444", width: 5, fill: "none" },
+                { type: "text", x: 395, y: 325, text: "d", color: "#ef4444", size: 28 },
+                { type: "text", x: 400, y: 70, text: "a = d (Vertically Opposite)", color: "#ef4444", size: 30 }
+              ]
+            },
+            {
+              narration: "The horizontal side pair 'b' and 'c' are also vertically opposite and equal: b = c.",
+              rule: "Adjacent angles on the line add up to 180°: a + b = 180°.",
+              quizQ: "If a = 65°, what is angle b on the straight line?",
+              quizA: "180° − 65° = 115°.",
+              elements: [
+                { type: "arc", d: "M 370 230 A 40 40 0 0 0 370 270", stroke: "#3b82f6", width: 4, fill: "none" },
+                { type: "text", x: 330, y: 258, text: "b", color: "#3b82f6", size: 24 },
+                { type: "arc", d: "M 430 270 A 40 40 0 0 0 430 230", stroke: "#3b82f6", width: 4, fill: "none" },
+                { type: "text", x: 455, y: 258, text: "c", color: "#3b82f6", size: 24 },
+                { type: "text", x: 400, y: 440, text: "b = c & a + b = 180°", color: "#3b82f6", size: 26 }
+              ]
+            }
+          ],
+          "corresponding": [
+            {
+              narration: "Draw two parallel lines intersected by a transversal line.",
+              rule: "Parallel lines have identical directional slants.",
+              quizQ: "What letter shape reminds us of corresponding angles?",
+              quizA: "The letter 'F'.",
+              elements: [
+                { type: "line", id: "p1", d: "M 120 160 L 680 160", stroke: "#475569", width: 4 },
+                { type: "line", id: "p2", d: "M 120 340 L 680 340", stroke: "#475569", width: 4 },
+                { type: "line", id: "tr", d: "M 220 80 L 580 420", stroke: "#475569", width: 4 },
+                /* parallel arrows */
+                { type: "path", d: "M 400 152 L 415 160 L 400 168", stroke: "#0f172a", width: 3, fill: "none" },
+                { type: "path", d: "M 400 332 L 415 340 L 400 348", stroke: "#0f172a", width: 3, fill: "none" }
+              ]
+            },
+            {
+              narration: "Highlight the classic 'F-shape'. Look at angle 'a' above the top line and angle 'e' above the bottom line.",
+              rule: "Corresponding angles make an 'F' and are equal: a = e.",
+              quizQ: "If a = 110°, what is corresponding angle e?",
+              quizA: "Angle e = 110°.",
+              elements: [
+                /* F-Shape highlights */
+                { type: "line", d: "M 300 160 L 500 160", stroke: "#ef4444", width: 6 },
+                { type: "line", d: "M 490 340 L 650 340", stroke: "#ef4444", width: 6 },
+                { type: "line", d: "M 300 160 L 490 340", stroke: "#ef4444", width: 6 },
+                /* Arcs */
+                { type: "arc", d: "M 340 160 A 40 40 0 0 0 320 180", stroke: "#f59e0b", width: 5, fill: "none" },
+                { type: "text", x: 335, y: 145, text: "a", color: "#b45309", size: 26 },
+                { type: "arc", d: "M 530 340 A 40 40 0 0 0 510 360", stroke: "#f59e0b", width: 5, fill: "none" },
+                { type: "text", x: 525, y: 325, text: "e", color: "#b45309", size: 26 },
+                { type: "text", x: 400, y: 70, text: "F-Shape: Corresponding a = e", color: "#ef4444", size: 30 }
+              ]
+            }
+          ],
+          "alternate": [
+            {
+              narration: "Now let's trace the transversal between the two parallel rails.",
+              rule: "Alternate angles lie on alternating sides of the transversal line.",
+              quizQ: "What letter shape reminds us of alternate angles?",
+              quizA: "The letter 'Z' (or backwards Z).",
+              elements: [
+                { type: "line", d: "M 120 160 L 680 160", stroke: "#475569", width: 4 },
+                { type: "line", d: "M 120 340 L 680 340", stroke: "#475569", width: 4 },
+                { type: "line", d: "M 220 80 L 580 420", stroke: "#475569", width: 4 }
+              ]
+            },
+            {
+              narration: "Highlight the 'Z-shape'. The inner elbow angles 'c' and 'f' are equal.",
+              rule: "Alternate angles make a 'Z' and are equal: c = f.",
+              quizQ: "If angle c = 65°, what is alternate angle f?",
+              quizA: "f = 65°.",
+              elements: [
+                /* Z shape in vivid blue */
+                { type: "line", d: "M 160 160 L 305 160", stroke: "#2563eb", width: 6 },
+                { type: "line", d: "M 305 160 L 490 340", stroke: "#2563eb", width: 6 },
+                { type: "line", d: "M 490 340 L 640 340", stroke: "#2563eb", width: 6 },
+                /* Angle arcs inside Z */
+                { type: "arc", d: "M 330 185 A 35 35 0 0 1 295 160", stroke: "#2563eb", width: 5, fill: "none" },
+                { type: "text", x: 335, y: 195, text: "c", color: "#1d4ed8", size: 26 },
+                { type: "arc", d: "M 465 315 A 35 35 0 0 1 500 340", stroke: "#2563eb", width: 5, fill: "none" },
+                { type: "text", x: 450, y: 310, text: "f", color: "#1d4ed8", size: 26 },
+                { type: "text", x: 400, y: 70, text: "Z-Shape: Alternate c = f", color: "#2563eb", size: 30 }
+              ]
+            }
+          ],
+          "cointerior": [
+            {
+              narration: "Look at the interior angles sitting together on the same side of the transversal.",
+              rule: "Co-interior angles are inside the two parallel lines on the same side.",
+              quizQ: "Do co-interior angles equal each other or add to 180°?",
+              quizA: "They add up to 180° (supplementary).",
+              elements: [
+                { type: "line", d: "M 120 160 L 680 160", stroke: "#475569", width: 4 },
+                { type: "line", d: "M 120 340 L 680 340", stroke: "#475569", width: 4 },
+                { type: "line", d: "M 220 80 L 580 420", stroke: "#475569", width: 4 }
+              ]
+            },
+            {
+              narration: "They form a 'C-shape'. Angles 'c' and 'e' add up to 180°.",
+              rule: "Co-interior angles make a 'C' and sum to 180°: c + e = 180°.",
+              quizQ: "If c = 65°, what is angle e?",
+              quizA: "e = 180° − 65° = 115°.",
+              elements: [
+                /* C-shape highlight */
+                { type: "line", d: "M 305 160 L 480 160", stroke: "#059669", width: 6 },
+                { type: "line", d: "M 305 160 L 490 340", stroke: "#059669", width: 6 },
+                { type: "line", d: "M 490 340 L 330 340", stroke: "#059669", width: 6 },
+                { type: "arc", d: "M 330 185 A 35 35 0 0 1 295 160", stroke: "#059669", width: 5, fill: "none" },
+                { type: "text", x: 335, y: 195, text: "c (65°)", color: "#047857", size: 24 },
+                { type: "arc", d: "M 470 320 A 35 35 0 0 0 450 340", stroke: "#059669", width: 5, fill: "none" },
+                { type: "text", x: 420, y: 325, text: "e (115°)", color: "#047857", size: 24 },
+                { type: "text", x: 400, y: 70, text: "C-Shape: c + e = 180°", color: "#059669", size: 30 }
+              ]
+            }
+          ]
+        }
+      },
+      "5.2": {
+        title: "5.2 The Exterior Angle of a Triangle",
+        watermark: "Section 5.2: Triangle Exterior Angle Theorem",
+        subtopics: [
+          { id: "exterior_proof", label: "Exterior Angle Proof: d = a + b" }
+        ],
+        scenes: {
+          "exterior_proof": [
+            {
+              narration: "Let's draw triangle ABC, then extend side BC past C straight out to point X.",
+              rule: "Extending one side forms an exterior angle 'd' outside vertex C.",
+              quizQ: "What are the two opposite interior angles to exterior angle d?",
+              quizA: "Angles a (at A) and b (at B).",
+              elements: [
+                /* Triangle A(300,120), B(160,360), C(480,360) and extension to X(700, 360) */
+                { type: "line", d: "M 160 360 L 700 360", stroke: "#334155", width: 4 },
+                { type: "line", d: "M 160 360 L 320 120", stroke: "#334155", width: 4 },
+                { type: "line", d: "M 320 120 L 480 360", stroke: "#334155", width: 4 },
+                { type: "point", cx: 320, cy: 120, r: 5, fill: "#0f172a" },
+                { type: "point", cx: 160, cy: 360, r: 5, fill: "#0f172a" },
+                { type: "point", cx: 480, cy: 360, r: 5, fill: "#0f172a" },
+                { type: "point", cx: 700, cy: 360, r: 5, fill: "#0f172a" },
+                { type: "text", x: 320, y: 95, text: "A", color: "#0f172a", size: 24 },
+                { type: "text", x: 140, y: 380, text: "B", color: "#0f172a", size: 24 },
+                { type: "text", x: 470, y: 395, text: "C", color: "#0f172a", size: 24 },
+                { type: "text", x: 715, y: 365, text: "X", color: "#0f172a", size: 24 }
+              ]
+            },
+            {
+              narration: "Mark interior angles a, b, and c inside triangle ABC. Sum of angles in a triangle: a + b + c = 180°.",
+              rule: "Therefore, the two opposite angles satisfy: a + b = 180° − c.",
+              quizQ: "If a = 50° and b = 65°, what is a + b?",
+              quizA: "115°.",
+              elements: [
+                { type: "arc", d: "M 305 142 A 30 30 0 0 0 335 142", stroke: "#2563eb", width: 4, fill: "none" },
+                { type: "text", x: 320, y: 170, text: "a (50°)", color: "#1d4ed8", size: 22 },
+                { type: "arc", d: "M 200 360 A 40 40 0 0 0 185 320", stroke: "#2563eb", width: 4, fill: "none" },
+                { type: "text", x: 230, y: 340, text: "b (65°)", color: "#1d4ed8", size: 22 },
+                { type: "arc", d: "M 440 360 A 40 40 0 0 1 460 330", stroke: "#059669", width: 4, fill: "none" },
+                { type: "text", x: 430, y: 340, text: "c", color: "#047857", size: 22 },
+                { type: "text", x: 400, y: 50, text: "In △ABC: a + b + c = 180° ⇒ a + b = 180° − c", color: "#1e293b", size: 24 }
+              ]
+            },
+            {
+              narration: "Angles c and d sit on a flat straight line BX, so c + d = 180°, which means d = 180° − c.",
+              rule: "Both expressions equal 180° − c. Therefore: d = a + b!",
+              quizQ: "With a = 50° and b = 65°, calculate exterior angle d.",
+              quizA: "d = 50° + 65° = 115°.",
+              elements: [
+                /* Exterior angle arc */
+                { type: "arc", d: "M 480 360 L 530 360 A 50 50 0 0 0 505 320 Z", stroke: "#dc2626", width: 3, fill: "rgba(239, 68, 68, 0.15)" },
+                { type: "text", x: 550, y: 335, text: "d = a + b", color: "#dc2626", size: 26 },
+                { type: "text", x: 550, y: 365, text: "= 115°", color: "#dc2626", size: 24 },
+                { type: "text", x: 400, y: 450, text: "Exterior angle d equals the sum of opposite interior angles a + b", color: "#dc2626", size: 24 }
+              ]
+            }
+          ]
+        }
+      },
+      "5.3": {
+        title: "5.3 Accurate Constructions",
+        watermark: "Section 5.3: Geometric Compass Constructions",
+        subtopics: [
+          { id: "perp_bisector", label: "Perpendicular Bisector (Line AB)" },
+          { id: "angle_bisector", label: "Angle Bisector" }
+        ],
+        scenes: {
+          "perp_bisector": [
+            {
+              narration: "Step 1: Start with line segment AB. Set the compass open to more than half the length of AB.",
+              rule: "Opening past halfway is required so the compass arcs will intersect.",
+              quizQ: "Why must the compass radius be strictly greater than half of AB?",
+              quizA: "If less than half, the arcs would never meet.",
+              elements: [
+                { type: "line", d: "M 200 250 L 600 250", stroke: "#0f172a", width: 4 },
+                { type: "point", cx: 200, cy: 250, r: 6, fill: "#0f172a" },
+                { type: "point", cx: 600, cy: 250, r: 6, fill: "#0f172a" },
+                { type: "text", x: 180, y: 255, text: "A", color: "#0f172a", size: 26 },
+                { type: "text", x: 620, y: 255, text: "B", color: "#0f172a", size: 26 },
+                { type: "circle", cx: 200, cy: 250, r: 6, stroke: "#3b82f6", width: 2, fill: "none", class: "compass-pivot" }
+              ]
+            },
+            {
+              narration: "Step 2: Place the compass point on A and strike arcs above and below AB. Without changing width, repeat from B!",
+              rule: "Equal radii from A and B ensure equal distance to the bisector line.",
+              quizQ: "How many arc intersection points are formed?",
+              quizA: "Two intersection points (one above AB, one below AB).",
+              elements: [
+                /* Arcs from A (r = 240) */
+                { type: "arc", d: "M 380 90 A 240 240 0 0 1 420 150", stroke: "#3b82f6", width: 3, dash: "6,6" },
+                { type: "arc", d: "M 380 410 A 240 240 0 0 0 420 350", stroke: "#3b82f6", width: 3, dash: "6,6" },
+                /* Arcs from B (r = 240) */
+                { type: "arc", d: "M 420 90 A 240 240 0 0 0 380 150", stroke: "#ec4899", width: 3, dash: "6,6" },
+                { type: "arc", d: "M 420 410 A 240 240 0 0 1 380 350", stroke: "#ec4899", width: 3, dash: "6,6" },
+                /* Intersections */
+                { type: "point", cx: 400, cy: 118, r: 5, fill: "#dc2626" },
+                { type: "point", cx: 400, cy: 382, r: 5, fill: "#dc2626" },
+                { type: "text", x: 415, y: 115, text: "P", color: "#dc2626", size: 22 },
+                { type: "text", x: 415, y: 395, text: "Q", color: "#dc2626", size: 22 }
+              ]
+            },
+            {
+              narration: "Step 3: Join the two crossings P and Q with a ruler. The line cuts AB exactly in half at 90°!",
+              rule: "Perpendicular bisector: 90° angle and divides AB into two equal segments.",
+              quizQ: "What angle does the bisector make with segment AB?",
+              quizA: "90° (a right angle).",
+              elements: [
+                { type: "line", d: "M 400 60 L 400 440", stroke: "#dc2626", width: 4 },
+                /* Right angle symbol at (400, 250) */
+                { type: "path", d: "M 400 230 L 420 230 L 420 250", stroke: "#dc2626", width: 2, fill: "none" },
+                /* Hash marks showing equal halves */
+                { type: "line", d: "M 295 242 L 305 258", stroke: "#059669", width: 3 },
+                { type: "line", d: "M 495 242 L 505 258", stroke: "#059669", width: 3 },
+                { type: "text", x: 400, y: 470, text: "PQ cuts AB in half at 90°", color: "#dc2626", size: 26 }
+              ]
+            }
+          ],
+          "angle_bisector": [
+            {
+              narration: "Step 1: Given angle BAC, put the compass on vertex A and draw an arc crossing both arms.",
+              rule: "This marks two points P and Q equidistant from vertex A.",
+              quizQ: "What is an angle bisector?",
+              quizA: "A ray that divides an angle into two perfectly equal angles.",
+              elements: [
+                { type: "line", d: "M 180 360 L 640 360", stroke: "#0f172a", width: 4 },
+                { type: "line", d: "M 180 360 L 520 100", stroke: "#0f172a", width: 4 },
+                { type: "point", cx: 180, cy: 360, r: 6, fill: "#0f172a" },
+                { type: "text", x: 150, y: 375, text: "A", color: "#0f172a", size: 26 },
+                /* Arc across both arms */
+                { type: "arc", d: "M 320 360 A 140 140 0 0 1 270 291", stroke: "#3b82f6", width: 4, dash: "6,6" },
+                { type: "point", cx: 320, cy: 360, r: 5, fill: "#2563eb" },
+                { type: "point", cx: 270, cy: 291, r: 5, fill: "#2563eb" },
+                { type: "text", x: 325, y: 390, text: "P", color: "#2563eb", size: 22 },
+                { type: "text", x: 250, y: 280, text: "Q", color: "#2563eb", size: 22 }
+              ]
+            },
+            {
+              narration: "Step 2: From point P and point Q, draw two equal arcs that meet inside the angle at point M.",
+              rule: "Keep the compass width equal when striking arcs from P and Q.",
+              quizQ: "Where do the two compass arcs meet?",
+              quizA: "At point M, inside the interior of the angle.",
+              elements: [
+                /* Arc from P */
+                { type: "arc", d: "M 440 240 A 160 160 0 0 0 490 290", stroke: "#ec4899", width: 3, dash: "6,6" },
+                /* Arc from Q */
+                { type: "arc", d: "M 480 230 A 160 160 0 0 1 450 300", stroke: "#ec4899", width: 3, dash: "6,6" },
+                { type: "point", cx: 468, cy: 266, r: 6, fill: "#dc2626" },
+                { type: "text", x: 485, y: 265, text: "M", color: "#dc2626", size: 24 }
+              ]
+            },
+            {
+              narration: "Step 3: Draw a straight ray from vertex A through meeting point M. The angle is bisected!",
+              rule: "The ray AM splits ∠A into two equal angles.",
+              quizQ: "If the total angle was 60°, what is each bisected angle?",
+              quizA: "30° and 30°.",
+              elements: [
+                { type: "line", d: "M 180 360 L 580 230", stroke: "#dc2626", width: 4 },
+                /* Equal angle indicators */
+                { type: "arc", d: "M 330 360 A 150 150 0 0 1 320 315", stroke: "#059669", width: 3, fill: "none" },
+                { type: "arc", d: "M 320 315 A 150 150 0 0 1 290 275", stroke: "#059669", width: 3, fill: "none" },
+                { type: "text", x: 345, y: 345, text: "•", color: "#059669", size: 30 },
+                { type: "text", x: 320, y: 295, text: "•", color: "#059669", size: 30 },
+                { type: "text", x: 400, y: 80, text: "Ray AM bisects ∠A into two equal halves", color: "#dc2626", size: 26 }
+              ]
+            }
+          ]
+        }
+      }
+    };
+
+    // App State
+    let currentTopicKey = "5.1";
+    let currentSubtopicId = "vert_opp";
+    let currentStep = 0;
+    let isPlaying = false;
+    let playTimer = null;
+
+    window.addEventListener("DOMContentLoaded", () => {
+      switchTopic("5.1");
+    });
+
+    function switchTopic(topicKey) {
+      currentTopicKey = topicKey;
+      const topicData = LESSON_DATA[topicKey];
+
+      // Update Top Nav Styling
+      ["5-1", "5-2", "5-3"].forEach(id => {
+        const btn = document.getElementById("tab-" + id);
+        const isActive = id === topicKey.replace(".", "-");
+        btn.className = isActive 
+          ? "px-4 py-2 rounded-lg transition-all duration-200 bg-white text-slate-900 shadow-xs font-bold whitespace-nowrap"
+          : "px-4 py-2 rounded-lg transition-all duration-200 text-slate-600 hover:text-slate-900 whitespace-nowrap";
+      });
+
+      // Update Badges & Titles
+      document.getElementById("current-badge-text").innerText = topicData.title;
+      document.getElementById("board-watermark").innerText = topicData.watermark;
+
+      // Populate Subtopic selector
+      const subtopicContainer = document.getElementById("subtopic-buttons");
+      subtopicContainer.innerHTML = "";
+      topicData.subtopics.forEach((sub, idx) => {
+        const btn = document.createElement("button");
+        btn.id = "subbtn-" + sub.id;
+        btn.className = "px-3 py-1.5 rounded-xl text-xs font-bold transition-all " + 
+          (idx === 0 ? "bg-slate-900 text-white shadow-xs" : "bg-slate-100 hover:bg-slate-200 text-slate-700");
+        btn.innerText = sub.label;
+        btn.onclick = () => switchSubtopic(sub.id);
+        subtopicContainer.appendChild(btn);
+      });
+
+      switchSubtopic(topicData.subtopics[0].id);
+    }
+
+    function switchSubtopic(subId) {
+      currentSubtopicId = subId;
+      currentStep = 0;
+      stopAutoPlay();
+
+      // Style active subtopic button
+      const topicData = LESSON_DATA[currentTopicKey];
+      topicData.subtopics.forEach(sub => {
+        const btn = document.getElementById("subbtn-" + sub.id);
+        if (btn) {
+          const isActive = sub.id === subId;
+          btn.className = "px-3 py-1.5 rounded-xl text-xs font-bold transition-all " + 
+            (isActive ? "bg-slate-900 text-white shadow-xs" : "bg-slate-100 hover:bg-slate-200 text-slate-700");
+        }
+      });
+
+      renderCurrentStep();
+    }
+
+    function renderCurrentStep() {
+      const scenes = LESSON_DATA[currentTopicKey].scenes[currentSubtopicId];
+      const maxSteps = scenes.length;
+      if (currentStep >= maxSteps) currentStep = maxSteps - 1;
+      if (currentStep < 0) currentStep = 0;
+
+      const sceneData = scenes[currentStep];
+
+      // Update Narrator Content
+      document.getElementById("teacher-title").innerText = LESSON_DATA[currentTopicKey].title;
+      document.getElementById("teacher-subtitle").innerText = `Step ${currentStep + 1} of ${maxSteps}`;
+      document.getElementById("teacher-narration").innerText = `"${sceneData.narration}"`;
+      document.getElementById("teacher-rule").innerText = sceneData.rule;
+      document.getElementById("quiz-question").innerText = sceneData.quizQ;
+      document.getElementById("quiz-answer").innerText = sceneData.quizA;
+      document.getElementById("quiz-answer").classList.add("hidden");
+      document.getElementById("quiz-btn").innerText = "Show Answer";
+
+      // Update Controls
+      document.getElementById("btn-prev").disabled = currentStep === 0;
+      document.getElementById("btn-next").disabled = currentStep === maxSteps - 1;
+      document.getElementById("step-counter-text").innerText = `${currentStep + 1} / ${maxSteps}`;
+
+      // Update indicator dots
+      const dotsContainer = document.getElementById("step-indicator-dots");
+      dotsContainer.innerHTML = "";
+      for (let i = 0; i < maxSteps; i++) {
+        const dot = document.createElement("div");
+        dot.className = "w-2.5 h-2.5 rounded-full transition-all duration-300 " + 
+          (i === currentStep ? "bg-amber-500 scale-125" : i < currentStep ? "bg-slate-700" : "bg-slate-200");
+        dotsContainer.appendChild(dot);
+      }
+
+      // Draw SVG Elements up to currentStep (cumulative whiteboard drawing)
+      const drawingLayer = document.getElementById("wb-drawing-layer");
+      drawingLayer.innerHTML = "";
+
+      // Show indicator
+      const indicator = document.getElementById("drawing-indicator");
+      indicator.style.opacity = "1";
+
+      for (let s = 0; s <= currentStep; s++) {
+        const stepElements = scenes[s].elements;
+        const isCurrentActiveStep = (s === currentStep);
+
+        stepElements.forEach((el, index) => {
+          let node;
+          if (el.type === "line" || el.type === "path" || el.type === "arc") {
+            node = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            node.setAttribute("d", el.d);
+            node.setAttribute("stroke", el.stroke);
+            node.setAttribute("stroke-width", el.width || 3);
+            node.setAttribute("fill", el.fill || "none");
+            node.setAttribute("class", "wb-path");
+            if (el.dash) node.setAttribute("stroke-dasharray", el.dash);
+
+            drawingLayer.appendChild(node);
+
+            // Animate stroke self-drawing
+            const length = node.getTotalLength ? node.getTotalLength() : 600;
+            if (isCurrentActiveStep) {
+              node.style.strokeDasharray = length;
+              node.style.strokeDashoffset = length;
+              // Force layout reflow
+              node.getBoundingClientRect();
+              node.style.strokeDashoffset = "0";
+            }
+          } 
+          else if (el.type === "point") {
+            node = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            node.setAttribute("cx", el.cx);
+            node.setAttribute("cy", el.cy);
+            node.setAttribute("r", el.r || 5);
+            node.setAttribute("fill", el.fill || "#0f172a");
+            node.setAttribute("class", isCurrentActiveStep ? "wb-fade wb-fade-hidden" : "wb-fade wb-fade-visible");
+            drawingLayer.appendChild(node);
+            if (isCurrentActiveStep) {
+              setTimeout(() => node.setAttribute("class", "wb-fade wb-fade-visible"), 300);
+            }
+          }
+          else if (el.type === "circle") {
+            node = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            node.setAttribute("cx", el.cx);
+            node.setAttribute("cy", el.cy);
+            node.setAttribute("r", el.r);
+            node.setAttribute("stroke", el.stroke);
+            node.setAttribute("stroke-width", el.width || 2);
+            node.setAttribute("fill", el.fill || "none");
+            if (el.class) node.setAttribute("class", el.class);
+            drawingLayer.appendChild(node);
+          }
+          else if (el.type === "text") {
+            node = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            node.setAttribute("x", el.x);
+            node.setAttribute("y", el.y);
+            node.setAttribute("fill", el.color || "#0f172a");
+            node.setAttribute("font-size", el.size || 22);
+            node.setAttribute("font-weight", "bold");
+            node.setAttribute("font-family", "'Caveat', cursive, sans-serif");
+            node.setAttribute("text-anchor", "middle");
+            node.setAttribute("dominant-baseline", "middle");
+            node.setAttribute("class", isCurrentActiveStep ? "wb-fade wb-fade-hidden" : "wb-fade wb-fade-visible");
+            node.textContent = el.text;
+            drawingLayer.appendChild(node);
+            if (isCurrentActiveStep) {
+              setTimeout(() => node.setAttribute("class", "wb-fade wb-fade-visible"), 400 + (index * 60));
+            }
+          }
+        });
+      }
+
+      setTimeout(() => {
+        indicator.style.opacity = "0";
+      }, 1000);
+    }
+
+    function nextStep() {
+      const maxSteps = LESSON_DATA[currentTopicKey].scenes[currentSubtopicId].length;
+      if (currentStep < maxSteps - 1) {
+        currentStep++;
+        renderCurrentStep();
+      } else {
+        stopAutoPlay();
+      }
+    }
+
+    function previousStep() {
+      if (currentStep > 0) {
+        currentStep--;
+        renderCurrentStep();
+      }
+    }
+
+    function restartScene() {
+      stopAutoPlay();
+      currentStep = 0;
+      renderCurrentStep();
+    }
+
+    function togglePlayPause() {
+      if (isPlaying) {
+        stopAutoPlay();
+      } else {
+        startAutoPlay();
+      }
+    }
+
+    function startAutoPlay() {
+      isPlaying = true;
+      document.getElementById("play-icon").innerText = "⏸";
+      document.getElementById("play-label").innerText = "Pause";
+      
+      const maxSteps = LESSON_DATA[currentTopicKey].scenes[currentSubtopicId].length;
+      if (currentStep >= maxSteps - 1) {
+        currentStep = 0;
+        renderCurrentStep();
+      }
+
+      playTimer = setInterval(() => {
+        const total = LESSON_DATA[currentTopicKey].scenes[currentSubtopicId].length;
+        if (currentStep < total - 1) {
+          nextStep();
+        } else {
+          stopAutoPlay();
+        }
+      }, 2600);
+    }
+
+    function stopAutoPlay() {
+      isPlaying = false;
+      clearInterval(playTimer);
+      document.getElementById("play-icon").innerText = "▶";
+      document.getElementById("play-label").innerText = "Play Step";
+    }
+
+    function revealAnswer() {
+      const ans = document.getElementById("quiz-answer");
+      const btn = document.getElementById("quiz-btn");
+      if (ans.classList.contains("hidden")) {
+        ans.classList.remove("hidden");
+        btn.innerText = "Hide Answer";
+      } else {
+        ans.classList.add("hidden");
+        btn.innerText = "Show Answer";
+      }
+    }
+  </script>
+</body>
+</html>

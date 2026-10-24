@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900">
+<rect width="1600" height="900" fill="#ffffff"/>
+<rect width="1600" height="92" fill="#0f172a"/>
+<text x="800" y="62" text-anchor="middle" fill="#ffffff" font-family="Segoe UI, Arial, sans-serif" font-size="40" font-weight="700" letter-spacing="2">ESTIMATE A SQUARE ROOT</text>
+<text x="800" y="148" text-anchor="middle" fill="#059669" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="600">Trap the number between two neighbouring squares.</text>
+<rect x="60" y="186" width="720" height="580" rx="18" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/>
+<text x="420" y="228" text-anchor="middle" fill="#c2410c" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">√79</text>
+<text x="420" y="274" text-anchor="middle" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700">8² = 64    9² = 81</text>
+<text x="420" y="316" text-anchor="middle" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700">79 is much closer to 81</text>
+<text x="420" y="358" text-anchor="middle" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="30" font-weight="700">closest integer is 9</text>
+  <rect x="820" y="186" width="720" height="580" rx="18" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+<text x="1180" y="228" text-anchor="middle" fill="#1d4ed8" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">√215</text>
+<text x="1180" y="274" text-anchor="middle" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700">14² = 196    15² = 225</text>
+<text x="1180" y="316" text-anchor="middle" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700">215 sits between them</text>
+<text x="1180" y="358" text-anchor="middle" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="30" font-weight="700">14 < √215 < 15</text>
+<rect y="808" width="1600" height="92" fill="#0f172a"/>
+<text x="800" y="864" text-anchor="middle" fill="#ffffff" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="600">CHECK  |  √79 ≈ 9   ·   14 < √215 < 15</text>
+</svg>

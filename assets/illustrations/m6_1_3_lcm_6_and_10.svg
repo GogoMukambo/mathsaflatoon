@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900">
+<rect width="1600" height="900" fill="#ffffff"/>
+<rect width="1600" height="92" fill="#0f172a"/>
+<text x="800" y="62" text-anchor="middle" fill="#ffffff" font-family="Segoe UI, Arial, sans-serif" font-size="40" font-weight="700" letter-spacing="2">LCM OF 6 AND 10</text>
+<text x="800" y="148" text-anchor="middle" fill="#2563eb" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="600">A multiple of 10 ends in 0. The first multiple of 6 that ends in 0 is 30.</text>
+<rect x="80" y="186" width="1440" height="580" rx="18" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+<text x="800" y="228" text-anchor="middle" fill="#1d4ed8" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">Multiples of 6</text>
+<text x="800" y="274" text-anchor="middle" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="36" font-weight="700">6,  12,  18,  24,  30,  36, …</text>
+<text x="800" y="316" text-anchor="middle" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="700">30 ends in 0, so it is a multiple of 10</text>
+<text x="800" y="358" text-anchor="middle" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="48" font-weight="700">LCM(6, 10) = 30</text>
+<rect y="808" width="1600" height="92" fill="#0f172a"/>
+<text x="800" y="864" text-anchor="middle" fill="#ffffff" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="600">RECALL  |  30 is the lowest common multiple</text>
+</svg>

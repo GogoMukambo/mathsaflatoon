@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="100%" height="100%">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&amp;family=Patrick+Hand&amp;display=swap');
+
+      .board-bg { fill: #ffffff; }
+      .board-frame { fill: none; stroke: #d9d3c7; stroke-width: 14; }
+      .inner-border { fill: none; stroke: #e6e1d6; stroke-width: 2; }
+
+      text {
+        font-family: 'Patrick Hand', 'Caveat', 'Comic Sans MS', cursive, sans-serif;
+        fill: #1c2430;
+        text-anchor: middle;
+        user-select: none;
+      }
+
+      .chalk-yellow { fill: #1b3a6b; }
+      .chalk-cyan { fill: #0c6e78; }
+      .chalk-green { fill: #1a7a42; }
+      .chalk-orange { fill: #b45309; }
+
+      .pop {
+        transform-box: fill-box;
+        transform-origin: center;
+      }
+
+      .t-title { animation: fadeIn 30s ease-in-out infinite; }
+      .rule-same { animation: showSame 30s ease-out infinite; }
+      .rule-diff { animation: showDiff 30s ease-out infinite; }
+      .rule-note { animation: showNote 30s ease-in-out infinite; }
+      .ex-question { animation: showQuestion 30s ease-out infinite; }
+      .ex-step { animation: showStep 30s ease-out infinite; }
+      .ex-answer { animation: showAnswer 30s ease-out infinite; }
+      .t-bidmas { animation: showBidmas 30s ease-in-out infinite; }
+
+      @keyframes fadeIn {
+        0%, 100% { opacity: 0; clip-path: inset(0 100% 0 0); }
+        3%, 94% { opacity: 1; clip-path: inset(0 0 0 0); }
+        98% { opacity: 0; clip-path: inset(0 100% 0 0); }
+      }
+
+      @keyframes showSame {
+        0%, 8% { opacity: 0; clip-path: inset(0 100% 0 0); transform: scale(0.7); }
+        14%, 94% { opacity: 1; clip-path: inset(0 0 0 0); transform: scale(1); }
+        98% { opacity: 0; clip-path: inset(0 100% 0 0); }
+      }
+
+      @keyframes showDiff {
+        0%, 22% { opacity: 0; clip-path: inset(0 100% 0 0); transform: scale(0.7); }
+        28%, 94% { opacity: 1; clip-path: inset(0 0 0 0); transform: scale(1); }
+        98% { opacity: 0; clip-path: inset(0 100% 0 0); }
+      }
+
+      @keyframes showNote {
+        0%, 34% { opacity: 0; clip-path: inset(0 100% 0 0); }
+        40%, 94% { opacity: 1; clip-path: inset(0 0 0 0); }
+        98% { opacity: 0; clip-path: inset(0 100% 0 0); }
+      }
+
+      @keyframes showQuestion {
+        0%, 46% { opacity: 0; clip-path: inset(0 100% 0 0); transform: translateY(-8px); }
+        52%, 94% { opacity: 1; clip-path: inset(0 0 0 0); transform: translateY(0); }
+        98% { opacity: 0; clip-path: inset(0 100% 0 0); }
+      }
+
+      @keyframes showStep {
+        0%, 58% { opacity: 0; clip-path: inset(0 100% 0 0); transform: translateY(8px); }
+        64%, 94% { opacity: 1; clip-path: inset(0 0 0 0); transform: translateY(0); }
+        98% { opacity: 0; clip-path: inset(0 100% 0 0); }
+      }
+
+      @keyframes showAnswer {
+        0%, 70% { opacity: 0; clip-path: inset(0 100% 0 0); transform: scale(0.85); }
+        76%, 94% { opacity: 1; clip-path: inset(0 0 0 0); transform: scale(1); }
+        98% { opacity: 0; clip-path: inset(0 100% 0 0); }
+      }
+
+      @keyframes showBidmas {
+        0%, 82% { opacity: 0; clip-path: inset(0 100% 0 0); }
+        88%, 94% { opacity: 1; clip-path: inset(0 0 0 0); }
+        98% { opacity: 0; clip-path: inset(0 100% 0 0); }
+      }
+    </style>
+  </defs>
+
+  <rect x="15" y="15" width="770" height="470" class="board-bg" />
+  <rect x="25" y="25" width="750" height="450" class="inner-border" />
+  <rect x="10" y="10" width="780" height="480" class="board-frame" rx="12" />
+
+  <g class="t-title">
+    <text x="400" y="58" font-size="28" font-weight="bold" class="chalk-yellow" letter-spacing="1.2">UNIT 1.2: SIGN RULES</text>
+    <path d="M 250,68 Q 400,74 550,68" stroke="#1b3a6b" stroke-width="2" fill="none" stroke-linecap="round" />
+  </g>
+
+  <g class="pop rule-same">
+    <text x="210" y="125" font-size="28">(+) &#215; (+) = <tspan class="chalk-green" font-weight="bold">+</tspan></text>
+    <text x="210" y="175" font-size="28">(&#8722;) &#215; (&#8722;) = <tspan class="chalk-green" font-weight="bold">+</tspan></text>
+  </g>
+
+  <g class="pop rule-diff">
+    <text x="560" y="125" font-size="28">(+) &#215; (&#8722;) = <tspan class="chalk-orange" font-weight="bold">&#8722;</tspan></text>
+    <text x="560" y="175" font-size="28">(&#8722;) &#215; (+) = <tspan class="chalk-orange" font-weight="bold">&#8722;</tspan></text>
+  </g>
+
+  <g class="rule-note">
+    <text x="400" y="230" font-size="22" class="chalk-cyan">Same signs give +. Different signs give &#8722;.</text>
+    <text x="400" y="262" font-size="20">Division uses the same rules.</text>
+  </g>
+
+  <g class="pop ex-question">
+    <text x="400" y="318" font-size="30">(&#8722;3 + 15) &#247; &#8722;4</text>
+  </g>
+
+  <g class="pop ex-step">
+    <text x="400" y="362" font-size="26" class="chalk-cyan">Brackets first: 12 &#247; &#8722;4</text>
+  </g>
+
+  <g class="pop ex-answer">
+    <rect x="300" y="382" width="200" height="52" rx="8" fill="#fff8ee" stroke="#b45309" stroke-width="2.5" stroke-dasharray="6,4" />
+    <text x="400" y="416" font-size="28" font-weight="bold" class="chalk-orange">= &#8722;3</text>
+  </g>
+
+  <g class="t-bidmas">
+    <text x="400" y="468" font-size="18" fill="#a0b2a6">Order: Brackets, Indices, &#215; and &#247;, then + and &#8722;</text>
+  </g>
+</svg>

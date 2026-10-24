@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abhyaas — Algebra Quest</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap');
+        
+        :root {
+            --brand-blue: #0f4c81;
+            --light-blue: #e0f2fe;
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.3);
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #020617, #1e3a8a, #3b82f6);
+            background-attachment: fixed;
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+            user-select: none;
+        }
+
+        h1, h2, h3, h4, .font-heading {
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        .bg-pattern {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: -1;
+            background-image: url("data:image/svg+xml,%3Csvg width='300' height='300' viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cg font-family='Fredoka, sans-serif' font-weight='bold' fill='rgba(255,255,255,0.05)'%3E%3Ctext x='30' y='60' font-size='40'%3E3x+2%3C/text%3E%3Ctext x='200' y='90' font-size='50'%3Ey%3C7%3C/text%3E%3Ctext x='100' y='180' font-size='45'%3E4(n+3)%3C/text%3E%3Ctext x='240' y='220' font-size='40'%3E%3D%3C/text%3E%3Ctext x='150' y='50' font-size='35'%3Ea%C2%B2%3C/text%3E%3Ctext x='50' y='260' font-size='35'%3E5n%3C/text%3E%3Ctext x='180' y='280' font-size='30'%3E>%3C/text%3E%3C/g%3E%3C/svg%3E");
+            animation: floatPattern 60s linear infinite;
+        }
+
+        @keyframes floatPattern {
+            0% { background-position: 0 0; }
+            100% { background-position: 300px 300px; }
+        }
+
+        @keyframes pulseNode {
+            0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 255, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        }
+
+        @keyframes flashRed {
+            0%, 100% { background-color: rgba(239, 68, 68, 0.4); border-color: #f87171; transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .quest-node {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            border: 3px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+
+        .quest-node.active, .quest-node:hover {
+            background: white;
+            color: var(--brand-blue);
+            transform: translate(-50%, -50%) scale(1.15);
+            animation: pulseNode 2s infinite;
+        }
+
+        .quest-node-label {
+            position: absolute;
+            top: 70px;
+            width: 160px;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            pointer-events: none;
+            line-height: 1.2;
+        }
+
+        .quiz-input {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+        .quiz-input:focus { outline: none; background: rgba(255, 255, 255, 0.3); border-color: white; }
+        .quiz-input.correct {
+            background: rgba(34, 197, 94, 0.4) !important;
+            color: #ffffff;
+            border-color: #4ade80 !important;
+            box-shadow: 0 0 20px rgba(74, 222, 128, 0.7);
+            transform: scale(1.05);
+            pointer-events: none;
+        }
+        .quiz-input.incorrect {
+            animation: flashRed 0.4s ease;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 15, 40, 0.6);
+            backdrop-filter: blur(8px);
+            z-index: 50;
+            overflow-y: auto;
+            padding: 2rem 1rem;
+            display: none;
+        }
+
+        .drag-card {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.6);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1rem;
+            border-radius: 0.75rem;
+            cursor: grab;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: transform 0.2s;
+            user-select: none;
+            text-align: center;
+        }
+        .drag-card:active { cursor: grabbing; transform: scale(0.95); }
+        
+        .drop-slot {
+            width: 150px;
+            height: 60px;
+            border: 2px dashed rgba(255,255,255,0.4);
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .drop-slot.filled { border-style: solid; }
+        
+        .study-box {
+            background: rgba(255,255,255,0.05);
+            border-left: 4px solid #3b82f6;
+            padding: 1.25rem;
+            border-radius: 0 1rem 1rem 0;
+            margin-bottom: 1.5rem;
+        }
+        
+        .btn-more, .btn-exercise {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s;
+        }
+        .btn-more { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+        .btn-exercise { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+        .btn-more:hover, .btn-exercise:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); }
+
+        .custom-scroll::-webkit-scrollbar { width: 8px; }
+        .custom-scroll::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
+        
+        .pyramid-row { display: flex; justify-content: center; gap: 10px; margin-bottom: 10px; }
+        .pyramid-block { width: 80px; height: 60px; background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.4); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: bold; border-radius: 12px; transition: all 0.3s ease; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+        .pyramid-block input { width: 100%; height: 100%; text-align: center; border-radius: 10px; background: transparent; outline: none; transition: all 0.3s; color: white; font-weight: bold;}
+        .pyramid-block input.correct { background: rgba(34, 197, 94, 0.5) !important; color: white; }
+        .pyramid-block input.incorrect { animation: flashRed 0.4s ease; background: rgba(239, 68, 68, 0.4); }
+        
+    
+        body.embed-mode header.glass-panel {
+            display: none;
+        }
+
+        body.embed-mode main {
+            min-height: 85vh;
+            padding-top: 1.5rem;
+        }
+
+        body.embed-mode #quest-modal {
+            padding-top: 0.5rem;
+        }
+
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="bg-pattern pointer-events-none"></div>
+
+    <header class="glass-panel sticky top-0 z-40 border-b-0 border-white/20">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <svg class="w-8 h-8 text-white drop-shadow-md" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"></path></svg>
+                <h1 class="text-3xl font-bold tracking-wider drop-shadow-sm font-heading">Abhyaas</h1>
+            </div>
+            <span class="text-sm font-bold bg-white/10 text-white py-1.5 px-4 rounded-full shadow-md uppercase tracking-wide border border-white/30">Math Quest: Chapter 2</span>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto w-full px-4 py-12 relative flex flex-col items-center justify-center min-h-[70vh]">
+        <div class="text-center mb-10">
+            <h2 class="text-5xl font-heading font-bold mb-4 drop-shadow-lg">Expressions, Formulae & Equations</h2>
+            <p class="text-xl text-blue-100/80 font-bold max-w-2xl mx-auto mb-8">Master algebraic expressions, expanding brackets, and solving inequalities.</p>
+            
+            <div class="glass-panel p-8 rounded-2xl max-w-4xl mx-auto mb-8 text-left z-10 relative">
+                <h3 class="text-2xl font-bold text-blue-200 mb-3 border-b border-white/10 pb-2">Why learn this in the real world?</h3>
+                <p class="text-blue-50 mb-6 leading-relaxed">Algebra allows you to take a situation and make it more general using formulae that work in every case. This helps in everyday life, such as calculating supermarket deals, applying for loans, or finding the area of a garden. It is also essential for careers in technology, engineering, medicine, and economics, and it helps you think logically to solve complex problems.</p>
+                
+                <h3 class="text-2xl font-bold text-purple-300 mb-3 border-b border-white/10 pb-2">Chapter Modules:</h3>
+                <ul class="list-disc ml-6 space-y-2 text-blue-50 font-semibold grid grid-cols-1 sm:grid-cols-2 gap-x-6">
+                    <li>2.1 Constructing expressions</li>
+                    <li>2.2 Using expressions and formulae</li>
+                    <li>2.3 Collecting like terms</li>
+                    <li>2.4 Expanding brackets</li>
+                    <li>2.5 Constructing and solving equations</li>
+                    <li>2.6 Inequalities</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="relative w-full max-w-4xl h-[300px] mt-4">
+            <svg class="absolute top-0 left-0 w-full h-full pointer-events-none drop-shadow-[0_0_10px_rgba(255,255,255,0.4)]" viewBox="0 0 1000 300" preserveAspectRatio="none">
+                <path d="M 150 150 C 300 150, 300 60, 500 60 C 700 60, 700 240, 850 240" 
+                      fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="8" stroke-linecap="round" stroke-dasharray="15, 15" />
+            </svg>
+            <button class="quest-node pulse" style="left: 15%; top: 50%;" onclick="openLevel(1)">1<span class="quest-node-label">2.1 & 2.2<br>Expressions & Formulae</span></button>
+            <button class="quest-node" style="left: 50%; top: 20%;" onclick="openLevel(2)">2<span class="quest-node-label">2.3 & 2.4<br>Terms & Brackets</span></button>
+            <button class="quest-node" style="left: 85%; top: 80%;" onclick="openLevel(3)">3<span class="quest-node-label">2.5 & 2.6<br>Equations & Inequalities</span></button>
+        </div>
+    </main>
+
+    <!-- MAIN QUEST MODAL -->
+    <div id="quest-modal" class="modal-overlay hidden items-center justify-center">
+        <button onclick="prevLevel(event)" class="fixed left-2 md:left-8 top-1/2 -translate-y-1/2 w-14 h-14 md:w-20 md:h-20 rounded-full bg-white/20 backdrop-blur-md hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-all duration-300 border-2 border-white/40 shadow-[0_0_20px_rgba(255,255,255,0.3)] z-[60] cursor-pointer" id="prev-level-btn"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path></svg></button>
+        <button onclick="nextLevel(event)" class="fixed right-2 md:right-8 top-1/2 -translate-y-1/2 w-14 h-14 md:w-20 md:h-20 rounded-full bg-white/20 backdrop-blur-md hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-all duration-300 border-2 border-white/40 shadow-[0_0_20px_rgba(255,255,255,0.3)] z-[60] cursor-pointer" id="next-level-btn"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg></button>
+
+        <div id="modal-content-panel" class="glass-panel w-full max-w-5xl rounded-3xl p-6 md:p-10 relative">
+            <button onclick="closeModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-colors border border-white/40 z-10"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+
+            <!-- Level 1: Expressions & Formulae -->
+            <div id="level-1" class="level-content hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Left: Study Material -->
+                    <div>
+                        <h2 class="text-3xl font-heading font-bold mb-6 flex items-center gap-3">
+                            <span class="bg-white text-blue-900 w-10 h-10 rounded-full flex items-center justify-center text-xl">1</span>
+                            Expressions & Formulae
+                        </h2>
+                        <div class="study-box">
+                            <h4 class="text-lg font-bold text-blue-300 mb-2">2.1 Constructing Expressions</h4>
+                            <ul class="list-disc ml-5 space-y-2 text-sm text-blue-50">
+                                <li>In algebra you can use a letter to represent an unknown number.</li>
+                                <li>An <b>expression</b> contains numbers and letters, but not an equals sign.</li>
+                                <li>In the expression 5n + 4, there are two <b>terms</b>. The letter n is the <b>variable</b>. The <b>coefficient</b> of n is 5 because it is the number that multiplies the variable.</li>
+                            </ul>
+                        </div>
+                        <div class="study-box border-teal-400">
+                            <h4 class="text-lg font-bold text-teal-300 mb-2">2.2 Using Formulae</h4>
+                            <p class="text-sm text-blue-50 mb-2">A formula is a mathematical rule that shows the relationship between two quantities (variables) and has an equals sign.</p>
+                            <ul class="list-disc ml-5 space-y-1 text-sm text-blue-50 font-bold">
+                                <li>For example, Area of a rectangle: A = l × w</li>
+                                <li>You can substitute numbers into an expression or formula to work out the value.</li>
+                            </ul>
+                        </div>
+                        <!-- SOLVED EXAMPLE -->
+                        <div class="bg-blue-900/50 border-l-4 border-blue-400 p-4 rounded-r-xl mb-6 shadow-lg">
+                            <h4 class="font-bold text-blue-200 mb-2 text-lg">Solved Examples</h4>
+                            <p class="text-sm font-bold mt-2">Work out the value of: 2w - 3v when w = 12 and v = 5</p>
+                            <ul class="list-decimal ml-5 text-sm text-blue-100 space-y-1 mb-3">
+                                <li>Substitute 12 for w and 5 for v in the expression.</li>
+                                <li>Use the correct order of operations: 2 × 12 - 3 × 5.</li>
+                                <li>24 - 15 = 9.</li>
+                            </ul>
+                            <p class="text-sm font-bold mt-4">Write a formula for the number of days in any number of weeks.</p>
+                            <ul class="list-decimal ml-5 text-sm text-blue-100 space-y-1">
+                                <li>There are seven days in a week, so multiply the number of weeks by 7.</li>
+                                <li>Choose d for days and w for weeks. Answer: d = 7w.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Right: Interactive Component -->
+                    <div class="flex flex-col justify-center">
+                        <div class="bg-black/20 rounded-3xl p-6 border border-white/20 h-full flex flex-col items-center gap-6 shadow-inner relative">
+                            <h3 class="text-2xl font-heading text-center text-blue-100">Interactive: Match the Expression</h3>
+                            <p class="text-center font-bold text-sm text-blue-200 mb-4">Class Activity: Ask a student to drag the word descriptions to their correct algebraic expression.</p>
+                            
+                            <div id="l1-source" class="flex flex-col gap-4 w-full items-center">
+                                <div draggable="true" ondragstart="drag(event)" id="card1" data-val="5x+4" class="drag-card shadow-lg bg-red-500/40 w-full max-w-[280px] !text-sm">Multiply x by 5 and add 4</div>
+                                <div draggable="true" ondragstart="drag(event)" id="card2" data-val="4x-5" class="drag-card shadow-lg bg-teal-500/40 w-full max-w-[280px] !text-sm">Multiply x by 4 and subtract 5</div>
+                                <div draggable="true" ondragstart="drag(event)" id="card3" data-val="5x-4" class="drag-card shadow-lg bg-purple-500/40 w-full max-w-[280px] !text-sm">Multiply x by 5 and subtract 4</div>
+                            </div>
+
+                            <div class="flex flex-col gap-6 mt-6 w-full px-4 border-t border-white/20 pt-6">
+                                <div class="flex items-center justify-between w-full">
+                                    <span class="font-bold text-blue-200 text-right w-1/3 pr-4 text-xl">5x - 4</span>
+                                    <div class="drop-slot w-2/3" ondrop="dropL1(event)" ondragover="allowDrop(event)" data-expected="5x-4"></div>
+                                </div>
+                                <div class="flex items-center justify-between w-full">
+                                    <span class="font-bold text-blue-200 text-right w-1/3 pr-4 text-xl">4x - 5</span>
+                                    <div class="drop-slot w-2/3" ondrop="dropL1(event)" ondragover="allowDrop(event)" data-expected="4x-5"></div>
+                                </div>
+                                <div class="flex items-center justify-between w-full">
+                                    <span class="font-bold text-blue-200 text-right w-1/3 pr-4 text-xl">5x + 4</span>
+                                    <div class="drop-slot w-2/3" ondrop="dropL1(event)" ondragover="allowDrop(event)" data-expected="5x+4"></div>
+                                </div>
+                            </div>
+                            <div id="l1-success" class="hidden text-green-300 font-bold text-xl animate-bounce mt-4">Perfectly Placed!</div>
+
+                            <div class="flex gap-4 w-full mt-6">
+                                <button onclick="openMoreExamples(1)" class="btn-more w-1/2 py-3 rounded-xl font-bold text-white text-md flex items-center justify-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                                    More Examples
+                                </button>
+                                <button onclick="openPdfExercise(1)" class="btn-exercise w-1/2 py-3 rounded-xl font-bold text-white text-md flex items-center justify-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                    Exercises
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Level 2: Terms & Brackets -->
+            <div id="level-2" class="level-content hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Left: Study Material -->
+                    <div>
+                        <h2 class="text-3xl font-heading font-bold mb-6 flex items-center gap-3">
+                            <span class="bg-white text-blue-900 w-10 h-10 rounded-full flex items-center justify-center text-xl">2</span>
+                            Terms & Brackets
+                        </h2>
+                        <div class="study-box">
+                            <h4 class="text-lg font-bold text-blue-300 mb-2">2.3 Collecting Like Terms</h4>
+                            <ul class="list-disc ml-5 space-y-2 text-sm text-blue-50">
+                                <li>Like terms are terms that contain the same letter.</li>
+                                <li>You can add, subtract or combine like terms (e.g. 2x + 3x = 5x).</li>
+                                <li>You cannot combine terms that contain different letters. This means you rewrite the expression in as short a way as possible.</li>
+                            </ul>
+                        </div>
+                        <div class="study-box border-purple-400">
+                            <h4 class="text-lg font-bold text-purple-300 mb-2">2.4 Expanding Brackets</h4>
+                            <ul class="list-disc ml-5 space-y-2 text-sm text-blue-50">
+                                <li>To expand a term with brackets, you multiply each term inside the brackets by the term outside the brackets.</li>
+                                <li>Expanding a term with brackets is sometimes called 'multiplying out the brackets'.</li>
+                            </ul>
+                        </div>
+                        <!-- SOLVED EXAMPLE -->
+                        <div class="bg-blue-900/50 border-l-4 border-blue-400 p-4 rounded-r-xl mb-6 shadow-lg">
+                            <h4 class="font-bold text-blue-200 mb-2 text-lg">Solved Examples</h4>
+                            <p class="text-sm font-bold">Simplify: 4p + 3q + 2p - q</p>
+                            <ul class="list-decimal ml-5 text-sm text-blue-100 mt-2 space-y-1 mb-3">
+                                <li>4p and 2p are like terms, so add them to get 6p.</li>
+                                <li>3q and -q are like terms, so subtract to get 2q.</li>
+                                <li>6p and 2q are not like terms so you cannot simplify any further: 6p + 2q.</li>
+                            </ul>
+                            <p class="text-sm font-bold">Expand the brackets: 3(2g + h - 7)</p>
+                            <ul class="list-decimal ml-5 text-sm text-blue-100 mt-2 space-y-1">
+                                <li>Multiply the 3 by the 2g, then multiply the 3 by the h, then the 3 by the -7.</li>
+                                <li>Answer: 6g + 3h - 21.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Right: Interactive Component -->
+                    <div class="flex flex-col justify-center">
+                        <div class="bg-black/20 rounded-3xl p-6 border border-white/20 h-full flex flex-col items-center justify-center gap-6 shadow-inner">
+                            <h3 class="text-2xl mb-4 font-heading text-center text-blue-100">Class Challenge: Algebraic Pyramid</h3>
+                            <p class="text-center font-bold text-sm text-blue-200 mb-4">Find the expression in each block by adding the expressions in the two blocks below it.</p>
+                            
+                            <div class="flex flex-col items-center gap-2 w-full mt-4">
+                                <!-- Row 3 (Top) -->
+                                <div class="pyramid-row">
+                                    <div class="pyramid-block"><input type="text" class="quiz-input" data-answer="14x" placeholder="?"></div>
+                                </div>
+                                <!-- Row 2 -->
+                                <div class="pyramid-row">
+                                    <div class="pyramid-block"><input type="text" class="quiz-input" data-answer="8x" placeholder="?"></div>
+                                    <div class="pyramid-block"><input type="text" class="quiz-input" data-answer="6x" placeholder="?"></div>
+                                </div>
+                                <!-- Row 1 (Bottom) -->
+                                <div class="pyramid-row">
+                                    <div class="pyramid-block bg-blue-600 border-blue-400 text-white">3x</div>
+                                    <div class="pyramid-block bg-blue-600 border-blue-400 text-white">5x</div>
+                                    <div class="pyramid-block bg-blue-600 border-blue-400 text-white">x</div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex gap-4 w-full mt-4">
+                                <button onclick="openMoreExamples(2)" class="btn-more w-1/2 py-3 rounded-xl font-bold text-white text-md flex items-center justify-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                                    More Examples
+                                </button>
+                                <button onclick="openPdfExercise(2)" class="btn-exercise w-1/2 py-3 rounded-xl font-bold text-white text-md flex items-center justify-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                    Exercises
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Level 3: Equations & Inequalities -->
+            <div id="level-3" class="level-content hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Left: Study Material -->
+                    <div>
+                        <h2 class="text-3xl font-heading font-bold mb-6 flex items-center gap-3">
+                            <span class="bg-white text-blue-900 w-10 h-10 rounded-full flex items-center justify-center text-xl">3</span>
+                            Equations & Inequalities
+                        </h2>
+                        <div class="study-box">
+                            <h4 class="text-lg font-bold text-blue-300 mb-2">2.5 Solving Equations</h4>
+                            <ul class="list-disc ml-5 space-y-2 text-sm text-blue-50">
+                                <li>When you solve an equation, you find the value of the unknown letter.</li>
+                                <li>You can use inverse operations. For example, if you have x + 5 = 12, subtract 5 from both sides of the equation.</li>
+                                <li>Work out the value of x, then substitute this value back into the equation to check that the answer is correct.</li>
+                            </ul>
+                        </div>
+                        <div class="study-box border-orange-400">
+                            <h4 class="text-lg font-bold text-orange-300 mb-2">2.6 Understanding Inequalities</h4>
+                            <p class="text-sm text-blue-50 mb-2">You can use a letter and an inequality to represent an open interval.</p>
+                            <ul class="list-disc ml-5 space-y-1 text-sm text-blue-50 font-bold">
+                                <li>&lt; means 'is less than' and &gt; means 'is greater than'.</li>
+                                <li>The inequality x &gt; 4 means that x can be any number greater than 4.</li>
+                                <li>You use an open circle for &lt; and &gt; inequalities on a number line.</li>
+                            </ul>
+                        </div>
+                        <!-- SOLVED EXAMPLE -->
+                        <div class="bg-blue-900/50 border-l-4 border-blue-400 p-4 rounded-r-xl mb-6 shadow-lg">
+                            <h4 class="font-bold text-blue-200 mb-2 text-lg">Solved Examples</h4>
+                            <p class="text-sm font-bold">Solve the equation: 2y + 4 = 16</p>
+                            <ul class="list-decimal ml-5 text-sm text-blue-100 mt-2 space-y-1 mb-3">
+                                <li>Subtract 4 from both sides: 2y = 12.</li>
+                                <li>Divide both sides by 2: y = 6.</li>
+                                <li>Check: 2 × 6 + 4 = 12 + 4 = 16.</li>
+                            </ul>
+                            <p class="text-sm font-bold">List the integer values that x could be for x &gt; 5</p>
+                            <ul class="list-decimal ml-5 text-sm text-blue-100 mt-2 space-y-1">
+                                <li>x is greater than 5, so 6 is the smallest number.</li>
+                                <li>The list is 6, 7, 8, 9, 10, ...</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Right: Interactive Component -->
+                    <div class="flex flex-col justify-center">
+                        <div class="bg-black/20 rounded-3xl p-6 border border-white/20 h-full flex flex-col items-center justify-center gap-6 shadow-inner">
+                            <h3 class="text-2xl mb-4 font-heading text-center text-blue-100">Class Challenge</h3>
+                            <p class="text-center font-bold text-sm text-blue-200 mb-4">Test your students' ability to solve simple equations and interpret inequalities.</p>
+                            
+                            <div class="flex flex-col gap-4 w-full">
+                                <div class="flex flex-col w-full bg-white/10 p-4 rounded-xl border border-white/20 gap-3">
+                                    <span class="font-bold text-sm">Solve the equation: 5x = 30</span>
+                                    <div class="flex justify-between items-center mt-2">
+                                        <span class="text-xs text-blue-200">Hint: Divide both sides by 5.</span>
+                                        <input type="text" class="quiz-input w-24 p-2 text-center font-bold rounded-lg" data-answer="6" placeholder="x = ?">
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col w-full bg-white/10 p-4 rounded-xl border border-white/20 gap-3">
+                                    <span class="font-bold text-sm">For the inequality p > -3, what is the smallest integer p could be?</span>
+                                    <div class="flex justify-between items-center mt-2">
+                                        <span class="text-xs text-blue-200">Hint: Think of the number line moving right.</span>
+                                        <input type="text" class="quiz-input w-24 p-2 text-center font-bold rounded-lg" data-answer="-2" placeholder="?">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-4 w-full mt-4">
+                                <button onclick="openMoreExamples(3)" class="btn-more w-1/2 py-3 rounded-xl font-bold text-white text-md flex items-center justify-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                                    More Examples
+                                </button>
+                                <button onclick="openPdfExercise(3)" class="btn-exercise w-1/2 py-3 rounded-xl font-bold text-white text-md flex items-center justify-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                    Exercises
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MORE EXAMPLES SECONDARY MODAL -->
+    <div id="examples-modal" class="modal-overlay hidden items-center justify-center z-[70]">
+        <div class="glass-panel w-full max-w-2xl rounded-3xl p-6 md:p-8 relative">
+            <button onclick="closeMoreExamples()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-colors border border-white/40 z-10">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <h3 class="text-2xl font-heading font-bold mb-6 text-white text-center border-b border-white/20 pb-4 flex items-center justify-center gap-3">
+                <svg class="w-7 h-7 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/></svg>
+                Bonus Examples
+            </h3>
+
+            <!-- Extra Examples for Level 1 -->
+            <div id="extra-level-1" class="extra-content space-y-4 hidden">
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Work out the value of: 10 - x when x = 3</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="7" placeholder="?">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Write a formula for the number of hours in any number of days (use h and d).</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="h=24d|h=24*d" placeholder="h = ?">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Is 8h an expression or a formula?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="expression" placeholder="?">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Is V = 9u a formula or expression?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="formula" placeholder="?">
+                </div>
+            </div>
+
+            <!-- Extra Examples for Level 2 -->
+            <div id="extra-level-2" class="extra-content space-y-4 hidden">
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Simplify the expression: 8x - 4x</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="4x" placeholder="?">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Expand the brackets: 5(3y - 2)</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="15y-10" placeholder="?">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Simplify: 2a + 3a + 5b</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="5a+5b" placeholder="?">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Expand: 3(x - 2)</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="3x-6" placeholder="?">
+                </div>
+            </div>
+
+            <!-- Extra Examples for Level 3 -->
+            <div id="extra-level-3" class="extra-content space-y-4 hidden">
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Solve the equation: x - 6 = 10</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="16" placeholder="x = ?">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">For the inequality q &lt; -1, what is the largest integer q could be?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="-2" placeholder="?">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Write as an inequality: m is less than 15.</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="m<15" placeholder="?">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Solve the equation: 12x = 72</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="6" placeholder="x = ?">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- PDF EXERCISE MODAL (NEW) -->
+    <div id="pdf-exercise-modal" class="modal-overlay hidden items-center justify-center z-[80]">
+        <div class="glass-panel w-full max-w-5xl rounded-3xl p-6 md:p-8 relative h-[90vh] flex flex-col">
+            <button onclick="closePdfExercise()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-colors border border-white/40 z-10">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <h3 class="text-3xl font-heading font-bold mb-6 text-white text-center border-b border-white/20 pb-4 flex items-center justify-center gap-3 shrink-0">
+                <svg class="w-8 h-8 text-purple-400" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4zm0 15l3-3.86 2.14 2.58 3-3.86L18 19H6z"/></svg>
+                Complete PDF Exercises
+            </h3>
+
+            <!-- REPLACED SCROLL CONTAINER WITH RELATIVE FLEX CONTAINER -->
+            <div class="relative flex-grow flex flex-col overflow-hidden pb-16">
+                
+                <!-- PDF Exercise Level 1 -->
+                <div id="pdf-level-1" class="pdf-content hidden h-full overflow-y-auto custom-scroll pr-4">
+                    
+                    <!-- Focus -->
+                    <div class="exercise-page bg-blue-900/40 p-5 rounded-2xl border border-blue-400/30">
+                        <h4 class="text-xl font-bold text-blue-300 mb-4 border-b border-blue-400/30 pb-2">Focus (Easy)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q1. Sofia has t toys. Write an expression for the total number of toys she has when:</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) she puts in 4 more</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="t+4"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) she takes out 2</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="t-2"></div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q2. Work out the value of each expression:</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) a + 10 when a = 6</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="16"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) b - 3 when b = 120</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="117"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3 lg:col-span-2">
+                                <span class="font-bold text-sm">Q3. Evaluate other expressions & formulae:</span>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) Work out x + 9 when x = 13</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="22"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) Write 'E' (Expression) or 'F' (Formula) for: 9u + 3</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg uppercase" data-answer="e"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) Write 'E' (Expression) or 'F' (Formula) for: m = 4 + n</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg uppercase" data-answer="f"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Practice -->
+                    <div class="exercise-page hidden bg-purple-900/40 p-5 rounded-2xl border border-purple-400/30">
+                        <h4 class="text-xl font-bold text-purple-300 mb-4 border-b border-purple-400/30 pb-2">Practice (Medium)</h4>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm">Q4. Write an expression for each description.</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) k more than g</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="g+k|k+g"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) h less than t</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="t-h"></div>
+                                </div>
+
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm">Q5. In a clothes shop, T-shirts cost $t and shirts cost $s. Write an expression for the total cost of:</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) one T-shirt and one shirt</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="t+s|s+t"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) four T-shirts and two shirts</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="4t+2s|2s+4t"></div>
+                                </div>
+
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm">Q6. Jan uses the formula M = P - E.</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">Find M when P = $225 and E = $72.</span><input type="text" class="quiz-input w-20 p-2 text-center text-xs font-bold rounded-lg" data-answer="153" placeholder="$"></div>
+                                </div>
+                                
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm">Q7. Hiroto uses the formula T = D / S.</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">Find T when D = 60 km and S = 20 km/h.</span><input type="text" class="quiz-input w-20 p-2 text-center text-xs font-bold rounded-lg" data-answer="3" placeholder="hrs"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Challenge -->
+                    <div class="exercise-page hidden bg-red-900/40 p-5 rounded-2xl border border-red-400/30">
+                        <h4 class="text-xl font-bold text-red-300 mb-4 border-b border-red-400/30 pb-2">Challenge (Hard)</h4>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm w-full">Q8. The weight of an object is calculated using W = mg, where: m is mass in kg, g is gravity (10 on Earth).</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs font-bold">The mass of a man is 75 kg. Work out his weight on Earth (in N).</span>
+                                        <input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="750" placeholder="N">
+                                    </div>
+                                </div>
+                                
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm w-full">Q9. Kwame uses the formula F = ma.</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs font-bold">He works out F = 75 N when m = 25 kg. What is a?</span>
+                                        <input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="3" placeholder="m/s²">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PDF Exercise Level 2 -->
+                <div id="pdf-level-2" class="pdf-content hidden h-full overflow-y-auto custom-scroll pr-4">
+                    
+                    <!-- Focus -->
+                    <div class="exercise-page bg-blue-900/40 p-5 rounded-2xl border border-blue-400/30">
+                        <h4 class="text-xl font-bold text-blue-300 mb-4 border-b border-blue-400/30 pb-2">Focus (Easy)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3 items-center">
+                                <span class="font-bold text-sm w-full">Q1. Simplify the expression: a + a + a + a</span>
+                                <input type="text" class="quiz-input w-full p-2 text-center text-sm font-bold rounded-lg" data-answer="4a" placeholder="?">
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3 items-center">
+                                <span class="font-bold text-sm w-full">Q2. Expand the brackets: 3(a + 2)</span>
+                                <input type="text" class="quiz-input w-full p-2 text-center text-sm font-bold rounded-lg" data-answer="3a+6" placeholder="?">
+                            </div>
+                            
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3 items-center">
+                                <span class="font-bold text-sm w-full">Q3. Simplify the expression: 6e + 6e + e</span>
+                                <input type="text" class="quiz-input w-full p-2 text-center text-sm font-bold rounded-lg" data-answer="13e" placeholder="?">
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3 items-center">
+                                <span class="font-bold text-sm w-full">Q4. Expand the brackets: 7(1 - w)</span>
+                                <input type="text" class="quiz-input w-full p-2 text-center text-sm font-bold rounded-lg" data-answer="7-7w" placeholder="?">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Practice -->
+                    <div class="exercise-page hidden bg-purple-900/40 p-5 rounded-2xl border border-purple-400/30">
+                        <h4 class="text-xl font-bold text-purple-300 mb-4 border-b border-purple-400/30 pb-2">Practice (Medium)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q5. Simplify by collecting like terms: 2a + 3a + 5b</span>
+                                <div class="flex items-center justify-between"><span class="text-xs">Answer:</span><input type="text" class="quiz-input w-32 p-2 text-center text-xs font-bold rounded-lg" data-answer="5a+5b"></div>
+                            </div>
+                            
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q6. Multiply out the brackets: 4(3y + 5)</span>
+                                <div class="flex items-center justify-between"><span class="text-xs">Answer:</span><input type="text" class="quiz-input w-32 p-2 text-center text-xs font-bold rounded-lg" data-answer="12y+20"></div>
+                            </div>
+                            
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q7. Write expression in simplest form: 4ab + 2ab + 3xy + 5xy</span>
+                                <div class="flex items-center justify-between"><span class="text-xs">Answer:</span><input type="text" class="quiz-input w-32 p-2 text-center text-xs font-bold rounded-lg" data-answer="6ab+8xy"></div>
+                            </div>
+                            
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q8. Multiply out the brackets: 9(2r + 3)</span>
+                                <div class="flex items-center justify-between"><span class="text-xs">Answer:</span><input type="text" class="quiz-input w-32 p-2 text-center text-xs font-bold rounded-lg" data-answer="18r+27"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Challenge -->
+                    <div class="exercise-page hidden bg-red-900/40 p-5 rounded-2xl border border-red-400/30">
+                        <h4 class="text-xl font-bold text-red-300 mb-4 border-b border-red-400/30 pb-2">Challenge (Hard)</h4>
+                        <div class="space-y-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm w-full">Q9. Expand and simplify: 3(x + 2) + 4x</span>
+                                <div class="flex items-center justify-between w-full">
+                                    <span class="text-xs">Answer:</span>
+                                    <input type="text" class="quiz-input w-32 p-2 text-center text-sm font-bold rounded-lg" data-answer="7x+6" placeholder="?">
+                                </div>
+                            </div>
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm w-full">Q10. Expand and simplify: 6(3x - 4) - 8x + 4</span>
+                                <div class="flex items-center justify-between w-full">
+                                    <span class="text-xs">Answer:</span>
+                                    <input type="text" class="quiz-input w-32 p-2 text-center text-sm font-bold rounded-lg" data-answer="10x-20" placeholder="?">
+                                </div>
+                            </div>
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm w-full">Q11. Work out the missing numbers: 9(3x + 2) = 3(__x + __)</span>
+                                <div class="flex gap-2 w-full justify-between items-center">
+                                    <span class="text-xs">Missing numbers:</span>
+                                    <div class="flex gap-2">
+                                        <input type="text" class="quiz-input w-16 p-2 text-center text-xs font-bold rounded-lg" data-answer="9" placeholder="#">
+                                        <input type="text" class="quiz-input w-16 p-2 text-center text-xs font-bold rounded-lg" data-answer="6" placeholder="#">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PDF Exercise Level 3 -->
+                <div id="pdf-level-3" class="pdf-content hidden h-full overflow-y-auto custom-scroll pr-4">
+                    
+                    <!-- Focus -->
+                    <div class="exercise-page bg-blue-900/40 p-5 rounded-2xl border border-blue-400/30">
+                        <h4 class="text-xl font-bold text-blue-300 mb-4 border-b border-blue-400/30 pb-2">Focus (Easy)</h4>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm">Q1. Solve the equation: x + 6 = 10</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">x = </span><input type="text" class="quiz-input w-16 p-1 text-center text-xs font-bold rounded-lg" data-answer="4"></div>
+                                </div>
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm">Q2. Solve the equation: 2x = 10</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">x = </span><input type="text" class="quiz-input w-16 p-1 text-center text-xs font-bold rounded-lg" data-answer="5"></div>
+                                </div>
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm">Q3. Solve the equation: x - 15 = 12</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">x = </span><input type="text" class="quiz-input w-16 p-1 text-center text-xs font-bold rounded-lg" data-answer="27"></div>
+                                </div>
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm">Q4. Solve the equation: 14 = 2x</span>
+                                    <div class="flex items-center justify-between"><span class="text-xs">x = </span><input type="text" class="quiz-input w-16 p-1 text-center text-xs font-bold rounded-lg" data-answer="7"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Practice -->
+                    <div class="exercise-page hidden bg-purple-900/40 p-5 rounded-2xl border border-purple-400/30">
+                        <h4 class="text-xl font-bold text-purple-300 mb-4 border-b border-purple-400/30 pb-2">Practice (Medium)</h4>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm w-full">Q5. Solve the equation: 2a + 3 = 13</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs font-bold">a = </span>
+                                        <input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="5" placeholder="#">
+                                    </div>
+                                </div>
+                                
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm w-full">Q6. Solve the equation: 30 = 7b + 9</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs font-bold">b = </span>
+                                        <input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="3" placeholder="#">
+                                    </div>
+                                </div>
+                                
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm w-full">Q7. For the inequality p > 8, what is the smallest integer p could be?</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs">p = </span>
+                                        <input type="text" class="quiz-input w-16 p-2 text-center text-xs font-bold rounded-lg" data-answer="9" placeholder="#">
+                                    </div>
+                                </div>
+                                
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm w-full">Q8. For the inequality y > 2.5, what is the smallest integer y could be?</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs">y = </span>
+                                        <input type="text" class="quiz-input w-16 p-2 text-center text-xs font-bold rounded-lg" data-answer="3" placeholder="#">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Challenge -->
+                    <div class="exercise-page hidden bg-red-900/40 p-5 rounded-2xl border border-red-400/30">
+                        <h4 class="text-xl font-bold text-red-300 mb-4 border-b border-red-400/30 pb-2">Challenge (Hard)</h4>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-1 gap-4">
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm w-full">Q9. The diagram shows a right angle divided into two smaller angles, 6x and 4x. Solve the equation: 6x + 4x = 90.</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs">x = </span>
+                                        <input type="text" class="quiz-input w-20 p-2 text-center text-xs font-bold rounded-lg" data-answer="9" placeholder="?">
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm w-full">Q10. For the inequality m &lt; -3.5, what is the largest integer m could be?</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs">Answer:</span>
+                                        <input type="text" class="quiz-input w-20 p-2 text-center text-xs font-bold rounded-lg" data-answer="-4" placeholder="#">
+                                    </div>
+                                </div>
+                                
+                                <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                    <span class="font-bold text-sm w-full">Q11. For the inequality j > -7, what is the smallest integer j could be?</span>
+                                    <div class="flex items-center justify-between w-full">
+                                        <span class="text-xs">Answer:</span>
+                                        <input type="text" class="quiz-input w-20 p-2 text-center text-xs font-bold rounded-lg" data-answer="-6" placeholder="#">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- NAVIGATION BUTTONS FOOTER -->
+                <div class="absolute bottom-0 left-0 right-0 flex justify-between items-center pt-4 bg-transparent z-10 border-t border-white/20">
+                    <button id="ex-prev-btn" onclick="prevExercisePage()" class="px-6 py-2 bg-white/20 hover:bg-white/30 rounded-xl font-bold transition-all text-white flex items-center gap-2 invisible">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg> Previous
+                    </button>
+                    <span id="ex-page-indicator" class="text-white/60 font-bold text-sm tracking-wide"></span>
+                    <button id="ex-next-btn" onclick="nextExercisePage()" class="px-6 py-2 bg-purple-600 hover:bg-purple-500 shadow-lg rounded-xl font-bold transition-all text-white flex items-center gap-2 invisible">
+                        Next <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('quest-modal');
+        const nextBtn = document.getElementById('next-level-btn');
+        const prevBtn = document.getElementById('prev-level-btn');
+        const contentPanel = document.getElementById('modal-content-panel');
+        let currentLevel = 1;
+        const totalLevels = 3;
+
+        function openLevel(level) {
+            document.querySelectorAll('.quest-node').forEach((n, i) => n.classList.toggle('active', i + 1 === level));
+            
+            document.querySelectorAll('.level-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
+            });
+            
+            const targetLevel = document.getElementById(`level-${level}`);
+            if (targetLevel) {
+                targetLevel.classList.remove('hidden');
+                targetLevel.classList.add('block');
+            }
+            
+            currentLevel = level;
+            
+            modal.style.display = 'flex';
+            
+            nextBtn.classList.toggle('hidden', level >= totalLevels);
+            prevBtn.classList.toggle('hidden', level <= 1);
+        }
+
+        function slide(dir) {
+            const nextLvl = currentLevel + dir;
+            if (nextLvl < 1 || nextLvl > totalLevels) return;
+            
+            contentPanel.style.opacity = '0';
+            contentPanel.style.transform = `translateX(${dir * -40}px)`;
+            
+            setTimeout(() => {
+                openLevel(nextLvl);
+                contentPanel.style.transition = 'none';
+                contentPanel.style.transform = `translateX(${dir * 40}px)`;
+                void contentPanel.offsetWidth; 
+                contentPanel.style.transition = 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+                contentPanel.style.opacity = '1';
+                contentPanel.style.transform = 'translateX(0)';
+            }, 300);
+        }
+
+        function nextLevel(e) { e.stopPropagation(); slide(1); }
+        function prevLevel(e) { e.stopPropagation(); slide(-1); }
+        
+        function closeModal() { 
+            modal.style.display = 'none';
+        }
+        
+        const examplesModal = document.getElementById('examples-modal');
+        const pdfExerciseModal = document.getElementById('pdf-exercise-modal');
+
+        function openMoreExamples(level) {
+            document.querySelectorAll('.extra-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
+            });
+            
+            const extraTarget = document.getElementById(`extra-level-${level}`);
+            if (extraTarget) {
+                extraTarget.classList.remove('hidden');
+                extraTarget.classList.add('block');
+            }
+            
+            examplesModal.style.display = 'flex';
+        }
+        
+        function closeMoreExamples() {
+            examplesModal.style.display = 'none';
+        }
+
+        let currentExercisePage = 0;
+        let activeExercisePages = [];
+
+        function openPdfExercise(level) {
+            document.querySelectorAll('.pdf-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
+            });
+            
+            const levelContainer = document.getElementById(`pdf-level-${level}`);
+            if (levelContainer) {
+                levelContainer.classList.remove('hidden');
+                levelContainer.classList.add('block');
+                
+                activeExercisePages = Array.from(levelContainer.querySelectorAll('.exercise-page'));
+                currentExercisePage = 0;
+                
+                updateExercisePagination();
+                
+                pdfExerciseModal.style.display = 'flex';
+            }
+        }
+
+        function updateExercisePagination() {
+            activeExercisePages.forEach((page, index) => {
+                if (index === currentExercisePage) {
+                    page.classList.remove('hidden');
+                    page.classList.add('block');
+                } else {
+                    page.classList.add('hidden');
+                    page.classList.remove('block');
+                }
+            });
+
+            const exPrevBtn = document.getElementById('ex-prev-btn');
+            const exNextBtn = document.getElementById('ex-next-btn');
+            const indicator = document.getElementById('ex-page-indicator');
+
+            if (exPrevBtn) exPrevBtn.style.visibility = currentExercisePage > 0 ? 'visible' : 'hidden';
+            if (exNextBtn) exNextBtn.style.visibility = currentExercisePage < activeExercisePages.length - 1 ? 'visible' : 'hidden';
+            
+            if (indicator && activeExercisePages.length > 0) {
+                indicator.textContent = `Section ${currentExercisePage + 1} of ${activeExercisePages.length}`;
+            }
+        }
+
+        function nextExercisePage() {
+            if (currentExercisePage < activeExercisePages.length - 1) {
+                currentExercisePage++;
+                updateExercisePagination();
+            }
+        }
+
+        function prevExercisePage() {
+            if (currentExercisePage > 0) {
+                currentExercisePage--;
+                updateExercisePagination();
+            }
+        }
+
+        function closePdfExercise() {
+            pdfExerciseModal.style.display = 'none';
+        }
+
+        // Global Drag & Drop
+        function allowDrop(ev) { ev.preventDefault(); }
+        function drag(ev) { ev.dataTransfer.setData("text", ev.target.id); }
+
+        // L1 Matching
+        let l1Correct = 0;
+        function dropL1(ev) {
+            ev.preventDefault();
+            const data = ev.dataTransfer.getData("text");
+            const el = document.getElementById(data);
+            const expected = ev.target.getAttribute('data-expected');
+            
+            if(el.getAttribute('data-val') === expected && !ev.target.hasChildNodes()) {
+                ev.target.appendChild(el);
+                el.draggable = false;
+                el.classList.add('!bg-green-500/40', '!border-green-400');
+                ev.target.classList.add('filled', 'border-green-400', 'bg-green-500/10');
+                l1Correct++;
+                if(l1Correct === 3) document.getElementById('l1-success').classList.remove('hidden');
+            } else {
+                el.classList.add('animate-[flashRed_0.4s_ease]');
+                setTimeout(() => el.classList.remove('animate-[flashRed_0.4s_ease]'), 400);
+            }
+        }
+
+        // Auto-Check Inputs
+        document.querySelectorAll('.quiz-input').forEach(input => {
+            input.addEventListener('input', function() {
+                const val = this.value.trim().toLowerCase().replace(/\s/g, "");
+                let answers = this.getAttribute('data-answer');
+                
+                if (!answers) return;
+                
+                answers = answers.toLowerCase().split('|');
+                this.classList.remove('correct', 'incorrect');
+                if (val !== '') {
+                    if (answers.includes(val)) {
+                        this.classList.add('correct');
+                    } else {
+                        this.classList.add('incorrect');
+                    }
+                }
+            });
+        });
+        function applyEmbedMode() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get("embed") === "1") {
+                document.body.classList.add("embed-mode");
+            }
+            const levelParam = params.get("level") || params.get("tab");
+            if (levelParam && typeof openLevel === "function") {
+                const level = Math.max(1, Math.min(3, parseInt(levelParam, 10) || 1));
+                setTimeout(() => openLevel(level), 150);
+            }
+        }
+
+        window.addEventListener("load", applyEmbedMode);
+    </script>
+</body>
+</html>

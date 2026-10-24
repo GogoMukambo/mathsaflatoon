@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900">
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path d="M 0 1 L 9 5 L 0 9 z" fill="#111111" />
+</marker>
+
+</defs>
+<rect x="0" y="0" width="1200" height="900" fill="#ffffff" />
+<text x="600" y="72" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="34" font-weight="700" text-anchor="middle">Melting a pure and an impure sample</text>
+<line x1="170" y1="700" x2="1050" y2="700" stroke="#111111" stroke-width="3" stroke-linecap="round" />
+<line x1="170" y1="700" x2="170" y2="120" stroke="#111111" stroke-width="3" stroke-linecap="round" />
+<text x="610" y="768" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="27" font-weight="600" text-anchor="middle">Time (minutes)</text>
+<text x="60" y="410" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="27" font-weight="600" text-anchor="middle" transform="rotate(-90 60 410)">Temperature (°C)</text>
+<line x1="170" y1="584" x2="1050" y2="584" stroke="#d4d4d4" stroke-width="1.5" stroke-linecap="round" />
+<line x1="170" y1="468" x2="1050" y2="468" stroke="#d4d4d4" stroke-width="1.5" stroke-linecap="round" />
+<line x1="170" y1="352" x2="1050" y2="352" stroke="#d4d4d4" stroke-width="1.5" stroke-linecap="round" />
+<line x1="170" y1="236" x2="1050" y2="236" stroke="#d4d4d4" stroke-width="1.5" stroke-linecap="round" />
+<line x1="170" y1="120" x2="1050" y2="120" stroke="#d4d4d4" stroke-width="1.5" stroke-linecap="round" />
+<text x="148" y="708" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="23" font-weight="500" text-anchor="end">-20</text>
+<text x="148" y="611.3333333333334" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="23" font-weight="500" text-anchor="end">0</text>
+<text x="148" y="514.6666666666667" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="23" font-weight="500" text-anchor="end">20</text>
+<text x="148" y="418" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="23" font-weight="500" text-anchor="end">40</text>
+<text x="148" y="321.33333333333337" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="23" font-weight="500" text-anchor="end">60</text>
+<text x="148" y="224.66666666666663" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="23" font-weight="500" text-anchor="end">80</text>
+<text x="148" y="128" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="23" font-weight="500" text-anchor="end">100</text>
+<line x1="170" y1="700" x2="170" y2="712" stroke="#111111" stroke-width="2" stroke-linecap="round" />
+<text x="170" y="742" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="23" font-weight="500" text-anchor="middle">0</text>
+<line x1="346" y1="700" x2="346" y2="712" stroke="#111111" stroke-width="2" stroke-linecap="round" />
+<text x="346" y="742" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="23" font-weight="500" text-anchor="middle">2</text>
+<line x1="522" y1="700" x2="522" y2="712" stroke="#111111" stroke-width="2" stroke-linecap="round" />
+<text x="522" y="742" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="23" font-weight="500" text-anchor="middle">4</text>
+<line x1="698" y1="700" x2="698" y2="712" stroke="#111111" stroke-width="2" stroke-linecap="round" />
+<text x="698" y="742" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="23" font-weight="500" text-anchor="middle">6</text>
+<line x1="874" y1="700" x2="874" y2="712" stroke="#111111" stroke-width="2" stroke-linecap="round" />
+<text x="874" y="742" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="23" font-weight="500" text-anchor="middle">8</text>
+<line x1="1050" y1="700" x2="1050" y2="712" stroke="#111111" stroke-width="2" stroke-linecap="round" />
+<text x="1050" y="742" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="23" font-weight="500" text-anchor="middle">10</text>
+<path d="M 170 675.8333333333334 L 398.8 603.3333333333334 L 645.2 603.3333333333334 L 874 385.83333333333337 L 1050 255.33333333333331" fill="none" stroke="#111111" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" />
+<path d="M 170 675.8333333333334 L 381.2 646.8333333333334 L 662.8 613 L 874 400.3333333333333 L 1050 265" fill="none" stroke="#555555" stroke-width="4" stroke-dasharray="14 10" stroke-linejoin="round" stroke-linecap="round" />
+<line x1="398.8" y1="603.3333333333334" x2="645.2" y2="603.3333333333334" stroke="#111111" stroke-width="7" stroke-linecap="round" />
+<text x="522" y="569.3333333333334" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="26" font-weight="600" text-anchor="middle">sharp flat melting point</text>
+<text x="539.6" y="731.8333333333334" fill="#555555" font-family="Helvetica, Arial, sans-serif" font-size="26" font-weight="600" text-anchor="middle">impure: lower and sloping</text>
+</svg>

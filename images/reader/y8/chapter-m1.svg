@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" width="1200" height="720">
+  <rect width="1200" height="720" fill="#f6f1e6"/>
+  
+    <text x="72" y="108" fill="#1e293b" font-family="Plus Jakarta Sans, Segoe UI, sans-serif" font-size="54" font-weight="700">1 Number</text>
+    <circle cx="300" cy="340" r="78" fill="none" stroke="#dc2626" stroke-width="8"/>
+    <text x="300" y="354" text-anchor="middle" fill="#dc2626" font-family="Plus Jakarta Sans, Segoe UI, sans-serif" font-size="64" font-weight="700">π</text>
+    <circle cx="520" cy="340" r="78" fill="none" stroke="#0f766e" stroke-width="8"/>
+    <text x="520" y="354" text-anchor="middle" fill="#0f766e" font-family="Plus Jakarta Sans, Segoe UI, sans-serif" font-size="52" font-weight="700">√2</text>
+    <rect x="680" y="270" width="420" height="140" rx="28" fill="#fde68a"/>
+    <text x="890" y="354" text-anchor="middle" fill="#1e293b" font-family="Plus Jakarta Sans, Segoe UI, sans-serif" font-size="42" font-weight="700">4.5 × 10⁴</text>
+    <text x="600" y="640" text-anchor="middle" fill="#1e293b" font-family="Plus Jakarta Sans, Segoe UI, sans-serif" font-size="36" font-weight="700">standard form and surds</text>
+  
+</svg>

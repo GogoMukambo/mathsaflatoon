@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900">
+  <rect width="1600" height="900" fill="#ffffff"/>
+  <rect width="1600" height="92" fill="#0f172a"/>
+  <text x="800" y="62" text-anchor="middle" fill="#ffffff" font-family="Segoe UI, Arial, sans-serif" font-size="42" font-weight="700" letter-spacing="3">MULTIPLYING POWERS</text>
+  <text x="800" y="148" text-anchor="middle" fill="#2563eb" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="600">Same base? Add the indices. 4 &#215; 16 = 64 becomes 2&#178; &#215; 2&#8308; = 2&#8310;.</text>
+  <g font-family="Segoe UI, Arial, sans-serif" text-anchor="middle">
+    <rect x="60" y="186" width="460" height="390" rx="18" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+    <text x="290" y="236" fill="#1d4ed8" font-size="22" font-weight="700">Book starter</text>
+    <text x="290" y="300" fill="#0f172a" font-size="34" font-weight="700">4 &#215; 16 = 64</text>
+    <text x="290" y="360" fill="#334155" font-size="24">write as powers of 2</text>
+    <rect x="110" y="390" width="360" height="140" rx="14" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+    <text x="290" y="450" fill="#1e3a8a" font-size="22">add the little numbers</text>
+    <text x="290" y="504" fill="#1d4ed8" font-size="36" font-weight="700">2&#178; &#215; 2&#8308; = 2&#8310;</text>
+    <rect x="570" y="186" width="460" height="390" rx="18" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+    <text x="800" y="236" fill="#065f46" font-size="22" font-weight="700">More powers of 2</text>
+    <text x="800" y="300" fill="#0f172a" font-size="28" font-weight="700">8 &#215; 4 = 32</text>
+    <text x="800" y="348" fill="#047857" font-size="28" font-weight="700">2&#179; &#215; 2&#178; = 2&#8309;</text>
+    <text x="800" y="430" fill="#0f172a" font-size="28" font-weight="700">16 &#215; 8 = 128</text>
+    <text x="800" y="478" fill="#047857" font-size="28" font-weight="700">2&#8308; &#215; 2&#179; = 2&#8311;</text>
+    <text x="800" y="540" fill="#334155" font-size="20">2 + 3 = 5    ·    4 + 3 = 7</text>
+    <rect x="1080" y="186" width="460" height="390" rx="18" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/>
+    <text x="1310" y="236" fill="#c2410c" font-size="22" font-weight="700">Same rule, other bases</text>
+    <text x="1310" y="318" fill="#0f172a" font-size="30" font-weight="700">6&#178; &#215; 6&#179; = 6&#8309;</text>
+    <text x="1310" y="386" fill="#0f172a" font-size="30" font-weight="700">10&#179; &#215; 10&#178; = 10&#8309;</text>
+    <text x="1310" y="454" fill="#0f172a" font-size="30" font-weight="700">6&#8308; &#215; 6 = 6&#8309;</text>
+    <text x="1310" y="530" fill="#9a3412" font-size="20">6 on its own is 6&#185;</text>
+  </g>
+  <rect x="60" y="600" width="1480" height="180" rx="16" fill="#0f172a"/>
+  <g font-family="Segoe UI, Arial, sans-serif" text-anchor="middle" fill="#f8fafc">
+    <text x="800" y="660" font-size="24" font-weight="700">Generalise</text>
+    <text x="800" y="718" font-size="34" font-weight="700">a&#7504; &#215; a&#8319; = a&#7504;&#8314;&#8319;</text>
+    <text x="800" y="760" font-size="20" fill="#cbd5e1">Bases must match. 2&#179; &#215; 5&#179; is not 2&#8312;.</text>
+  </g>
+  <rect y="808" width="1600" height="92" fill="#0f172a"/>
+  <text x="800" y="864" text-anchor="middle" fill="#ffffff" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="600">RECALL  |  Same base  |  Multiply means add the indices</text>
+</svg>

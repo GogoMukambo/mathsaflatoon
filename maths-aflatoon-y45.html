@@ -1,0 +1,2605 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maths Aflatoon · Year 4–5</title>
+    <script src="mental-course-auth.js?v=1"></script>
+    <script src="account-sync.js?v=1"></script>
+    <script>
+      localStorage.setItem("abhyaas-maths-aflatoon-year", "45");
+      if (!window.MentalCourse.ready()) {
+        location.replace("index.html?login=mental&next=" + encodeURIComponent("maths-aflatoon-y45.html"));
+      }
+    </script>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Fredoka (Headings), Nunito (Child-friendly body), Inter (UI/Numbers) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        heading: ['Fredoka', 'sans-serif'],
+                        kid: ['Nunito', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#1e1b4b',
+                        },
+                        accent: {
+                            amber: '#f59e0b',
+                            emerald: '#10b981',
+                            rose: '#f43f5e',
+                            sky: '#0ea5e9',
+                            purple: '#8b5cf6'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+            overflow-x: hidden;
+        }
+        h1, h2, h3, .font-heading {
+            font-family: 'Fredoka', sans-serif;
+        }
+        .font-kid {
+            font-family: 'Nunito', sans-serif;
+        }
+        /* Custom 3D Button & Card Styling */
+        .btn-3d-indigo {
+            background: linear-gradient(180deg, #6366f1 0%, #4f46e5 100%);
+            box-shadow: 0 5px 0 #3730a3, 0 8px 15px rgba(79, 70, 229, 0.3);
+            transition: all 0.12s ease;
+        }
+        .btn-3d-indigo:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 0 #3730a3, 0 10px 20px rgba(79, 70, 229, 0.4);
+        }
+        .btn-3d-indigo:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 #3730a3, 0 3px 6px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-3d-amber {
+            background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 100%);
+            box-shadow: 0 5px 0 #b45309, 0 8px 15px rgba(245, 158, 11, 0.35);
+            transition: all 0.12s ease;
+        }
+        .btn-3d-amber:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 0 #b45309, 0 10px 20px rgba(245, 158, 11, 0.45);
+        }
+        .btn-3d-amber:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 #b45309;
+        }
+
+        .btn-3d-emerald {
+            background: linear-gradient(180deg, #34d399 0%, #10b981 100%);
+            box-shadow: 0 5px 0 #047857, 0 8px 15px rgba(16, 185, 129, 0.3);
+            transition: all 0.12s ease;
+        }
+        .btn-3d-emerald:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 #047857;
+        }
+
+        .flashcard-3d {
+            background: #ffffff;
+            border: 3px solid #e2e8f0;
+            box-shadow: 0 12px 0 #cbd5e1, 0 20px 35px -5px rgba(15, 23, 42, 0.12);
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .flashcard-correct {
+            border-color: #10b981 !important;
+            box-shadow: 0 12px 0 #059669, 0 20px 35px rgba(16, 185, 129, 0.25) !important;
+            transform: scale(1.02);
+        }
+        .flashcard-wrong {
+            border-color: #f43f5e !important;
+            box-shadow: 0 12px 0 #e11d48, 0 20px 35px rgba(244, 63, 94, 0.25) !important;
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-2px, 0, 0); }
+            20%, 80% { transform: translate3d(4px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+            40%, 60% { transform: translate3d(6px, 0, 0); }
+        }
+
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.9) translateY(10px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .animate-pop {
+            animation: popIn 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .numpad-btn {
+            background: #ffffff;
+            border: 2px solid #e2e8f0;
+            box-shadow: 0 4px 0 #cbd5e1;
+            transition: all 0.08s ease;
+        }
+        .numpad-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #cbd5e1;
+            background: #f1f5f9;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+
+        .afl-bands {
+            display: flex;
+            gap: 0.35rem;
+            flex-wrap: wrap;
+        }
+        .afl-bands a {
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 0.78rem;
+            border-radius: 999px;
+            padding: 0.4rem 0.7rem;
+            border: 1px solid #cbd5e1;
+            color: #334155;
+            background: #f8fafc;
+            white-space: nowrap;
+        }
+        .afl-bands a[aria-current="page"] {
+            background: #1e1b4b;
+            color: white;
+            border-color: #1e1b4b;
+        }
+        .afl-home {
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 0.8rem;
+            color: #475569;
+            white-space: nowrap;
+        }
+        .afl-home:hover { color: #4f46e5; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-50 selection:bg-indigo-600 selection:text-white">
+
+    <!-- STICKY GLOBAL NAVIGATION BAR -->
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-16 py-2 flex flex-wrap items-center justify-between gap-3">
+            <!-- Brand Logo -->
+            <div class="flex items-center gap-3">
+                <a class="afl-home" href="index.html">← Home</a>
+                <div class="flex items-center gap-3 cursor-pointer group" onclick="app.showLandingPage()">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform">
+                        <i class="fa-solid fa-bolt-lightning text-lg text-amber-300"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="font-heading font-bold text-xl tracking-tight text-slate-900">Aflatoon</span>
+                            <span class="bg-amber-100 text-amber-800 text-xs font-extrabold px-2 py-0.5 rounded-full border border-amber-300">YEAR 4–5</span>
+                        </div>
+                        <p class="text-[11px] text-slate-500 hidden sm:block leading-none">30-day mental maths · ages 8–10</p>
+                    </div>
+                </div>
+            </div>
+            <nav class="afl-bands" aria-label="Choose a mental maths course">
+                <a href="maths-aflatoon-y45.html" data-mental-course="45" aria-current="page">Year 4–5</a>
+                <a href="maths-aflatoon.html#67" data-mental-course="67">Year 6–7</a>
+                <a href="maths-aflatoon.html#8" data-mental-course="8">Year 8</a>
+            </nav>
+
+            <!-- Quick Day Jump Dropdown & View Switcher -->
+            <div class="flex items-center gap-2 sm:gap-4">
+                <!-- Day Selector Dropdown -->
+                <div class="relative">
+                    <label for="globalDaySelect" class="sr-only">Jump to Day</label>
+                    <select id="globalDaySelect" onchange="app.openDay(parseInt(this.value))" class="appearance-none bg-slate-100 hover:bg-slate-200/80 text-slate-800 font-semibold text-xs sm:text-sm rounded-xl pl-3 pr-8 py-2 border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer transition">
+                        <!-- Dynamically populated with 30 days -->
+                    </select>
+                    <i class="fa-solid fa-chevron-down text-xs text-slate-500 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+                </div>
+
+                <!-- Live Star Counter Pill -->
+                <button onclick="app.scrollToRoadmap()" title="Your Total Stars Earned" class="flex items-center gap-1.5 bg-amber-50 hover:bg-amber-100 border border-amber-200 px-3 py-1.5 rounded-xl transition">
+                    <i class="fa-solid fa-star text-amber-400 text-sm"></i>
+                    <span id="navTotalStars" class="font-heading font-bold text-sm text-amber-900">0/90</span>
+                </button>
+
+                <!-- Switch View Button -->
+                <button id="navHomeBtn" onclick="app.showLandingPage()" class="hidden md:flex items-center gap-1.5 text-sm font-semibold text-slate-600 hover:text-indigo-600 px-3 py-2 rounded-xl hover:bg-slate-100 transition">
+                    <i class="fa-solid fa-map"></i>
+                    <span>Parent Guide & 30-Day Map</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW 1: HIGH-CONVERTING PARENT LANDING PAGE & 30-DAY INTERACTIVE ROADMAP -->
+    <!-- ========================================================================= -->
+    <main id="landingView" class="flex-grow">
+        <!-- HERO SECTION -->
+        <section class="relative overflow-hidden bg-gradient-to-b from-indigo-950 via-indigo-900 to-slate-900 text-white pt-10 pb-16 lg:py-20">
+            <!-- Decorative background radial glow -->
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[450px] bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="grid lg:grid-cols-12 gap-10 items-center">
+                    <!-- Left Column: Parent Value Prop -->
+                    <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                        <div class="inline-flex items-center gap-2 bg-indigo-800/70 border border-indigo-500/40 rounded-full px-4 py-1.5 text-xs sm:text-sm font-semibold text-amber-300 shadow-sm">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            <span>Year 4–5 · ages 8–10 · one course, one month</span>
+                        </div>
+
+                        <h1 class="font-heading text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.12]">
+                            Turn Finger-Counting Into <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-yellow-200 to-emerald-300">Lightning-Fast</span> Mental Maths in 30 Days.
+                        </h1>
+
+                        <p class="text-indigo-100 text-base sm:text-lg max-w-2xl mx-auto lg:mx-0 font-normal leading-relaxed">
+                            Year 5 is the pivotal year where arithmetic meets complex multi-step problems, fractions, decimals, and timed exams. We don't just drill rote tables—we teach your child <strong>30 secret mental calculation hacks</strong> followed by a daily <strong>50-card speed sprint</strong>.
+                        </p>
+
+                        <!-- Key Parent Benefits Pills -->
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 max-w-2xl mx-auto lg:mx-0 text-left">
+                            <div class="bg-white/10 backdrop-blur-sm border border-white/15 rounded-xl p-3 flex items-center gap-3">
+                                <div class="w-9 h-9 rounded-lg bg-emerald-400/20 text-emerald-300 flex items-center justify-center shrink-0">
+                                    <i class="fa-solid fa-brain"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs font-bold text-white">1 Visual Hack / Day</div>
+                                    <div class="text-[11px] text-indigo-200">Slow Brain vs. Fast Brain</div>
+                                </div>
+                            </div>
+                            <div class="bg-white/10 backdrop-blur-sm border border-white/15 rounded-xl p-3 flex items-center gap-3">
+                                <div class="w-9 h-9 rounded-lg bg-amber-400/20 text-amber-300 flex items-center justify-center shrink-0">
+                                    <i class="fa-solid fa-bolt"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs font-bold text-white">50 Timed Flashcards</div>
+                                    <div class="text-[11px] text-indigo-200">1,500 Total Speed Drills</div>
+                                </div>
+                            </div>
+                            <div class="bg-white/10 backdrop-blur-sm border border-white/15 rounded-xl p-3 flex items-center gap-3">
+                                <div class="w-9 h-9 rounded-lg bg-sky-400/20 text-sky-300 flex items-center justify-center shrink-0">
+                                    <i class="fa-solid fa-stopwatch"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs font-bold text-white">15 Mins Daily</div>
+                                    <div class="text-[11px] text-indigo-200">Zero Parent Prep Needed</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Primary Hero CTAs -->
+                        <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-3">
+                            <button onclick="app.startNextRecommendedDay()" class="w-full sm:w-auto btn-3d-amber text-slate-950 font-heading font-bold text-lg px-8 py-4 rounded-2xl flex items-center justify-center gap-3">
+                                <i class="fa-solid fa-play"></i>
+                                <span id="heroStartBtnText">Start Day 1 Now (Free Instant Access)</span>
+                            </button>
+                            <button onclick="app.scrollToRoadmap()" class="w-full sm:w-auto bg-indigo-800/60 hover:bg-indigo-800 text-white font-semibold px-6 py-4 rounded-2xl border border-indigo-600 transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-calendar-check text-indigo-300"></i>
+                                <span>Explore 30-Day Syllabus</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Live Interactive Preview Card ("Slow Brain vs Fast Brain") -->
+                    <div class="lg:col-span-5">
+                        <div class="bg-white text-slate-900 rounded-3xl p-6 sm:p-7 shadow-2xl border-4 border-indigo-300 relative">
+                            <div class="absolute -top-4 right-6 bg-gradient-to-r from-rose-500 to-amber-500 text-white text-xs font-extrabold uppercase tracking-wider px-3.5 py-1 rounded-full shadow">
+                                See How We Teach Year 5s
+                            </div>
+
+                            <h3 class="font-heading text-xl font-bold text-slate-800 mb-1">Why Some Kids Answer in 2 Seconds</h3>
+                            <p class="text-xs text-slate-500 mb-4">Example from <strong>Day 10: Multiplying by 25 Hack</strong></p>
+
+                            <div class="bg-slate-900 text-white rounded-2xl p-4 text-center mb-4">
+                                <span class="text-xs uppercase tracking-widest text-indigo-300 block mb-1">Mental Challenge</span>
+                                <span class="font-heading text-4xl font-bold tracking-wider text-amber-300">36 × 25 = ?</span>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5">
+                                <!-- Slow Way -->
+                                <div class="bg-rose-50 border border-rose-200 rounded-2xl p-3.5">
+                                    <div class="flex items-center gap-1.5 text-rose-700 font-bold text-xs mb-1.5">
+                                        <i class="fa-solid fa-hourglass-half"></i>
+                                        <span>THE SLOW WAY (22 secs)</span>
+                                    </div>
+                                    <p class="text-xs text-slate-600 leading-relaxed font-kid">
+                                        Imagining long column multiplication in mid-air: "6×5 is 30, carry the 3, 3×5 is 15 plus 3... wait, what was I carrying?" <span class="text-rose-600 font-bold">High mistake risk!</span>
+                                    </p>
+                                </div>
+                                <!-- Fast Way -->
+                                <div class="bg-emerald-50 border-2 border-emerald-400 rounded-2xl p-3.5">
+                                    <div class="flex items-center gap-1.5 text-emerald-800 font-bold text-xs mb-1.5">
+                                        <i class="fa-solid fa-bolt"></i>
+                                        <span>THE AFLATOON WAY (2 secs)</span>
+                                    </div>
+                                    <p class="text-xs text-slate-700 leading-relaxed font-kid">
+                                        <strong>25 is a quarter of 100!</strong><br>
+                                        Step 1: Quarter of 36 = <strong>9</strong><br>
+                                        Step 2: Multiply by 100 = <strong>900</strong>!<br>
+                                        <span class="text-emerald-700 font-bold">Instant & effortless!</span>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="bg-indigo-50 rounded-2xl p-3.5 flex items-center justify-between border border-indigo-100">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-heading font-bold">
+                                        10
+                                    </div>
+                                    <div>
+                                        <div class="text-xs font-bold text-slate-800">Want your child to try Day 10 right now?</div>
+                                        <div class="text-[11px] text-slate-500">Lesson + 50 Timed Flashcards ready</div>
+                                    </div>
+                                </div>
+                                <button onclick="app.openDay(10)" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition shrink-0">
+                                    Try Day 10 →
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- STUDENT PROGRESS DASHBOARD BANNER (Persisted via LocalStorage) -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20">
+            <div class="bg-white rounded-3xl shadow-xl border border-slate-200 p-6 sm:p-8">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-100">
+                    <div>
+                        <span class="text-xs font-extrabold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">Live Student Progress Tracker</span>
+                        <h2 class="font-heading text-2xl sm:text-3xl font-bold text-slate-900 mt-1">Your 30-Day Mastery Dashboard</h2>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button onclick="app.startNextRecommendedDay()" class="btn-3d-indigo text-white font-heading font-semibold text-sm px-5 py-2.5 rounded-xl flex items-center gap-2">
+                            <i class="fa-solid fa-rocket"></i>
+                            <span id="dashboardContinueText">Continue Day 1</span>
+                        </button>
+                        <button onclick="app.openResetModal()" class="text-xs text-slate-400 hover:text-rose-600 font-semibold px-3 py-2 rounded-lg hover:bg-rose-50 transition" title="Reset stored progress">
+                            <i class="fa-solid fa-rotate-left mr-1"></i>Reset Progress
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 4 Key Metrics -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 pt-6">
+                    <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200/80 flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl shrink-0">
+                            <i class="fa-solid fa-calendar-check"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs font-semibold text-slate-500">Days Completed</div>
+                            <div id="statDaysCompleted" class="font-heading text-2xl font-bold text-slate-900">0 / 30</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200/80 flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-500 flex items-center justify-center text-xl shrink-0">
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs font-semibold text-slate-500">Stars Earned</div>
+                            <div id="statTotalStars" class="font-heading text-2xl font-bold text-slate-900">0 / 90</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200/80 flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl shrink-0">
+                            <i class="fa-solid fa-layer-group"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs font-semibold text-slate-500">Cards Mastered</div>
+                            <div id="statTotalCards" class="font-heading text-2xl font-bold text-slate-900">0</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200/80 flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center text-xl shrink-0">
+                            <i class="fa-solid fa-gauge-high"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs font-semibold text-slate-500">Best 50-Card Sprint</div>
+                            <div id="statBestTime" class="font-heading text-2xl font-bold text-slate-900">--:--</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- WHY THIS WORKS FOR YEAR 5 PARENTS -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-600">The Science of Mental Fluency</span>
+                <h2 class="font-heading text-3xl sm:text-4xl font-bold text-slate-900 mt-2">Why Year 5 Is the "Make-or-Break" Year for Maths Speed</h2>
+                <p class="text-slate-600 mt-3 text-base">
+                    In Year 5, children face multi-digit multiplication, improper fractions, percentages, and word problems. When a child takes 15 seconds just to work out <code>83 - 47</code>, their working memory overloads and they lose track of the main problem.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition">
+                    <div class="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center text-xl mb-4">
+                        <i class="fa-solid fa-lightbulb"></i>
+                    </div>
+                    <h3 class="font-heading text-xl font-bold text-slate-900 mb-2">1. Strategy Before Speed</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        Handing a child a timed worksheet without teaching them <em>how</em> to calculate mentally just makes them count on their fingers faster. Each of our 30 days starts with a visual <strong>"Brain Hack Lesson"</strong> that rewires how they see numbers.
+                    </p>
+                </div>
+
+                <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center text-xl mb-4">
+                        <i class="fa-solid fa-dumbbell"></i>
+                    </div>
+                    <h3 class="font-heading text-xl font-bold text-slate-900 mb-2">2. The 50-Card Myelination Sprint</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        Neuroscience shows a new mental pathway becomes automatic after ~50 focused repetitions in a single session. Every day includes a custom 50-flashcard deck that progresses from gentle warm-ups (Cards 1–15) to boss-level mastery (Cards 35–50).
+                    </p>
+                </div>
+
+                <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition">
+                    <div class="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-xl mb-4">
+                        <i class="fa-solid fa-trophy"></i>
+                    </div>
+                    <h3 class="font-heading text-xl font-bold text-slate-900 mb-2">3. Gamified Beat-the-Clock Pride</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        Kids love beating their own record! With live streak counters, seconds-per-card telemetry, and 3-star milestones, children beg to play "just one more sprint" to turn a 2-star day into a 3-star Gold Trophy.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- INTERACTIVE 30-DAY CURRICULUM ROADMAP -->
+        <section id="curriculumRoadmap" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+                <div>
+                    <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-600">Complete 30-Day Journey</span>
+                    <h2 class="font-heading text-3xl sm:text-4xl font-bold text-slate-900 mt-1">Click Any Day to Inspect the Lesson or Start Practicing</h2>
+                    <p class="text-slate-600 text-sm mt-1">All 30 days are unlocked so parents and teachers can preview any topic immediately.</p>
+                </div>
+                <!-- Week Filter Buttons -->
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="app.filterRoadmap('all')" id="filter-all" class="roadmap-filter-btn bg-indigo-600 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition">All 30 Days</button>
+                    <button onclick="app.filterRoadmap(1)" id="filter-1" class="roadmap-filter-btn bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-bold px-3.5 py-2 rounded-xl transition">Week 1: + / −</button>
+                    <button onclick="app.filterRoadmap(2)" id="filter-2" class="roadmap-filter-btn bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-bold px-3.5 py-2 rounded-xl transition">Week 2: × / ÷</button>
+                    <button onclick="app.filterRoadmap(3)" id="filter-3" class="roadmap-filter-btn bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-bold px-3.5 py-2 rounded-xl transition">Week 3: Frac/Dec/%</button>
+                    <button onclick="app.filterRoadmap(4)" id="filter-4" class="roadmap-filter-btn bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-bold px-3.5 py-2 rounded-xl transition">Week 4: Y5 Applied</button>
+                </div>
+            </div>
+
+            <!-- Dynamic Container for the 4 Weekly Phases & 30 Day Cards -->
+            <div id="roadmapContainer" class="space-y-10">
+                <!-- Populated by JavaScript -->
+            </div>
+        </section>
+    </main>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW 2: INDIVIDUAL DAY MODULE (CONCEPT LESSON TAB + 50 FLASHCARDS TAB)    -->
+    <!-- ========================================================================= -->
+    <main id="dayModuleView" class="hidden flex-grow pb-16">
+        <!-- Day Module Top Sub-Header -->
+        <div class="bg-indigo-950 text-white border-b border-indigo-900">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div class="flex items-start sm:items-center gap-3.5">
+                        <button onclick="app.showLandingPage()" class="mt-1 sm:mt-0 w-10 h-10 rounded-xl bg-indigo-900 hover:bg-indigo-800 border border-indigo-700 flex items-center justify-center text-indigo-200 hover:text-white transition shrink-0" title="Back to 30-Day Map">
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </button>
+                        <div>
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span id="moduleWeekBadge" class="text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-800 text-amber-300 border border-indigo-700">WEEK 1 • DAY 1</span>
+                                <span id="moduleStarStatus" class="text-xs font-bold text-amber-300"></span>
+                            </div>
+                            <h1 id="moduleTitle" class="font-heading text-2xl sm:text-3xl font-bold text-white mt-0.5">Day 1: Complement Numbers to 100 & 1000</h1>
+                        </div>
+                    </div>
+
+                    <!-- Prev / Next Day Navigation -->
+                    <div class="flex items-center gap-2 self-end sm:self-center">
+                        <button id="prevDayBtn" onclick="app.changeDayRelative(-1)" class="bg-indigo-900 hover:bg-indigo-800 disabled:opacity-40 border border-indigo-700 text-xs font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-chevron-left"></i>
+                            <span>Prev Day</span>
+                        </button>
+                        <button id="nextDayBtn" onclick="app.changeDayRelative(1)" class="bg-indigo-900 hover:bg-indigo-800 disabled:opacity-40 border border-indigo-700 text-xs font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5">
+                            <span>Next Day</span>
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                    <!-- Mode Tabs -->
+                <div class="flex gap-3 mt-6 border-b border-indigo-800/80">
+                    <button id="tabBtnLesson" onclick="app.switchDayTab('lesson')" class="px-5 py-3 font-heading font-bold text-sm sm:text-base rounded-t-2xl transition flex items-center gap-2 border-b-4 border-amber-400 bg-white/10 text-white">
+                        <i class="fa-solid fa-book-open-reader text-amber-300"></i>
+                        <span>Step 1: Learn The Aflatoon Way</span>
+                    </button>
+                    <button id="tabBtnPractice" onclick="app.switchDayTab('practice')" class="px-5 py-3 font-heading font-bold text-sm sm:text-base rounded-t-2xl transition flex items-center gap-2 border-b-4 border-transparent text-indigo-300 hover:text-white hover:bg-white/5">
+                        <i class="fa-solid fa-bolt text-amber-400"></i>
+                        <span>Step 2: 50 Speed Flashcards</span>
+                        <span class="bg-amber-400 text-slate-950 text-[11px] font-extrabold px-2 py-0.5 rounded-full">TIMED</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- =============================================================== -->
+        <!-- TAB 1 CONTENT: CHILD-FRIENDLY INTERACTIVE CONCEPT LESSON        -->
+        <!-- =============================================================== -->
+        <section id="lessonTabContent" class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-8 animate-pop">
+            <!-- Top Secret Hook Card -->
+            <div class="bg-white rounded-3xl border-2 border-indigo-100 shadow-lg overflow-hidden">
+                <div class="bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 px-6 py-4 flex items-center justify-between text-white">
+                    <div class="flex items-center gap-2.5">
+                        <i class="fa-solid fa-wand-magic-sparkles text-amber-300 text-xl"></i>
+                        <span class="font-heading font-bold text-lg tracking-wide">Today's Secret: The Aflatoon Way</span>
+                    </div>
+                    <span id="lessonTargetTimeBadge" class="bg-white/20 text-xs font-bold px-3 py-1 rounded-full">Goal: Under 3.5s per card</span>
+                </div>
+
+                <div class="p-6 sm:p-8 space-y-6">
+                    <!-- Child-Friendly Story / Concept Explanation -->
+                    <div class="flex flex-col md:flex-row gap-6 items-start">
+                        <div class="w-16 h-16 rounded-2xl bg-amber-100 border-2 border-amber-300 flex items-center justify-center text-3xl shrink-0">
+                            🧠
+                        </div>
+                        <div class="space-y-2">
+                            <h2 id="lessonHookTitle" class="font-heading text-2xl font-bold text-slate-900">The "All from 9, Last from 10" Super Hack</h2>
+                            <p id="lessonConceptText" class="font-kid text-base sm:text-lg text-slate-700 leading-relaxed"></p>
+                        </div>
+                    </div>
+
+                    <!-- Golden Rule Box -->
+                    <div class="bg-gradient-to-r from-amber-50 to-yellow-50 border-2 border-amber-300 rounded-2xl p-5 flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center font-bold text-lg shrink-0 mt-0.5">
+                            <i class="fa-solid fa-key"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs font-extrabold uppercase tracking-wider text-amber-800">The Aflatoon Method Golden Rule</div>
+                            <p id="lessonGoldenRule" class="font-kid font-bold text-base sm:text-lg text-slate-900 mt-0.5"></p>
+                        </div>
+                    </div>
+
+                    <!-- Visual Mental Model Diagram -->
+                    <div>
+                        <h3 class="font-heading text-lg font-bold text-slate-800 mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-eye text-indigo-600"></i>
+                            <span>Picture This in Your Mind (The Aflatoon Blueprint)</span>
+                        </h3>
+                        <div id="lessonVisualBlueprint" class="bg-slate-900 text-white rounded-2xl p-5 sm:p-6 font-kid">
+                            <!-- Dynamically rendered visual steps -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3 CONCRETE WORKED EXAMPLES -->
+            <div>
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-heading text-2xl font-bold text-slate-900 flex items-center gap-2.5">
+                        <span class="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center text-sm"><i class="fa-solid fa-list-ol"></i></span>
+                        <span>3 Step-by-Step Examples (The Aflatoon Way)</span>
+                    </h3>
+                    <span class="text-xs font-semibold text-slate-500 hidden sm:inline">Read each step out loud to lock in the pattern!</span>
+                </div>
+
+                <div id="lessonExamplesGrid" class="grid md:grid-cols-3 gap-5">
+                    <!-- 3 Worked Example Cards injected via JS -->
+                </div>
+            </div>
+
+            <!-- INTERACTIVE WARM-UP MINI-CHECK BEFORE 50 FLASHCARDS -->
+            <div class="bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 rounded-3xl p-6 sm:p-8 border-2 border-emerald-300 shadow-md">
+                <div class="grid md:grid-cols-12 gap-6 items-center">
+                    <div class="md:col-span-6 space-y-2">
+                        <span class="bg-emerald-600 text-white text-xs font-extrabold uppercase px-3 py-1 rounded-full">Quick Warm-Up Check</span>
+                        <h3 class="font-heading text-2xl font-bold text-slate-900">Test The Aflatoon Way on 1 Practice Question!</h3>
+                        <p id="warmupHintText" class="font-kid text-sm sm:text-base text-slate-700"></p>
+                        <p class="text-xs text-slate-500 font-kid">Use your keyboard or tap the mini keypad to type your answer:</p>
+                        <div id="warmupFeedback" class="hidden pt-2 font-kid font-bold text-sm"></div>
+                    </div>
+
+                    <div class="md:col-span-6 bg-white rounded-2xl p-5 border-2 border-emerald-200 shadow-sm space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold uppercase text-slate-400">Warm-up Question</span>
+                            <span class="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full">Keypad Active</span>
+                        </div>
+                        <div id="warmupQuestionText" class="font-heading text-3xl font-bold text-slate-900">100 - 37 = ?</div>
+                        <div class="flex gap-2">
+                            <input type="text" id="warmupInput" inputmode="decimal" autocomplete="off" placeholder="Type or tap keypad..." onkeydown="if(event.key==='Enter') app.checkWarmup()" class="w-full font-heading text-2xl font-bold text-indigo-950 px-4 py-2.5 rounded-xl border-2 border-slate-300 focus:border-indigo-600 focus:outline-none">
+                            <button type="button" onclick="app.checkWarmup()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-bold px-5 py-2.5 rounded-xl transition shrink-0">
+                                Check
+                            </button>
+                        </div>
+                        <!-- Interactive Mini Numpad for Warm-Up Check -->
+                        <div class="grid grid-cols-6 gap-1.5 pt-1">
+                            <button type="button" onclick="app.appendWarmupNumpad('1')" class="numpad-btn font-heading text-base font-bold text-slate-800 py-2 rounded-xl">1</button>
+                            <button type="button" onclick="app.appendWarmupNumpad('2')" class="numpad-btn font-heading text-base font-bold text-slate-800 py-2 rounded-xl">2</button>
+                            <button type="button" onclick="app.appendWarmupNumpad('3')" class="numpad-btn font-heading text-base font-bold text-slate-800 py-2 rounded-xl">3</button>
+                            <button type="button" onclick="app.appendWarmupNumpad('4')" class="numpad-btn font-heading text-base font-bold text-slate-800 py-2 rounded-xl">4</button>
+                            <button type="button" onclick="app.appendWarmupNumpad('5')" class="numpad-btn font-heading text-base font-bold text-slate-800 py-2 rounded-xl">5</button>
+                            <button type="button" onclick="app.backspaceWarmupNumpad()" class="numpad-btn font-heading text-xs font-bold text-rose-600 py-2 rounded-xl" title="Backspace"><i class="fa-solid fa-delete-left"></i></button>
+
+                            <button type="button" onclick="app.appendWarmupNumpad('6')" class="numpad-btn font-heading text-base font-bold text-slate-800 py-2 rounded-xl">6</button>
+                            <button type="button" onclick="app.appendWarmupNumpad('7')" class="numpad-btn font-heading text-base font-bold text-slate-800 py-2 rounded-xl">7</button>
+                            <button type="button" onclick="app.appendWarmupNumpad('8')" class="numpad-btn font-heading text-base font-bold text-slate-800 py-2 rounded-xl">8</button>
+                            <button type="button" onclick="app.appendWarmupNumpad('9')" class="numpad-btn font-heading text-base font-bold text-slate-800 py-2 rounded-xl">9</button>
+                            <button type="button" onclick="app.appendWarmupNumpad('0')" class="numpad-btn font-heading text-base font-bold text-slate-800 py-2 rounded-xl">0</button>
+                            <button type="button" onclick="app.appendWarmupNumpad('.')" class="numpad-btn font-heading text-base font-bold text-slate-700 py-2 rounded-xl">.</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Big CTA to Launch the 50 Flashcards -->
+                <div class="mt-8 pt-6 border-t border-emerald-200/80 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-fire"></i>
+                        </div>
+                        <div class="text-sm font-kid">
+                            <strong class="text-slate-900 block">Ready for Today's 50-Card Challenge?</strong>
+                            <span class="text-slate-600">Beat the clock, build your streak, and earn up to 3 Gold Stars!</span>
+                        </div>
+                    </div>
+                    <button onclick="app.switchDayTab('practice')" class="w-full sm:w-auto btn-3d-indigo text-white font-heading font-bold text-lg px-8 py-4 rounded-2xl flex items-center justify-center gap-3">
+                        <span>Start 50-Card Speed Sprint</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- =============================================================== -->
+        <!-- TAB 2 CONTENT: 50 TIMED FLASHCARDS ENGINE & ANALYTICS           -->
+        <!-- =============================================================== -->
+        <section id="practiceTabContent" class="hidden max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 animate-pop">
+            <!-- Top Telemetry Bar (Card Progress, Timer, Streak, Score, Mode Toggle) -->
+            <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm mb-5">
+                <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+                    <!-- Card Counter Badge -->
+                    <div class="flex items-center gap-2">
+                        <span class="bg-indigo-600 text-white font-heading font-bold text-sm px-3.5 py-1.5 rounded-xl">
+                            Card <span id="fcCurrentIndex">1</span> of 50
+                        </span>
+                        <span id="fcDifficultyBadge" class="bg-emerald-100 text-emerald-800 text-xs font-extrabold px-2.5 py-1 rounded-lg">
+                            Warm-Up Pace
+                        </span>
+                    </div>
+
+                    <!-- Live Stopwatch, Streak & Score -->
+                    <div class="flex items-center gap-2 sm:gap-3">
+                        <div class="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold text-slate-800" title="Elapsed Time">
+                            <i class="fa-solid fa-stopwatch text-indigo-600"></i>
+                            <span id="fcTimerDisplay" class="font-mono">00:00</span>
+                        </div>
+
+                        <div class="flex items-center gap-1.5 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold text-amber-800" title="Current Correct Streak">
+                            <i class="fa-solid fa-fire text-amber-500"></i>
+                            <span id="fcStreakDisplay">0</span>
+                        </div>
+
+                        <div class="flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold text-emerald-800" title="Correct Score">
+                            <i class="fa-solid fa-check-circle text-emerald-600"></i>
+                            <span id="fcScoreDisplay">0 / 50</span>
+                        </div>
+                    </div>
+
+                    <!-- Quick Controls: Input Mode Toggle & Restart Deck -->
+                    <div class="flex items-center gap-2">
+                        <button onclick="app.toggleInputMode()" id="fcModeToggleBtn" class="bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-heading font-bold text-sm px-3.5 py-1.5 rounded-xl shadow-sm transition flex items-center gap-1.5 cursor-pointer" title="Switch between Number Pad and Multiple Choice">
+                            <i id="fcModeToggleIcon" class="fa-solid fa-keyboard"></i>
+                            <span id="fcModeToggleText">Mode: Keypad</span>
+                        </button>
+                        <button onclick="app.initFlashcardSession(true)" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-heading font-bold text-sm px-3 py-1.5 rounded-xl border border-indigo-200 transition" title="Shuffle & Restart 50 Cards">
+                            <i class="fa-solid fa-shuffle"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 50-Card Progress Bar -->
+                <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden p-0.5 border border-slate-200">
+                    <div id="fcProgressBar" class="h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-emerald-500 rounded-full transition-all duration-200" style="width: 2%"></div>
+                </div>
+            </div>
+
+            <!-- ACTIVE FLASHCARD ARENA -->
+            <div id="fcActiveArena" class="grid md:grid-cols-12 gap-6 items-stretch">
+                <!-- Left/Main 3D Flashcard -->
+                <div class="md:col-span-7 flex flex-col">
+                    <div id="flashcardBox" class="flashcard-3d rounded-3xl p-6 sm:p-8 flex-grow flex flex-col justify-between relative min-h-[290px]">
+                        <!-- Top Mini Hint Toggle -->
+                        <div class="flex items-center justify-between">
+                            <span id="fcSkillTag" class="text-xs font-extrabold uppercase tracking-wider text-slate-400">DAY 1 SPRINT</span>
+                            <button onclick="app.toggleCardHint()" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 px-3 py-1 rounded-full transition flex items-center gap-1">
+                                <i class="fa-regular fa-lightbulb"></i>
+                                <span>Mental Hint</span>
+                            </button>
+                        </div>
+
+                        <!-- Center Question Prompt -->
+                        <div class="my-auto py-6 text-center">
+                            <div id="fcQuestionPrompt" class="font-heading text-3xl sm:text-5xl font-bold text-slate-900 tracking-tight leading-tight select-none">
+                                100 − 47 = ?
+                            </div>
+                            <!-- Collapsible Micro-Hint for the current card -->
+                            <div id="fcCardHintBox" class="hidden mt-4 bg-amber-50 border border-amber-200 text-amber-900 text-xs sm:text-sm font-kid font-bold px-4 py-2 rounded-xl inline-block">
+                            </div>
+                        </div>
+
+                        <!-- Answer Input Box + Instant Feedback Banner -->
+                        <div class="space-y-3">
+                            <div class="relative flex items-center">
+                                <input type="text" id="fcAnswerInput" inputmode="decimal" autocomplete="off" placeholder="Use keypad or type..." onkeydown="app.handleFlashcardKeydown(event)" class="w-full text-center font-heading text-3xl font-bold text-indigo-950 bg-slate-50 border-2 border-indigo-300 focus:border-indigo-600 focus:bg-white rounded-2xl py-3.5 px-4 focus:outline-none transition shadow-inner">
+                                <button type="button" onclick="app.submitFlashcardAnswer()" class="absolute right-2 bg-indigo-600 hover:bg-indigo-700 text-white font-heading font-bold text-sm px-4 py-2.5 rounded-xl transition">
+                                    Enter ↵
+                                </button>
+                            </div>
+
+                            <!-- Live Feedback Toast inside Card -->
+                            <div id="fcInstantFeedback" class="h-7 flex items-center justify-center text-sm font-kid font-extrabold">
+                                <span class="text-slate-400 text-xs">Tap the keypad buttons or type on your keyboard!</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Fast On-Screen Numpad OR 4 Multiple Choice Buttons -->
+                <div class="md:col-span-5 flex flex-col justify-center">
+                    <!-- On-Screen Touch Numpad -->
+                    <div id="fcKeypadContainer" class="bg-white rounded-3xl p-4 sm:p-5 border border-slate-200 shadow-sm select-none">
+                        <div class="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-3 text-center flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-calculator"></i>
+                            <span>Aflatoon Speed Keypad (Tap to Type in Card)</span>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2.5">
+                            <button type="button" onmousedown="event.preventDefault()" onclick="app.appendNumpad('7')" class="numpad-btn font-heading text-2xl font-bold text-slate-800 hover:bg-indigo-50 hover:border-indigo-300 py-3.5 rounded-2xl">7</button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="app.appendNumpad('8')" class="numpad-btn font-heading text-2xl font-bold text-slate-800 hover:bg-indigo-50 hover:border-indigo-300 py-3.5 rounded-2xl">8</button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="app.appendNumpad('9')" class="numpad-btn font-heading text-2xl font-bold text-slate-800 hover:bg-indigo-50 hover:border-indigo-300 py-3.5 rounded-2xl">9</button>
+
+                            <button type="button" onmousedown="event.preventDefault()" onclick="app.appendNumpad('4')" class="numpad-btn font-heading text-2xl font-bold text-slate-800 hover:bg-indigo-50 hover:border-indigo-300 py-3.5 rounded-2xl">4</button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="app.appendNumpad('5')" class="numpad-btn font-heading text-2xl font-bold text-slate-800 hover:bg-indigo-50 hover:border-indigo-300 py-3.5 rounded-2xl">5</button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="app.appendNumpad('6')" class="numpad-btn font-heading text-2xl font-bold text-slate-800 hover:bg-indigo-50 hover:border-indigo-300 py-3.5 rounded-2xl">6</button>
+
+                            <button type="button" onmousedown="event.preventDefault()" onclick="app.appendNumpad('1')" class="numpad-btn font-heading text-2xl font-bold text-slate-800 hover:bg-indigo-50 hover:border-indigo-300 py-3.5 rounded-2xl">1</button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="app.appendNumpad('2')" class="numpad-btn font-heading text-2xl font-bold text-slate-800 hover:bg-indigo-50 hover:border-indigo-300 py-3.5 rounded-2xl">2</button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="app.appendNumpad('3')" class="numpad-btn font-heading text-2xl font-bold text-slate-800 hover:bg-indigo-50 hover:border-indigo-300 py-3.5 rounded-2xl">3</button>
+
+                            <button type="button" onmousedown="event.preventDefault()" onclick="app.appendNumpad('.')" class="numpad-btn font-heading text-2xl font-bold text-slate-700 hover:bg-indigo-50 py-3.5 rounded-2xl">.</button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="app.appendNumpad('0')" class="numpad-btn font-heading text-2xl font-bold text-slate-800 hover:bg-indigo-50 hover:border-indigo-300 py-3.5 rounded-2xl">0</button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="app.appendNumpad('-')" class="numpad-btn font-heading text-2xl font-bold text-slate-700 hover:bg-indigo-50 py-3.5 rounded-2xl" title="Negative Sign">−</button>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2.5 mt-2.5">
+                            <button type="button" onmousedown="event.preventDefault()" onclick="app.backspaceOneNumpad()" class="numpad-btn font-heading text-sm font-bold text-amber-700 py-3 rounded-2xl flex items-center justify-center gap-1" title="Delete last digit">
+                                <i class="fa-solid fa-delete-left"></i> Del
+                            </button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="app.backspaceNumpad()" class="numpad-btn font-heading text-sm font-bold text-rose-600 py-3 rounded-2xl flex items-center justify-center gap-1" title="Clear all">
+                                <i class="fa-solid fa-trash-can"></i> Clear
+                            </button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="app.submitFlashcardAnswer()" class="btn-3d-emerald text-white font-heading text-lg font-bold py-3 rounded-2xl flex items-center justify-center gap-1.5">
+                                <span>GO!</span> <i class="fa-solid fa-check"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Optional Multiple-Choice Grid (Hidden unless toggled) -->
+                    <div id="fcMultipleChoiceContainer" class="hidden bg-white rounded-3xl p-5 border border-slate-200 shadow-sm space-y-3">
+                        <div class="text-xs font-bold text-slate-400 uppercase tracking-wider text-center">Tap the Correct Mental Answer</div>
+                        <div id="fcChoicesGrid" class="grid grid-cols-1 gap-3">
+                            <!-- 4 Choice buttons injected here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- POST-50 CARD CELEBRATION & ANALYTICS SCREEN -->
+            <div id="fcCelebrationScreen" class="hidden bg-white rounded-3xl border-4 border-amber-300 shadow-2xl p-6 sm:p-10 text-center space-y-6 animate-pop">
+                <div id="celStarsContainer" class="flex items-center justify-center gap-3 text-5xl text-amber-400">
+                    <!-- 1 to 3 animated stars -->
+                </div>
+
+                <div>
+                    <span id="celBadgeText" class="bg-amber-100 text-amber-800 text-xs font-extrabold uppercase px-4 py-1 rounded-full">50-Card Sprint Complete!</span>
+                    <h2 id="celHeadline" class="font-heading text-3xl sm:text-4xl font-bold text-slate-900 mt-2">Phenomenal Mental Speed!</h2>
+                    <p id="celSubtext" class="font-kid text-slate-600 max-w-lg mx-auto mt-1"></p>
+                </div>
+
+                <!-- 4 Final Sprint Analytics Cards -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl mx-auto">
+                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                        <div class="text-xs font-bold text-slate-400 uppercase">Final Score</div>
+                        <div id="celFinalScore" class="font-heading text-3xl font-bold text-emerald-600 mt-1">48 / 50</div>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                        <div class="text-xs font-bold text-slate-400 uppercase">Accuracy</div>
+                        <div id="celAccuracy" class="font-heading text-3xl font-bold text-indigo-600 mt-1">96%</div>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                        <div class="text-xs font-bold text-slate-400 uppercase">Total Time</div>
+                        <div id="celTotalTime" class="font-heading text-3xl font-bold text-slate-800 mt-1">02:14</div>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                        <div class="text-xs font-bold text-slate-400 uppercase">Speed Pace</div>
+                        <div id="celPacePerCard" class="font-heading text-3xl font-bold text-amber-600 mt-1">2.7s</div>
+                    </div>
+                </div>
+
+                <!-- Review Missed Questions (If any) -->
+                <div id="celMissedSection" class="hidden max-w-2xl mx-auto text-left bg-rose-50/70 border border-rose-200 rounded-2xl p-4">
+                    <div class="text-xs font-extrabold uppercase text-rose-700 mb-2 flex items-center gap-1.5">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <span>Quick Review of Tricky Cards</span>
+                    </div>
+                    <div id="celMissedList" class="grid sm:grid-cols-2 gap-2 text-xs font-kid text-slate-700 max-h-40 overflow-y-auto pr-1"></div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+                    <button onclick="app.initFlashcardSession(true)" class="w-full sm:w-auto bg-slate-100 hover:bg-slate-200 text-slate-800 font-heading font-bold px-6 py-3.5 rounded-2xl transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-rotate-right"></i>
+                        <span>Play Again to Beat Your Time</span>
+                    </button>
+                    <button id="celNextDayBtn" onclick="app.changeDayRelative(1)" class="w-full sm:w-auto btn-3d-indigo text-white font-heading font-bold text-lg px-8 py-3.5 rounded-2xl flex items-center justify-center gap-2">
+                        <span>Advance to Next Day</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- CUSTOM CONFIRMATION MODAL FOR PROGRESS RESET (No native alert/confirm) -->
+    <div id="resetModal" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 animate-pop text-center space-y-4">
+            <div class="w-14 h-14 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center text-2xl mx-auto">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h3 class="font-heading text-2xl font-bold text-slate-900">Reset All 30-Day Progress?</h3>
+            <p class="text-sm text-slate-600">
+                This will clear all earned stars, completed days, and speed records stored on this device. You cannot undo this action.
+            </p>
+            <div class="flex gap-3 pt-2">
+                <button onclick="app.closeResetModal()" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 rounded-xl transition">Cancel</button>
+                <button onclick="app.confirmResetProgress()" class="w-1/2 bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 rounded-xl transition">Yes, Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-8 border-t border-slate-800 text-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-bolt text-amber-400"></i>
+                <span class="font-heading font-bold text-white text-sm">Aflatoon Year 4–5</span>
+                <span>• The Aflatoon Way 30-Day Mental Maths Speed Mastery Program</span>
+            </div>
+            <div>1,500 Dynamic Flashcards • Built for Year 5 (Ages 9–10) Fluency & Confidence</div>
+        </div>
+    </footer>
+
+    <!-- ========================================================================= -->
+    <!-- COMPLETE CURRICULUM DATA & 50-FLASHCARD ENGINE SCRIPT                     -->
+    <!-- ========================================================================= -->
+    <script>
+        // Utility random helpers for dynamic 50-card generation
+        const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+        const pickOne = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+        /**
+         * 30-DAY COMPREHENSIVE YEAR 5 CURRICULUM DATABASE
+         * Every day contains:
+         * - Metadata (day, week, title, subtitle, icon)
+         * - Child-friendly Concept Explanation & Golden Rule
+         * - Visual Blueprint Steps (rendered as interactive mental flow blocks)
+         * - 3 Concrete Worked Examples (Problem, Slow Way vs Fast Steps, Final Answer)
+         * - Warm-up mini-check question
+         * - Custom `generateCard(cardNumber)` algorithm that creates 50 progressive flashcards
+         */
+        const CURRICULUM_DAYS = [
+            // =========================================================================
+            // WEEK 1: ADDITION & SUBTRACTION SPEED HACKS (DAYS 1 - 7)
+            // =========================================================================
+            {
+                day: 1, week: 1,
+                title: "Complement Numbers to 100 & 1000",
+                subtitle: "Instant number bonds without messy borrowing",
+                hookTitle: "The 'All from 9, Last from 10' Super Hack",
+                concept: "When subtracting any number from 100 or 1,000, most kids waste time crossing out zeros and borrowing across columns. Instead, read the digits from left to right: subtract every digit from 9, and subtract the final unit digit from 10! Zero borrowing, zero mistakes.",
+                goldenRule: "To find what adds to 100 or 1,000: Make every digit add up to 9, except the last non-zero digit which adds up to 10!",
+                visualSteps: [
+                    { label: "Problem", val: "100 − 63", desc: "Look at the tens digit (6) and ones digit (3)" },
+                    { label: "First Digit from 9", val: "9 − 6 = 3", desc: "Your tens digit is 3 (30)" },
+                    { label: "Last Digit from 10", val: "10 − 3 = 7", desc: "Your ones digit is 7 → Answer: 37!" }
+                ],
+                examples: [
+                    { q: "100 − 48", steps: ["Tens: 9 − 4 = 5", "Ones: 10 − 8 = 2", "Put them together: 52!"], ans: "52" },
+                    { q: "100 − 81", steps: ["Tens: 9 − 8 = 1", "Ones: 10 − 1 = 9", "Put them together: 19!"], ans: "19" },
+                    { q: "1000 − 364", steps: ["Hundreds: 9 − 3 = 6", "Tens: 9 − 6 = 3", "Ones: 10 − 4 = 6 → 636!"], ans: "636" }
+                ],
+                warmup: { q: "100 − 37 = ?", ans: 63, hint: "Tens: 9 − 3 = 6. Ones: 10 − 7 = 3." },
+                generateCard: (idx) => {
+                    if (idx <= 30) {
+                        const n = randInt(11, 98);
+                        if (n % 10 === 0) return { q: `100 − ${n + 3} = ?`, ans: 100 - (n + 3), hint: "9 minus tens, 10 minus ones!" };
+                        return idx % 2 === 0
+                            ? { q: `100 − ${n} = ?`, ans: 100 - n, hint: `Tens: 9−${Math.floor(n/10)}, Ones: 10−${n%10}` }
+                            : { q: `${n} + ___ = 100`, ans: 100 - n, hint: `Match Tens to 9, Ones to 10!` };
+                    } else {
+                        const n = randInt(111, 899);
+                        const cleanN = (n % 10 === 0) ? n + 4 : n;
+                        return { q: `1000 − ${cleanN} = ?`, ans: 1000 - cleanN, hint: "All digits from 9, last digit from 10!" };
+                    }
+                }
+            },
+            {
+                day: 2, week: 1,
+                title: "Compensation Rounding (+99, +98, −99, −98)",
+                subtitle: "Turn awkward numbers into friendly hundreds",
+                hookTitle: "The 'Over-Jump & Step Back' Trick",
+                concept: "Numbers like 99, 98, 49, or 199 are right next door to super-friendly round numbers! Never add 99 column by column. Instead, add 100 in a flash and adjust by 1. When subtracting 99, subtract 100 and give 1 back!",
+                goldenRule: "Adding 99? Add 100, then subtract 1. Subtracting 99? Subtract 100, then ADD 1 back!",
+                visualSteps: [
+                    { label: "Problem", val: "365 + 98", desc: "98 is just 100 minus 2" },
+                    { label: "Big Friendly Jump", val: "365 + 100 = 465", desc: "Instant hundred jump" },
+                    { label: "Tiny Adjustment", val: "465 − 2 = 463", desc: "Step back 2 → 463!" }
+                ],
+                examples: [
+                    { q: "247 + 99", steps: ["Jump +100: 247 + 100 = 347", "Adjust −1: 347 − 1 = 346", "Done in 2 seconds!"], ans: "346" },
+                    { q: "534 − 99", steps: ["Jump −100: 534 − 100 = 434", "Took 1 too many! Add 1 back: 435", "Answer: 435"], ans: "435" },
+                    { q: "418 + 198", steps: ["Jump +200: 418 + 200 = 618", "Adjust −2: 618 − 2 = 616", "Answer: 616"], ans: "616" }
+                ],
+                warmup: { q: "456 + 99 = ?", ans: 555, hint: "Do 456 + 100 = 556, then take away 1!" },
+                generateCard: (idx) => {
+                    const base = idx <= 20 ? randInt(120, 490) : randInt(250, 850);
+                    const mod = pickOne([99, 98, 49, 199]);
+                    const isAdd = idx % 2 === 1;
+                    if (isAdd) {
+                        const roundUp = mod + (mod % 10 === 9 ? 1 : 2);
+                        const diff = roundUp - mod;
+                        return { q: `${base} + ${mod} = ?`, ans: base + mod, hint: `Add ${roundUp}, then subtract ${diff}!` };
+                    } else {
+                        const safeBase = Math.max(base, mod + 35);
+                        const roundUp = mod + (mod % 10 === 9 ? 1 : 2);
+                        const diff = roundUp - mod;
+                        return { q: `${safeBase} − ${mod} = ?`, ans: safeBase - mod, hint: `Subtract ${roundUp}, then ADD ${diff} back!` };
+                    }
+                }
+            },
+            {
+                day: 3, week: 1,
+                title: "Left-to-Right Mental Addition",
+                subtitle: "Add the way you read—from biggest place value first",
+                hookTitle: "Ditch Right-to-Left Paper Columns!",
+                concept: "On paper, we start at the ones column. In your head, that's backwards because you have to remember little carried digits while reading the number backwards! Fast mathematicians always add from LEFT to RIGHT: add the Tens (or Hundreds) first, then pop the Ones on top.",
+                goldenRule: "Start with the BIGGEST place value on the left, hold that running total in your voice, then add the ones!",
+                visualSteps: [
+                    { label: "Problem", val: "56 + 37", desc: "Keep 56 whole, split 37 into 30 + 7" },
+                    { label: "Add Tens First", val: "56 + 30 = 86", desc: "Say '86' in your head" },
+                    { label: "Add Ones Next", val: "86 + 7 = 93", desc: "Pop the 7 on → 93!" }
+                ],
+                examples: [
+                    { q: "48 + 35", steps: ["Start with 48, add 30 → 78", "Now add 5 → 78 + 5 = 83", "Answer: 83"], ans: "83" },
+                    { q: "67 + 54", steps: ["67 + 50 = 117", "117 + 4 = 121", "Answer: 121"], ans: "121" },
+                    { q: "240 + 156", steps: ["240 + 100 = 340", "340 + 50 = 390", "390 + 6 = 396!"], ans: "396" }
+                ],
+                warmup: { q: "64 + 28 = ?", ans: 92, hint: "Do 64 + 20 = 84 first, then + 8!" },
+                generateCard: (idx) => {
+                    if (idx <= 30) {
+                        const a = randInt(24, 88);
+                        const b = randInt(15, 76);
+                        return { q: `${a} + ${b} = ?`, ans: a + b, hint: `Do ${a} + ${Math.floor(b/10)*10} first, then + ${b%10}!` };
+                    } else {
+                        const a = randInt(120, 460);
+                        const b = randInt(110, 380);
+                        return { q: `${a} + ${b} = ?`, ans: a + b, hint: "Add Hundreds, then Tens, then Ones!" };
+                    }
+                }
+            },
+            {
+                day: 4, week: 1,
+                title: "Split & Jump Subtraction Strategy",
+                subtitle: "Subtract two-digit numbers without ever borrowing",
+                hookTitle: "Keep the First Number Whole, Chop the Second!",
+                concept: "Never try to split both numbers when subtracting (kids often do 73 − 28 and mistakenly do 8 − 3!). Instead, keep the first number completely whole, and subtract the second number in two easy hops: first hop back by the Tens, then hop back by the Ones.",
+                goldenRule: "Keep the starting number intact! Subtract the Tens first, then subtract the Ones.",
+                visualSteps: [
+                    { label: "Problem", val: "84 − 37", desc: "Chop 37 into 30 and 7" },
+                    { label: "Hop Back Tens", val: "84 − 30 = 54", desc: "Super easy tens drop" },
+                    { label: "Hop Back Ones", val: "54 − 7 = 47", desc: "54 − 4 = 50, − 3 = 47!" }
+                ],
+                examples: [
+                    { q: "75 − 32", steps: ["75 − 30 = 45", "45 − 2 = 43", "Answer: 43"], ans: "43" },
+                    { q: "92 − 46", steps: ["92 − 40 = 52", "52 − 6 = 46", "Answer: 46"], ans: "46" },
+                    { q: "134 − 53", steps: ["134 − 50 = 84", "84 − 3 = 81", "Answer: 81"], ans: "81" }
+                ],
+                warmup: { q: "83 − 26 = ?", ans: 57, hint: "First do 83 − 20 = 63. Then 63 − 6 = 57!" },
+                generateCard: (idx) => {
+                    const a = idx <= 25 ? randInt(52, 98) : randInt(105, 185);
+                    const b = randInt(14, Math.min(86, a - 12));
+                    return { q: `${a} − ${b} = ?`, ans: a - b, hint: `First ${a} − ${Math.floor(b/10)*10} = ${a - Math.floor(b/10)*10}, then − ${b%10}` };
+                }
+            },
+            {
+                day: 5, week: 1,
+                title: "Near-Doubles & Secret Midpoints",
+                subtitle: "Use your instant doubles to crush neighbours",
+                hookTitle: "Spot the Twin Hiding Inside!",
+                concept: "Your brain already knows doubles (like 35 + 35 = 70 or 60 + 60 = 120) in a split second! Whenever two numbers are close together—like 35 + 36 or 49 + 51—don't add them normally. Double one of them and adjust by the tiny difference!",
+                goldenRule: "Neighbours (35 + 36) = Double + 1. One-Apart Twins (39 + 41) = Double the Middle Number (40 × 2)!",
+                visualSteps: [
+                    { label: "Problem", val: "45 + 47", desc: "Both are right next to 45 (or middle 46)" },
+                    { label: "Instant Double", val: "45 + 45 = 90", desc: "Double 45 is 90" },
+                    { label: "Add Extra", val: "90 + 2 = 92", desc: "Add the extra 2 → 92!" }
+                ],
+                examples: [
+                    { q: "35 + 36", steps: ["Double 35 is 70", "Plus 1 extra = 71", "Answer: 71"], ans: "71" },
+                    { q: "59 + 61", steps: ["60 is right in the middle!", "Double 60 = 120", "Answer: 120"], ans: "120" },
+                    { q: "125 + 126", steps: ["Double 125 = 250", "250 + 1 = 251", "Answer: 251"], ans: "251" }
+                ],
+                warmup: { q: "45 + 46 = ?", ans: 91, hint: "Double 45 is 90, plus 1 more!" },
+                generateCard: (idx) => {
+                    const base = idx <= 25 ? randInt(15, 75) : randInt(65, 250);
+                    const diff = pickOne([1, 2, -1]);
+                    const second = base + diff;
+                    return { q: `${base} + ${second} = ?`, ans: base + second, hint: `Double ${base} is ${base*2}, then adjust by ${diff > 0 ? '+'+diff : diff}!` };
+                }
+            },
+            {
+                day: 6, week: 1,
+                title: "Bridging Through Friendly 10s & 100s",
+                subtitle: "Count up across the bridge to find subtraction gaps",
+                hookTitle: "Turn Hard Subtraction Into Easy Counting Up!",
+                concept: "What is 104 − 97? If you do column subtraction, it looks scary. But if you ask 'How far is it from 97 up to 104?', you bridge through 100! From 97 to 100 is 3, and from 100 to 104 is 4. 3 + 4 = 7! Bridging turns ugly subtractions into tiny additions.",
+                goldenRule: "When two numbers sit on either side of a 100 (like 205 − 196), hop up to the 100 bridge and add the two hops!",
+                visualSteps: [
+                    { label: "Problem", val: "106 − 98", desc: "100 sits right between 98 and 106" },
+                    { label: "Hop 1 to Bridge", val: "98 → 100 (+2)", desc: "2 steps to reach 100" },
+                    { label: "Hop 2 Past Bridge", val: "100 → 106 (+6)", desc: "2 + 6 = 8!" }
+                ],
+                examples: [
+                    { q: "103 − 96", steps: ["96 to 100 is +4", "100 to 103 is +3", "4 + 3 = 7!"], ans: "7" },
+                    { q: "305 − 285", steps: ["285 to 300 is +15", "300 to 305 is +5", "15 + 5 = 20!"], ans: "20" },
+                    { q: "512 − 495", steps: ["495 to 500 is +5", "500 to 512 is +12", "5 + 12 = 17!"], ans: "17" }
+                ],
+                warmup: { q: "204 − 197 = ?", ans: 7, hint: "197 to 200 is 3, plus 4 more to 204!" },
+                generateCard: (idx) => {
+                    const hundred = randInt(1, 9) * 100;
+                    const below = idx <= 25 ? randInt(2, 9) : randInt(6, 25);
+                    const above = idx <= 25 ? randInt(2, 9) : randInt(4, 24);
+                    const topNum = hundred + above;
+                    const botNum = hundred - below;
+                    return { q: `${topNum} − ${botNum} = ?`, ans: topNum - botNum, hint: `Bridge via ${hundred}: ${below} + ${above}` };
+                }
+            },
+            {
+                day: 7, week: 1,
+                title: "Week 1 Speed Boss: Addition & Subtraction",
+                subtitle: "Combine all 6 mental addition & subtraction superpowers",
+                hookTitle: "Choose the Right Weapon in Half a Second!",
+                concept: "Today is your Week 1 Championship Boss! Every card uses one of the 6 tricks you mastered this week: Complements to 100/1000, +99/-99 Compensation, Left-to-Right Addition, Split Subtraction, Near-Doubles, or Bridging across 100s.",
+                goldenRule: "Glance at the numbers first: Is there a 99? A bond to 100? A near-double? Pick your shortcut and fire!",
+                visualSteps: [
+                    { label: "See 1000 − 472", val: "Use 9-9-10 Rule", desc: "528 in 2 seconds" },
+                    { label: "See 346 + 99", val: "Use +100 − 1", desc: "445 in 1 second" },
+                    { label: "See 406 − 397", val: "Bridge via 400", desc: "3 + 6 = 9 in 1 second" }
+                ],
+                examples: [
+                    { q: "100 − 29", steps: ["Day 1 Hack: 9−2=7, 10−9=1", "Instant Answer: 71"], ans: "71" },
+                    { q: "265 + 98", steps: ["Day 2 Hack: 265 + 100 − 2", "Instant Answer: 363"], ans: "363" },
+                    { q: "65 + 66", steps: ["Day 5 Hack: Double 65 + 1", "130 + 1 = 131"], ans: "131" }
+                ],
+                warmup: { q: "305 − 296 = ?", ans: 9, hint: "Bridge through 300: 4 + 5 = 9!" },
+                generateCard: (idx) => {
+                    const pickDay = (idx % 6) + 1;
+                    return CURRICULUM_DAYS[pickDay - 1].generateCard(idx);
+                }
+            },
+
+            // =========================================================================
+            // WEEK 2: MULTIPLICATION & DIVISION POWER TRICKS (DAYS 8 - 14)
+            // =========================================================================
+            {
+                day: 8, week: 2,
+                title: "Powers of 10 & Trailing Zero Multiplier",
+                subtitle: "Multiply & divide whole numbers and decimals by 10, 100, 1000",
+                hookTitle: "Slide the Digits & Count the Zeros!",
+                concept: "In Year 5, multiplying like 40 × 70 or dividing 4,500 ÷ 100 should take 1 second. For whole numbers like 60 × 80, multiply the front digits (6 × 8 = 48) and attach the total number of zeros (two zeros → 4,800). For decimals × 10 or 100, slide the digits left!",
+                goldenRule: "Front digits first, then count & attach the zeros! When dividing, cancel matching zeros on both sides.",
+                visualSteps: [
+                    { label: "Problem", val: "60 × 70", desc: "Spot 6 × 7 and two trailing zeros" },
+                    { label: "Core Fact", val: "6 × 7 = 42", desc: "Basic times table fact" },
+                    { label: "Attach 2 Zeros", val: "4,200", desc: "Two zeros → 4200!" }
+                ],
+                examples: [
+                    { q: "80 × 40", steps: ["8 × 4 = 32", "Attach 2 zeros → 3,200", "Answer: 3200"], ans: "3200" },
+                    { q: "3.6 × 100", steps: ["Slide digits 2 places bigger", "3.6 → 36 → 360", "Answer: 360"], ans: "360" },
+                    { q: "54,000 ÷ 100", steps: ["Cancel 2 zeros from both numbers", "540 ÷ 1 = 540", "Answer: 540"], ans: "540" }
+                ],
+                warmup: { q: "70 × 60 = ?", ans: 4200, hint: "7 × 6 = 42, then attach two zeros!" },
+                generateCard: (idx) => {
+                    const type = idx % 3;
+                    if (type === 0) {
+                        const a = randInt(2, 9) * 10;
+                        const b = randInt(3, 9) * (idx > 25 ? 100 : 10);
+                        return { q: `${a} × ${b} = ?`, ans: a * b, hint: "Multiply front digits, then count total zeros!" };
+                    } else if (type === 1) {
+                        const dec = (randInt(12, 98) / 10);
+                        const mult = pickOne([10, 100, 1000]);
+                        return { q: `${dec} × ${mult} = ?`, ans: Math.round(dec * mult), hint: `Slide digits left by ${String(mult).length - 1} places!` };
+                    } else {
+                        const ans = randInt(12, 95);
+                        const div = pickOne([10, 100]);
+                        return { q: `${ans * div} ÷ ${div} = ?`, ans: ans, hint: "Cross off matching zeros!" };
+                    }
+                }
+            },
+            {
+                day: 9, week: 2,
+                title: "The Doubling & Halving Equilibrium Hack",
+                subtitle: "Reshape hard multiplications into easy ones",
+                hookTitle: "Half One Side, Double the Other!",
+                concept: "Did you know that 16 × 5 gives the exact same answer as 8 × 10? When you HALVE one number and DOUBLE the other, the product stays identical! This turns awkward 2-digit multiplications like 14 × 15 into 7 × 30 = 210 in a flash.",
+                goldenRule: "If one number is even and the other ends in 5 (or is tricky), HALVE the even number and DOUBLE the other!",
+                visualSteps: [
+                    { label: "Problem", val: "18 × 15", desc: "18 is even, 15 loves to be doubled!" },
+                    { label: "Halve & Double", val: "9 × 30", desc: "Half of 18 is 9; Double 15 is 30" },
+                    { label: "Instant Answer", val: "270", desc: "9 × 30 = 270!" }
+                ],
+                examples: [
+                    { q: "14 × 50", steps: ["Halve 14 → 7", "Double 50 → 100", "7 × 100 = 700!"], ans: "700" },
+                    { q: "16 × 15", steps: ["Halve 16 → 8", "Double 15 → 30", "8 × 30 = 240!"], ans: "240" },
+                    { q: "35 × 4", steps: ["Double 35 → 70", "Halve 4 → 2", "70 × 2 = 140!"], ans: "140" }
+                ],
+                warmup: { q: "12 × 15 = ?", ans: 180, hint: "Halve 12 to 6, Double 15 to 30 → 6 × 30!" },
+                generateCard: (idx) => {
+                    const oddFive = pickOne([15, 25, 35, 45, 50]);
+                    const evenNum = randInt(2, 12) * 2;
+                    return idx % 2 === 0
+                        ? { q: `${evenNum} × ${oddFive} = ?`, ans: evenNum * oddFive, hint: `Change to ${evenNum/2} × ${oddFive*2}!` }
+                        : { q: `${oddFive} × ${evenNum} = ?`, ans: oddFive * evenNum, hint: `Double ${oddFive} to ${oddFive*2}, Halve ${evenNum} to ${evenNum/2}!` };
+                }
+            },
+            {
+                day: 10, week: 2,
+                title: "Multiplying by 5, 25, and 50",
+                subtitle: "Use 10s and 100s to multiply in 2 seconds",
+                hookTitle: "5 is Half of 10, 25 is a Quarter of 100!",
+                concept: "Never multiply by 5, 25, or 50 the slow way! Since 5 is half of 10, just halve the number and × 10. Since 50 is half of 100, halve the number and × 100. And since 25 is a quarter of 100, divide by 4 (halve twice) and × 100!",
+                goldenRule: "×5 → Halve & ×10  |  ×50 → Halve & ×100  |  ×25 → Quarter (Halve twice) & ×100!",
+                visualSteps: [
+                    { label: "Problem", val: "28 × 25", desc: "25 is 100 ÷ 4" },
+                    { label: "Find a Quarter", val: "28 ÷ 4 = 7", desc: "Half of 28 is 14, half of 14 is 7" },
+                    { label: "Multiply by 100", val: "7 × 100 = 700", desc: "Instant 700!" }
+                ],
+                examples: [
+                    { q: "46 × 5", steps: ["Half of 46 is 23", "23 × 10 = 230", "Answer: 230"], ans: "230" },
+                    { q: "32 × 25", steps: ["Quarter of 32 is 8", "8 × 100 = 800", "Answer: 800"], ans: "800" },
+                    { q: "18 × 50", steps: ["Half of 18 is 9", "9 × 100 = 900", "Answer: 900"], ans: "900" }
+                ],
+                warmup: { q: "24 × 25 = ?", ans: 600, hint: "Quarter of 24 is 6, then × 100!" },
+                generateCard: (idx) => {
+                    const mode = idx % 3;
+                    if (mode === 0) {
+                        const n = randInt(12, 88);
+                        return { q: `${n} × 5 = ?`, ans: n * 5, hint: `Half of ${n} is ${n/2}, then × 10!` };
+                    } else if (mode === 1) {
+                        const n = randInt(2, 24) * 4;
+                        return { q: `${n} × 25 = ?`, ans: n * 25, hint: `Quarter of ${n} is ${n/4}, then × 100!` };
+                    } else {
+                        const n = randInt(6, 48) * 2;
+                        return { q: `${n} × 50 = ?`, ans: n * 50, hint: `Half of ${n} is ${n/2}, then × 100!` };
+                    }
+                }
+            },
+            {
+                day: 11, week: 2,
+                title: "Multiplying by 9, 11, and 12",
+                subtitle: "Lightning shortcuts for 9×, 11×, and 12×",
+                hookTitle: "The 11s Sandwich & The 10-Minus-1 Trick!",
+                concept: "To multiply any 2-digit number by 11 (like 35 × 11), separate the digits (3 _ 5) and put their sum (3+5=8) in the middle → 385! To multiply any number by 9, multiply by 10 and subtract the number once (e.g., 16 × 9 = 160 − 16 = 144).",
+                goldenRule: "×11: Sandwich the sum of the two digits in the middle!  |  ×9: Multiply by 10, then subtract the number once!",
+                visualSteps: [
+                    { label: "11s Trick: 43 × 11", val: "4 [4+3] 3", desc: "Put 4+3=7 in the middle → 473!" },
+                    { label: "9s Trick: 15 × 9", val: "150 − 15", desc: "15 × 10 minus 15 → 135!" },
+                    { label: "12s Trick: 14 × 12", val: "140 + 28", desc: "(14 × 10) + (14 × 2) → 168!" }
+                ],
+                examples: [
+                    { q: "52 × 11", steps: ["Outside digits: 5 and 2", "Middle digit: 5 + 2 = 7", "Sandwich: 572!"], ans: "572" },
+                    { q: "18 × 9", steps: ["18 × 10 = 180", "180 − 18 = 162", "Answer: 162"], ans: "162" },
+                    { q: "13 × 12", steps: ["13 × 10 = 130", "13 × 2 = 26", "130 + 26 = 156!"], ans: "156" }
+                ],
+                warmup: { q: "36 × 11 = ?", ans: 396, hint: "Sandwich 3 + 6 = 9 between 3 and 6!" },
+                generateCard: (idx) => {
+                    const mode = idx % 3;
+                    if (mode === 0) {
+                        const d1 = randInt(1, 7);
+                        const d2 = randInt(1, 9 - d1); // No carry for ultra-clean sandwich or occasional carry
+                        const n = d1 * 10 + d2;
+                        return { q: `${n} × 11 = ?`, ans: n * 11, hint: `Sandwich ${d1}+${d2}=${d1+d2} between ${d1} and ${d2}!` };
+                    } else if (mode === 1) {
+                        const n = randInt(12, 30);
+                        return { q: `${n} × 9 = ?`, ans: n * 9, hint: `Do ${n*10} − ${n}!` };
+                    } else {
+                        const n = randInt(11, 20);
+                        return { q: `${n} × 12 = ?`, ans: n * 12, hint: `Do (${n}×10) + (${n}×2) = ${n*10} + ${n*2}!` };
+                    }
+                }
+            },
+            {
+                day: 12, week: 2,
+                title: "Partition Multiplication (2-Digit × 1-Digit)",
+                subtitle: "Multiply tens first, then ones, and snap together",
+                hookTitle: "Break the Number Into Tens + Ones!",
+                concept: "How do you do 47 × 6 in your head without writing a column? Split 47 into 40 and 7! Multiply the tens first (40 × 6 = 240), then the ones (7 × 6 = 42), and add 240 + 42 = 282. Doing Tens first keeps the big number anchored in your memory!",
+                goldenRule: "Split 2-digit numbers into Tens + Ones: (Tens × Multiplier) + (Ones × Multiplier)!",
+                visualSteps: [
+                    { label: "Problem", val: "36 × 4", desc: "Split 36 into 30 and 6" },
+                    { label: "Multiply Tens", val: "30 × 4 = 120", desc: "Hold 120 in your head" },
+                    { label: "Multiply Ones", val: "6 × 4 = 24", desc: "120 + 24 = 144!" }
+                ],
+                examples: [
+                    { q: "43 × 5", steps: ["40 × 5 = 200", "3 × 5 = 15", "200 + 15 = 215!"], ans: "215" },
+                    { q: "54 × 3", steps: ["50 × 3 = 150", "4 × 3 = 12", "150 + 12 = 162!"], ans: "162" },
+                    { q: "68 × 4", steps: ["60 × 4 = 240", "8 × 4 = 32", "240 + 32 = 272!"], ans: "272" }
+                ],
+                warmup: { q: "34 × 6 = ?", ans: 204, hint: "30 × 6 = 180, plus 4 × 6 = 24!" },
+                generateCard: (idx) => {
+                    const tens = randInt(2, idx <= 25 ? 5 : 8) * 10;
+                    const ones = randInt(2, 8);
+                    const n = tens + ones;
+                    const m = randInt(3, 8);
+                    return { q: `${n} × ${m} = ?`, ans: n * m, hint: `(${tens}×${m}=${tens*m}) + (${ones}×${m}=${ones*m})` };
+                }
+            },
+            {
+                day: 13, week: 2,
+                title: "Mental Division: Halving Chains & Chunking",
+                subtitle: "Divide by 4, 8, and 1-digit numbers with zero bus-stop writing",
+                hookTitle: "Divide by 4 = Halve Twice! Or Split Into Friendly Chunks!",
+                concept: "There are two awesome ways to divide mentally: 1) To divide by 4, just halve, then halve again! To divide by 8, halve 3 times! 2) For other divisors like 96 ÷ 6, split 96 into friendly chunks of 6: 60 + 36. (60÷6 = 10) + (36÷6 = 6) = 16!",
+                goldenRule: "÷4 = Halve twice!  |  For ÷3, ÷6, ÷7: Split the big number into a 10× chunk plus the leftover!",
+                visualSteps: [
+                    { label: "Problem", val: "84 ÷ 6", desc: "Split 84 into 60 + 24" },
+                    { label: "First Chunk", val: "60 ÷ 6 = 10", desc: "10× chunk" },
+                    { label: "Second Chunk", val: "24 ÷ 6 = 4", desc: "10 + 4 = 14!" }
+                ],
+                examples: [
+                    { q: "92 ÷ 4", steps: ["Half of 92 is 46", "Half of 46 is 23", "Answer: 23"], ans: "23" },
+                    { q: "78 ÷ 6", steps: ["Split 78 into 60 + 18", "60÷6 = 10, 18÷6 = 3", "10 + 3 = 13!"], ans: "13" },
+                    { q: "112 ÷ 8", steps: ["Split 112 into 80 + 32", "80÷8 = 10, 32÷8 = 4", "10 + 4 = 14!"], ans: "14" }
+                ],
+                warmup: { q: "75 ÷ 5 = ?", ans: 15, hint: "Split 75 into 50 + 25: (50÷5=10) + (25÷5=5)!" },
+                generateCard: (idx) => {
+                    if (idx % 2 === 0) {
+                        const ans = randInt(12, 36);
+                        return { q: `${ans * 4} ÷ 4 = ?`, ans: ans, hint: `Halve ${ans*4} to ${ans*2}, then halve again!` };
+                    } else {
+                        const div = pickOne([3, 5, 6, 7, 8]);
+                        const ans = randInt(11, 19);
+                        const total = div * ans;
+                        return { q: `${total} ÷ ${div} = ?`, ans: ans, hint: `Split ${total} into ${div*10} + ${total - div*10}!` };
+                    }
+                }
+            },
+            {
+                day: 14, week: 2,
+                title: "Week 2 Speed Boss: Multiplication & Division",
+                subtitle: "Put all your Week 2 multiplication & division hacks to the test",
+                hookTitle: "Spot the Pattern & Execute in Under 3 Seconds!",
+                concept: "Welcome to the Week 2 Speed Boss! You'll face a mix of Powers of 10, Doubling & Halving, ×25/×50 shortcuts, 11s Sandwiches, 2-Digit Partitioning, and Chunking Division. Trust your shortcuts!",
+                goldenRule: "Never brute-force a multiplication when a Halve-Double or ×25 shortcut is staring right at you!",
+                visualSteps: [
+                    { label: "See 28 × 25", val: "Quarter & ×100", desc: "28 ÷ 4 = 7 → 700!" },
+                    { label: "See 53 × 11", val: "11s Sandwich", desc: "5 [5+3] 3 → 583!" },
+                    { label: "See 96 ÷ 6", val: "Chunk 60 + 36", desc: "10 + 6 = 16!" }
+                ],
+                examples: [
+                    { q: "36 × 25", steps: ["Quarter of 36 is 9", "9 × 100 = 900", "Answer: 900"], ans: "900" },
+                    { q: "45 × 11", steps: ["Sandwich 4 + 5 = 9", "Answer: 495"], ans: "495" },
+                    { q: "16 × 15", steps: ["Halve 16 → 8, Double 15 → 30", "8 × 30 = 240"], ans: "240" }
+                ],
+                warmup: { q: "14 × 15 = ?", ans: 210, hint: "Halve 14 to 7, Double 15 to 30 → 7 × 30 = 210!" },
+                generateCard: (idx) => {
+                    const pickDay = 8 + (idx % 6);
+                    return CURRICULUM_DAYS[pickDay - 1].generateCard(idx);
+                }
+            },
+
+            // =========================================================================
+            // WEEK 3: FRACTIONS, DECIMALS & PERCENTAGES FLUENCY (DAYS 15 - 21)
+            // =========================================================================
+            {
+                day: 15, week: 3,
+                title: "Unit Fractions of Amounts (1/3, 1/4, 1/5, 1/8)",
+                subtitle: "Find a fraction of any number by dividing by the bottom",
+                hookTitle: "Bottom Number = The Splitter!",
+                concept: "Finding a unit fraction (where the top number is 1, like 1/5 of 45) is just division in disguise! The denominator (bottom number) tells you how many equal slices to divide the whole number into. So 1/6 of 42 simply means 42 ÷ 6 = 7!",
+                goldenRule: "To find 1/n of a number, divide the number by the bottom denominator (n)!",
+                visualSteps: [
+                    { label: "Problem", val: "1/8 of 56", desc: "Denominator is 8" },
+                    { label: "Translate to ÷", val: "56 ÷ 8", desc: "How many 8s in 56?" },
+                    { label: "Instant Answer", val: "7", desc: "7 × 8 = 56, so 7!" }
+                ],
+                examples: [
+                    { q: "1/4 of 60", steps: ["Divide 60 by 4", "Half is 30, half again is 15", "Answer: 15"], ans: "15" },
+                    { q: "1/7 of 63", steps: ["Divide 63 by 7", "63 ÷ 7 = 9", "Answer: 9"], ans: "9" },
+                    { q: "1/9 of 720", steps: ["72 ÷ 9 = 8", "Attach the zero → 80", "Answer: 80"], ans: "80" }
+                ],
+                warmup: { q: "1/6 of 54 = ?", ans: 9, hint: "Just do 54 ÷ 6!" },
+                generateCard: (idx) => {
+                    const denom = pickOne([3, 4, 5, 6, 7, 8, 9, 10]);
+                    const mult = idx <= 25 ? randInt(3, 12) : randInt(11, 20) * (idx > 40 ? 10 : 1);
+                    const total = denom * mult;
+                    return { q: `1/${denom} of ${total} = ?`, ans: mult, hint: `Divide ${total} by ${denom}!` };
+                }
+            },
+            {
+                day: 16, week: 3,
+                title: "Non-Unit Fractions of Amounts (3/4, 2/5, 5/8)",
+                subtitle: "Divide by the bottom, multiply by the top in two smooth steps",
+                hookTitle: "The 'Divide by Bottom, Times by Top' Two-Step!",
+                concept: "What if the top number isn't 1, like 3/5 of 40? Never multiply by 3 first (that makes the number huge!). ALWAYS divide by the bottom number first to find 1 slice (40 ÷ 5 = 8), then multiply that slice by the top number (8 × 3 = 24)!",
+                goldenRule: "Step 1: Divide by the BOTTOM (denominator). Step 2: Multiply by the TOP (numerator)!",
+                visualSteps: [
+                    { label: "Problem", val: "3/4 of 36", desc: "Bottom is 4, Top is 3" },
+                    { label: "Step 1: ÷ Bottom", val: "36 ÷ 4 = 9", desc: "1/4 is 9" },
+                    { label: "Step 2: × Top", val: "9 × 3 = 27", desc: "3 quarters is 27!" }
+                ],
+                examples: [
+                    { q: "2/5 of 35", steps: ["Step 1: 35 ÷ 5 = 7", "Step 2: 7 × 2 = 14", "Answer: 14"], ans: "14" },
+                    { q: "5/6 of 42", steps: ["Step 1: 42 ÷ 6 = 7", "Step 2: 7 × 5 = 35", "Answer: 35"], ans: "35" },
+                    { q: "3/8 of 64", steps: ["Step 1: 64 ÷ 8 = 8", "Step 2: 8 × 3 = 24", "Answer: 24"], ans: "24" }
+                ],
+                warmup: { q: "3/5 of 45 = ?", ans: 27, hint: "First 45 ÷ 5 = 9. Then 9 × 3 = 27!" },
+                generateCard: (idx) => {
+                    const pairs = [[2,3],[3,4],[2,5],[3,5],[4,5],[5,6],[3,8],[5,8],[7,10]];
+                    const [num, den] = pickOne(pairs);
+                    const unit = idx <= 25 ? randInt(3, 10) : randInt(6, 15);
+                    const total = den * unit;
+                    return { q: `${num}/${den} of ${total} = ?`, ans: unit * num, hint: `Step 1: ${total} ÷ ${den} = ${unit}. Step 2: ${unit} × ${num}!` };
+                }
+            },
+            {
+                day: 17, week: 3,
+                title: "Decimal Complements to 1 and 10",
+                subtitle: "Avoid the #1 Year 5 decimal trap using whole-number bonds",
+                hookTitle: "Think in Tenths (to 10) or Hundredths (to 100)!",
+                concept: "When Year 5s see 1 − 0.37, many accidentally say 0.73! Why? Because they forget to borrow. Instead, treat 1.00 as 100 hundredths! Using your Day 1 trick (9 from first, 10 from last), 100 − 37 = 63, so 1 − 0.37 = 0.63! For 10 − 3.4, think 100 tenths − 34 tenths = 6.6!",
+                goldenRule: "Ignore the decimal point for a second, use the 9-and-10 complement rule, then put the decimal point back!",
+                visualSteps: [
+                    { label: "Problem", val: "1 − 0.42", desc: "Think of 1.00 as 100 hundredths" },
+                    { label: "9 & 10 Rule", val: "9−4=5, 10−2=8", desc: "100 − 42 = 58" },
+                    { label: "Place Decimal", val: "0.58", desc: "58 hundredths = 0.58!" }
+                ],
+                examples: [
+                    { q: "1 − 0.6", steps: ["Think 10 tenths − 6 tenths", "10 − 6 = 4 tenths", "Answer: 0.4"], ans: "0.4" },
+                    { q: "1 − 0.28", steps: ["Think 100 − 28 = 72", "Write as hundredths: 0.72", "Answer: 0.72"], ans: "0.72" },
+                    { q: "10 − 4.3", steps: ["Ones digit sums to 9: 9 − 4 = 5", "Tenths digit sums to 10: 10 − 3 = 7", "Answer: 5.7"], ans: "5.7" }
+                ],
+                warmup: { q: "1 − 0.36 = ?", ans: 0.64, hint: "100 − 36 is 64, so 0.64!" },
+                generateCard: (idx) => {
+                    if (idx <= 15) {
+                        const t = randInt(1, 9);
+                        return { q: `1 − 0.${t} = ?`, ans: Number((1 - t/10).toFixed(1)), hint: `10 tenths − ${t} tenths = 0.${10-t}` };
+                    } else if (idx <= 35) {
+                        const h = randInt(11, 98);
+                        if (h % 10 === 0) return { q: `1 − 0.${h+3} = ?`, ans: Number((1 - (h+3)/100).toFixed(2)), hint: "Use 9-and-10 rule!" };
+                        return { q: `1 − 0.${h} = ?`, ans: Number((1 - h/100).toFixed(2)), hint: `100 − ${h} = ${100-h} → 0.${100-h}` };
+                    } else {
+                        const whole = randInt(1, 8);
+                        const tenth = randInt(1, 9);
+                        const sub = Number(`${whole}.${tenth}`);
+                        return { q: `10 − ${sub} = ?`, ans: Number((10 - sub).toFixed(1)), hint: `Ones: 9−${whole}=${9-whole}, Tenths: 10−${tenth}=${10-tenth}` };
+                    }
+                }
+            },
+            {
+                day: 18, week: 3,
+                title: "Adding & Subtracting Decimals Mentally",
+                subtitle: "Line up tenths and ones in your head like money",
+                hookTitle: "Treat Decimals Like Pounds/Dollars & Coins!",
+                concept: "Adding 2.6 + 1.8 is super easy when you treat them as 26 tenths + 18 tenths = 44 tenths = 4.4! Or add the whole numbers first (2 + 1 = 3), then add the tenths (0.6 + 0.8 = 1.4), and combine: 3 + 1.4 = 4.4!",
+                goldenRule: "Add Whole Numbers first, then add Tenths (remembering 10 tenths = 1 whole)!",
+                visualSteps: [
+                    { label: "Problem", val: "3.7 + 2.5", desc: "Whole parts: 3 and 2. Tenths: 0.7 and 0.5" },
+                    { label: "Add Wholes", val: "3 + 2 = 5", desc: "Hold 5" },
+                    { label: "Add Tenths", val: "0.7 + 0.5 = 1.2", desc: "5 + 1.2 = 6.2!" }
+                ],
+                examples: [
+                    { q: "1.4 + 2.5", steps: ["Wholes: 1 + 2 = 3", "Tenths: 0.4 + 0.5 = 0.9", "Answer: 3.9"], ans: "3.9" },
+                    { q: "4.8 + 1.6", steps: ["Wholes: 4 + 1 = 5", "Tenths: 0.8 + 0.6 = 1.4", "5 + 1.4 = 6.4!"], ans: "6.4" },
+                    { q: "5.6 − 2.3", steps: ["Wholes: 5 − 2 = 3", "Tenths: 0.6 − 0.3 = 0.3", "Answer: 3.3"], ans: "3.3" }
+                ],
+                warmup: { q: "2.7 + 1.5 = ?", ans: 4.2, hint: "2 + 1 = 3, and 0.7 + 0.5 = 1.2 → 3 + 1.2 = 4.2!" },
+                generateCard: (idx) => {
+                    const isAdd = idx % 3 !== 0;
+                    if (isAdd) {
+                        const a = randInt(11, 59) / 10;
+                        const b = randInt(11, 49) / 10;
+                        return { q: `${a.toFixed(1)} + ${b.toFixed(1)} = ?`, ans: Number((a + b).toFixed(1)), hint: "Add wholes first, then tenths!" };
+                    } else {
+                        const b = randInt(11, 38) / 10;
+                        const diff = randInt(11, 45) / 10;
+                        const a = Number((b + diff).toFixed(1));
+                        return { q: `${a.toFixed(1)} − ${b.toFixed(1)} = ?`, ans: diff, hint: `Think ${Math.round(a*10)} tenths − ${Math.round(b*10)} tenths!` };
+                    }
+                }
+            },
+            {
+                day: 19, week: 3,
+                title: "Percentage Power Hacks: 10%, 5%, 15%, 20%",
+                subtitle: "Unlock any percentage by finding the Golden 10% first",
+                hookTitle: "10% Is Your Master Key to Every Percentage!",
+                concept: "To find 10% of any number, simply divide by 10! Once you know 10%, you can build almost any percentage in seconds: 20% is Double 10%. 5% is Half of 10%. And 15% is just 10% + 5% added together!",
+                goldenRule: "10% = ÷10  |  5% = Half of 10%  |  20% = Double 10%  |  15% = 10% + 5%!",
+                visualSteps: [
+                    { label: "Problem", val: "15% of 60", desc: "Start with the Golden 10%" },
+                    { label: "Find 10% & 5%", val: "10% = 6, so 5% = 3", desc: "5% is half of 10%" },
+                    { label: "Add for 15%", val: "6 + 3 = 9", desc: "15% of 60 is 9!" }
+                ],
+                examples: [
+                    { q: "10% of 240", steps: ["Divide 240 by 10", "Drop the zero → 24", "Answer: 24"], ans: "24" },
+                    { q: "5% of 80", steps: ["10% of 80 is 8", "5% is half of 8 → 4", "Answer: 4"], ans: "4" },
+                    { q: "15% of 40", steps: ["10% of 40 is 4", "5% of 40 is 2", "4 + 2 = 6!"], ans: "6" }
+                ],
+                warmup: { q: "15% of 80 = ?", ans: 12, hint: "10% is 8, 5% is 4 → 8 + 4 = 12!" },
+                generateCard: (idx) => {
+                    const pct = pickOne([10, 5, 20, 15, 30]);
+                    const base = randInt(2, 24) * 20;
+                    const tenPct = base / 10;
+                    let hintStr = `10% of ${base} is ${tenPct}`;
+                    if (pct === 5) hintStr += `, so 5% is half (${tenPct/2})!`;
+                    if (pct === 20) hintStr += `, so 20% is double (${tenPct*2})!`;
+                    if (pct === 15) hintStr += `, plus 5% (${tenPct/2})!`;
+                    if (pct === 30) hintStr += `, times 3!`;
+                    return { q: `${pct}% of ${base} = ?`, ans: (base * pct) / 100, hint: hintStr };
+                }
+            },
+            {
+                day: 20, week: 3,
+                title: "25%, 50%, 75% Fraction-Percentage Twins",
+                subtitle: "Convert percentages into instant quarters and halves",
+                hookTitle: "Don't Multiply—Use Halves & Quarters!",
+                concept: "Some percentages are famous fractions wearing a costume! 50% is 1/2 (just halve it). 25% is 1/4 (halve it twice!). And 75% is 3/4 (find 25% first, then multiply by 3!).",
+                goldenRule: "50% = Half (÷2)  |  25% = Quarter (÷4)  |  75% = Three Quarters (÷4, then ×3)!",
+                visualSteps: [
+                    { label: "Problem", val: "75% of 48", desc: "75% means 3 quarters (3/4)" },
+                    { label: "Find 25% (1/4)", val: "48 ÷ 4 = 12", desc: "One quarter is 12" },
+                    { label: "Multiply by 3", val: "12 × 3 = 36", desc: "Three quarters is 36!" }
+                ],
+                examples: [
+                    { q: "50% of 86", steps: ["50% is exactly half", "86 ÷ 2 = 43", "Answer: 43"], ans: "43" },
+                    { q: "25% of 64", steps: ["25% is one quarter (÷4)", "Half is 32, half again is 16", "Answer: 16"], ans: "16" },
+                    { q: "75% of 40", steps: ["25% (1/4) of 40 is 10", "75% (3/4) is 10 × 3 = 30", "Answer: 30"], ans: "30" }
+                ],
+                warmup: { q: "75% of 32 = ?", ans: 24, hint: "Quarter of 32 is 8. Then 8 × 3 = 24!" },
+                generateCard: (idx) => {
+                    const pct = pickOne([50, 25, 75]);
+                    if (pct === 50) {
+                        const n = randInt(12, 96) * 2;
+                        return { q: `50% of ${n} = ?`, ans: n / 2, hint: `Just find half of ${n}!` };
+                    } else {
+                        const qtr = randInt(3, 25);
+                        const n = qtr * 4;
+                        return pct === 25
+                            ? { q: `25% of ${n} = ?`, ans: qtr, hint: `Find a quarter (halve twice) of ${n}!` }
+                            : { q: `75% of ${n} = ?`, ans: qtr * 3, hint: `Quarter of ${n} is ${qtr}, then × 3!` };
+                    }
+                }
+            },
+            {
+                day: 21, week: 3,
+                title: "Week 3 Speed Boss: Fractions, Decimals & %",
+                subtitle: "Mastery sprint across Fractions, Decimals, and Percentages",
+                hookTitle: "Connect Fractions, Decimals & Percentages Like a Pro!",
+                concept: "Today is your Week 3 Championship Sprint! You'll rapidly switch between unit fractions, non-unit fractions (divide by bottom, times by top), decimal complements to 1 and 10, and percentage hacks.",
+                goldenRule: "Fractions & Percentages are best friends: Divide first to keep numbers small, then multiply!",
+                visualSteps: [
+                    { label: "3/5 of 45", val: "(45 ÷ 5) × 3", desc: "9 × 3 = 27!" },
+                    { label: "1 − 0.64", val: "100 − 64 = 36", desc: "0.36!" },
+                    { label: "15% of 60", val: "10% (6) + 5% (3)", desc: "9!" }
+                ],
+                examples: [
+                    { q: "4/5 of 30", steps: ["30 ÷ 5 = 6", "6 × 4 = 24", "Answer: 24"], ans: "24" },
+                    { q: "1 − 0.83", steps: ["100 − 83 = 17", "Answer: 0.17"], ans: "0.17" },
+                    { q: "75% of 80", steps: ["Quarter of 80 is 20", "20 × 3 = 60"], ans: "60" }
+                ],
+                warmup: { q: "25% of 84 = ?", ans: 21, hint: "Halve 84 to 42, halve again to 21!" },
+                generateCard: (idx) => {
+                    const pickDay = 15 + (idx % 6);
+                    return CURRICULUM_DAYS[pickDay - 1].generateCard(idx);
+                }
+            },
+
+            // =========================================================================
+            // WEEK 4: ADVANCED YEAR 5 APPLIED STRATEGIES & MASTERY (DAYS 22 - 30)
+            // =========================================================================
+            {
+                day: 22, week: 4,
+                title: "Square Numbers, Square Roots & 5-Enders",
+                subtitle: "Instant squares up to 15² plus the magic 25²/35² trick",
+                hookTitle: "Know Your Squares & The Magic 'Ends-in-5' Trick!",
+                concept: "A square number means a number multiplied by itself (like 8² = 8 × 8 = 64). A square root (√64) asks 'what number times itself makes 64?' Bonus superpower: to square ANY number ending in 5 (like 25² or 35²), multiply the first digit by the NEXT higher number (2 × 3 = 6) and stick 25 on the end → 625!",
+                goldenRule: "Memorise 1² to 12² cold! For numbers ending in 5 (like 35²): do 3 × 4 = 12, then attach 25 → 1225!",
+                visualSteps: [
+                    { label: "Magic 5-Square", val: "35² (35 × 35)", desc: "Tens digit is 3. Next number after 3 is 4." },
+                    { label: "Tens × Next", val: "3 × 4 = 12", desc: "Front part is 12" },
+                    { label: "Attach 25", val: "1225", desc: "Always ends in 25 → 1,225!" }
+                ],
+                examples: [
+                    { q: "9² (9 squared)", steps: ["9 × 9 = 81", "Never do 9 × 2!", "Answer: 81"], ans: "81" },
+                    { q: "√144", steps: ["What times itself equals 144?", "12 × 12 = 144", "Answer: 12"], ans: "12" },
+                    { q: "25² (25 × 25)", steps: ["First digit 2 × next number 3 = 6", "Attach 25 at the end → 625", "Answer: 625"], ans: "625" }
+                ],
+                warmup: { q: "15² (15 × 15) = ?", ans: 225, hint: "1 × 2 = 2, then attach 25 → 225!" },
+                generateCard: (idx) => {
+                    const mode = idx % 3;
+                    if (mode === 0) {
+                        const n = randInt(2, 13);
+                        return { q: `${n}² = ?`, ans: n * n, hint: `Multiply ${n} × ${n}!` };
+                    } else if (mode === 1) {
+                        const n = randInt(2, 13);
+                        return { q: `√${n * n} = ?`, ans: n, hint: `What number times itself equals ${n*n}?` };
+                    } else {
+                        const tens = randInt(1, 6);
+                        const n = tens * 10 + 5;
+                        return { q: `${n}² (${n} × ${n}) = ?`, ans: n * n, hint: `Do ${tens} × ${tens+1} = ${tens*(tens+1)}, then attach 25!` };
+                    }
+                }
+            },
+            {
+                day: 23, week: 4,
+                title: "Cube Numbers & Powers of 2",
+                subtitle: "Master 1³ to 5³ and doubling chains up to 2¹⁰",
+                hookTitle: "The Year 5 Cube Club & Binary Doubling!",
+                concept: "In Year 5, you need to recognise the first 5 cube numbers on sight: 1³=1, 2³=8, 3³=27, 4³=64, 5³=125, and 10³=1000. You also unlock computer-science speed by knowing the Powers of 2 (just double each time: 2, 4, 8, 16, 32, 64, 128)!",
+                goldenRule: "Cubes to lock in: 2³=8, 3³=27, 4³=64, 5³=125! Powers of 2 just double every step!",
+                visualSteps: [
+                    { label: "What is 4³?", val: "4 × 4 × 4", desc: "Not 4 × 3!" },
+                    { label: "Step 1", val: "4 × 4 = 16", desc: "Square it first" },
+                    { label: "Step 2", val: "16 × 4 = 64", desc: "4³ = 64!" }
+                ],
+                examples: [
+                    { q: "3³", steps: ["3 × 3 = 9", "9 × 3 = 27", "Answer: 27"], ans: "27" },
+                    { q: "5³", steps: ["5 × 5 = 25", "25 × 5 = 125", "Answer: 125"], ans: "125" },
+                    { q: "2⁵", steps: ["Double 5 times: 2, 4, 8, 16, 32", "Answer: 32"], ans: "32" }
+                ],
+                warmup: { q: "4³ = ?", ans: 64, hint: "4 × 4 = 16, and 16 × 4 = 64!" },
+                generateCard: (idx) => {
+                    const pool = [
+                        { q: "2³ = ?", ans: 8, hint: "2 × 2 × 2" },
+                        { q: "3³ = ?", ans: 27, hint: "3 × 3 × 3" },
+                        { q: "4³ = ?", ans: 64, hint: "4 × 4 × 4" },
+                        { q: "5³ = ?", ans: 125, hint: "5 × 5 × 5" },
+                        { q: "10³ = ?", ans: 1000, hint: "10 × 10 × 10" },
+                        { q: "2⁴ = ?", ans: 16, hint: "2 × 2 × 2 × 2" },
+                        { q: "2⁵ = ?", ans: 32, hint: "Double 16!" },
+                        { q: "2⁶ = ?", ans: 64, hint: "Double 32!" }
+                    ];
+                    if (idx % 2 === 0) return pickOne(pool);
+                    const c = pickOne([2, 3, 4, 5]);
+                    const add = randInt(5, 30);
+                    return { q: `${c}³ + ${add} = ?`, ans: Math.pow(c, 3) + add, hint: `${c}³ is ${Math.pow(c,3)}, then + ${add}!` };
+                }
+            },
+            {
+                day: 24, week: 4,
+                title: "Order of Operations (BODMAS / BIDMAS) Sprints",
+                subtitle: "Multiply & divide BEFORE you add or subtract",
+                hookTitle: "Multiplication Has VIP Priority Over Addition!",
+                concept: "Look at 4 + 3 × 5. If you go left-to-right, you get 7 × 5 = 35 (WRONG!). Under BODMAS rules, Brackets go first, then Orders (squares), then Division/Multiplication, and finally Addition/Subtraction last! So in 4 + 3 × 5, do 3 × 5 = 15 first, then 4 + 15 = 19!",
+                goldenRule: "1st: Brackets ( )  |  2nd: Multiply & Divide (× ÷)  |  Last: Add & Subtract (+ −)!",
+                visualSteps: [
+                    { label: "Problem", val: "20 − 3 × 4", desc: "Spot the multiplication VIP!" },
+                    { label: "Multiply First", val: "3 × 4 = 12", desc: "Do this before subtracting" },
+                    { label: "Subtract Last", val: "20 − 12 = 8", desc: "Correct answer is 8 (not 68)!" }
+                ],
+                examples: [
+                    { q: "6 + 4 × 5", steps: ["Multiply first: 4 × 5 = 20", "Then add: 6 + 20 = 26", "Answer: 26"], ans: "26" },
+                    { q: "(6 + 4) × 5", steps: ["Brackets beat everything: 6 + 4 = 10", "10 × 5 = 50", "Answer: 50"], ans: "50" },
+                    { q: "30 − 18 ÷ 3", steps: ["Divide first: 18 ÷ 3 = 6", "30 − 6 = 24", "Answer: 24"], ans: "24" }
+                ],
+                warmup: { q: "10 + 5 × 4 = ?", ans: 30, hint: "Do 5 × 4 = 20 first, then + 10!" },
+                generateCard: (idx) => {
+                    const mode = idx % 3;
+                    if (mode === 0) {
+                        const a = randInt(4, 25);
+                        const b = randInt(2, 9);
+                        const c = randInt(2, 9);
+                        return { q: `${a} + ${b} × ${c} = ?`, ans: a + b * c, hint: `Do ${b} × ${c} = ${b*c} first, then + ${a}!` };
+                    } else if (mode === 1) {
+                        const b = randInt(2, 8);
+                        const c = randInt(2, 8);
+                        const a = b * c + randInt(3, 25);
+                        return { q: `${a} − ${b} × ${c} = ?`, ans: a - b * c, hint: `Do ${b} × ${c} = ${b*c} first, then subtract from ${a}!` };
+                    } else {
+                        const a = randInt(2, 9);
+                        const b = randInt(2, 8);
+                        const c = randInt(2, 7);
+                        return { q: `(${a} + ${b}) × ${c} = ?`, ans: (a + b) * c, hint: `Brackets first: ${a}+${b}=${a+b}, then × ${c}!` };
+                    }
+                }
+            },
+            {
+                day: 25, week: 4,
+                title: "Negative Numbers & Zero-Crossing Jumps",
+                subtitle: "Navigate sub-zero temperatures and number lines effortlessly",
+                hookTitle: "Always Stop at Zero on the Elevator!",
+                concept: "Think of negative numbers like basement floors below Ground Zero (0). If the temperature is −4°C and rises by 10°C, don't guess! Use 4 of those degrees to climb back to 0°C, and the remaining 6 degrees take you up to +6°C!",
+                goldenRule: "Use Zero as your stepping stone! Gap between −a and +b is simply a + b!",
+                visualSteps: [
+                    { label: "Problem", val: "−6 + 14", desc: "Start 6 floors underground" },
+                    { label: "Rise to Zero", val: "−6 → 0 uses +6", desc: "14 − 6 = 8 left over" },
+                    { label: "Above Zero", val: "0 + 8 = 8", desc: "Final floor: 8!" }
+                ],
+                examples: [
+                    { q: "−5 + 12", steps: ["It takes 5 to get from −5 to 0", "12 − 5 = 7 left over", "Answer: 7"], ans: "7" },
+                    { q: "4 − 9", steps: ["Drop 4 to reach 0", "Drop 5 more below zero → −5", "Answer: -5"], ans: "-5" },
+                    { q: "Gap from −4 to 7", steps: ["From −4 to 0 is 4", "From 0 to 7 is 7", "4 + 7 = 11!"], ans: "11" }
+                ],
+                warmup: { q: "−7 + 15 = ?", ans: 8, hint: "7 gets you to 0, leaving 15 − 7 = 8!" },
+                generateCard: (idx) => {
+                    const mode = idx % 3;
+                    if (mode === 0) {
+                        const neg = randInt(2, 15);
+                        const jump = neg + randInt(2, 18);
+                        return { q: `−${neg} + ${jump} = ?`, ans: jump - neg, hint: `Simply do ${jump} − ${neg}!` };
+                    } else if (mode === 1) {
+                        const start = randInt(2, 12);
+                        const drop = start + randInt(1, 14);
+                        return { q: `${start} − ${drop} = ?`, ans: start - drop, hint: `Drops ${ drop - start } below zero!` };
+                    } else {
+                        const neg = randInt(2, 14);
+                        const pos = randInt(3, 16);
+                        return { q: `Difference from −${neg} to ${pos} = ?`, ans: neg + pos, hint: `Distance to 0 is ${neg}, plus ${pos} above 0!` };
+                    }
+                }
+            },
+            {
+                day: 26, week: 4,
+                title: "Metric Unit Conversions (km, m, cm, kg, g, L, mL)",
+                subtitle: "Convert Year 5 measurements in a blink using ×1000 and ×100",
+                hookTitle: "'Kilo' & 'Milli' Always Mean 1,000! 'Centi' Means 100!",
+                concept: "Metric conversions are just Day 8 (×100 and ×1000) wearing a measurement badge! 1 km = 1,000 m. 1 kg = 1,000 g. 1 L = 1,000 mL. And 1 m = 100 cm. So 3.4 kg is simply 3.4 × 1,000 = 3,400 g!",
+                goldenRule: "km↔m, kg↔g, L↔mL = ×1,000 or ÷1,000  |  m↔cm = ×100 or ÷100!",
+                visualSteps: [
+                    { label: "Problem", val: "2.45 kg = ___ g", desc: "1 kg = 1,000 g" },
+                    { label: "Multiply by 1000", val: "2.45 × 1000", desc: "Slide decimal 3 places right" },
+                    { label: "Instant Answer", val: "2450 g", desc: "2,450!" }
+                ],
+                examples: [
+                    { q: "3.6 km in metres", steps: ["1 km = 1000 m", "3.6 × 1000 = 3600", "Answer: 3600"], ans: "3600" },
+                    { q: "450 cm in metres", steps: ["100 cm = 1 m", "450 ÷ 100 = 4.5", "Answer: 4.5"], ans: "4.5" },
+                    { q: "1.25 L in mL", steps: ["1 L = 1000 mL", "1.25 × 1000 = 1250", "Answer: 1250"], ans: "1250" }
+                ],
+                warmup: { q: "2.7 km = ___ m", ans: 2700, hint: "Multiply 2.7 by 1000!" },
+                generateCard: (idx) => {
+                    const mode = idx % 4;
+                    if (mode === 0) {
+                        const v = randInt(11, 89) / 10;
+                        const unit = pickOne([["km","m"],["kg","g"],["L","mL"]]);
+                        return { q: `${v} ${unit[0]} = ___ ${unit[1]}`, ans: Math.round(v * 1000), hint: "Multiply by 1,000!" };
+                    } else if (mode === 1) {
+                        const v = randInt(12, 95) * 100;
+                        const unit = pickOne([["m","km"],["g","kg"],["mL","L"]]);
+                        return { q: `${v} ${unit[0]} = ___ ${unit[1]}`, ans: v / 1000, hint: "Divide by 1,000!" };
+                    } else if (mode === 2) {
+                        const v = randInt(12, 85) / 10;
+                        return { q: `${v} m = ___ cm`, ans: Math.round(v * 100), hint: "1 m = 100 cm, so × 100!" };
+                    } else {
+                        const v = randInt(15, 75) * 10;
+                        return { q: `${v} mm = ___ cm`, ans: v / 10, hint: "10 mm = 1 cm, so ÷ 10!" };
+                    }
+                }
+            },
+            {
+                day: 27, week: 4,
+                title: "Time Intervals, 60-Minute Bridges & 24-Hour Clock",
+                subtitle: "Never treat hours like 100—bridge through 60 minutes!",
+                hookTitle: "The 60-Minute Clock Bridge & The 'Minus 12' 24-Hour Rule!",
+                concept: "Why do kids get time questions wrong? Because they forget an hour has 60 minutes, not 100! To find minutes from 2:40 to 3:15, bridge to the next o'clock (2:40 to 3:00 is 20 mins), then add 15 mins = 35 mins! And for 24-hour afternoon times like 17:00, just subtract 12 → 5:00 PM!",
+                goldenRule: "Time Complements use 60 (not 100)! For 24-hour PM times (13:00–23:00), subtract 12!",
+                visualSteps: [
+                    { label: "Problem", val: "09:45 to 10:20", desc: "Bridge through 10:00 o'clock" },
+                    { label: "To the Hour", val: "09:45 → 10:00 = 15m", desc: "60 − 45 = 15 mins" },
+                    { label: "Past the Hour", val: "15m + 20m = 35m", desc: "35 minutes total!" }
+                ],
+                examples: [
+                    { q: "Mins from 4:35 to 5:00", steps: ["How far from 35 to 60?", "60 − 35 = 25 mins", "Answer: 25"], ans: "25" },
+                    { q: "Mins from 7:40 to 8:15", steps: ["7:40 to 8:00 is 20 mins", "Plus 15 mins = 35 mins", "Answer: 35"], ans: "35" },
+                    { q: "What PM hour is 19:00?", steps: ["Subtract 12 from 19", "19 − 12 = 7 PM", "Answer: 7"], ans: "7" }
+                ],
+                warmup: { q: "Minutes from 3:40 to 4:15 = ?", ans: 35, hint: "20 mins to 4:00, plus 15 mins = 35!" },
+                generateCard: (idx) => {
+                    const mode = idx % 3;
+                    if (mode === 0) {
+                        const hr = randInt(1, 10);
+                        const m1 = randInt(25, 55);
+                        const m2 = randInt(5, 35);
+                        const pad = (n) => String(n).padStart(2, '0');
+                        return { q: `Mins from ${hr}:${pad(m1)} to ${hr+1}:${pad(m2)} = ?`, ans: (60 - m1) + m2, hint: `${60-m1} mins to ${hr+1}:00, plus ${m2} mins!` };
+                    } else if (mode === 1) {
+                        const hrs = randInt(1, 4);
+                        const extra = randInt(10, 50);
+                        return { q: `${hrs} hr ${extra} min = ___ mins`, ans: hrs * 60 + extra, hint: `${hrs} × 60 = ${hrs*60}, plus ${extra}!` };
+                    } else {
+                        const pm = randInt(1, 11);
+                        return { q: `${pm + 12}:00 is what hour PM?`, ans: pm, hint: `Subtract 12 from ${pm+12}!` };
+                    }
+                }
+            },
+            {
+                day: 28, week: 4,
+                title: "Money Maths, Rapid Change & Multi-Item Deals",
+                subtitle: "Calculate shop change from £10/£20 and multipack prices",
+                hookTitle: "Shopkeeper Change & The '1p Less' Price Tag Trick!",
+                concept: "Shops love prices like £1.99 or £2.98 to trick your brain! Always round £1.99 up to £2.00, multiply, and subtract 1p per item! And when calculating change from £10.00 (like £10 − £6.35), make the pounds add to 9 (£3) and the pence add to 100 (65p) → £3.65!",
+                goldenRule: "Change from £10: Pounds add to 9, Pence add to 100! For £1.99 × n: do £2 × n minus n pence!",
+                visualSteps: [
+                    { label: "Change from £10", val: "£10.00 − £4.62", desc: "Pounds to 9, Pence to 100" },
+                    { label: "Pounds", val: "9 − 4 = £5", desc: "£5" },
+                    { label: "Pence", val: "100 − 62 = 38p", desc: "£5.38!" }
+                ],
+                examples: [
+                    { q: "10 − 3.45", steps: ["Whole part: 9 − 3 = 6", "Decimal part: 100 − 45 = 55", "Answer: 6.55"], ans: "6.55" },
+                    { q: "3 items at 1.99 each", steps: ["3 × 2.00 = 6.00", "Subtract 0.03 = 5.97", "Answer: 5.97"], ans: "5.97" },
+                    { q: "20 − 12.60", steps: ["Whole part: 19 − 12 = 7", "Pence part: 100 − 60 = 40", "Answer: 7.4"], ans: "7.4" }
+                ],
+                warmup: { q: "10 − 6.25 = ?", ans: 3.75, hint: "9 − 6 = 3, and 100 − 25 = 75 → 3.75!" },
+                generateCard: (idx) => {
+                    if (idx % 2 === 0) {
+                        const pounds = randInt(1, 8);
+                        const pence = randInt(2, 19) * 5;
+                        const cost = Number((pounds + pence / 100).toFixed(2));
+                        return { q: `Change from 10 for ${cost.toFixed(2)} = ?`, ans: Number((10 - cost).toFixed(2)), hint: `Wholes to 9 (${9-pounds}), Hundredths to 100 (${100-pence})!` };
+                    } else {
+                        const qty = randInt(2, 6);
+                        const roundPrice = randInt(2, 6);
+                        const price = roundPrice - 0.01;
+                        return { q: `${qty} × ${price.toFixed(2)} = ?`, ans: Number((qty * price).toFixed(2)), hint: `Do ${qty} × ${roundPrice} = ${qty*roundPrice}, minus 0.0${qty}!` };
+                    }
+                }
+            },
+            {
+                day: 29, week: 4,
+                title: "Rapid Word-Problem & Geometry Mental Sprints",
+                subtitle: "Perimeter, Area, Mean Average, and Missing Angles on a Line",
+                hookTitle: "Turn Year 5 Geometry & Word Rules Into 2-Second Formulas!",
+                concept: "In Year 5 exams, half the battle is translating words into fast mental maths: 1) Rectangle Perimeter = Add Length + Width, then DOUBLE it! 2) Angles on a straight line add to 180° (and in a triangle add to 180°). 3) Mean (Average) = Add them up and divide by how many numbers there are!",
+                goldenRule: "Rectangle Perimeter = 2 × (L + W)  |  Straight Line Angle = 180° − angle  |  Area = L × W!",
+                visualSteps: [
+                    { label: "Rectangle 12cm by 8cm", val: "Perimeter = ?", desc: "Don't do 12+12+8+8!" },
+                    { label: "Add L + W", val: "12 + 8 = 20", desc: "Halfway around the rectangle" },
+                    { label: "Double It", val: "20 × 2 = 40 cm", desc: "Instant 40!" }
+                ],
+                examples: [
+                    { q: "Perimeter of 14cm × 6cm rectangle", steps: ["Add L + W: 14 + 6 = 20", "Double it: 20 × 2 = 40", "Answer: 40"], ans: "40" },
+                    { q: "Missing angle on straight line with 115°", steps: ["Straight line = 180°", "180 − 115 = 65°", "Answer: 65"], ans: "65" },
+                    { q: "Mean average of 6, 8, 10", steps: ["Sum: 6 + 8 + 10 = 24", "Divide by 3 numbers: 24 ÷ 3 = 8", "Answer: 8"], ans: "8" }
+                ],
+                warmup: { q: "Perimeter of a 15m by 5m rectangle = ?", ans: 40, hint: "Add 15 + 5 = 20, then double it to 40!" },
+                generateCard: (idx) => {
+                    const mode = idx % 3;
+                    if (mode === 0) {
+                        const l = randInt(6, 25);
+                        const w = randInt(3, 18);
+                        return { q: `Perimeter of ${l}cm × ${w}cm rectangle = ?`, ans: 2 * (l + w), hint: `Add (${l}+${w}=${l+w}), then double it!` };
+                    } else if (mode === 1) {
+                        const ang = randInt(25, 155);
+                        return { q: `Straight line: 180° − ${ang}° = ?`, ans: 180 - ang, hint: `Find what adds to ${ang} to make 180!` };
+                    } else {
+                        const l = randInt(5, 15);
+                        const w = randInt(4, 12);
+                        return { q: `Area of ${l}m × ${w}m rectangle = ?`, ans: l * w, hint: `Area = Length × Width (${l} × ${w})!` };
+                    }
+                }
+            },
+            {
+                day: 30, week: 4,
+                title: "Day 30 Grand Championship 50-Card Sprint",
+                subtitle: "The Ultimate Year 5 Mental Maths Trophy Challenge",
+                hookTitle: "You Made It to Day 30! Time to Claim Your Grand Mastery Crown!",
+                concept: "Over the past 29 days, you have rewired your brain with 29 elite mental calculation shortcuts—from 9-and-10 complements and ×25 hacks to fractions, percentages, squares, BODMAS, and geometry. This final 50-card Grand Championship tests every single week of your training!",
+                goldenRule: "Stay calm, breathe, spot the shortcut hidden inside each card, and trust your fast brain!",
+                visualSteps: [
+                    { label: "Cards 1–15", val: "Week 1 & 2 Classics", desc: "+/− Complements & ×/÷ Hacks" },
+                    { label: "Cards 16–35", val: "Week 3 Fluency", desc: "Fractions, Decimals & Percentages" },
+                    { label: "Cards 36–50", val: "Week 4 Boss Sprint", desc: "Squares, BODMAS, Negative & Applied" }
+                ],
+                examples: [
+                    { q: "1000 − 648", steps: ["Day 1 Hack: 9−6=3, 9−4=5, 10−8=2", "Answer: 352"], ans: "352" },
+                    { q: "36 × 25", steps: ["Day 10 Hack: Quarter of 36 is 9", "9 × 100 = 900"], ans: "900" },
+                    { q: "3/4 of 60", steps: ["Day 16 Hack: 60 ÷ 4 = 15", "15 × 3 = 45"], ans: "45" }
+                ],
+                warmup: { q: "75% of 48 = ?", ans: 36, hint: "Quarter of 48 is 12, times 3 is 36!" },
+                generateCard: (idx) => {
+                    // Samples across all 29 prior days progressively
+                    const sourceDay = ((idx - 1) % 29) + 1;
+                    return CURRICULUM_DAYS[sourceDay - 1].generateCard(idx);
+                }
+            }
+        ];
+
+        const WEEK_METADATA = [
+            {
+                week: 1,
+                title: "Week 1: Addition & Subtraction Speed Hacks",
+                desc: "Eliminate finger-counting and column borrowing forever with complement numbers, compensation rounding, left-to-right addition, and bridging.",
+                badgeClass: "bg-indigo-100 text-indigo-800 border-indigo-200",
+                headerBg: "from-indigo-600 to-blue-600"
+            },
+            {
+                week: 2,
+                title: "Week 2: Multiplication & Division Power Tricks",
+                desc: "Unlock instant two-digit mental multiplication and division using doubling & halving, ×25/×50 shortcuts, 11s sandwiches, and chunking.",
+                badgeClass: "bg-emerald-100 text-emerald-800 border-emerald-200",
+                headerBg: "from-emerald-600 to-teal-600"
+            },
+            {
+                week: 3,
+                title: "Week 3: Fractions, Decimals & Percentages Fluency",
+                desc: "Conquer the toughest part of the Year 5 syllabus mentally: fractions of amounts, decimal complements, and rapid 5%/10%/15%/25%/75% shortcuts.",
+                badgeClass: "bg-amber-100 text-amber-800 border-amber-200",
+                headerBg: "from-amber-500 to-orange-500"
+            },
+            {
+                week: 4,
+                title: "Week 4: Advanced Year 5 Applied Strategies & Grand Mastery",
+                desc: "Apply your speed to square roots, cubes, BODMAS order of operations, negative numbers, metric conversions, time, money, and the Day 30 Championship.",
+                badgeClass: "bg-purple-100 text-purple-800 border-purple-200",
+                headerBg: "from-purple-600 to-rose-600"
+            }
+        ];
+
+        /**
+         * MAIN APPLICATION CONTROLLER
+         */
+        const app = {
+            STORAGE_KEY: 'mathsprint_y5_v1_progress',
+            progress: {}, // { [dayNum]: { completed: true, stars: 3, bestScore: 50, bestTimeSec: 112 } }
+            currentDay: 1,
+            currentTab: 'lesson',
+            roadmapFilter: 'all',
+
+            // Flashcard Engine State
+            deck: [],
+            cardIndex: 0,
+            score: 0,
+            streak: 0,
+            bestStreak: 0,
+            missedCards: [],
+            timerInterval: null,
+            startTimeMs: 0,
+            elapsedSec: 0,
+            inputMode: 'keypad', // 'keypad' | 'mc'
+            isTransitioning: false,
+
+            init() {
+                this.loadProgress();
+                this.populateGlobalDropdown();
+                this.updateDashboardStats();
+                this.renderRoadmap();
+                this.setupGlobalKeyboardListener();
+            },
+
+            setupGlobalKeyboardListener() {
+                // Allow physical keyboard number keys to type directly into the flashcard even if the input loses focus
+                document.addEventListener('keydown', (e) => {
+                    const isPracticeVisible = !document.getElementById('dayModuleView').classList.contains('hidden') &&
+                                              this.currentTab === 'practice' &&
+                                              !document.getElementById('fcActiveArena').classList.contains('hidden');
+                    if (!isPracticeVisible || this.isTransitioning) return;
+
+                    const inputEl = document.getElementById('fcAnswerInput');
+                    if (document.activeElement === inputEl) return; // Handled natively by input
+
+                    if (/^[0-9]$/.test(e.key)) {
+                        e.preventDefault();
+                        this.appendNumpad(e.key);
+                    } else if (e.key === '.' || e.key === '-') {
+                        e.preventDefault();
+                        this.appendNumpad(e.key);
+                    } else if (e.key === 'Backspace') {
+                        e.preventDefault();
+                        this.backspaceOneNumpad();
+                    } else if (e.key === 'Escape') {
+                        e.preventDefault();
+                        this.backspaceNumpad();
+                    } else if (e.key === 'Enter') {
+                        e.preventDefault();
+                        this.submitFlashcardAnswer();
+                    }
+                });
+            },
+
+            progressStorageKey() {
+                let suffix = "";
+                try {
+                    const saved = JSON.parse(localStorage.getItem("scienceStudyActiveChild") || "null");
+                    if (saved && saved.childId) suffix = ":" + saved.childId;
+                } catch (e) {
+                    suffix = "";
+                }
+                return this.STORAGE_KEY + suffix;
+            },
+
+            loadProgress() {
+                try {
+                    const key = this.progressStorageKey();
+                    let raw = localStorage.getItem(key);
+                    if (!raw && key !== this.STORAGE_KEY) {
+                        const saved = JSON.parse(localStorage.getItem("scienceStudyActiveChild") || "null");
+                        const legacyOwner = localStorage.getItem("scienceStudyLegacyChild");
+                        if (saved && legacyOwner && saved.childId === legacyOwner) {
+                            raw = localStorage.getItem(this.STORAGE_KEY);
+                            if (raw) localStorage.setItem(key, raw);
+                        }
+                    }
+                    this.progress = raw ? JSON.parse(raw) : {};
+                } catch (e) {
+                    this.progress = {};
+                }
+            },
+
+            saveProgress() {
+                try {
+                    localStorage.setItem(this.progressStorageKey(), JSON.stringify(this.progress));
+                } catch (e) {
+                    // Fallback if storage restricted
+                }
+                this.updateDashboardStats();
+                this.populateGlobalDropdown();
+                this.renderRoadmap();
+            },
+
+            populateGlobalDropdown() {
+                const select = document.getElementById('globalDaySelect');
+                select.innerHTML = CURRICULUM_DAYS.map(d => {
+                    const p = this.progress[d.day];
+                    const stars = p && p.stars ? '★'.repeat(p.stars) : '';
+                    return `<option value="${d.day}" ${d.day === this.currentDay ? 'selected' : ''}>Day ${d.day}: ${d.title} ${stars}</option>`;
+                }).join('');
+            },
+
+            updateDashboardStats() {
+                let completedCount = 0;
+                let totalStars = 0;
+                let bestTime = null;
+
+                for (let d = 1; d <= 30; d++) {
+                    const p = this.progress[d];
+                    if (p && p.completed) {
+                        completedCount++;
+                        totalStars += (p.stars || 0);
+                        if (p.bestTimeSec && (bestTime === null || p.bestTimeSec < bestTime)) {
+                            bestTime = p.bestTimeSec;
+                        }
+                    }
+                }
+
+                document.getElementById('navTotalStars').textContent = `${totalStars}/90`;
+                document.getElementById('statDaysCompleted').textContent = `${completedCount} / 30`;
+                document.getElementById('statTotalStars').textContent = `${totalStars} / 90`;
+                document.getElementById('statTotalCards').textContent = (completedCount * 50).toLocaleString();
+                document.getElementById('statBestTime').textContent = bestTime !== null ? this.formatTime(bestTime) : '--:--';
+
+                // Next recommended day
+                let nextDay = 1;
+                for (let d = 1; d <= 30; d++) {
+                    if (!this.progress[d] || !this.progress[d].completed) {
+                        nextDay = d;
+                        break;
+                    }
+                }
+                document.getElementById('dashboardContinueText').textContent = `Start Day ${nextDay}`;
+                document.getElementById('heroStartBtnText').textContent = completedCount === 0
+                    ? `Start Day 1 Now (Interactive Lesson + 50 Cards)`
+                    : `Continue Day ${nextDay}: ${CURRICULUM_DAYS[nextDay-1].title}`;
+            },
+
+            formatTime(sec) {
+                const mins = Math.floor(sec / 60);
+                const rem = sec % 60;
+                return `${String(mins).padStart(2, '0')}:${String(rem).padStart(2, '0')}`;
+            },
+
+            filterRoadmap(weekFilter) {
+                this.roadmapFilter = weekFilter;
+                document.querySelectorAll('.roadmap-filter-btn').forEach(btn => {
+                    btn.className = "roadmap-filter-btn bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-bold px-3.5 py-2 rounded-xl transition";
+                });
+                const activeBtn = document.getElementById(`filter-${weekFilter}`);
+                if (activeBtn) {
+                    activeBtn.className = "roadmap-filter-btn bg-indigo-600 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition shadow-sm";
+                }
+                this.renderRoadmap();
+            },
+
+            renderRoadmap() {
+                const container = document.getElementById('roadmapContainer');
+                const weeksToShow = this.roadmapFilter === 'all'
+                    ? WEEK_METADATA
+                    : WEEK_METADATA.filter(w => w.week === this.roadmapFilter);
+
+                container.innerHTML = weeksToShow.map(w => {
+                    const daysInWeek = CURRICULUM_DAYS.filter(d => d.week === w.week);
+                    const daysHtml = daysInWeek.map(d => {
+                        const p = this.progress[d.day];
+                        const isDone = p && p.completed;
+                        const stars = p ? (p.stars || 0) : 0;
+                        const isBoss = d.day % 7 === 0 || d.day === 30;
+
+                        let starsHtml = '';
+                        for (let s = 1; s <= 3; s++) {
+                            starsHtml += `<i class="fa-solid fa-star text-xs ${s <= stars ? 'text-amber-400' : 'text-slate-200'}"></i>`;
+                        }
+
+                        return `
+                            <div onclick="app.openDay(${d.day})" class="group bg-white hover:bg-indigo-50/40 rounded-2xl p-5 border-2 ${isDone ? 'border-emerald-400' : isBoss ? 'border-amber-300' : 'border-slate-200 hover:border-indigo-400'} shadow-sm hover:shadow-md transition cursor-pointer flex flex-col justify-between">
+                                <div>
+                                    <div class="flex items-center justify-between gap-2 mb-3">
+                                        <span class="font-heading font-bold text-xs px-2.5 py-1 rounded-lg ${isBoss ? 'bg-amber-100 text-amber-900 border border-amber-300' : 'bg-slate-100 text-slate-700'}">
+                                            ${isBoss ? '<i class="fa-solid fa-crown text-amber-500 mr-1"></i>' : ''}DAY ${d.day}
+                                        </span>
+                                        <div class="flex items-center gap-1">
+                                            ${starsHtml}
+                                        </div>
+                                    </div>
+                                    <h4 class="font-heading font-bold text-base text-slate-900 group-hover:text-indigo-600 transition leading-snug mb-1">
+                                        ${d.title}
+                                    </h4>
+                                    <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed">
+                                        ${d.subtitle}
+                                    </p>
+                                </div>
+
+                                <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                                    ${isDone
+                                        ? `<span class="text-emerald-700 font-bold flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> Best: ${p.bestScore}/50 (${this.formatTime(p.bestTimeSec)})</span>`
+                                        : `<span class="text-slate-400 font-medium">Lesson + 50 Cards</span>`
+                                    }
+                                    <span class="font-bold text-indigo-600 group-hover:translate-x-1 transition-transform">
+                                        Open →
+                                    </span>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+
+                    return `
+                        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+                            <div class="bg-gradient-to-r ${w.headerBg} px-6 py-4 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                <div>
+                                    <h3 class="font-heading text-xl sm:text-2xl font-bold">${w.title}</h3>
+                                    <p class="text-xs sm:text-sm text-white/90">${w.desc}</p>
+                                </div>
+                                <span class="bg-white/20 backdrop-blur-sm text-white text-xs font-extrabold px-3.5 py-1.5 rounded-full shrink-0 self-start sm:self-center">
+                                    ${daysInWeek.length} Daily Modules
+                                </span>
+                            </div>
+                            <div class="p-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-4 bg-slate-50/50">
+                                ${daysHtml}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            },
+
+            scrollToRoadmap() {
+                this.showLandingPage();
+                setTimeout(() => {
+                    document.getElementById('curriculumRoadmap').scrollIntoView({ behavior: 'smooth' });
+                }, 50);
+            },
+
+            startNextRecommendedDay() {
+                let nextDay = 1;
+                for (let d = 1; d <= 30; d++) {
+                    if (!this.progress[d] || !this.progress[d].completed) {
+                        nextDay = d;
+                        break;
+                    }
+                }
+                this.openDay(nextDay);
+            },
+
+            showLandingPage() {
+                this.stopTimer();
+                document.getElementById('dayModuleView').classList.add('hidden');
+                document.getElementById('landingView').classList.remove('hidden');
+                document.getElementById('navHomeBtn').classList.add('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            },
+
+            openDay(dayNum, initialTab = 'lesson') {
+                this.stopTimer();
+                this.currentDay = Math.max(1, Math.min(30, dayNum));
+                const dayData = CURRICULUM_DAYS[this.currentDay - 1];
+
+                // Update top dropdown & nav
+                document.getElementById('globalDaySelect').value = this.currentDay;
+                document.getElementById('landingView').classList.add('hidden');
+                document.getElementById('dayModuleView').classList.remove('hidden');
+                document.getElementById('navHomeBtn').classList.remove('hidden');
+
+                // Header info
+                document.getElementById('moduleWeekBadge').textContent = `WEEK ${dayData.week} • DAY ${dayData.day} OF 30`;
+                document.getElementById('moduleTitle').textContent = `Day ${dayData.day}: ${dayData.title}`;
+
+                const p = this.progress[this.currentDay];
+                document.getElementById('moduleStarStatus').innerHTML = p && p.completed
+                    ? `${'★'.repeat(p.stars)}${'☆'.repeat(3 - p.stars)} (Best: ${p.bestScore}/50 in ${this.formatTime(p.bestTimeSec)})`
+                    : 'Not Completed Yet';
+
+                document.getElementById('prevDayBtn').disabled = (this.currentDay === 1);
+                document.getElementById('nextDayBtn').disabled = (this.currentDay === 30);
+
+                // Populate Concept Lesson Tab
+                document.getElementById('lessonHookTitle').textContent = dayData.hookTitle;
+                document.getElementById('lessonConceptText').textContent = dayData.concept;
+                document.getElementById('lessonGoldenRule').textContent = dayData.goldenRule;
+
+                // Visual Blueprint Steps
+                const blueprintEl = document.getElementById('lessonVisualBlueprint');
+                blueprintEl.innerHTML = `
+                    <div class="grid md:grid-cols-3 gap-4 items-center">
+                        ${dayData.visualSteps.map((step, i) => `
+                            <div class="bg-slate-800/90 border border-slate-700 rounded-2xl p-4 relative">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="text-[11px] font-extrabold uppercase tracking-wider text-amber-400">STEP ${i + 1}: ${step.label}</span>
+                                    ${i < 2 ? '<i class="fa-solid fa-arrow-right text-slate-500 hidden md:inline"></i>' : '<i class="fa-solid fa-check-circle text-emerald-400"></i>'}
+                                </div>
+                                <div class="font-heading text-2xl font-bold text-white my-1">${step.val}</div>
+                                <div class="text-xs text-slate-300">${step.desc}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+
+                // 3 Worked Examples
+                const examplesGrid = document.getElementById('lessonExamplesGrid');
+                examplesGrid.innerHTML = dayData.examples.map((ex, idx) => `
+                    <div class="bg-white rounded-3xl p-5 border-2 border-slate-200 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-extrabold uppercase text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg">Example ${idx + 1}</span>
+                                <span class="font-heading text-lg font-bold text-slate-800">${ex.q}</span>
+                            </div>
+                            <div class="space-y-2 my-3">
+                                ${ex.steps.map((s, sIdx) => `
+                                    <div class="flex items-start gap-2 text-xs sm:text-sm font-kid text-slate-700 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                                        <span class="w-5 h-5 rounded-full bg-indigo-600 text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">${sIdx + 1}</span>
+                                        <span>${s}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <div class="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between">
+                            <span class="text-xs font-bold text-slate-400 uppercase">Aflatoon Way Answer</span>
+                            <span class="font-heading text-xl font-bold text-emerald-600">${ex.ans}</span>
+                        </div>
+                    </div>
+                `).join('');
+
+                // Warm-up Question
+                document.getElementById('warmupQuestionText').textContent = dayData.warmup.q;
+                document.getElementById('warmupHintText').textContent = `Hint: ${dayData.warmup.hint}`;
+                document.getElementById('warmupInput').value = '';
+                const wf = document.getElementById('warmupFeedback');
+                wf.classList.add('hidden');
+                wf.textContent = '';
+
+                this.switchDayTab(initialTab);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            },
+
+            changeDayRelative(offset) {
+                const target = this.currentDay + offset;
+                if (target >= 1 && target <= 30) {
+                    this.openDay(target, 'lesson');
+                }
+            },
+
+            switchDayTab(tabName) {
+                this.currentTab = tabName;
+                const btnLesson = document.getElementById('tabBtnLesson');
+                const btnPractice = document.getElementById('tabBtnPractice');
+                const lessonContent = document.getElementById('lessonTabContent');
+                const practiceContent = document.getElementById('practiceTabContent');
+
+                if (tabName === 'lesson') {
+                    this.stopTimer();
+                    btnLesson.className = "px-5 py-3 font-heading font-bold text-sm sm:text-base rounded-t-2xl transition flex items-center gap-2 border-b-4 border-amber-400 bg-white/10 text-white";
+                    btnPractice.className = "px-5 py-3 font-heading font-bold text-sm sm:text-base rounded-t-2xl transition flex items-center gap-2 border-b-4 border-transparent text-indigo-300 hover:text-white hover:bg-white/5";
+                    lessonContent.classList.remove('hidden');
+                    practiceContent.classList.add('hidden');
+                } else {
+                    btnPractice.className = "px-5 py-3 font-heading font-bold text-sm sm:text-base rounded-t-2xl transition flex items-center gap-2 border-b-4 border-amber-400 bg-white/10 text-white";
+                    btnLesson.className = "px-5 py-3 font-heading font-bold text-sm sm:text-base rounded-t-2xl transition flex items-center gap-2 border-b-4 border-transparent text-indigo-300 hover:text-white hover:bg-white/5";
+                    lessonContent.classList.add('hidden');
+                    practiceContent.classList.remove('hidden');
+                    this.initFlashcardSession();
+                }
+            },
+
+            checkWarmup() {
+                const dayData = CURRICULUM_DAYS[this.currentDay - 1];
+                const rawVal = document.getElementById('warmupInput').value.trim();
+                const wf = document.getElementById('warmupFeedback');
+                wf.classList.remove('hidden');
+
+                if (Number(rawVal) === Number(dayData.warmup.ans) && rawVal !== '') {
+                    wf.className = "pt-2 font-kid font-bold text-sm text-emerald-700 flex items-center gap-1.5";
+                    wf.innerHTML = `<i class="fa-solid fa-circle-check"></i> Spot on with The Aflatoon Way! ${dayData.warmup.ans} is correct! You're ready for the 50-Card Sprint!`;
+                } else {
+                    wf.className = "pt-2 font-kid font-bold text-sm text-rose-600 flex items-center gap-1.5";
+                    wf.innerHTML = `<i class="fa-solid fa-circle-info"></i> Almost! Use The Aflatoon Way hint: ${dayData.warmup.hint} (Answer: ${dayData.warmup.ans})`;
+                }
+            },
+
+            appendWarmupNumpad(char) {
+                const input = document.getElementById('warmupInput');
+                if (char === '.' && input.value.includes('.')) return;
+                input.value += char;
+                input.focus();
+            },
+
+            backspaceWarmupNumpad() {
+                const input = document.getElementById('warmupInput');
+                input.value = input.value.slice(0, -1);
+                input.focus();
+            },
+
+            // =========================================================================
+            // 50-FLASHCARD ENGINE METHODS
+            // =========================================================================
+            initFlashcardSession() {
+                this.stopTimer();
+                const dayData = CURRICULUM_DAYS[this.currentDay - 1];
+                this.deck = [];
+
+                // Generate 50 progressive cards for this day
+                for (let i = 1; i <= 50; i++) {
+                    const card = dayData.generateCard(i);
+                    this.deck.push({
+                        index: i,
+                        q: card.q,
+                        ans: card.ans,
+                        hint: card.hint
+                    });
+                }
+
+                this.cardIndex = 0;
+                this.score = 0;
+                this.streak = 0;
+                this.bestStreak = 0;
+                this.missedCards = [];
+                this.elapsedSec = 0;
+                this.isTransitioning = false;
+
+                document.getElementById('fcActiveArena').classList.remove('hidden');
+                document.getElementById('fcCelebrationScreen').classList.add('hidden');
+
+                this.startTimer();
+                this.renderCurrentFlashcard();
+            },
+
+            startTimer() {
+                this.stopTimer();
+                this.startTimeMs = Date.now();
+                document.getElementById('fcTimerDisplay').textContent = "00:00";
+                this.timerInterval = setInterval(() => {
+                    this.elapsedSec = Math.floor((Date.now() - this.startTimeMs) / 1000);
+                    document.getElementById('fcTimerDisplay').textContent = this.formatTime(this.elapsedSec);
+                }, 500);
+            },
+
+            stopTimer() {
+                if (this.timerInterval) {
+                    clearInterval(this.timerInterval);
+                    this.timerInterval = null;
+                }
+            },
+
+            renderCurrentFlashcard() {
+                const card = this.deck[this.cardIndex];
+                if (!card) return;
+
+                // Telemetry updates
+                document.getElementById('fcCurrentIndex').textContent = this.cardIndex + 1;
+                document.getElementById('fcStreakDisplay').textContent = this.streak;
+                document.getElementById('fcScoreDisplay').textContent = `${this.score} / 50`;
+                document.getElementById('fcProgressBar').style.width = `${((this.cardIndex + 1) / 50) * 100}%`;
+
+                const diffBadge = document.getElementById('fcDifficultyBadge');
+                if (this.cardIndex < 15) {
+                    diffBadge.className = "bg-emerald-100 text-emerald-800 text-xs font-extrabold px-2.5 py-1 rounded-lg";
+                    diffBadge.textContent = "Warm-Up Pace";
+                } else if (this.cardIndex < 35) {
+                    diffBadge.className = "bg-amber-100 text-amber-800 text-xs font-extrabold px-2.5 py-1 rounded-lg";
+                    diffBadge.textContent = "Speed Builder";
+                } else {
+                    diffBadge.className = "bg-rose-100 text-rose-800 text-xs font-extrabold px-2.5 py-1 rounded-lg";
+                    diffBadge.textContent = "Boss Sprint";
+                }
+
+                document.getElementById('fcSkillTag').textContent = `DAY ${this.currentDay} • CARD #${this.cardIndex + 1}`;
+                document.getElementById('fcQuestionPrompt').textContent = card.q;
+
+                const hintBox = document.getElementById('fcCardHintBox');
+                hintBox.classList.add('hidden');
+                hintBox.textContent = `💡 ${card.hint}`;
+
+                const inputEl = document.getElementById('fcAnswerInput');
+                inputEl.value = '';
+                if (this.inputMode === 'keypad') {
+                    inputEl.focus();
+                } else {
+                    this.renderMultipleChoiceOptions(card.ans);
+                }
+            },
+
+            toggleCardHint() {
+                const hintBox = document.getElementById('fcCardHintBox');
+                hintBox.classList.toggle('hidden');
+            },
+
+            toggleInputMode() {
+                this.inputMode = this.inputMode === 'keypad' ? 'mc' : 'keypad';
+                const keypad = document.getElementById('fcKeypadContainer');
+                const mc = document.getElementById('fcMultipleChoiceContainer');
+                const label = document.getElementById('fcModeToggleText');
+                const icon = document.getElementById('fcModeToggleIcon');
+
+                if (this.inputMode === 'mc') {
+                    keypad.classList.add('hidden');
+                    mc.classList.remove('hidden');
+                    label.textContent = "Mode: 4-Choice";
+                    if (icon) icon.className = "fa-solid fa-list-check";
+                    if (this.deck[this.cardIndex]) {
+                        this.renderMultipleChoiceOptions(this.deck[this.cardIndex].ans);
+                    }
+                } else {
+                    mc.classList.add('hidden');
+                    keypad.classList.remove('hidden');
+                    label.textContent = "Mode: Keypad";
+                    if (icon) icon.className = "fa-solid fa-keyboard";
+                    document.getElementById('fcAnswerInput').focus();
+                }
+            },
+
+            renderMultipleChoiceOptions(correctAns) {
+                const choicesSet = new Set([Number(correctAns)]);
+                const isDecimal = !Number.isInteger(Number(correctAns));
+
+                while (choicesSet.size < 4) {
+                    let offset = isDecimal
+                        ? pickOne([-0.2, -0.1, 0.1, 0.2, 0.5, 1, -1])
+                        : pickOne([-10, -2, -1, 1, 2, 5, 10, 12]);
+                    let candidate = Number((Number(correctAns) + offset).toFixed(2));
+                    if (candidate !== Number(correctAns)) {
+                        choicesSet.add(candidate);
+                    }
+                }
+
+                const shuffled = Array.from(choicesSet).sort(() => Math.random() - 0.5);
+                const grid = document.getElementById('fcChoicesGrid');
+                grid.innerHTML = shuffled.map(val => `
+                    <button onclick="app.selectMultipleChoice('${val}')" class="numpad-btn font-heading text-2xl font-bold text-slate-800 hover:border-indigo-500 hover:text-indigo-600 py-4 rounded-2xl transition">
+                        ${val}
+                    </button>
+                `).join('');
+            },
+
+            selectMultipleChoice(val) {
+                if (this.isTransitioning) return;
+                document.getElementById('fcAnswerInput').value = val;
+                this.submitFlashcardAnswer();
+            },
+
+            appendNumpad(char) {
+                if (this.isTransitioning) return;
+                const input = document.getElementById('fcAnswerInput');
+                if (char === '-' && input.value.length > 0) return;
+                if (char === '.' && input.value.includes('.')) return;
+                input.value += char;
+                input.focus();
+            },
+
+            backspaceOneNumpad() {
+                if (this.isTransitioning) return;
+                const input = document.getElementById('fcAnswerInput');
+                input.value = input.value.slice(0, -1);
+                input.focus();
+            },
+
+            backspaceNumpad() {
+                if (this.isTransitioning) return;
+                const input = document.getElementById('fcAnswerInput');
+                input.value = '';
+                input.focus();
+            },
+
+            handleFlashcardKeydown(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    this.submitFlashcardAnswer();
+                }
+            },
+
+            submitFlashcardAnswer() {
+                if (this.isTransitioning) return;
+                const inputEl = document.getElementById('fcAnswerInput');
+                const rawVal = inputEl.value.trim();
+                if (rawVal === '') return;
+
+                const currentCard = this.deck[this.cardIndex];
+                const userNum = Number(rawVal);
+                const correctNum = Number(currentCard.ans);
+                const isCorrect = !isNaN(userNum) && Math.abs(userNum - correctNum) < 0.001;
+
+                const box = document.getElementById('flashcardBox');
+                const feedback = document.getElementById('fcInstantFeedback');
+                this.isTransitioning = true;
+
+                if (isCorrect) {
+                    this.score++;
+                    this.streak++;
+                    if (this.streak > this.bestStreak) this.bestStreak = this.streak;
+
+                    box.classList.add('flashcard-correct');
+                    const praises = ["⚡ Lightning Fast!", "🔥 Boom! Spot on!", "🌟 Pure Genius!", "🚀 Unstoppable!", "✅ Nailed It!"];
+                    feedback.innerHTML = `<span class="text-emerald-600">${pickOne(praises)} (${currentCard.ans})</span>`;
+
+                    setTimeout(() => {
+                        box.classList.remove('flashcard-correct');
+                        this.advanceToNextCard();
+                    }, 260);
+                } else {
+                    this.streak = 0;
+                    this.missedCards.push({
+                        q: currentCard.q,
+                        userAns: rawVal,
+                        correctAns: currentCard.ans,
+                        hint: currentCard.hint
+                    });
+
+                    box.classList.add('flashcard-wrong');
+                    feedback.innerHTML = `<span class="text-rose-600">❌ Answer: <strong>${currentCard.ans}</strong> (${currentCard.hint})</span>`;
+
+                    setTimeout(() => {
+                        box.classList.remove('flashcard-wrong');
+                        this.advanceToNextCard();
+                    }, 1100);
+                }
+            },
+
+            advanceToNextCard() {
+                this.isTransitioning = false;
+                this.cardIndex++;
+
+                if (this.cardIndex >= 50) {
+                    this.finishFlashcardSession();
+                } else {
+                    this.renderCurrentFlashcard();
+                }
+            },
+
+            finishFlashcardSession() {
+                this.stopTimer();
+                const totalTimeSec = Math.max(1, Math.floor((Date.now() - this.startTimeMs) / 1000));
+                const accuracy = Math.round((this.score / 50) * 100);
+                const pace = (totalTimeSec / 50).toFixed(1);
+
+                // Calculate Star Rating (1 to 3 stars)
+                let stars = 1;
+                if (this.score >= 45 && totalTimeSec <= 240) {
+                    stars = 3;
+                } else if (this.score >= 38) {
+                    stars = 2;
+                }
+
+                // Persist to localStorage
+                const prev = this.progress[this.currentDay] || {};
+                this.progress[this.currentDay] = {
+                    completed: true,
+                    stars: Math.max(stars, prev.stars || 0),
+                    bestScore: Math.max(this.score, prev.bestScore || 0),
+                    bestTimeSec: prev.bestTimeSec ? Math.min(totalTimeSec, prev.bestTimeSec) : totalTimeSec
+                };
+                this.saveProgress();
+
+                // Update Celebration UI
+                document.getElementById('fcActiveArena').classList.add('hidden');
+                const celScreen = document.getElementById('fcCelebrationScreen');
+                celScreen.classList.remove('hidden');
+
+                let starsHtml = '';
+                for (let s = 1; s <= 3; s++) {
+                    starsHtml += `<i class="fa-solid fa-star ${s <= stars ? 'text-amber-400 drop-shadow' : 'text-slate-200'}"></i>`;
+                }
+                document.getElementById('celStarsContainer').innerHTML = starsHtml;
+
+                document.getElementById('celBadgeText').textContent = `DAY ${this.currentDay} COMPLETE • ${stars} OUT OF 3 STARS!`;
+                document.getElementById('celHeadline').textContent = stars === 3
+                    ? "Grandmaster Speed Achieved! 🏆"
+                    : stars === 2
+                    ? "Awesome Job! Almost 3-Star Pace! 🌟"
+                    : "50-Card Sprint Completed! 💪";
+                document.getElementById('celSubtext').textContent = `You answered ${this.score} out of 50 cards correctly in ${this.formatTime(totalTimeSec)} (${pace} seconds per card) with a best streak of ${this.bestStreak}!`;
+
+                document.getElementById('celFinalScore').textContent = `${this.score} / 50`;
+                document.getElementById('celAccuracy').textContent = `${accuracy}%`;
+                document.getElementById('celTotalTime').textContent = this.formatTime(totalTimeSec);
+                document.getElementById('celPacePerCard').textContent = `${pace}s`;
+
+                // Missed Cards Review
+                const missedSec = document.getElementById('celMissedSection');
+                const missedList = document.getElementById('celMissedList');
+                if (this.missedCards.length > 0) {
+                    missedSec.classList.remove('hidden');
+                    missedList.innerHTML = this.missedCards.map(m => `
+                        <div class="bg-white p-2.5 rounded-xl border border-rose-100">
+                            <div class="font-bold text-slate-800">${m.q} <span class="text-emerald-600">→ ${m.correctAns}</span></div>
+                            <div class="text-[11px] text-slate-500">You typed: ${m.userAns} • ${m.hint}</div>
+                        </div>
+                    `).join('');
+                } else {
+                    missedSec.classList.add('hidden');
+                }
+
+                // Header star badge refresh
+                const p = this.progress[this.currentDay];
+                document.getElementById('moduleStarStatus').innerHTML = `${'★'.repeat(p.stars)}${'☆'.repeat(3 - p.stars)} (Best: ${p.bestScore}/50 in ${this.formatTime(p.bestTimeSec)})`;
+            },
+
+            // Reset Modal Handlers
+            openResetModal() {
+                document.getElementById('resetModal').classList.remove('hidden');
+            },
+            closeResetModal() {
+                document.getElementById('resetModal').classList.add('hidden');
+            },
+            confirmResetProgress() {
+                this.progress = {};
+                localStorage.removeItem(this.progressStorageKey());
+                this.updateDashboardStats();
+                this.populateGlobalDropdown();
+                this.renderRoadmap();
+                this.closeResetModal();
+            }
+        };
+
+        window.onload = async function () {
+            if (window.AccountSync && AccountSync.ready) await AccountSync.ready();
+            app.init();
+        };
+    </script>
+</body>
+</html>

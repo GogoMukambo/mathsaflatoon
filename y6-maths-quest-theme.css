@@ -1,0 +1,220 @@
+/* Year 6 Mathematics — full-screen Nice Blue quest reader */
+
+body.y6-maths-quest-mode #appToolbar {
+  display: none;
+}
+
+body.y6-maths-quest-mode .layout {
+  grid-template-columns: 1fr;
+  max-width: none;
+}
+
+body.y6-maths-quest-mode main.content {
+  padding: 0;
+  max-width: none;
+}
+
+body.y6-maths-quest-mode #nav {
+  display: none;
+}
+
+#reader.panel.y6-maths-fullscreen {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 3.25rem);
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: linear-gradient(135deg, #020617, #1e3a8a, #3b82f6);
+  background-attachment: fixed;
+  box-shadow: none;
+}
+
+#reader.y6-maths-quest-theme .reader-doc {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  min-height: 0;
+}
+
+.y6-quest-shell {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 3.25rem);
+}
+
+.y6-chapter-top-nav {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding: 0.65rem 1rem;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+  scrollbar-width: thin;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.y6-chapter-top-btn {
+  flex: 0 0 auto;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-family: "Fredoka", "Nunito", sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+
+.y6-chapter-top-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+  transform: translateY(-1px);
+}
+
+.y6-chapter-top-btn.is-active {
+  background: #fff;
+  color: #1e3a8a;
+  border-color: #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.y6-section-top-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.55rem 1rem;
+  background: rgba(0, 0, 0, 0.15);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  flex-shrink: 0;
+}
+
+.y6-section-top-nav .reader-topic-status {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.92);
+  font-weight: 800;
+  font-size: 0.9rem;
+}
+
+.y6-section-top-nav .reader-topic-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.y6-section-top-nav .reader-prev-topic,
+.y6-section-top-nav .reader-next-topic {
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 0.82rem;
+  padding: 0.4rem 0.85rem;
+}
+
+.y6-section-top-nav .ghost {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.y6-section-top-nav .primary {
+  background: #fff;
+  color: #1e3a8a;
+  border: none;
+}
+
+.y6-quest-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 0.75rem 1rem 1.25rem;
+}
+
+.y6-quest-body .y6-integers-module-wrap,
+.y6-quest-body .mental-quest-module-wrap {
+  margin: 0;
+  height: 100%;
+  min-height: calc(100vh - 7.5rem);
+}
+
+.y6-quest-body .y6-integers-module-frame {
+  width: 100%;
+  height: calc(100vh - 7.5rem);
+  min-height: 480px;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+}
+
+@media (min-width: 1024px) {
+  .y6-quest-body .y6-integers-module-frame {
+    height: calc(100vh - 6.75rem);
+    min-height: 560px;
+    border-radius: 0;
+  }
+
+  #reader.panel.y6-maths-fullscreen,
+  .y6-quest-shell {
+    min-height: calc(100vh - 3.25rem);
+  }
+}
+
+.y6-glass-panel {
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 20px;
+  padding: 1.25rem 1.5rem;
+  color: #fff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  max-width: 56rem;
+  margin: 0 auto 1rem;
+}
+
+.y6-glass-panel h3 {
+  font-family: "Fredoka", sans-serif;
+  font-size: 1.65rem;
+  margin: 0 0 0.75rem;
+  color: #fff;
+}
+
+.y6-glass-panel .reader-objectives-lead,
+.y6-glass-panel p,
+.y6-glass-panel li {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.y6-glass-panel .reader-objectives-list li {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #fff;
+}
+
+.y6-glass-panel .study-callout {
+  background: rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #fff;
+}
+
+.y6-glass-panel .study-callout-label {
+  color: #e0f2fe;
+}
+
+#reader.y6-maths-quest-theme .reader-header,
+#reader.y6-maths-quest-theme .reader-topic-bar,
+#reader.y6-maths-quest-theme .reader-chapter-nav {
+  display: none !important;
+}

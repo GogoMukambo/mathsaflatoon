@@ -1,0 +1,233 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+<defs>
+  <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+    <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.08" />
+  </filter>
+</defs>
+<rect width="800" height="500" fill="#ffffff" />
+<rect x="8" y="8" width="784" height="484" fill="none" stroke="#e2e8f0" stroke-width="2" rx="14" />
+
+<g class="chalk-step" data-step="0">
+<rect x="30" y="25" width="740" height="85" rx="14" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5" />
+<text x="400" y="62" text-anchor="middle" fill="#14285c" font-size="26" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">C</tspan><tspan class="glyph">H</tspan><tspan class="glyph">A</tspan><tspan class="glyph">P</tspan><tspan class="glyph">T</tspan><tspan class="glyph">E</tspan><tspan class="glyph">R</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">5</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">·</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">A</tspan><tspan class="glyph">N</tspan><tspan class="glyph">G</tspan><tspan class="glyph">L</tspan><tspan class="glyph">E</tspan><tspan class="glyph">S</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">&amp;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">C</tspan><tspan class="glyph">O</tspan><tspan class="glyph">N</tspan><tspan class="glyph">S</tspan><tspan class="glyph">T</tspan><tspan class="glyph">R</tspan><tspan class="glyph">U</tspan><tspan class="glyph">C</tspan><tspan class="glyph">T</tspan><tspan class="glyph">I</tspan><tspan class="glyph">O</tspan><tspan class="glyph">N</tspan><tspan class="glyph">S</tspan></text>
+<text x="400" y="92" text-anchor="middle" fill="#5c6d92" font-size="14" font-family="Plus Jakarta Sans, sans-serif">Parallel Lines, Transversals, Exterior Angle of a Triangle &amp; Accurate Bisectors</text>
+<rect x="30" y="125" width="230" height="340" rx="16" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+<rect x="30" y="125" width="230" height="40" rx="16" fill="#eff6ff" />
+<text x="145" y="150" text-anchor="middle" fill="#1e40af" font-size="15" font-family="Plus Jakarta Sans, sans-serif" font-weight="bold">5.1 Parallel Lines</text>
+<path class="draw" d="M 55 220 L 235 220" stroke="#334155" stroke-width="3" fill="none" />
+<path class="draw" d="M 55 300 L 235 300" stroke="#334155" stroke-width="3" fill="none" />
+<path class="draw" d="M 90 180 L 200 340" stroke="#334155" stroke-width="3" fill="none" />
+<path d="M 140 216 L 150 220 L 140 224" stroke="#0f172a" stroke-width="2.5" fill="none" />
+<path d="M 140 296 L 150 300 L 140 304" stroke="#0f172a" stroke-width="2.5" fill="none" />
+<path d="M 110 220 A 20 20 0 0 1 122 208" stroke="#ef4444" stroke-width="3" fill="none" />
+<text x="108" y="202" fill="#ef4444" font-size="14" font-weight="bold">a</text>
+<path d="M 140 236 A 20 20 0 0 1 150 220" stroke="#ef4444" stroke-width="3" fill="none" />
+<text x="146" y="246" fill="#ef4444" font-size="14" font-weight="bold">d</text>
+<text x="145" y="365" text-anchor="middle" fill="#dc2626" font-size="13" font-family="Plus Jakarta Sans, sans-serif" font-weight="bold">Vert. opp: a = d</text>
+<text x="145" y="390" text-anchor="middle" fill="#b45309" font-size="12" font-family="Plus Jakarta Sans, sans-serif">F-shape: a = e  (corr)</text>
+<text x="145" y="412" text-anchor="middle" fill="#2563eb" font-size="12" font-family="Plus Jakarta Sans, sans-serif">Z-shape: c = f  (alt)</text>
+<text x="145" y="435" text-anchor="middle" fill="#059669" font-size="12" font-family="Plus Jakarta Sans, sans-serif">C-shape: c + e = 180&#176;</text>
+<rect x="285" y="125" width="230" height="340" rx="16" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+<rect x="285" y="125" width="230" height="40" rx="16" fill="#fef3c7" />
+<text x="400" y="150" text-anchor="middle" fill="#92400e" font-size="15" font-family="Plus Jakarta Sans, sans-serif" font-weight="bold">5.2 Exterior Angle</text>
+<path class="draw" d="M 310 310 L 490 310" stroke="#334155" stroke-width="3" fill="none" />
+<path class="draw" d="M 310 310 L 380 200" stroke="#334155" stroke-width="3" fill="none" />
+<path class="draw" d="M 380 200 L 450 310" stroke="#334155" stroke-width="3" fill="none" />
+<path d="M 370 216 A 18 18 0 0 0 390 216" stroke="#2563eb" stroke-width="2.5" fill="none" />
+<text x="380" y="235" fill="#2563eb" font-size="13" font-weight="bold">a</text>
+<path d="M 330 310 A 20 20 0 0 0 322 292" stroke="#2563eb" stroke-width="2.5" fill="none" />
+<text x="340" y="302" fill="#2563eb" font-size="13" font-weight="bold">b</text>
+<path d="M 450 310 L 474 310 A 24 24 0 0 0 462 290 Z" stroke="#dc2626" stroke-width="2" fill="rgba(239, 68, 68, 0.2)" />
+<text x="480" y="285" fill="#dc2626" font-size="15" font-weight="bold">d</text>
+<text x="400" y="370" text-anchor="middle" fill="#475569" font-size="12" font-family="Plus Jakarta Sans, sans-serif">Theorem:</text>
+<text x="400" y="400" text-anchor="middle" fill="#dc2626" font-size="22" font-family="Plus Jakarta Sans, sans-serif" font-weight="bold">d = a + b</text>
+<text x="400" y="435" text-anchor="middle" fill="#64748b" font-size="11" font-family="Plus Jakarta Sans, sans-serif">Exterior = sum of remote interior</text>
+<rect x="540" y="125" width="230" height="340" rx="16" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+<rect x="540" y="125" width="230" height="40" rx="16" fill="#ecfdf5" />
+<text x="655" y="150" text-anchor="middle" fill="#065f46" font-size="15" font-family="Plus Jakarta Sans, sans-serif" font-weight="bold">5.3 Constructions</text>
+<line x1="565" y1="260" x2="745" y2="260" stroke="#334155" stroke-width="3" />
+<path d="M 645 190 A 90 90 0 0 1 665 210" stroke="#3b82f6" stroke-width="2" stroke-dasharray="4,4" fill="none" />
+<path d="M 665 190 A 90 90 0 0 0 645 210" stroke="#ec4899" stroke-width="2" stroke-dasharray="4,4" fill="none" />
+<path d="M 645 330 A 90 90 0 0 0 665 310" stroke="#3b82f6" stroke-width="2" stroke-dasharray="4,4" fill="none" />
+<path d="M 665 330 A 90 90 0 0 1 645 310" stroke="#ec4899" stroke-width="2" stroke-dasharray="4,4" fill="none" />
+<line x1="655" y1="180" x2="655" y2="340" stroke="#dc2626" stroke-width="2.5" />
+<rect x="655" y="248" width="12" height="12" fill="none" stroke="#dc2626" stroke-width="1.5" />
+<text x="655" y="368" text-anchor="middle" fill="#0f172a" font-size="13" font-family="Plus Jakarta Sans, sans-serif" font-weight="bold">Perpendicular Bisector</text>
+<text x="655" y="395" text-anchor="middle" fill="#0f172a" font-size="13" font-family="Plus Jakarta Sans, sans-serif">Angle Bisector with arcs</text>
+<text x="655" y="430" text-anchor="middle" fill="#059669" font-size="13" font-family="Plus Jakarta Sans, sans-serif" font-weight="bold">SSS · SAS · ASA · RHS</text>
+<rect class="pen" x="0" y="0" width="3" height="28" rx="1" fill="#1b3a6b" />
+</g>
+<g class="chalk-step" data-step="1">
+<rect x="30" y="20" width="740" height="55" rx="12" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5" />
+<text x="400" y="52" text-anchor="middle" fill="#1e40af" font-size="22" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">P</tspan><tspan class="glyph">A</tspan><tspan class="glyph">R</tspan><tspan class="glyph">A</tspan><tspan class="glyph">L</tspan><tspan class="glyph">L</tspan><tspan class="glyph">E</tspan><tspan class="glyph">L</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">L</tspan><tspan class="glyph">I</tspan><tspan class="glyph">N</tspan><tspan class="glyph">E</tspan><tspan class="glyph">S</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">&amp;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">T</tspan><tspan class="glyph">R</tspan><tspan class="glyph">A</tspan><tspan class="glyph">N</tspan><tspan class="glyph">S</tspan><tspan class="glyph">V</tspan><tspan class="glyph">E</tspan><tspan class="glyph">R</tspan><tspan class="glyph">S</tspan><tspan class="glyph">A</tspan><tspan class="glyph">L</tspan><tspan class="glyph">S</tspan></text>
+<rect x="30" y="85" width="450" height="390" rx="16" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+<path class="draw" d="M 50 190 L 460 190" stroke="#334155" stroke-width="4" stroke-linecap="round" fill="none" />
+<path class="draw" d="M 50 350 L 460 350" stroke="#334155" stroke-width="4" stroke-linecap="round" fill="none" />
+<path class="draw" d="M 280 182 L 295 190 L 280 198" stroke="#0f172a" stroke-width="3" fill="none" stroke-linejoin="round" />
+<path class="draw" d="M 280 342 L 295 350 L 280 358" stroke="#0f172a" stroke-width="3" fill="none" stroke-linejoin="round" />
+<text x="440" y="175" text-anchor="middle" fill="#64748b" font-size="14" font-family="Plus Jakarta Sans, sans-serif" font-weight="bold">L1</text>
+<text x="440" y="335" text-anchor="middle" fill="#64748b" font-size="14" font-family="Plus Jakarta Sans, sans-serif" font-weight="bold">L2</text>
+<path class="draw" d="M 120 100 L 390 440" stroke="#0f172a" stroke-width="4.5" stroke-linecap="round" fill="none" />
+<text x="110" y="95" text-anchor="middle" fill="#475569" font-size="14" font-family="Plus Jakarta Sans, sans-serif" font-weight="bold">Transversal</text>
+<circle cx="191" cy="190" r="5" fill="#0f172a" />
+<circle cx="319" cy="350" r="5" fill="#0f172a" />
+<path class="draw" d="M 151 190 A 40 40 0 0 1 174 168" stroke="#ef4444" stroke-width="4" fill="none" />
+<text x="148" y="160" text-anchor="middle" fill="#ef4444" font-size="24" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">a</tspan></text>
+<path class="draw" d="M 174 168 A 40 40 0 0 1 231 190" stroke="#3b82f6" stroke-width="3.5" fill="none" />
+<text x="225" y="162" text-anchor="middle" fill="#2563eb" font-size="22" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">b</tspan></text>
+<path class="draw" d="M 151 190 A 40 40 0 0 0 208 212" stroke="#3b82f6" stroke-width="3.5" fill="none" />
+<text x="160" y="226" text-anchor="middle" fill="#2563eb" font-size="22" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">c</tspan></text>
+<path class="draw" d="M 208 212 A 40 40 0 0 0 231 190" stroke="#ef4444" stroke-width="4" fill="none" />
+<text x="236" y="226" text-anchor="middle" fill="#ef4444" font-size="24" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">d</tspan></text>
+<path class="draw" d="M 279 350 A 40 40 0 0 1 302 328" stroke="#ef4444" stroke-width="4" fill="none" />
+<text x="276" y="320" text-anchor="middle" fill="#ef4444" font-size="24" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">e</tspan></text>
+<path class="draw" d="M 302 328 A 40 40 0 0 1 359 350" stroke="#3b82f6" stroke-width="3.5" fill="none" />
+<text x="353" y="322" text-anchor="middle" fill="#2563eb" font-size="22" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">f</tspan></text>
+<path class="draw" d="M 279 350 A 40 40 0 0 0 336 372" stroke="#3b82f6" stroke-width="3.5" fill="none" />
+<text x="288" y="386" text-anchor="middle" fill="#2563eb" font-size="22" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">g</tspan></text>
+<path class="draw" d="M 336 372 A 40 40 0 0 0 359 350" stroke="#ef4444" stroke-width="4" fill="none" />
+<text x="364" y="386" text-anchor="middle" fill="#ef4444" font-size="24" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">h</tspan></text>
+<rect x="495" y="85" width="275" height="115" rx="14" fill="#fef2f2" stroke="#fecaca" stroke-width="1.5" />
+<text x="632" y="115" text-anchor="middle" fill="#dc2626" font-size="18" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">V</tspan><tspan class="glyph">e</tspan><tspan class="glyph">r</tspan><tspan class="glyph">t</tspan><tspan class="glyph">i</tspan><tspan class="glyph">c</tspan><tspan class="glyph">a</tspan><tspan class="glyph">l</tspan><tspan class="glyph">l</tspan><tspan class="glyph">y</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">O</tspan><tspan class="glyph">p</tspan><tspan class="glyph">p</tspan><tspan class="glyph">o</tspan><tspan class="glyph">s</tspan><tspan class="glyph">i</tspan><tspan class="glyph">t</tspan><tspan class="glyph">e</tspan></text>
+<text x="632" y="148" text-anchor="middle" fill="#dc2626" font-size="22" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">a</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">=</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">d</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">a</tspan><tspan class="glyph">n</tspan><tspan class="glyph">d</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">b</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">=</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">c</tspan></text>
+<text x="632" y="178" text-anchor="middle" fill="#991b1b" font-size="12" font-family="Plus Jakarta Sans, sans-serif" font-weight="bold">Opposite across the vertex: EQUAL!</text>
+<rect x="495" y="215" width="275" height="120" rx="14" fill="#fffbeb" stroke="#fde68a" stroke-width="1.5" />
+<text x="632" y="245" text-anchor="middle" fill="#b45309" font-size="18" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">C</tspan><tspan class="glyph">o</tspan><tspan class="glyph">r</tspan><tspan class="glyph">r</tspan><tspan class="glyph">e</tspan><tspan class="glyph">s</tspan><tspan class="glyph">p</tspan><tspan class="glyph">o</tspan><tspan class="glyph">n</tspan><tspan class="glyph">d</tspan><tspan class="glyph">i</tspan><tspan class="glyph">n</tspan><tspan class="glyph">g</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">(</tspan><tspan class="glyph">F</tspan><tspan class="glyph">&#8722;</tspan><tspan class="glyph">S</tspan><tspan class="glyph">h</tspan><tspan class="glyph">a</tspan><tspan class="glyph">p</tspan><tspan class="glyph">e</tspan><tspan class="glyph">)</tspan></text>
+<text x="632" y="278" text-anchor="middle" fill="#b45309" font-size="22" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">a</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">=</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">e</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">a</tspan><tspan class="glyph">n</tspan><tspan class="glyph">d</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">b</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">=</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">f</tspan></text>
+<text x="632" y="310" text-anchor="middle" fill="#92400e" font-size="12" font-family="Plus Jakarta Sans, sans-serif" font-weight="bold">Same position at each line: EQUAL!</text>
+<rect x="495" y="350" width="275" height="125" rx="14" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5" />
+<text x="632" y="380" text-anchor="middle" fill="#1d4ed8" font-size="18" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">A</tspan><tspan class="glyph">l</tspan><tspan class="glyph">t</tspan><tspan class="glyph">e</tspan><tspan class="glyph">r</tspan><tspan class="glyph">n</tspan><tspan class="glyph">a</tspan><tspan class="glyph">t</tspan><tspan class="glyph">e</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">(</tspan><tspan class="glyph">Z</tspan><tspan class="glyph">&#8722;</tspan><tspan class="glyph">S</tspan><tspan class="glyph">h</tspan><tspan class="glyph">a</tspan><tspan class="glyph">p</tspan><tspan class="glyph">e</tspan><tspan class="glyph">)</tspan></text>
+<text x="632" y="413" text-anchor="middle" fill="#1d4ed8" font-size="22" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">c</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">=</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">f</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">a</tspan><tspan class="glyph">n</tspan><tspan class="glyph">d</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">d</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">=</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">e</tspan></text>
+<text x="632" y="445" text-anchor="middle" fill="#1e40af" font-size="12" font-family="Plus Jakarta Sans, sans-serif" font-weight="bold">Inside lines, alternate sides: EQUAL!</text>
+<rect class="pen" x="0" y="0" width="3" height="28" rx="1" fill="#1b3a6b" />
+</g>
+<g class="chalk-step" data-step="2">
+<rect x="30" y="20" width="740" height="55" rx="12" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="1.5" />
+<text x="400" y="52" text-anchor="middle" fill="#065f46" font-size="22" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">C</tspan><tspan class="glyph">O</tspan><tspan class="glyph">&#8722;</tspan><tspan class="glyph">I</tspan><tspan class="glyph">N</tspan><tspan class="glyph">T</tspan><tspan class="glyph">E</tspan><tspan class="glyph">R</tspan><tspan class="glyph">I</tspan><tspan class="glyph">O</tspan><tspan class="glyph">R</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">A</tspan><tspan class="glyph">N</tspan><tspan class="glyph">G</tspan><tspan class="glyph">L</tspan><tspan class="glyph">E</tspan><tspan class="glyph">S</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">(</tspan><tspan class="glyph">C</tspan><tspan class="glyph">&#8722;</tspan><tspan class="glyph">S</tspan><tspan class="glyph">H</tspan><tspan class="glyph">A</tspan><tspan class="glyph">P</tspan><tspan class="glyph">E</tspan><tspan class="glyph">)</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">&amp;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">E</tspan><tspan class="glyph">X</tspan><tspan class="glyph">A</tspan><tspan class="glyph">M</tspan><tspan class="glyph">P</tspan><tspan class="glyph">L</tspan><tspan class="glyph">E</tspan></text>
+<rect x="30" y="85" width="430" height="390" rx="16" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+<path d="M 50 185 L 440 185" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" fill="none" />
+<path d="M 50 345 L 440 345" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" fill="none" />
+<path d="M 120 100 L 390 430" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" fill="none" />
+<path class="draw" d="M 191 185 L 260 185 M 191 185 L 319 345 M 319 345 L 250 345" stroke="#059669" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+<path class="draw" d="M 151 185 A 40 40 0 0 0 208 207" stroke="#059669" stroke-width="4.5" fill="none" />
+<text x="160" y="222" text-anchor="middle" fill="#047857" font-size="20" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">c</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">=</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">1</tspan><tspan class="glyph">1</tspan><tspan class="glyph">0</tspan><tspan class="glyph">&#176;</tspan></text>
+<path class="draw" d="M 279 345 A 40 40 0 0 1 302 323" stroke="#059669" stroke-width="4.5" fill="none" />
+<text x="268" y="316" text-anchor="middle" fill="#047857" font-size="20" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">e</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">=</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">7</tspan><tspan class="glyph">0</tspan><tspan class="glyph">&#176;</tspan></text>
+<path d="M 208 207 A 40 40 0 0 0 231 185" stroke="#f59e0b" stroke-width="3" fill="none" />
+<text x="245" y="218" text-anchor="middle" fill="#b45309" font-size="15" font-family="Plus Jakarta Sans, sans-serif" font-weight="bold">d = 70&#176;</text>
+<path d="M 302 323 A 40 40 0 0 1 359 345" stroke="#f59e0b" stroke-width="3" fill="none" />
+<text x="350" y="318" text-anchor="middle" fill="#b45309" font-size="15" font-family="Plus Jakarta Sans, sans-serif" font-weight="bold">f = 110&#176;</text>
+<rect x="65" y="390" width="360" height="65" rx="12" fill="#ecfdf5" stroke="#10b981" stroke-width="2" />
+<text x="245" y="420" text-anchor="middle" fill="#065f46" font-size="18" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">c</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">+</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">e</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">=</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">1</tspan><tspan class="glyph">8</tspan><tspan class="glyph">0</tspan><tspan class="glyph">&#176;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">a</tspan><tspan class="glyph">n</tspan><tspan class="glyph">d</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">d</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">+</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">f</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">=</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">1</tspan><tspan class="glyph">8</tspan><tspan class="glyph">0</tspan><tspan class="glyph">&#176;</tspan></text>
+<text x="245" y="442" text-anchor="middle" fill="#047857" font-size="12" font-family="Plus Jakarta Sans, sans-serif">Co-interior angles on same side sum to 180&#176;</text>
+<rect x="475" y="85" width="295" height="390" rx="16" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+<rect x="475" y="85" width="295" height="42" rx="16" fill="#f8fafc" />
+<text x="622" y="112" text-anchor="middle" fill="#0f172a" font-size="15" font-family="Plus Jakarta Sans, sans-serif" font-weight="bold">WORKED CALCULATION</text>
+<text x="622" y="155" text-anchor="middle" fill="#dc2626" font-size="22" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">G</tspan><tspan class="glyph">i</tspan><tspan class="glyph">v</tspan><tspan class="glyph">e</tspan><tspan class="glyph">n</tspan><tspan class="glyph">:</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">a</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">=</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">7</tspan><tspan class="glyph">0</tspan><tspan class="glyph">&#176;</tspan></text>
+<text x="495" y="190" text-anchor="start" fill="#334155" font-size="13" font-family="Plus Jakarta Sans, sans-serif" font-weight="bold">1. Acute angles (equal to a):</text>
+<text x="622" y="218" text-anchor="middle" fill="#dc2626" font-size="16" font-family="Segoe Script, Comic Sans MS, cursive"><tspan class="glyph">d</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">=</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">7</tspan><tspan class="glyph">0</tspan><tspan class="glyph">&#176;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">(</tspan><tspan class="glyph">v</tspan><tspan class="glyph">e</tspan><tspan class="glyph">r</tspan><tspan class="glyph">t</tspan><tspan class="glyph">i</tspan><tspan class="glyph">c</tspan><tspan class="glyph">a</tspan><tspan class="glyph">l</tspan><tspan class="glyph">l</tspan><tspan class="glyph">y</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">o</tspan><tspan class="glyph">p</tspan><tspan class="glyph">p</tspan><tspan class="glyph">)</tspan></text>
+<text x="622" y="242" text-anchor="middle" fill="#b45309" font-size="16" font-family="Segoe Script, Comic Sans MS, cursive"><tspan class="glyph">e</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">=</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">7</tspan><tspan class="glyph">0</tspan><tspan class="glyph">&#176;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">(</tspan><tspan class="glyph">c</tspan><tspan class="glyph">o</tspan><tspan class="glyph">r</tspan><tspan class="glyph">r</tspan><tspan class="glyph">e</tspan><tspan class="glyph">s</tspan><tspan class="glyph">p</tspan><tspan class="glyph">o</tspan><tspan class="glyph">n</tspan><tspan class="glyph">d</tspan><tspan class="glyph">i</tspan><tspan class="glyph">n</tspan><tspan class="glyph">g</tspan><tspan class="glyph">)</tspan></text>
+<text x="622" y="266" text-anchor="middle" fill="#1d4ed8" font-size="16" font-family="Segoe Script, Comic Sans MS, cursive"><tspan class="glyph">h</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">=</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">7</tspan><tspan class="glyph">0</tspan><tspan class="glyph">&#176;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">(</tspan><tspan class="glyph">a</tspan><tspan class="glyph">l</tspan><tspan class="glyph">t</tspan><tspan class="glyph">e</tspan><tspan class="glyph">r</tspan><tspan class="glyph">n</tspan><tspan class="glyph">a</tspan><tspan class="glyph">t</tspan><tspan class="glyph">e</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">t</tspan><tspan class="glyph">o</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">e</tspan><tspan class="glyph">)</tspan></text>
+<text x="495" y="300" text-anchor="start" fill="#334155" font-size="13" font-family="Plus Jakarta Sans, sans-serif" font-weight="bold">2. Obtuse angles (straight line):</text>
+<text x="622" y="328" text-anchor="middle" fill="#047857" font-size="18" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">b</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">=</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">1</tspan><tspan class="glyph">8</tspan><tspan class="glyph">0</tspan><tspan class="glyph">&#176;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">&#8722;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">7</tspan><tspan class="glyph">0</tspan><tspan class="glyph">&#176;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">=</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">1</tspan><tspan class="glyph">1</tspan><tspan class="glyph">0</tspan><tspan class="glyph">&#176;</tspan></text>
+<text x="622" y="354" text-anchor="middle" fill="#047857" font-size="18" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">c</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">=</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">f</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">=</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">g</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">=</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">1</tspan><tspan class="glyph">1</tspan><tspan class="glyph">0</tspan><tspan class="glyph">&#176;</tspan></text>
+<rect x="490" y="380" width="265" height="80" rx="12" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5" />
+<text x="622" y="408" text-anchor="middle" fill="#1e40af" font-size="12" font-family="Plus Jakarta Sans, sans-serif" font-weight="bold">CRITICAL LESSON RULE</text>
+<text x="622" y="430" text-anchor="middle" fill="#1e3a8a" font-size="12" font-family="Plus Jakarta Sans, sans-serif">There are only 2 angle values:</text>
+<text x="622" y="452" text-anchor="middle" fill="#1e40af" font-size="16" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">7</tspan><tspan class="glyph">0</tspan><tspan class="glyph">&#176;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">(</tspan><tspan class="glyph">a</tspan><tspan class="glyph">c</tspan><tspan class="glyph">u</tspan><tspan class="glyph">t</tspan><tspan class="glyph">e</tspan><tspan class="glyph">)</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">o</tspan><tspan class="glyph">r</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">1</tspan><tspan class="glyph">1</tspan><tspan class="glyph">0</tspan><tspan class="glyph">&#176;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">(</tspan><tspan class="glyph">o</tspan><tspan class="glyph">b</tspan><tspan class="glyph">t</tspan><tspan class="glyph">u</tspan><tspan class="glyph">s</tspan><tspan class="glyph">e</tspan><tspan class="glyph">)</tspan></text>
+<rect class="pen" x="0" y="0" width="3" height="28" rx="1" fill="#1b3a6b" />
+</g>
+<g class="chalk-step" data-step="3">
+<rect x="30" y="20" width="740" height="55" rx="12" fill="#fef2f2" stroke="#fecaca" stroke-width="1.5" />
+<text x="400" y="52" text-anchor="middle" fill="#dc2626" font-size="22" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">T</tspan><tspan class="glyph">H</tspan><tspan class="glyph">E</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">E</tspan><tspan class="glyph">X</tspan><tspan class="glyph">T</tspan><tspan class="glyph">E</tspan><tspan class="glyph">R</tspan><tspan class="glyph">I</tspan><tspan class="glyph">O</tspan><tspan class="glyph">R</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">A</tspan><tspan class="glyph">N</tspan><tspan class="glyph">G</tspan><tspan class="glyph">L</tspan><tspan class="glyph">E</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">O</tspan><tspan class="glyph">F</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">A</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">T</tspan><tspan class="glyph">R</tspan><tspan class="glyph">I</tspan><tspan class="glyph">A</tspan><tspan class="glyph">N</tspan><tspan class="glyph">G</tspan><tspan class="glyph">L</tspan><tspan class="glyph">E</tspan></text>
+<rect x="30" y="85" width="450" height="390" rx="16" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+<path class="draw" d="M 80 340 L 440 340" stroke="#0f172a" stroke-width="4" stroke-linecap="round" fill="none" />
+<path class="draw" d="M 80 340 L 230 140" stroke="#0f172a" stroke-width="4" stroke-linecap="round" fill="none" />
+<path class="draw" d="M 230 140 L 330 340" stroke="#0f172a" stroke-width="4" stroke-linecap="round" fill="none" />
+<path d="M 330 340 L 445 340" stroke="#dc2626" stroke-width="3" stroke-dasharray="6,4" fill="none" />
+<path d="M 435 334 L 447 340 L 435 346" stroke="#dc2626" stroke-width="2.5" fill="none" />
+<circle cx="230" cy="140" r="5" fill="#0f172a" />
+<circle cx="80" cy="340" r="5" fill="#0f172a" />
+<circle cx="330" cy="340" r="5" fill="#0f172a" />
+<circle cx="445" cy="340" r="4" fill="#dc2626" />
+<text x="230" y="115" text-anchor="middle" fill="#0f172a" font-size="24" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">A</tspan></text>
+<text x="60" y="360" text-anchor="middle" fill="#0f172a" font-size="24" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">B</tspan></text>
+<text x="325" y="375" text-anchor="middle" fill="#0f172a" font-size="24" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">C</tspan></text>
+<text x="458" y="360" text-anchor="middle" fill="#dc2626" font-size="22" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">X</tspan></text>
+<path class="draw" d="M 215 160 A 30 30 0 0 0 245 170" stroke="#2563eb" stroke-width="4" fill="none" />
+<text x="230" y="200" text-anchor="middle" fill="#1d4ed8" font-size="20" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">a</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">=</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">5</tspan><tspan class="glyph">0</tspan><tspan class="glyph">&#176;</tspan></text>
+<path class="draw" d="M 125 340 A 45 45 0 0 0 108 303" stroke="#2563eb" stroke-width="4" fill="none" />
+<text x="150" y="318" text-anchor="middle" fill="#1d4ed8" font-size="20" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">b</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">=</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">6</tspan><tspan class="glyph">5</tspan><tspan class="glyph">&#176;</tspan></text>
+<path class="draw" d="M 290 340 A 40 40 0 0 1 310 300" stroke="#059669" stroke-width="3.5" fill="none" />
+<text x="290" y="320" text-anchor="middle" fill="#047857" font-size="20" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">c</tspan></text>
+<path class="draw" d="M 330 340 L 390 340 A 60 60 0 0 0 357 286 Z" stroke="#dc2626" stroke-width="3" fill="rgba(239, 68, 68, 0.16)" />
+<text x="395" y="275" text-anchor="middle" fill="#dc2626" font-size="28" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">d</tspan></text>
+<text x="395" y="310" text-anchor="middle" fill="#dc2626" font-size="20" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">=</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">a</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">+</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">b</tspan></text>
+<text x="395" y="332" text-anchor="middle" fill="#dc2626" font-size="18" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">=</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">1</tspan><tspan class="glyph">1</tspan><tspan class="glyph">5</tspan><tspan class="glyph">&#176;</tspan></text>
+<rect x="495" y="85" width="275" height="390" rx="16" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+<rect x="495" y="85" width="275" height="42" rx="16" fill="#fef2f2" />
+<text x="632" y="112" text-anchor="middle" fill="#991b1b" font-size="15" font-family="Plus Jakarta Sans, sans-serif" font-weight="bold">STEP-BY-STEP PROOF</text>
+<text x="510" y="150" text-anchor="start" fill="#334155" font-size="13" font-family="Plus Jakarta Sans, sans-serif" font-weight="bold">1. In triangle ABC:</text>
+<text x="632" y="178" text-anchor="middle" fill="#1e293b" font-size="18" font-family="Segoe Script, Comic Sans MS, cursive"><tspan class="glyph">a</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">+</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">b</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">+</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">c</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">=</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">1</tspan><tspan class="glyph">8</tspan><tspan class="glyph">0</tspan><tspan class="glyph">&#176;</tspan></text>
+<text x="632" y="204" text-anchor="middle" fill="#1d4ed8" font-size="18" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">&#8658;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">a</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">+</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">b</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">=</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">1</tspan><tspan class="glyph">8</tspan><tspan class="glyph">0</tspan><tspan class="glyph">&#176;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">&#8722;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">c</tspan></text>
+<text x="510" y="240" text-anchor="start" fill="#334155" font-size="13" font-family="Plus Jakarta Sans, sans-serif" font-weight="bold">2. On straight line BX:</text>
+<text x="632" y="268" text-anchor="middle" fill="#1e293b" font-size="18" font-family="Segoe Script, Comic Sans MS, cursive"><tspan class="glyph">c</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">+</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">d</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">=</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">1</tspan><tspan class="glyph">8</tspan><tspan class="glyph">0</tspan><tspan class="glyph">&#176;</tspan></text>
+<text x="632" y="294" text-anchor="middle" fill="#dc2626" font-size="18" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">&#8658;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">d</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">=</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">1</tspan><tspan class="glyph">8</tspan><tspan class="glyph">0</tspan><tspan class="glyph">&#176;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">&#8722;</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">c</tspan></text>
+<rect x="510" y="325" width="245" height="85" rx="12" fill="#fef2f2" stroke="#dc2626" stroke-width="2" />
+<text x="632" y="350" text-anchor="middle" fill="#991b1b" font-size="12" font-family="Plus Jakarta Sans, sans-serif" font-weight="bold">THEREFORE:</text>
+<text x="632" y="385" text-anchor="middle" fill="#dc2626" font-size="30" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">d</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">=</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">a</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">+</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">b</tspan></text>
+<text x="632" y="435" text-anchor="middle" fill="#64748b" font-size="11" font-family="Plus Jakarta Sans, sans-serif">Exterior angle = sum of 2 opposite interior</text>
+<text x="632" y="455" text-anchor="middle" fill="#0f172a" font-size="13" font-family="Plus Jakarta Sans, sans-serif" font-weight="bold">Example: 50&#176; + 65&#176; = 115&#176;</text>
+<rect class="pen" x="0" y="0" width="3" height="28" rx="1" fill="#1b3a6b" />
+</g>
+<g class="chalk-step" data-step="4">
+<rect x="30" y="20" width="740" height="55" rx="12" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5" />
+<text x="400" y="52" text-anchor="middle" fill="#1e40af" font-size="22" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">A</tspan><tspan class="glyph">C</tspan><tspan class="glyph">C</tspan><tspan class="glyph">U</tspan><tspan class="glyph">R</tspan><tspan class="glyph">A</tspan><tspan class="glyph">T</tspan><tspan class="glyph">E</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">G</tspan><tspan class="glyph">E</tspan><tspan class="glyph">O</tspan><tspan class="glyph">M</tspan><tspan class="glyph">E</tspan><tspan class="glyph">T</tspan><tspan class="glyph">R</tspan><tspan class="glyph">I</tspan><tspan class="glyph">C</tspan><tspan class="glyph">&#160;</tspan><tspan class="glyph">C</tspan><tspan class="glyph">O</tspan><tspan class="glyph">N</tspan><tspan class="glyph">S</tspan><tspan class="glyph">T</tspan><tspan class="glyph">R</tspan><tspan class="glyph">U</tspan><tspan class="glyph">C</tspan><tspan class="glyph">T</tspan><tspan class="glyph">I</tspan><tspan class="glyph">O</tspan><tspan class="glyph">N</tspan><tspan class="glyph">S</tspan></text>
+<rect x="30" y="85" width="355" height="315" rx="16" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+<rect x="30" y="85" width="355" height="36" rx="16" fill="#f8fafc" />
+<text x="207" y="108" text-anchor="middle" fill="#0f172a" font-size="14" font-family="Plus Jakarta Sans, sans-serif" font-weight="bold">Perpendicular Bisector of AB</text>
+<path class="draw" d="M 70 240 L 345 240" stroke="#0f172a" stroke-width="3.5" stroke-linecap="round" fill="none" />
+<circle cx="70" cy="240" r="5" fill="#0f172a" />
+<circle cx="345" cy="240" r="5" fill="#0f172a" />
+<text x="55" y="245" text-anchor="middle" fill="#0f172a" font-size="20" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">A</tspan></text>
+<text x="360" y="245" text-anchor="middle" fill="#0f172a" font-size="20" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">B</tspan></text>
+<path class="draw" d="M 195 130 A 165 165 0 0 1 220 170" stroke="#3b82f6" stroke-width="2.5" stroke-dasharray="6,4" fill="none" />
+<path class="draw" d="M 195 350 A 165 165 0 0 0 220 310" stroke="#3b82f6" stroke-width="2.5" stroke-dasharray="6,4" fill="none" />
+<path class="draw" d="M 220 130 A 165 165 0 0 0 195 170" stroke="#ec4899" stroke-width="2.5" stroke-dasharray="6,4" fill="none" />
+<path class="draw" d="M 220 350 A 165 165 0 0 1 195 310" stroke="#ec4899" stroke-width="2.5" stroke-dasharray="6,4" fill="none" />
+<circle cx="207" cy="148" r="4.5" fill="#dc2626" />
+<circle cx="207" cy="332" r="4.5" fill="#dc2626" />
+<text x="225" y="145" text-anchor="middle" fill="#dc2626" font-size="18" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">P</tspan></text>
+<text x="225" y="340" text-anchor="middle" fill="#dc2626" font-size="18" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">Q</tspan></text>
+<path class="draw" d="M 207 115 L 207 365" stroke="#dc2626" stroke-width="3" stroke-linecap="round" fill="none" />
+<path d="M 207 226 L 221 226 L 221 240" stroke="#dc2626" stroke-width="1.8" fill="none" />
+<line x1="134" y1="233" x2="142" y2="247" stroke="#059669" stroke-width="2.5" />
+<line x1="272" y1="233" x2="280" y2="247" stroke="#059669" stroke-width="2.5" />
+<text x="207" y="385" text-anchor="middle" fill="#dc2626" font-size="12" font-family="Plus Jakarta Sans, sans-serif" font-weight="bold">Cuts AB exactly in half at 90&#176;</text>
+<rect x="415" y="85" width="355" height="315" rx="16" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+<rect x="415" y="85" width="355" height="36" rx="16" fill="#f8fafc" />
+<text x="592" y="108" text-anchor="middle" fill="#0f172a" font-size="14" font-family="Plus Jakarta Sans, sans-serif" font-weight="bold">Angle Bisector of &#8736;BAC</text>
+<path class="draw" d="M 445 330 L 735 330" stroke="#0f172a" stroke-width="3.5" stroke-linecap="round" fill="none" />
+<path class="draw" d="M 445 330 L 675 145" stroke="#0f172a" stroke-width="3.5" stroke-linecap="round" fill="none" />
+<circle cx="445" cy="330" r="5" fill="#0f172a" />
+<text x="430" y="345" text-anchor="middle" fill="#0f172a" font-size="20" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">A</tspan></text>
+<path class="draw" d="M 565 330 A 120 120 0 0 1 526 265" stroke="#3b82f6" stroke-width="3" stroke-dasharray="5,4" fill="none" />
+<circle cx="565" cy="330" r="4" fill="#2563eb" />
+<circle cx="526" cy="265" r="4" fill="#2563eb" />
+<text x="570" y="352" text-anchor="middle" fill="#2563eb" font-size="16" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">P</tspan></text>
+<text x="515" y="255" text-anchor="middle" fill="#2563eb" font-size="16" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">Q</tspan></text>
+<path class="draw" d="M 645 235 A 130 130 0 0 0 680 275" stroke="#ec4899" stroke-width="2.5" stroke-dasharray="5,4" fill="none" />
+<path class="draw" d="M 675 225 A 130 130 0 0 1 650 280" stroke="#ec4899" stroke-width="2.5" stroke-dasharray="5,4" fill="none" />
+<circle cx="665" cy="255" r="4.5" fill="#dc2626" />
+<text x="685" y="255" text-anchor="middle" fill="#dc2626" font-size="18" font-family="Segoe Script, Comic Sans MS, cursive" font-weight="bold"><tspan class="glyph">M</tspan></text>
+<path class="draw" d="M 445 330 L 735 230" stroke="#dc2626" stroke-width="3" stroke-linecap="round" fill="none" />
+<circle cx="535" cy="318" r="3" fill="#059669" />
+<circle cx="518" cy="295" r="3" fill="#059669" />
+<text x="592" y="385" text-anchor="middle" fill="#dc2626" font-size="12" font-family="Plus Jakarta Sans, sans-serif" font-weight="bold">Ray AM splits angle into 2 equal halves</text>
+<rect x="30" y="415" width="740" height="60" rx="12" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5" />
+<text x="400" y="435" text-anchor="middle" fill="#1e40af" font-size="12" font-family="Plus Jakarta Sans, sans-serif" font-weight="bold">TRIANGLE CONSTRUCTION CRITERIA</text>
+<text x="400" y="458" text-anchor="middle" fill="#1e3a8a" font-size="13" font-family="Plus Jakarta Sans, sans-serif" font-weight="bold">SSS (3 sides)  ·  SAS (2 sides + angle)  ·  ASA (2 angles + side)  ·  RHS (Right angle, Hypotenuse, Side)</text>
+<rect class="pen" x="0" y="0" width="3" height="28" rx="1" fill="#1b3a6b" />
+</g>
+
+</svg>

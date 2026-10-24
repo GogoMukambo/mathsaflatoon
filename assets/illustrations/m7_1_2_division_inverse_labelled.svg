@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900">
+  <rect width="1600" height="900" fill="#ffffff"/>
+  <rect width="1600" height="92" fill="#0f172a"/>
+  <text x="800" y="62" text-anchor="middle" fill="#ffffff" font-family="Segoe UI, Arial, sans-serif" font-size="42" font-weight="700" letter-spacing="3">DIVISION IS THE INVERSE</text>
+  <text x="800" y="148" text-anchor="middle" fill="#ea580c" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="600">Rewrite a multiplication as two divisions</text>
+
+  <g font-family="Segoe UI, Arial, sans-serif" text-anchor="middle">
+    <rect x="70" y="186" width="710" height="360" rx="18" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+    <text x="425" y="236" fill="#1e40af" font-size="22" font-weight="700">Positive &#215; negative</text>
+    <rect x="160" y="260" width="530" height="70" rx="12" fill="#2563eb"/>
+    <text x="425" y="306" fill="#ffffff" font-size="30" font-weight="700">-4  &#215;  6  =  -24</text>
+    <path d="M 300 340 L 260 380" stroke="#2563eb" stroke-width="4"/>
+    <path d="M 550 340 L 590 380" stroke="#2563eb" stroke-width="4"/>
+    <rect x="110" y="388" width="290" height="120" rx="12" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+    <text x="255" y="440" fill="#1e3a8a" font-size="24" font-weight="700">-24  &#247;  6</text>
+    <text x="255" y="482" fill="#1d4ed8" font-size="26" font-weight="700">=  -4</text>
+    <rect x="450" y="388" width="290" height="120" rx="12" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+    <text x="595" y="440" fill="#1e3a8a" font-size="24" font-weight="700">-24  &#247;  -4</text>
+    <text x="595" y="482" fill="#1d4ed8" font-size="26" font-weight="700">=  6</text>
+
+    <rect x="820" y="186" width="710" height="360" rx="18" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+    <text x="1175" y="236" fill="#065f46" font-size="22" font-weight="700">Negative &#215; negative</text>
+    <rect x="910" y="260" width="530" height="70" rx="12" fill="#059669"/>
+    <text x="1175" y="306" fill="#ffffff" font-size="30" font-weight="700">-7  &#215;  -2  =  14</text>
+    <path d="M 1050 340 L 1010 380" stroke="#059669" stroke-width="4"/>
+    <path d="M 1300 340 L 1340 380" stroke="#059669" stroke-width="4"/>
+    <rect x="860" y="388" width="290" height="120" rx="12" fill="#ffffff" stroke="#059669" stroke-width="2"/>
+    <text x="1005" y="440" fill="#065f46" font-size="24" font-weight="700">14  &#247;  -2</text>
+    <text x="1005" y="482" fill="#047857" font-size="26" font-weight="700">=  -7</text>
+    <rect x="1200" y="388" width="290" height="120" rx="12" fill="#ffffff" stroke="#059669" stroke-width="2"/>
+    <text x="1345" y="440" fill="#065f46" font-size="24" font-weight="700">14  &#247;  -7</text>
+    <text x="1345" y="482" fill="#047857" font-size="26" font-weight="700">=  -2</text>
+  </g>
+
+  <g font-family="Segoe UI, Arial, sans-serif" text-anchor="middle" font-weight="700">
+    <rect x="70" y="570" width="350" height="200" rx="14" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/>
+    <text x="245" y="640" fill="#9a3412" font-size="22">18  &#247;  -6</text>
+    <text x="245" y="700" fill="#c2410c" font-size="36">=  -3</text>
+    <rect x="440" y="570" width="350" height="200" rx="14" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+    <text x="615" y="640" fill="#065f46" font-size="22">-28  &#247;  -4</text>
+    <text x="615" y="700" fill="#047857" font-size="36">=  7</text>
+    <rect x="810" y="570" width="350" height="200" rx="14" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/>
+    <text x="985" y="640" fill="#9a3412" font-size="22">30  &#247;  -6</text>
+    <text x="985" y="700" fill="#c2410c" font-size="36">=  -5</text>
+    <rect x="1180" y="570" width="350" height="200" rx="14" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+    <text x="1355" y="640" fill="#065f46" font-size="22">-30  &#247;  -10</text>
+    <text x="1355" y="700" fill="#047857" font-size="36">=  3</text>
+  </g>
+
+  <rect y="808" width="1600" height="92" fill="#0f172a"/>
+  <text x="800" y="864" text-anchor="middle" fill="#ffffff" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="600">KEY IDEAS  |  Same sign rule for divide as for multiply</text>
+</svg>

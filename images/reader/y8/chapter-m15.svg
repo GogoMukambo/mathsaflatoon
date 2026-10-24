@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" width="1200" height="720">
+  <rect width="1200" height="720" fill="#f6f1e6"/>
+  
+    <text x="72" y="108" fill="#1e293b" font-family="Plus Jakarta Sans, Segoe UI, sans-serif" font-size="54" font-weight="700">15 Results</text>
+    <line x1="240" y1="520" x2="980" y2="520" stroke="#1e293b" stroke-width="6"/>
+    <rect x="320" y="360" width="90" height="160" rx="12" fill="#2563eb"/>
+    <rect x="500" y="250" width="90" height="270" rx="12" fill="#0f766e"/>
+    <rect x="680" y="300" width="90" height="220" rx="12" fill="#d97706"/>
+    <text x="365" y="560" text-anchor="middle" fill="#1e293b" font-family="Plus Jakarta Sans, Segoe UI, sans-serif" font-size="28" font-weight="700">A</text>
+    <text x="545" y="560" text-anchor="middle" fill="#1e293b" font-family="Plus Jakarta Sans, Segoe UI, sans-serif" font-size="28" font-weight="700">B</text>
+    <text x="725" y="560" text-anchor="middle" fill="#1e293b" font-family="Plus Jakarta Sans, Segoe UI, sans-serif" font-size="28" font-weight="700">C</text>
+    <text x="600" y="640" text-anchor="middle" fill="#1e293b" font-family="Plus Jakarta Sans, Segoe UI, sans-serif" font-size="36" font-weight="700">compare the data</text>
+  
+</svg>

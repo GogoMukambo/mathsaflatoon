@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900">
+<rect width="1600" height="900" fill="#ffffff"/>
+<rect width="1600" height="92" fill="#0f172a"/>
+<text x="800" y="62" text-anchor="middle" fill="#ffffff" font-family="Segoe UI, Arial, sans-serif" font-size="40" font-weight="700" letter-spacing="2">MORE LCM EXAMPLES</text>
+<text x="800" y="148" text-anchor="middle" fill="#059669" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="600">A × B is a common multiple — not always the lowest.</text>
+<rect x="60" y="186" width="720" height="580" rx="18" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+<text x="420" y="228" text-anchor="middle" fill="#065f46" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">LCM(8, 12)</text>
+<text x="420" y="274" text-anchor="middle" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700">8: 8, 16, 24, 32, …</text>
+<text x="420" y="316" text-anchor="middle" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700">12: 12, 24, 36, …</text>
+<text x="420" y="358" text-anchor="middle" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="40" font-weight="700">LCM = 24</text>
+  <rect x="820" y="186" width="720" height="580" rx="18" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/>
+<text x="1180" y="228" text-anchor="middle" fill="#c2410c" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">LCM(3, 4, 6)</text>
+<text x="1180" y="274" text-anchor="middle" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700">First shared by all three</text>
+<text x="1180" y="316" text-anchor="middle" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700">3, 4 and 6 all divide 12</text>
+<text x="1180" y="358" text-anchor="middle" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="40" font-weight="700">LCM = 12</text>
+<rect y="808" width="1600" height="92" fill="#0f172a"/>
+<text x="800" y="864" text-anchor="middle" fill="#ffffff" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="600">CHECK  |  LCM(8, 12) = 24   ·   LCM(3, 4, 6) = 12   ·   4 × 6 = 24 is not the LCM</text>
+</svg>

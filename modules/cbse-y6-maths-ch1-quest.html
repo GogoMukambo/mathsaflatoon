@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoGoExams - Patterns in Mathematics Quest</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap');
+        
+        :root {
+            --brand-blue: #0f4c81;
+            --light-blue: #e0f2fe;
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.3);
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #020617, #1e3a8a, #3b82f6);
+            background-attachment: fixed;
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+            user-select: none;
+        }
+
+        h1, h2, h3, h4, .font-heading {
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        .bg-pattern {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: -1;
+            background-image: url("data:image/svg+xml,%3Csvg width='300' height='300' viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cg font-family='Fredoka, sans-serif' font-weight='bold' fill='rgba(255,255,255,0.05)'%3E%3Ctext x='20' y='60' font-size='34'%3E1,3,6,10%3C/text%3E%3Ctext x='190' y='90' font-size='44'%3En%C2%B2%3C/text%3E%3Ctext x='85' y='180' font-size='38'%3E1+3+5%3C/text%3E%3Ctext x='220' y='220' font-size='40'%3EK%E2%82%85%3C/text%3E%3Ctext x='145' y='45' font-size='32'%3E2%E2%81%BF%3C/text%3E%3Ctext x='35' y='260' font-size='35'%3E1,4,9,16%3C/text%3E%3Ctext x='195' y='280' font-size='30'%3En%C2%B3%3C/text%3E%3C/g%3E%3C/svg%3E");
+            animation: floatPattern 60s linear infinite;
+        }
+
+        @keyframes floatPattern {
+            0% { background-position: 0 0; }
+            100% { background-position: 300px 300px; }
+        }
+
+        @keyframes pulseNode {
+            0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(255, 255, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        }
+
+        @keyframes flashRed {
+            0%, 100% { background-color: rgba(239, 68, 68, 0.4); border-color: #f87171; transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .quest-node {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            border: 4px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+
+        .quest-node.active, .quest-node:hover {
+            background: white;
+            color: var(--brand-blue);
+            transform: translate(-50%, -50%) scale(1.15);
+            animation: pulseNode 2s infinite;
+        }
+
+        .quest-node-label {
+            position: absolute;
+            top: 90px;
+            width: 210px;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            pointer-events: none;
+        }
+
+        .quiz-input {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 3px solid rgba(255, 255, 255, 0.5);
+        }
+        .quiz-input:focus { outline: none; background: rgba(255, 255, 255, 0.3); border-color: white; }
+        .quiz-input.correct {
+            background: rgba(34, 197, 94, 0.4) !important;
+            color: #ffffff;
+            border-color: #4ade80 !important;
+            box-shadow: 0 0 25px rgba(74, 222, 128, 0.7);
+            transform: scale(1.05);
+            pointer-events: none;
+        }
+        .quiz-input.incorrect {
+            animation: flashRed 0.4s ease;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 15, 40, 0.7);
+            backdrop-filter: blur(12px);
+            z-index: 50;
+            overflow-y: auto;
+            padding: 2rem 1rem;
+        }
+
+        .study-box {
+            background: rgba(255,255,255,0.05);
+            border-left: 6px solid #3b82f6;
+            padding: 1.5rem 2rem;
+            border-radius: 0 1rem 1rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        .btn-more, .btn-exercise {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s;
+        }
+        .btn-more { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+        .btn-exercise { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+        .btn-more:hover, .btn-exercise:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4); }
+
+        .custom-scroll::-webkit-scrollbar { width: 10px; }
+        .custom-scroll::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 5px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); border-radius: 5px; }
+        
+        .topic-slide {
+            display: none;
+            animation: slideIn 0.4s ease forwards;
+        }
+        .topic-slide.active {
+            display: block;
+        }
+
+        /* Enlarge Pyramid Blocks for Kids */
+        .pyramid-row { display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
+        .pyramid-block { width: 92px; height: 92px; background: rgba(255,255,255,0.15); border: 3px solid rgba(255,255,255,0.4); display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: bold; border-radius: 16px; transition: all 0.3s ease; box-shadow: 0 6px 12px rgba(0,0,0,0.2); }
+        .pyramid-block input { width: 100%; height: 100%; text-align: center; border-radius: 12px; background: transparent; outline: none; transition: all 0.3s; color: white; }
+        .pyramid-block input.correct { background: rgba(34, 197, 94, 0.5) !important; color: white; }
+        .pyramid-block input.incorrect { animation: flashRed 0.4s ease; background: rgba(239, 68, 68, 0.4); }
+
+        .slide-indicator-dots { display: flex; gap: 8px; justify-content: center; margin-top: 1.5rem; }
+        .slide-dot { width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,0.2); transition: all 0.3s; cursor: pointer; }
+        .slide-dot.active { background: white; transform: scale(1.3); }
+
+        body.embed-mode header.glass-panel {
+            display: none;
+        }
+        body.embed-mode main {
+            min-height: 85vh;
+            padding-top: 1.5rem;
+        }
+        body.embed-mode #quest-modal {
+            padding-top: 0.5rem;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="bg-pattern pointer-events-none"></div>
+
+    <header class="glass-panel sticky top-0 z-40 border-b-0 border-white/20">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <svg class="w-10 h-10 text-white drop-shadow-md" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"></path></svg>
+                <h1 class="text-4xl font-bold tracking-wider drop-shadow-sm font-heading">GoGoExams</h1>
+            </div>
+            <span class="text-lg font-bold bg-white/10 text-white py-2 px-6 rounded-full shadow-md uppercase tracking-wide border border-white/30">Ganita Prakash: Chapter 1</span>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto w-full px-4 py-16 relative flex flex-col items-center justify-center min-h-[70vh]">
+        <div class="text-center mb-16">
+            <h2 class="text-5xl md:text-6xl font-heading font-bold mb-6 drop-shadow-lg">Patterns in Mathematics</h2>
+            <p class="text-2xl text-blue-100/90 font-bold max-w-3xl mx-auto">Discover number sequences, visual dot arrangements, surprising sequence relations, and geometric shape patterns.</p>
+        </div>
+
+        <div class="relative w-full max-w-5xl h-[350px] mt-8">
+            <svg class="absolute top-0 left-0 w-full h-full pointer-events-none drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]" viewBox="0 0 1000 300" preserveAspectRatio="none">
+                <path d="M 150 150 C 300 150, 300 60, 500 60 C 700 60, 700 240, 850 240" 
+                      fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="10" stroke-linecap="round" stroke-dasharray="20, 20" />
+            </svg>
+            <button class="quest-node pulse" style="left: 15%; top: 50%;" onclick="openLevel(1)">1<span class="quest-node-label">Number Sequences &amp; Visuals</span></button>
+            <button class="quest-node" style="left: 50%; top: 20%;" onclick="openLevel(2)">2<span class="quest-node-label">Relations Among Sequences</span></button>
+            <button class="quest-node" style="left: 85%; top: 80%;" onclick="openLevel(3)">3<span class="quest-node-label">Patterns in Shapes</span></button>
+        </div>
+    </main>
+
+    <!-- MAIN QUEST MODAL -->
+    <div id="quest-modal" class="modal-overlay hidden items-center justify-center">
+        
+        <!-- Main External Navigation Arrows -->
+        <button onclick="prevSlide(event)" class="fixed left-2 md:left-6 top-1/2 -translate-y-1/2 w-16 h-16 md:w-24 md:h-24 rounded-full bg-white/20 backdrop-blur-md hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-all duration-300 border-4 border-white/40 shadow-[0_0_25px_rgba(255,255,255,0.3)] z-[60] cursor-pointer" id="prev-btn"><svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M15 19l-7-7 7-7"></path></svg></button>
+        
+        <button onclick="nextSlide(event)" class="fixed right-2 md:right-6 top-1/2 -translate-y-1/2 w-16 h-16 md:w-24 md:h-24 rounded-full bg-white/20 backdrop-blur-md hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-all duration-300 border-4 border-white/40 shadow-[0_0_25px_rgba(255,255,255,0.3)] z-[60] cursor-pointer" id="next-btn"><svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M9 5l7 7-7 7"></path></svg></button>
+
+        <div id="modal-content-panel" class="glass-panel w-full max-w-5xl rounded-[2rem] p-8 md:p-12 relative flex flex-col min-h-[60vh] justify-between">
+            <button onclick="closeModal()" class="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/20 hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-colors border-2 border-white/40 z-20"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+
+            <div id="slides-container" class="w-full flex-grow mt-4">
+                
+                <!-- ================= LEVEL 1 ================= -->
+                <!-- L1 Slide 1 -->
+                <div class="topic-slide level-1-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 flex items-center gap-4 text-white">
+                        <span class="bg-white text-blue-900 w-14 h-14 rounded-full flex items-center justify-center text-3xl shrink-0">1</span>
+                        Patterns in Numbers (Table 1)
+                    </h2>
+                    
+                    <div class="study-box border-blue-400">
+                        <h4 class="text-3xl font-bold text-blue-300 mb-6">What is Mathematics &amp; Number Theory?</h4>
+                        <ul class="list-disc ml-8 space-y-3 text-xl text-blue-50">
+                            <li><strong>Mathematics</strong> is the search for patterns—in nature, homes, astronomy, weather, and technology—and the explanations for <em>why</em> those patterns exist.</li>
+                            <li>The branch of Mathematics that studies patterns in whole numbers (<code class="bg-black/30 px-2 py-0.5 rounded">0, 1, 2, 3, 4, ...</code>) is called <strong>number theory</strong>.</li>
+                            <li><strong>Table 1 Key Number Sequences:</strong>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mt-3 text-base bg-black/20 p-4 rounded-xl border border-white/10">
+                                    <div>&bull; <strong>All 1&rsquo;s:</strong> 1, 1, 1, 1, 1, 1, 1, &hellip;</div>
+                                    <div>&bull; <strong>Counting numbers:</strong> 1, 2, 3, 4, 5, 6, 7, &hellip;</div>
+                                    <div>&bull; <strong>Odd numbers:</strong> 1, 3, 5, 7, 9, 11, 13, &hellip;</div>
+                                    <div>&bull; <strong>Even numbers:</strong> 2, 4, 6, 8, 10, 12, 14, &hellip;</div>
+                                    <div>&bull; <strong>Triangular numbers:</strong> 1, 3, 6, 10, 15, 21, 28, &hellip;</div>
+                                    <div>&bull; <strong>Squares:</strong> 1, 4, 9, 16, 25, 36, 49, &hellip;</div>
+                                    <div>&bull; <strong>Cubes:</strong> 1, 8, 27, 64, 125, 216, &hellip;</div>
+                                    <div>&bull; <strong>Virah&#257;nka numbers:</strong> 1, 2, 3, 5, 8, 13, 21, &hellip;</div>
+                                    <div>&bull; <strong>Powers of 2:</strong> 1, 2, 4, 8, 16, 32, 64, &hellip;</div>
+                                    <div>&bull; <strong>Powers of 3:</strong> 1, 3, 9, 27, 81, 243, 729, &hellip;</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-blue-900/60 border-l-8 border-blue-400 p-8 rounded-r-2xl shadow-xl mt-6">
+                        <h4 class="font-bold text-white mb-4 text-3xl flex items-center gap-3">
+                            <svg class="w-8 h-8 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                            Solved Example: Rules &amp; Next Three Terms
+                        </h4>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
+                            <div class="bg-black/20 p-5 rounded-xl border border-white/10">
+                                <p class="text-xl font-bold text-blue-100 mb-2">1. Triangular Numbers: <span class="bg-black/40 text-white px-2 py-1 rounded">1, 3, 6, 10, 15, 21, 28, ...</span></p>
+                                <p class="text-base text-blue-50 mb-3"><strong>Rule:</strong> Add consecutive counting numbers (+2, +3, +4, +5, +6, +7, then +8, +9, +10).</p>
+                                <p class="text-lg text-green-300 font-bold">Next 3 terms: 28+8 = 36, 36+9 = 45, 45+10 = 55</p>
+                            </div>
+                            <div class="bg-black/20 p-5 rounded-xl border border-white/10">
+                                <p class="text-xl font-bold text-blue-100 mb-2">2. Virah&#257;nka Numbers: <span class="bg-black/40 text-white px-2 py-1 rounded">1, 2, 3, 5, 8, 13, 21, ...</span></p>
+                                <p class="text-base text-blue-50 mb-3"><strong>Rule:</strong> Each number (from the 3rd term) is the sum of the two preceding numbers (3=1+2, 5=2+3, 8=3+5).</p>
+                                <p class="text-lg text-pink-300 font-bold">Next 3 terms: 13+21 = 34, 21+34 = 55, 34+55 = 89</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- L1 Slide 2 -->
+                <div class="topic-slide level-1-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 flex items-center gap-4 text-white">
+                        <span class="bg-white text-blue-900 w-14 h-14 rounded-full flex items-center justify-center text-3xl shrink-0">1</span>
+                        Visualising Number Sequences (Table 2)
+                    </h2>
+                    
+                    <div class="study-box border-teal-400">
+                        <h4 class="text-3xl font-bold text-teal-300 mb-6">Why Do Numbers Have Geometric Names?</h4>
+                        <ul class="list-disc ml-8 space-y-3 text-xl text-blue-50">
+                            <li><strong>Triangular numbers (1, 3, 6, 10, 15, ...):</strong> Dots can be arranged in a neat equilateral triangle with rows of 1, 2, 3, 4, ... dots.</li>
+                            <li><strong>Square numbers (1, 4, 9, 16, 25, ...):</strong> Dots form a square grid of size 1&times;1, 2&times;2, 3&times;3, 4&times;4, 5&times;5, ...</li>
+                            <li><strong>Cubes (1, 8, 27, 64, 125, ...):</strong> Unit blocks form 3D cubes of side 1&times;1&times;1, 2&times;2&times;2, 3&times;3&times;3, ...</li>
+                            <li><strong>Hexagonal numbers (1, 7, 19, 37, 61, ...):</strong> Dots expand outward in concentric regular hexagonal rings (+6, +12, +18, +24, ...).</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-blue-900/60 border-l-8 border-teal-400 p-8 rounded-r-2xl shadow-xl mt-6">
+                        <h4 class="font-bold text-white mb-4 text-3xl flex items-center gap-3">
+                            <svg class="w-8 h-8 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                            Solved Example: 36 is BOTH Triangular &amp; Square!
+                        </h4>
+                        <p class="text-xl text-blue-100 mb-4">The number <strong class="text-white">36</strong> plays two roles: it is the <strong>8th triangular number</strong> (1+2+3+4+5+6+7+8 = 36) AND the <strong>6th square number</strong> (6 &times; 6 = 36)!</p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
+                            <!-- Triangular SVG -->
+                            <div class="bg-black/25 p-4 rounded-xl border border-white/10 flex flex-col items-center">
+                                <span class="text-base font-bold text-amber-300 mb-2">Triangular Numbers (1, 3, 6, 10)</span>
+                                <svg class="w-full h-28" viewBox="0 0 260 95">
+                                    <!-- 1 -->
+                                    <circle cx="20" cy="70" r="5" fill="#fbbf24"/>
+                                    <text x="20" y="90" fill="#fff" font-size="12" text-anchor="middle">1</text>
+                                    <!-- 3 -->
+                                    <circle cx="65" cy="56" r="5" fill="#fbbf24"/>
+                                    <circle cx="58" cy="70" r="5" fill="#fbbf24"/><circle cx="72" cy="70" r="5" fill="#fbbf24"/>
+                                    <text x="65" y="90" fill="#fff" font-size="12" text-anchor="middle">3</text>
+                                    <!-- 6 -->
+                                    <circle cx="125" cy="42" r="5" fill="#fbbf24"/>
+                                    <circle cx="118" cy="56" r="5" fill="#fbbf24"/><circle cx="132" cy="56" r="5" fill="#fbbf24"/>
+                                    <circle cx="111" cy="70" r="5" fill="#fbbf24"/><circle cx="125" cy="70" r="5" fill="#fbbf24"/><circle cx="139" cy="70" r="5" fill="#fbbf24"/>
+                                    <text x="125" y="90" fill="#fff" font-size="12" text-anchor="middle">6</text>
+                                    <!-- 10 -->
+                                    <circle cx="205" cy="28" r="5" fill="#fbbf24"/>
+                                    <circle cx="198" cy="42" r="5" fill="#fbbf24"/><circle cx="212" cy="42" r="5" fill="#fbbf24"/>
+                                    <circle cx="191" cy="56" r="5" fill="#fbbf24"/><circle cx="205" cy="56" r="5" fill="#fbbf24"/><circle cx="219" cy="56" r="5" fill="#fbbf24"/>
+                                    <circle cx="184" cy="70" r="5" fill="#fbbf24"/><circle cx="198" cy="70" r="5" fill="#fbbf24"/><circle cx="212" cy="70" r="5" fill="#fbbf24"/><circle cx="226" cy="70" r="5" fill="#fbbf24"/>
+                                    <text x="205" y="90" fill="#fff" font-size="12" text-anchor="middle">10</text>
+                                </svg>
+                            </div>
+                            <!-- Square SVG -->
+                            <div class="bg-black/25 p-4 rounded-xl border border-white/10 flex flex-col items-center">
+                                <span class="text-base font-bold text-sky-300 mb-2">Square Numbers (1, 4, 9, 16)</span>
+                                <svg class="w-full h-28" viewBox="0 0 260 95">
+                                    <!-- 1 -->
+                                    <circle cx="20" cy="70" r="5" fill="#38bdf8"/>
+                                    <text x="20" y="90" fill="#fff" font-size="12" text-anchor="middle">1</text>
+                                    <!-- 4 -->
+                                    <circle cx="58" cy="56" r="5" fill="#38bdf8"/><circle cx="72" cy="56" r="5" fill="#38bdf8"/>
+                                    <circle cx="58" cy="70" r="5" fill="#38bdf8"/><circle cx="72" cy="70" r="5" fill="#38bdf8"/>
+                                    <text x="65" y="90" fill="#fff" font-size="12" text-anchor="middle">4</text>
+                                    <!-- 9 -->
+                                    <g fill="#38bdf8">
+                                        <circle cx="112" cy="42" r="5"/><circle cx="126" cy="42" r="5"/><circle cx="140" cy="42" r="5"/>
+                                        <circle cx="112" cy="56" r="5"/><circle cx="126" cy="56" r="5"/><circle cx="140" cy="56" r="5"/>
+                                        <circle cx="112" cy="70" r="5"/><circle cx="126" cy="70" r="5"/><circle cx="140" cy="70" r="5"/>
+                                    </g>
+                                    <text x="126" y="90" fill="#fff" font-size="12" text-anchor="middle">9</text>
+                                    <!-- 16 -->
+                                    <g fill="#38bdf8">
+                                        <circle cx="182" cy="28" r="5"/><circle cx="196" cy="28" r="5"/><circle cx="210" cy="28" r="5"/><circle cx="224" cy="28" r="5"/>
+                                        <circle cx="182" cy="42" r="5"/><circle cx="196" cy="42" r="5"/><circle cx="210" cy="42" r="5"/><circle cx="224" cy="42" r="5"/>
+                                        <circle cx="182" cy="56" r="5"/><circle cx="196" cy="56" r="5"/><circle cx="210" cy="56" r="5"/><circle cx="224" cy="56" r="5"/>
+                                        <circle cx="182" cy="70" r="5"/><circle cx="196" cy="70" r="5"/><circle cx="210" cy="70" r="5"/><circle cx="224" cy="70" r="5"/>
+                                    </g>
+                                    <text x="203" y="90" fill="#fff" font-size="12" text-anchor="middle">16</text>
+                                </svg>
+                            </div>
+                            <!-- Hexagonal SVG -->
+                            <div class="bg-black/25 p-4 rounded-xl border border-white/10 flex flex-col items-center">
+                                <span class="text-base font-bold text-rose-300 mb-2">Hexagonal Numbers (1, 7, 19)</span>
+                                <svg class="w-full h-28" viewBox="0 0 260 95">
+                                    <!-- 1 -->
+                                    <circle cx="35" cy="52" r="5" fill="#fb7185"/>
+                                    <text x="35" y="90" fill="#fff" font-size="12" text-anchor="middle">1</text>
+                                    <!-- 7 -->
+                                    <g fill="#fb7185">
+                                        <circle cx="105" cy="52" r="5"/>
+                                        <circle cx="105" cy="36" r="5"/><circle cx="105" cy="68" r="5"/>
+                                        <circle cx="91" cy="44" r="5"/><circle cx="119" cy="44" r="5"/>
+                                        <circle cx="91" cy="60" r="5"/><circle cx="119" cy="60" r="5"/>
+                                    </g>
+                                    <text x="105" y="90" fill="#fff" font-size="12" text-anchor="middle">7</text>
+                                    <!-- Next is 19, 37, 61 -->
+                                    <text x="195" y="42" fill="#fda4af" font-size="13" text-anchor="middle" font-weight="bold">1, 7, 19, 37...</text>
+                                    <text x="195" y="62" fill="#fff" font-size="12" text-anchor="middle">+6, +12, +18, +24</text>
+                                    <text x="195" y="84" fill="#4ade80" font-size="13" text-anchor="middle" font-weight="bold">Next: 37+24 = 61</text>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- L1 Slide 3 -->
+                <div class="topic-slide level-1-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 text-center text-white">
+                        Interactive Challenge
+                    </h2>
+                    
+                    <div class="bg-black/20 rounded-3xl p-8 md:p-10 border border-white/20 flex flex-col items-center justify-center shadow-inner mt-4">
+                        <h3 class="text-3xl font-heading text-center text-blue-100 mb-3">Virah&#257;nka Pyramid &amp; Sequence Detective</h3>
+                        <p class="text-center font-bold text-lg text-blue-200 mb-8 max-w-2xl">Part A: In a Virah&#257;nka-style addition pyramid, each block is the sum of the two blocks directly beneath it. Fill in the missing blocks!</p>
+                        
+                        <div class="flex flex-col items-center gap-3 w-full mb-8">
+                            <!-- Row 3 (Top) -->
+                            <div class="pyramid-row">
+                                <div class="pyramid-block"><input type="text" class="quiz-input" data-answer="21" placeholder="?"></div>
+                            </div>
+                            <!-- Row 2 -->
+                            <div class="pyramid-row">
+                                <div class="pyramid-block"><input type="text" class="quiz-input" data-answer="8" placeholder="?"></div>
+                                <div class="pyramid-block"><input type="text" class="quiz-input" data-answer="13" placeholder="?"></div>
+                            </div>
+                            <!-- Row 1 (Bottom) -->
+                            <div class="pyramid-row">
+                                <div class="pyramid-block bg-blue-600 border-blue-400 text-white">3</div>
+                                <div class="pyramid-block bg-blue-600 border-blue-400 text-white">5</div>
+                                <div class="pyramid-block bg-blue-600 border-blue-400 text-white">8</div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-3xl">
+                            <div class="flex items-center justify-between bg-white/10 p-4 rounded-2xl border border-white/20">
+                                <div>
+                                    <span class="font-bold text-lg block">Hexagonal Sequence: 1, 7, 19, 37, ?</span>
+                                    <span class="text-sm text-blue-200">Hint: Add 6, 12, 18, then 24!</span>
+                                </div>
+                                <input type="text" class="quiz-input w-24 p-3 text-center text-xl font-bold rounded-xl" data-answer="61" placeholder="#">
+                            </div>
+                            <div class="flex items-center justify-between bg-white/10 p-4 rounded-2xl border border-white/20">
+                                <div>
+                                    <span class="font-bold text-lg block">Both Triangular &amp; Square (&gt; 1):</span>
+                                    <span class="text-sm text-blue-200">Hint: 6 &times; 6 and 1+2+...+8</span>
+                                </div>
+                                <input type="text" class="quiz-input w-24 p-3 text-center text-xl font-bold rounded-xl" data-answer="36" placeholder="#">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-6 w-full mt-10 justify-center max-w-3xl mx-auto">
+                        <button onclick="openMoreExamples(1)" class="btn-more flex-1 py-4 rounded-2xl font-bold text-white text-xl flex items-center justify-center gap-3">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                            More Examples
+                        </button>
+                        <button onclick="openPdfExercise(1)" class="btn-exercise flex-1 py-4 rounded-2xl font-bold text-white text-xl flex items-center justify-center gap-3">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            Exercises
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ================= LEVEL 2 ================= -->
+                <!-- L2 Slide 1 -->
+                <div class="topic-slide level-2-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 flex items-center gap-4 text-white">
+                        <span class="bg-white text-blue-900 w-14 h-14 rounded-full flex items-center justify-center text-3xl shrink-0">2</span>
+                        Adding Odd Numbers &amp; Up-and-Down Sums
+                    </h2>
+                    
+                    <div class="study-box border-blue-400">
+                        <ul class="list-disc ml-8 space-y-4 text-xl text-blue-50">
+                            <li><strong>Sum of Consecutive Odd Numbers = Square Numbers!</strong><br>
+                                <span class="text-blue-200">1 = 1 (1<sup>2</sup>), &nbsp; 1+3 = 4 (2<sup>2</sup>), &nbsp; 1+3+5 = 9 (3<sup>2</sup>), &nbsp; 1+3+5+7+9+11 = 36 (6<sup>2</sup>).</span></li>
+                            <li><strong>Why?</strong> A square grid of <em>n</em> &times; <em>n</em> dots can be partitioned into <em>n</em> L-shaped layers containing 1, 3, 5, 7, &hellip;, (2<em>n</em> &minus; 1) dots!</li>
+                            <li><strong>Adding Counting Numbers Up and Down = Square Numbers!</strong><br>
+                                <span class="text-blue-200">1 = 1, &nbsp; 1+2+1 = 4, &nbsp; 1+2+3+2+1 = 9, &nbsp; 1+2+3+4+3+2+1 = 16.</span><br>
+                                Reading a square grid along its diagonals counts 1, 2, 3, &hellip;, <em>n</em>, &hellip;, 3, 2, 1 dots, which equals <strong><em>n</em><sup>2</sup></strong>!</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-blue-900/60 border-l-8 border-blue-400 p-8 rounded-r-2xl shadow-xl mt-6">
+                        <h4 class="font-bold text-white mb-4 text-3xl flex items-center gap-3">
+                            <svg class="w-8 h-8 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                            Visual Proof from Textbook (Pages 7 &amp; 15)
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center mt-4">
+                            <div class="bg-black/25 p-5 rounded-xl border border-white/10 flex flex-col items-center">
+                                <p class="text-lg font-bold text-amber-300 mb-3">L-Shaped Partition: 1+3+5+7+9+11 = 36</p>
+                                <svg class="w-48 h-48" viewBox="0 0 150 150">
+                                    <!-- L-partition lines -->
+                                    <polyline points="12,115 35,115 35,138" fill="none" stroke="#f87171" stroke-width="2"/>
+                                    <polyline points="12,95 55,95 55,138" fill="none" stroke="#f87171" stroke-width="2"/>
+                                    <polyline points="12,75 75,75 75,138" fill="none" stroke="#f87171" stroke-width="2"/>
+                                    <polyline points="12,55 95,55 95,138" fill="none" stroke="#f87171" stroke-width="2"/>
+                                    <polyline points="12,35 115,35 115,138" fill="none" stroke="#f87171" stroke-width="2"/>
+                                    <polyline points="12,15 135,15 135,138" fill="none" stroke="#f87171" stroke-width="2"/>
+                                    <!-- 6x6 dots -->
+                                    <g fill="#fde047">
+                                        <!-- row 1 (y=25) -->
+                                        <circle cx="25" cy="25" r="4.5"/><circle cx="45" cy="25" r="4.5"/><circle cx="65" cy="25" r="4.5"/><circle cx="85" cy="25" r="4.5"/><circle cx="105" cy="25" r="4.5"/><circle cx="125" cy="25" r="4.5"/>
+                                        <!-- row 2 (y=45) -->
+                                        <circle cx="25" cy="45" r="4.5"/><circle cx="45" cy="45" r="4.5"/><circle cx="65" cy="45" r="4.5"/><circle cx="85" cy="45" r="4.5"/><circle cx="105" cy="45" r="4.5"/><circle cx="125" cy="45" r="4.5"/>
+                                        <!-- row 3 (y=65) -->
+                                        <circle cx="25" cy="65" r="4.5"/><circle cx="45" cy="65" r="4.5"/><circle cx="65" cy="65" r="4.5"/><circle cx="85" cy="65" r="4.5"/><circle cx="105" cy="65" r="4.5"/><circle cx="125" cy="65" r="4.5"/>
+                                        <!-- row 4 (y=85) -->
+                                        <circle cx="25" cy="85" r="4.5"/><circle cx="45" cy="85" r="4.5"/><circle cx="65" cy="85" r="4.5"/><circle cx="85" cy="85" r="4.5"/><circle cx="105" cy="85" r="4.5"/><circle cx="125" cy="85" r="4.5"/>
+                                        <!-- row 5 (y=105) -->
+                                        <circle cx="25" cy="105" r="4.5"/><circle cx="45" cy="105" r="4.5"/><circle cx="65" cy="105" r="4.5"/><circle cx="85" cy="105" r="4.5"/><circle cx="105" cy="105" r="4.5"/><circle cx="125" cy="105" r="4.5"/>
+                                        <!-- row 6 (y=125) -->
+                                        <circle cx="25" cy="125" r="4.5"/><circle cx="45" cy="125" r="4.5"/><circle cx="65" cy="125" r="4.5"/><circle cx="85" cy="125" r="4.5"/><circle cx="105" cy="125" r="4.5"/><circle cx="125" cy="125" r="4.5"/>
+                                    </g>
+                                </svg>
+                            </div>
+                            <div class="bg-black/25 p-5 rounded-xl border border-white/10 space-y-3">
+                                <p class="text-xl font-bold text-green-300">Fast Mental Power:</p>
+                                <p class="text-lg text-blue-50">&bull; Sum of first <strong>10 odd numbers</strong> = 10 &times; 10 = <strong class="text-white">100</strong>.</p>
+                                <p class="text-lg text-blue-50">&bull; Sum of first <strong>100 odd numbers</strong> = 100 &times; 100 = <strong class="text-white">10,000</strong>.</p>
+                                <p class="text-lg text-blue-50">&bull; Up &amp; Down to 100:<br><code class="text-sm bg-black/40 px-2 py-1 rounded">1+2+...+99+100+99+...+2+1</code> = 100<sup>2</sup> = <strong class="text-white">10,000</strong>.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- L2 Slide 2 -->
+                <div class="topic-slide level-2-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 flex items-center gap-4 text-white">
+                        <span class="bg-white text-blue-900 w-14 h-14 rounded-full flex items-center justify-center text-3xl shrink-0">2</span>
+                        More Surprising Sequence Relations
+                    </h2>
+                    
+                    <div class="study-box border-purple-400">
+                        <ul class="list-disc ml-8 space-y-4 text-xl text-blue-50">
+                            <li><strong>Adding Counting Numbers Up:</strong> 1, 1+2=3, 1+2+3=6, 1+2+3+4=10 &rarr; gives the <strong>Triangular numbers</strong>!</li>
+                            <li><strong>Consecutive Triangular Numbers:</strong> 1+3 = <strong>4</strong>, 3+6 = <strong>9</strong>, 6+10 = <strong>16</strong>, 10+15 = <strong>25</strong> &rarr; gives the <strong>Square numbers</strong>! (Two right-angled triangles fit together to form a square!)</li>
+                            <li><strong>Adding Powers of 2:</strong> 1=1, 1+2=3, 1+2+4=7, 1+2+4+8=15, 1+2+4+8+16=31. Adding <strong>1</strong> to each gives <strong>2, 4, 8, 16, 32</strong> (the next Power of 2)!</li>
+                            <li><strong>Triangular &times; 6 + 1:</strong> (1&times;6)+1 = <strong>7</strong>, (3&times;6)+1 = <strong>19</strong>, (6&times;6)+1 = <strong>37</strong>, (10&times;6)+1 = <strong>61</strong> &rarr; gives the <strong>Hexagonal numbers</strong>!</li>
+                            <li><strong>Adding Hexagonal Numbers:</strong> 1 = <strong>1</strong>, 1+7 = <strong>8</strong>, 1+7+19 = <strong>27</strong>, 1+7+19+37 = <strong>64</strong> &rarr; gives the <strong>Cube numbers</strong>!</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-blue-900/60 border-l-8 border-purple-400 p-8 rounded-r-2xl shadow-xl mt-6">
+                        <h4 class="font-bold text-white mb-4 text-3xl flex items-center gap-3">
+                            <svg class="w-8 h-8 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                            Solved Example: Why 6 &times; Triangular + 1 = Hexagonal
+                        </h4>
+                        <p class="text-xl text-blue-100 mt-2">A hexagon has <strong>1 centre dot</strong> surrounded by <strong>6 identical triangular wedges</strong>! For the 4th hexagonal number, each of the 6 wedges is the 3rd triangular number (6 dots), so total dots = <strong>(6 &times; 6) + 1 = 37</strong>.</p>
+                    </div>
+                </div>
+
+                <!-- L2 Slide 3 -->
+                <div class="topic-slide level-2-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 text-center text-white">
+                        Interactive Challenge
+                    </h2>
+                    
+                    <div class="bg-black/20 rounded-3xl p-8 md:p-10 border border-white/20 flex flex-col items-center justify-center shadow-inner mt-4">
+                        <p class="text-center font-bold text-2xl text-blue-200 mb-8">Test your mastery of relationships among number sequences!</p>
+                        
+                        <div class="flex flex-col gap-6 w-full max-w-3xl">
+                            <div class="flex flex-col w-full bg-white/10 p-5 rounded-2xl border border-white/20 gap-2">
+                                <span class="font-bold text-xl">1. What is the sum of the first 10 odd numbers (1 + 3 + 5 + ... + 19)?</span>
+                                <div class="flex justify-between items-center mt-1">
+                                    <span class="text-base text-blue-200">Hint: Sum of first n odd numbers = n<sup>2</sup>.</span>
+                                    <input type="text" class="quiz-input w-32 p-3 text-center text-2xl font-bold rounded-xl" data-answer="100" placeholder="#">
+                                </div>
+                            </div>
+                            
+                            <div class="flex flex-col w-full bg-white/10 p-5 rounded-2xl border border-white/20 gap-2">
+                                <span class="font-bold text-xl">2. Find the value of 1 + 2 + 3 + ... + 99 + 100 + 99 + ... + 3 + 2 + 1.</span>
+                                <div class="flex justify-between items-center mt-1">
+                                    <span class="text-base text-blue-200">Hint: Adding up to 100 and back down gives 100<sup>2</sup>.</span>
+                                    <input type="text" class="quiz-input w-32 p-3 text-center text-2xl font-bold rounded-xl" data-answer="10000|10,000" placeholder="#">
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/10 p-5 rounded-2xl border border-white/20 gap-2">
+                                <span class="font-bold text-xl">3. Add the first four Hexagonal numbers: 1 + 7 + 19 + 37 = ?</span>
+                                <div class="flex justify-between items-center mt-1">
+                                    <span class="text-base text-blue-200">Hint: Adding hexagonal numbers gives the Cube numbers (4<sup>3</sup>)!</span>
+                                    <input type="text" class="quiz-input w-32 p-3 text-center text-2xl font-bold rounded-xl" data-answer="64" placeholder="#">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-6 w-full mt-10 justify-center max-w-3xl mx-auto">
+                        <button onclick="openMoreExamples(2)" class="btn-more flex-1 py-4 rounded-2xl font-bold text-white text-xl flex items-center justify-center gap-3">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                            More Examples
+                        </button>
+                        <button onclick="openPdfExercise(2)" class="btn-exercise flex-1 py-4 rounded-2xl font-bold text-white text-xl flex items-center justify-center gap-3">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            Exercises
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ================= LEVEL 3 ================= -->
+                <!-- L3 Slide 1 -->
+                <div class="topic-slide level-3-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 flex items-center gap-4 text-white">
+                        <span class="bg-white text-blue-900 w-14 h-14 rounded-full flex items-center justify-center text-3xl shrink-0">3</span>
+                        Regular Polygons &amp; Complete Graphs (Table 3)
+                    </h2>
+                    
+                    <div class="study-box border-blue-400">
+                        <ul class="list-disc ml-8 space-y-4 text-xl text-blue-50">
+                            <li><strong>Geometry</strong> is the branch of Mathematics that studies patterns in shapes (in 1D, 2D, 3D, and beyond).</li>
+                            <li><strong>Regular Polygons:</strong> Shapes with equal-length sides and equal angles—Triangle (3), Square/Quadrilateral (4), Pentagon (5), Hexagon (6), Heptagon (7), Octagon (8), Nonagon (9), Decagon (10).
+                                <br><span class="text-blue-200">&rarr; Both the <strong>number of sides</strong> and <strong>number of corners</strong> give the counting sequence starting at 3: <strong>3, 4, 5, 6, 7, 8, 9, 10, &hellip;</strong></span></li>
+                            <li><strong>Complete Graphs (K2, K3, K4, K5, K6):</strong> Connect every vertex to every other vertex with a straight line.
+                                <br><span class="text-blue-200">&rarr; Total lines in K2, K3, K4, K5, K6 are <strong>1, 3, 6, 10, 15, &hellip;</strong> (the <strong>Triangular Numbers</strong>!).</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-blue-900/60 border-l-8 border-blue-400 p-8 rounded-r-2xl shadow-xl mt-6">
+                        <h4 class="font-bold text-white mb-4 text-3xl flex items-center gap-3">
+                            <svg class="w-8 h-8 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                            Visualising Complete Graphs (K2 to K5)
+                        </h4>
+                        <svg class="w-full h-36 bg-black/25 rounded-xl p-2 border border-white/10" viewBox="0 0 500 120">
+                            <!-- K2 -->
+                            <line x1="30" y1="60" x2="80" y2="60" stroke="#93c5fd" stroke-width="2.5"/>
+                            <circle cx="30" cy="60" r="4" fill="#f87171"/><circle cx="80" cy="60" r="4" fill="#f87171"/>
+                            <text x="55" y="105" fill="#fff" font-size="13" text-anchor="middle" font-weight="bold">K2 (1 line)</text>
+                            <!-- K3 -->
+                            <polygon points="160,25 130,80 190,80" fill="none" stroke="#93c5fd" stroke-width="2.5"/>
+                            <circle cx="160" cy="25" r="4" fill="#f87171"/><circle cx="130" cy="80" r="4" fill="#f87171"/><circle cx="190" cy="80" r="4" fill="#f87171"/>
+                            <text x="160" y="105" fill="#fff" font-size="13" text-anchor="middle" font-weight="bold">K3 (3 lines)</text>
+                            <!-- K4 -->
+                            <rect x="245" y="25" width="55" height="55" fill="none" stroke="#93c5fd" stroke-width="2.5"/>
+                            <line x1="245" y1="25" x2="300" y2="80" stroke="#93c5fd" stroke-width="2"/>
+                            <line x1="300" y1="25" x2="245" y2="80" stroke="#93c5fd" stroke-width="2"/>
+                            <circle cx="245" cy="25" r="4" fill="#f87171"/><circle cx="300" cy="25" r="4" fill="#f87171"/>
+                            <circle cx="245" cy="80" r="4" fill="#f87171"/><circle cx="300" cy="80" r="4" fill="#f87171"/>
+                            <text x="272" y="105" fill="#fff" font-size="13" text-anchor="middle" font-weight="bold">K4 (6 lines)</text>
+                            <!-- K5 -->
+                            <polygon points="405,20 438,44 425,82 385,82 372,44" fill="none" stroke="#93c5fd" stroke-width="2"/>
+                            <polygon points="405,20 425,82 372,44 438,44 385,82" fill="none" stroke="#60a5fa" stroke-width="1.8"/>
+                            <circle cx="405" cy="20" r="4" fill="#f87171"/><circle cx="438" cy="44" r="4" fill="#f87171"/>
+                            <circle cx="425" cy="82" r="4" fill="#f87171"/><circle cx="385" cy="82" r="4" fill="#f87171"/><circle cx="372" cy="44" r="4" fill="#f87171"/>
+                            <text x="405" y="105" fill="#fff" font-size="13" text-anchor="middle" font-weight="bold">K5 (10 lines)</text>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- L3 Slide 2 -->
+                <div class="topic-slide level-3-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 flex items-center gap-4 text-white">
+                        <span class="bg-white text-blue-900 w-14 h-14 rounded-full flex items-center justify-center text-3xl shrink-0">3</span>
+                        Stacked Shapes &amp; Koch Snowflake
+                    </h2>
+                    
+                    <div class="study-box border-orange-400">
+                        <ul class="list-disc ml-8 space-y-4 text-xl text-blue-50">
+                            <li><strong>Stacked Squares:</strong> 1&times;1, 2&times;2, 3&times;3, 4&times;4, 5&times;5 grids contain <strong>1, 4, 9, 16, 25, &hellip;</strong> small squares (the <strong>Square number sequence</strong>).</li>
+                            <li><strong>Stacked Triangles:</strong> Each row from top to bottom has 1, 3, 5, 7, 9 little triangles! Since adding odd numbers (1, 1+3, 1+3+5, &hellip;) or adding up-and-down (1+2+3+2+1) gives squares, the total little triangles are ALSO <strong>1, 4, 9, 16, 25, &hellip; (Square numbers)</strong>!</li>
+                            <li><strong>Koch Snowflake Sequence:</strong> Start with an equilateral triangle (<strong>3</strong> segments). In each step, every straight segment <code class="bg-black/30 px-2 rounded">&mdash;</code> is replaced by a <strong>4-segment &ldquo;speed bump&rdquo;</strong> <code class="bg-black/30 px-2 rounded">_/\_</code>.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-blue-900/60 border-l-8 border-orange-400 p-8 rounded-r-2xl shadow-xl mt-6">
+                        <h4 class="font-bold text-white mb-4 text-3xl flex items-center gap-3">
+                            <svg class="w-8 h-8 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                            Solved Example: Koch Snowflake Line Segments
+                        </h4>
+                        <p class="text-2xl font-bold mt-2 text-blue-100">How many total line segments are in the first 5 shapes of the Koch Snowflake?</p>
+                        <ul class="list-decimal ml-8 text-xl text-blue-100 space-y-2 mt-4">
+                            <li>Shape 1 (Triangle): <strong class="text-white">3</strong> segments.</li>
+                            <li>Shape 2: 3 &times; 4 = <strong class="text-white">12</strong> segments.</li>
+                            <li>Shape 3: 12 &times; 4 = 3 &times; 4<sup>2</sup> = <strong class="text-white">48</strong> segments.</li>
+                            <li>Shape 4: 48 &times; 4 = 3 &times; 4<sup>3</sup> = <strong class="text-white">192</strong> segments; &nbsp; Shape 5: 192 &times; 4 = <strong class="text-white">768</strong> segments (3 times Powers of 4!).</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- L3 Slide 3 -->
+                <div class="topic-slide level-3-slide">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 text-center text-white">
+                        Interactive Challenge
+                    </h2>
+                    
+                    <div class="bg-black/20 rounded-3xl p-8 md:p-10 border border-white/20 flex flex-col items-center justify-center shadow-inner mt-4">
+                        <p class="text-center font-bold text-2xl text-blue-200 mb-8">Connect shape sequences to their matching number sequences!</p>
+                        
+                        <div class="flex flex-col gap-6 w-full max-w-3xl">
+                            <div class="flex flex-col w-full bg-white/10 p-5 rounded-2xl border border-white/20 gap-2">
+                                <span class="font-bold text-xl">1. How many straight lines are in the Complete Graph K6 (6 vertices)?</span>
+                                <div class="flex justify-between items-center mt-1">
+                                    <span class="text-base text-blue-200">Hint: K2=1, K3=3, K4=6, K5=10, so K6 is the 5th triangular number!</span>
+                                    <input type="text" class="quiz-input w-32 p-3 text-center text-2xl font-bold rounded-xl" data-answer="15" placeholder="#">
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/10 p-5 rounded-2xl border border-white/20 gap-2">
+                                <span class="font-bold text-xl">2. How many little triangles are in the 5th Stacked Triangle (5 rows)?</span>
+                                <div class="flex justify-between items-center mt-1">
+                                    <span class="text-base text-blue-200">Hint: Row counts are 1 + 3 + 5 + 7 + 9 = 5<sup>2</sup>.</span>
+                                    <input type="text" class="quiz-input w-32 p-3 text-center text-2xl font-bold rounded-xl" data-answer="25" placeholder="#">
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/10 p-5 rounded-2xl border border-white/20 gap-2">
+                                <span class="font-bold text-xl">3. In the Koch Snowflake (3, 12, 48, ...), how many segments are in the 4th shape?</span>
+                                <div class="flex justify-between items-center mt-1">
+                                    <span class="text-base text-blue-200">Hint: Multiply 48 by 4!</span>
+                                    <input type="text" class="quiz-input w-32 p-3 text-center text-2xl font-bold rounded-xl" data-answer="192" placeholder="#">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-6 w-full mt-10 justify-center max-w-3xl mx-auto">
+                        <button onclick="openMoreExamples(3)" class="btn-more flex-1 py-4 rounded-2xl font-bold text-white text-xl flex items-center justify-center gap-3">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                            More Examples
+                        </button>
+                        <button onclick="openPdfExercise(3)" class="btn-exercise flex-1 py-4 rounded-2xl font-bold text-white text-xl flex items-center justify-center gap-3">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            Exercises
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Global Slide Navigation Dots -->
+            <div id="slide-indicators" class="slide-indicator-dots">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MORE EXAMPLES SECONDARY MODAL -->
+    <div id="examples-modal" class="modal-overlay hidden items-center justify-center z-[70]">
+        <div class="glass-panel w-full max-w-2xl rounded-3xl p-6 md:p-8 relative">
+            <button onclick="closeMoreExamples()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-colors border border-white/40 z-10">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <h3 class="text-2xl font-heading font-bold mb-6 text-white text-center border-b border-white/20 pb-4 flex items-center justify-center gap-3">
+                <svg class="w-7 h-7 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/></svg>
+                Bonus Examples
+            </h3>
+
+            <!-- Extra Examples for Level 1 -->
+            <div id="extra-level-1" class="extra-content space-y-4 hidden">
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Find the next number in the Triangular sequence: 1, 3, 6, 10, 15, 21, 28, ?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="36" placeholder="#">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Find the next number in the Virah&#257;nka sequence: 1, 2, 3, 5, 8, 13, 21, ?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="34" placeholder="#">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Find the next Cube number after 216 (6<sup>3</sup>): 1, 8, 27, 64, 125, 216, ?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="343" placeholder="#">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Find the next Power of 2: 1, 2, 4, 8, 16, 32, 64, ?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="128" placeholder="#">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Find the 6th Hexagonal number: 1, 7, 19, 37, 61, ? (Hint: +30)</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="91" placeholder="#">
+                </div>
+            </div>
+
+            <!-- Extra Examples for Level 2 -->
+            <div id="extra-level-2" class="extra-content space-y-4 hidden">
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">What is the sum of the first 12 odd numbers (1 + 3 + 5 + ... + 23)?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="144" placeholder="#">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Work out the up-and-down sum: 1 + 2 + 3 + 4 + 5 + 6 + 7 + 6 + 5 + 4 + 3 + 2 + 1</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="49" placeholder="#">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Add consecutive triangular numbers: 15 + 21 = ?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="36" placeholder="#">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Calculate (1 + 2 + 4 + 8 + 16) + 1 = ?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="32" placeholder="#">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">Multiply the 4th triangular number (10) by 6 and add 1: (10 &times; 6) + 1 = ?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="61" placeholder="#">
+                </div>
+            </div>
+
+            <!-- Extra Examples for Level 3 -->
+            <div id="extra-level-3" class="extra-content space-y-4 hidden">
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">How many corners (vertices) does a Regular Decagon (10 sides) have?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="10" placeholder="#">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">How many total lines are in Complete Graph K7 (6th Triangular number)?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="21" placeholder="#">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">How many little triangles are in the 6th Stacked Triangle (6 rows)?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="36" placeholder="#">
+                </div>
+                <div class="flex items-center justify-between w-full bg-white/10 p-4 rounded-xl border border-white/20">
+                    <span class="font-bold text-sm mr-4 w-3/4">How many line segments are in the 5th Koch Snowflake (192 &times; 4)?</span>
+                    <input type="text" class="quiz-input w-28 p-2 text-center text-sm font-bold rounded-lg" data-answer="768" placeholder="#">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- PDF EXERCISE MODAL -->
+    <div id="pdf-exercise-modal" class="modal-overlay hidden items-center justify-center z-[80]">
+        <div class="glass-panel w-full max-w-5xl rounded-3xl p-6 md:p-8 relative h-[90vh] flex flex-col">
+            <button onclick="closePdfExercise()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white text-white hover:text-blue-900 flex items-center justify-center transition-colors border border-white/40 z-10">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <h3 class="text-3xl font-heading font-bold mb-6 text-white text-center border-b border-white/20 pb-4 flex items-center justify-center gap-3 shrink-0">
+                <svg class="w-8 h-8 text-purple-400" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4zm0 15l3-3.86 2.14 2.58 3-3.86L18 19H6z"/></svg>
+                Complete PDF Exercises (Figure it Out &amp; Extra Practice)
+            </h3>
+
+            <div class="relative flex-grow flex flex-col overflow-hidden pb-16">
+                
+                <!-- PDF Exercise Level 1 -->
+                <div id="pdf-level-1" class="pdf-content hidden h-full overflow-y-auto custom-scroll pr-4">
+                    
+                    <!-- Focus -->
+                    <div class="exercise-page bg-blue-900/40 p-5 rounded-2xl border border-blue-400/30">
+                        <h4 class="text-xl font-bold text-blue-300 mb-4 border-b border-blue-400/30 pb-2">Focus (Easy) &mdash; Table 1 Sequences (Pages 3 &amp; 4)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q1. Write the next number in each basic sequence from Table 1:</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) Odd numbers: 1, 3, 5, 7, 9, 11, 13, ?</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="15"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) Even numbers: 2, 4, 6, 8, 10, 12, 14, ?</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="16"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) Squares: 1, 4, 9, 16, 25, 36, 49, ?</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="64"></div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q2. Identify the next picture count for Table 2 sequences (Page 5 Q1):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) Next Triangular dot picture after 15 (5th):</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="21"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) Next Square dot grid after 25 (5&times;5):</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="36"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) Next 3D Cube after 125 (5&times;5&times;5):</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="216"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Practice -->
+                    <div class="exercise-page hidden bg-purple-900/40 p-5 rounded-2xl border border-purple-400/30">
+                        <h4 class="text-xl font-bold text-purple-300 mb-4 border-b border-purple-400/30 pb-2">Practice (Medium) &mdash; Next Three Numbers (Page 3 Q2)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q3. Write the next three numbers in each sequence (comma-separated):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) Triangular: 1, 3, 6, 10, 15, 21, 28, ...</span><input type="text" class="quiz-input w-36 p-2 text-center text-xs font-bold rounded-lg" data-answer="36,45,55" placeholder="e.g. 36,45,55"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) Virah&#257;nka: 1, 2, 3, 5, 8, 13, 21, ...</span><input type="text" class="quiz-input w-36 p-2 text-center text-xs font-bold rounded-lg" data-answer="34,55,89" placeholder="e.g. 34,55,89"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) Powers of 2: 1, 2, 4, 8, 16, 32, 64, ...</span><input type="text" class="quiz-input w-36 p-2 text-center text-xs font-bold rounded-lg" data-answer="128,256,512" placeholder="128,256,512"></div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q4. Powers of 3 &amp; Hexagonal Numbers (Pages 3 &amp; 5):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) 8th term of Powers of 3 (after 729):</span><input type="text" class="quiz-input w-28 p-2 text-center text-xs font-bold rounded-lg" data-answer="2187"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) 5th Hexagonal number (after 1, 7, 19, 37):</span><input type="text" class="quiz-input w-28 p-2 text-center text-xs font-bold rounded-lg" data-answer="61"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) 6th Hexagonal number (after 61):</span><input type="text" class="quiz-input w-28 p-2 text-center text-xs font-bold rounded-lg" data-answer="91"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Challenge -->
+                    <div class="exercise-page hidden bg-red-900/40 p-5 rounded-2xl border border-red-400/30">
+                        <h4 class="text-xl font-bold text-red-300 mb-4 border-b border-red-400/30 pb-2">Challenge (Hard) &mdash; Dual-Role Numbers &amp; Higher Powers (Page 5 Q3 &amp; Q5)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q5. Dual-Role Numbers (Page 5 Q3):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) 36 is the 6th square. Which triangular number is 36? (nth)</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="8|8th"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) Which number (&gt;1) is BOTH a Square (8<sup>2</sup>) and a Cube (4<sup>3</sup>)?</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="64"></div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q6. Visualising Powers of 2 &amp; 3 (Page 14 Solutions):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) A 3D cube of side 2 has 8 corners. How many corners in 2 such cubes (2<sup>4</sup>)?</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="16"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) How many dots in the 4th step of Powers of 3 (1, 3, 9, ?)?</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="27"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PDF Exercise Level 2 -->
+                <div id="pdf-level-2" class="pdf-content hidden h-full overflow-y-auto custom-scroll pr-4">
+                    
+                    <!-- Focus -->
+                    <div class="exercise-page bg-blue-900/40 p-5 rounded-2xl border border-blue-400/30">
+                        <h4 class="text-xl font-bold text-blue-300 mb-4 border-b border-blue-400/30 pb-2">Focus (Easy) &mdash; Odd Numbers &amp; Up-and-Down Sums (Pages 7 &amp; 8)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q1. Sum of Consecutive Odd Numbers (Page 7):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) Sum of first 10 odd numbers:</span><input type="text" class="quiz-input w-28 p-2 text-center text-xs font-bold rounded-lg" data-answer="100"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) Sum of first 100 odd numbers:</span><input type="text" class="quiz-input w-28 p-2 text-center text-xs font-bold rounded-lg" data-answer="10000|10,000"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) 1 + 3 + 5 + 7 + 9 + 11 + 13 = ?</span><input type="text" class="quiz-input w-28 p-2 text-center text-xs font-bold rounded-lg" data-answer="49"></div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q2. Adding Up and Down (Page 8 Q1, Q2, Q3):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) 1 + 2 + ... + 99 + 100 + 99 + ... + 2 + 1 = ?</span><input type="text" class="quiz-input w-28 p-2 text-center text-xs font-bold rounded-lg" data-answer="10000|10,000"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) Adding All 1&rsquo;s up (1, 1+1, 1+1+1, ...) gives which sequence?</span><input type="text" class="quiz-input w-28 p-2 text-center text-xs font-bold rounded-lg" data-answer="counting|countingnumbers" placeholder="name"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) Adding Counting numbers up (1, 1+2, 1+2+3, ...) gives:</span><input type="text" class="quiz-input w-28 p-2 text-center text-xs font-bold rounded-lg" data-answer="triangular|triangularnumbers" placeholder="name"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Practice -->
+                    <div class="exercise-page hidden bg-purple-900/40 p-5 rounded-2xl border border-purple-400/30">
+                        <h4 class="text-xl font-bold text-purple-300 mb-4 border-b border-purple-400/30 pb-2">Practice (Medium) &mdash; Consecutive Triangulars &amp; Powers of 2 (Page 8 Q5 &amp; Q6)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q3. Add pairs of consecutive triangular numbers (Page 8 Q5):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) 1 + 3 = 4, 3 + 6 = 9, 6 + 10 = ?</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="16"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) 10 + 15 = ?</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="25"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) Which sequence do you get?</span><input type="text" class="quiz-input w-28 p-2 text-center text-xs font-bold rounded-lg" data-answer="squares|square|squarenumbers" placeholder="name"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q4. Adding Powers of 2 starting with 1 (Page 8 Q6):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) 1 + 2 + 4 + 8 = ?</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="15"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) 1 + 2 + 4 + 8 + 16 = ?</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="31"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) Add 1 to 31: what power of 2 do you get?</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="32"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Challenge -->
+                    <div class="exercise-page hidden bg-red-900/40 p-5 rounded-2xl border border-red-400/30">
+                        <h4 class="text-xl font-bold text-red-300 mb-4 border-b border-red-400/30 pb-2">Challenge (Hard) &mdash; Hexagonal &amp; Cube Connections (Page 9 Q7 &amp; Q8)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q5. Multiply Triangular numbers by 6 and add 1 (Page 9 Q7):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) (6 &times; 6) + 1 = ?</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="37"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) (15 &times; 6) + 1 = ?</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="91"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) Which sequence is 1, 7, 19, 37, 61, 91?</span><input type="text" class="quiz-input w-28 p-2 text-center text-xs font-bold rounded-lg" data-answer="hexagonal|hexagonalnumbers" placeholder="name"></div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q6. Sum of Hexagonal Numbers = Cubes (Page 9 Q8):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) 1 + 7 + 19 = ?</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="27"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) 1 + 7 + 19 + 37 + 61 = ? (5<sup>3</sup>)</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="125"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) Which sequence do you get?</span><input type="text" class="quiz-input w-28 p-2 text-center text-xs font-bold rounded-lg" data-answer="cubes|cube|cubenumbers" placeholder="name"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PDF Exercise Level 3 -->
+                <div id="pdf-level-3" class="pdf-content hidden h-full overflow-y-auto custom-scroll pr-4">
+                    
+                    <!-- Focus -->
+                    <div class="exercise-page bg-blue-900/40 p-5 rounded-2xl border border-blue-400/30">
+                        <h4 class="text-xl font-bold text-blue-300 mb-4 border-b border-blue-400/30 pb-2">Focus (Easy) &mdash; Regular Polygons &amp; Complete Graphs (Page 11 Q1 &amp; Q2)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q1. Regular Polygons (Page 11 Q1):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) Number of sides in a Regular Octagon:</span><input type="text" class="quiz-input w-20 p-1 text-center text-xs font-bold rounded-lg" data-answer="8"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) Number of corners in a Regular Nonagon:</span><input type="text" class="quiz-input w-20 p-1 text-center text-xs font-bold rounded-lg" data-answer="9"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) Next shape after Decagon (10 sides) has how many sides?</span><input type="text" class="quiz-input w-20 p-1 text-center text-xs font-bold rounded-lg" data-answer="11"></div>
+                                </div>
+                            </div>
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm">Q2. Complete Graphs (Page 11 Q2):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) Number of lines in K4:</span><input type="text" class="quiz-input w-20 p-1 text-center text-xs font-bold rounded-lg" data-answer="6"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) Number of lines in K5:</span><input type="text" class="quiz-input w-20 p-1 text-center text-xs font-bold rounded-lg" data-answer="10"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) Number of lines in K6:</span><input type="text" class="quiz-input w-20 p-1 text-center text-xs font-bold rounded-lg" data-answer="15"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Practice -->
+                    <div class="exercise-page hidden bg-purple-900/40 p-5 rounded-2xl border border-purple-400/30">
+                        <h4 class="text-xl font-bold text-purple-300 mb-4 border-b border-purple-400/30 pb-2">Practice (Medium) &mdash; Stacked Squares &amp; Triangles (Page 12 Q3 &amp; Q4)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm w-full">Q3. Stacked Squares (Page 12 Q3):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) Little squares in the 4th shape (4&times;4):</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="16"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) Little squares in the 6th shape (6&times;6):</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="36"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm w-full">Q4. Stacked Triangles (Page 12 Q4):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) Little triangles in 4th shape (1+3+5+7):</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="16"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) How many little triangles are in the 5th row alone?</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="9"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Challenge -->
+                    <div class="exercise-page hidden bg-red-900/40 p-5 rounded-2xl border border-red-400/30">
+                        <h4 class="text-xl font-bold text-red-300 mb-4 border-b border-red-400/30 pb-2">Challenge (Hard) &mdash; Koch Snowflake Fractal (Page 12 Q5)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm w-full">Q5. Koch Snowflake Segments (3 &times; Powers of 4):</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) Segments in 3rd shape (3 &times; 4 &times; 4):</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="48"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) Segments in 4th shape (3 &times; 4<sup>3</sup>):</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="192"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">c) Segments in 5th shape (3 &times; 4<sup>4</sup>):</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="768"></div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full bg-white/5 p-4 rounded-xl border border-white/10 gap-3">
+                                <span class="font-bold text-sm w-full">Q6. Advanced Shape-Number Synthesis:</span>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between"><span class="text-xs">a) How many lines in Complete Graph K8 (7th Triangular number)?</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="28"></div>
+                                    <div class="flex items-center justify-between"><span class="text-xs">b) Difference between little triangles in 8th and 7th Stacked Triangles (8<sup>2</sup> &minus; 7<sup>2</sup>):</span><input type="text" class="quiz-input w-24 p-2 text-center text-xs font-bold rounded-lg" data-answer="15"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- NAVIGATION BUTTONS FOOTER -->
+                <div class="absolute bottom-0 left-0 right-0 flex justify-between items-center pt-4 bg-transparent z-10 border-t border-white/20">
+                    <button id="ex-prev-btn" onclick="prevExercisePage()" class="px-6 py-2 bg-white/20 hover:bg-white/30 rounded-xl font-bold transition-all text-white flex items-center gap-2 invisible">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg> Previous
+                    </button>
+                    <span id="ex-page-indicator" class="text-white/60 font-bold text-sm tracking-wide"></span>
+                    <button id="ex-next-btn" onclick="nextExercisePage()" class="px-6 py-2 bg-purple-600 hover:bg-purple-500 shadow-lg rounded-xl font-bold transition-all text-white flex items-center gap-2 invisible">
+                        Next <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('quest-modal');
+        const nextBtn = document.getElementById('next-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const slidesContainer = document.getElementById('slides-container');
+        const indicators = document.getElementById('slide-indicators');
+        
+        const examplesModal = document.getElementById('examples-modal');
+        const pdfExerciseModal = document.getElementById('pdf-exercise-modal');
+
+        let currentLevel = 1;
+        let currentSlideIndex = 0;
+        let allSlides = [];
+
+        function initSlides() {
+            allSlides = Array.from(document.querySelectorAll('.topic-slide'));
+        }
+
+        function openLevel(level) {
+            document.querySelectorAll('.quest-node').forEach((n, i) => n.classList.toggle('active', i + 1 === level));
+            currentLevel = level;
+            
+            const targetClass = `level-${level}-slide`;
+            currentSlideIndex = allSlides.findIndex(slide => slide.classList.contains(targetClass));
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            updateView();
+        }
+
+        function nextSlide(e) {
+            if(e) e.stopPropagation();
+            if (currentSlideIndex < allSlides.length - 1) {
+                currentSlideIndex++;
+                updateView();
+            }
+        }
+
+        function prevSlide(e) {
+            if(e) e.stopPropagation();
+            if (currentSlideIndex > 0) {
+                currentSlideIndex--;
+                updateView();
+            }
+        }
+
+        function updateView() {
+            allSlides.forEach((slide, index) => {
+                if (index === currentSlideIndex) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+
+            prevBtn.style.display = currentSlideIndex === 0 ? 'none' : 'flex';
+            nextBtn.style.display = currentSlideIndex === allSlides.length - 1 ? 'none' : 'flex';
+
+            const activeSlide = allSlides[currentSlideIndex];
+            for (let i = 1; i <= 3; i++) {
+                if (activeSlide.classList.contains(`level-${i}-slide`)) {
+                    currentLevel = i;
+                    document.querySelectorAll('.quest-node').forEach((n, idx) => n.classList.toggle('active', idx + 1 === currentLevel));
+                    break;
+                }
+            }
+
+            updateDots();
+        }
+
+        function updateDots() {
+            indicators.innerHTML = '';
+            const levelClass = `level-${currentLevel}-slide`;
+            const levelSlides = allSlides.filter(s => s.classList.contains(levelClass));
+            
+            let localIndex = 0;
+            const currentGlobalSlide = allSlides[currentSlideIndex];
+            localIndex = levelSlides.indexOf(currentGlobalSlide);
+
+            levelSlides.forEach((slideEl, idx) => {
+                const dot = document.createElement('div');
+                dot.className = `slide-dot ${idx === localIndex ? 'active' : ''}`;
+                dot.addEventListener('click', () => {
+                    currentSlideIndex = allSlides.indexOf(slideEl);
+                    updateView();
+                });
+                indicators.appendChild(dot);
+            });
+        }
+
+        function closeModal() { 
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            allSlides.forEach(s => s.classList.remove('active'));
+        }
+
+        // ====== MORE EXAMPLES LOGIC ======
+        function openMoreExamples(level) {
+            document.querySelectorAll('.extra-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
+            });
+            const extraTarget = document.getElementById(`extra-level-${level}`);
+            if (extraTarget) {
+                extraTarget.classList.remove('hidden');
+                extraTarget.classList.add('block');
+            }
+            examplesModal.classList.remove('hidden');
+            examplesModal.classList.add('flex');
+        }
+        
+        function closeMoreExamples() {
+            examplesModal.classList.add('hidden');
+            examplesModal.classList.remove('flex');
+        }
+
+        // ====== PDF EXERCISE LOGIC ======
+        let currentExercisePage = 0;
+        let activeExercisePages = [];
+
+        function openPdfExercise(level) {
+            document.querySelectorAll('.pdf-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
+            });
+            
+            const levelContainer = document.getElementById(`pdf-level-${level}`);
+            if (levelContainer) {
+                levelContainer.classList.remove('hidden');
+                levelContainer.classList.add('block');
+                
+                activeExercisePages = Array.from(levelContainer.querySelectorAll('.exercise-page'));
+                currentExercisePage = 0;
+                
+                updateExercisePagination();
+                
+                pdfExerciseModal.classList.remove('hidden');
+                pdfExerciseModal.classList.add('flex');
+            }
+        }
+
+        function updateExercisePagination() {
+            activeExercisePages.forEach((page, index) => {
+                if (index === currentExercisePage) {
+                    page.classList.remove('hidden');
+                    page.classList.add('block');
+                } else {
+                    page.classList.add('hidden');
+                    page.classList.remove('block');
+                }
+            });
+
+            const exPrevBtn = document.getElementById('ex-prev-btn');
+            const exNextBtn = document.getElementById('ex-next-btn');
+            const indicator = document.getElementById('ex-page-indicator');
+
+            if (exPrevBtn) exPrevBtn.style.visibility = currentExercisePage > 0 ? 'visible' : 'hidden';
+            if (exNextBtn) exNextBtn.style.visibility = currentExercisePage < activeExercisePages.length - 1 ? 'visible' : 'hidden';
+            
+            if (indicator && activeExercisePages.length > 0) {
+                indicator.textContent = `Section ${currentExercisePage + 1} of ${activeExercisePages.length}`;
+            }
+        }
+
+        function nextExercisePage() {
+            if (currentExercisePage < activeExercisePages.length - 1) {
+                currentExercisePage++;
+                updateExercisePagination();
+            }
+        }
+
+        function prevExercisePage() {
+            if (currentExercisePage > 0) {
+                currentExercisePage--;
+                updateExercisePagination();
+            }
+        }
+
+        function closePdfExercise() {
+            pdfExerciseModal.classList.add('hidden');
+            pdfExerciseModal.classList.remove('flex');
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initSlides();
+        });
+
+        document.querySelectorAll('.quiz-input').forEach(input => {
+            input.addEventListener('input', function() {
+                const val = this.value.trim().toLowerCase().replace(/\s/g, "");
+                let answers = this.getAttribute('data-answer');
+                
+                if (!answers) return;
+                
+                answers = answers.toLowerCase().split('|');
+                this.classList.remove('correct', 'incorrect');
+                if (val !== '') {
+                    if (answers.includes(val)) {
+                        this.classList.add('correct');
+                    } else {
+                        this.classList.add('incorrect');
+                    }
+                }
+            });
+        });
+        function applyEmbedMode() {
+            const params = new URLSearchParams(window.location.search);
+            let inFrame = false;
+            try { inFrame = window.self !== window.top; } catch (err) { inFrame = true; }
+            if (params.get("embed") === "1" || inFrame) {
+                document.body.classList.add("embed-mode");
+            }
+            const levelParam = params.get("level") || params.get("tab");
+            if (levelParam && typeof openLevel === "function") {
+                const level = Math.max(1, Math.min(3, parseInt(levelParam, 10) || 1));
+                setTimeout(() => openLevel(level), 150);
+            }
+        }
+        applyEmbedMode();
+        window.addEventListener("load", applyEmbedMode);
+    </script>
+</body>
+</html>
