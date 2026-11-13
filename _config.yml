@@ -1,0 +1,27 @@
+exclude:
+  - node_modules
+  - vendor
+  - Gemfile
+  - Gemfile.lock
+  - docs
+  - images
+  - modules
+  - question-bank
+  - data
+  - db
+  - templates
+  - assets
+  - iwb-y7-ch1
+  - "*.md"
+  - "*.py"
+  - "*.pdf"
+  - "*.json"
+  - "*.css"
+  - "*.js"
+  - "*.html"
+  - "*.svg"
+include:
+  - index.html
+  - mental-course-auth.js
+  - account-sync.js
+  - CNAME
