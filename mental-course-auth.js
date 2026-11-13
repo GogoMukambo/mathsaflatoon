@@ -1,11 +1,11 @@
 (function () {
   var COURSES = {
-    "45": "maths-aflatoon-y45.html",
-    "67": "maths-aflatoon.html#67",
-    "8": "maths-aflatoon.html#8",
-    "beginner": "maths-aflatoon.html#beginner",
-    "foundation": "maths-aflatoon.html#foundation",
-    "advanced": "maths-aflatoon.html#advanced"
+    "45": "index.html",
+    "67": "index.html#67",
+    "8": "index.html#8",
+    "beginner": "index.html#beginner",
+    "foundation": "index.html#foundation",
+    "advanced": "index.html#advanced"
   };
 
   function ready() {
@@ -30,10 +30,6 @@
   function openCourse(bandOrPath) {
     var dest = destination(bandOrPath);
     if (!dest) return;
-    if (!ready()) {
-      window.location.href = "index.html?login=mental&next=" + encodeURIComponent(dest);
-      return;
-    }
     window.location.href = dest;
   }
 
