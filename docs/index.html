@@ -2,9 +2,38 @@
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-store">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <script>
+        (function () {
+            function applyPlatform() {
+                var ua = navigator.userAgent || "";
+                var touch = navigator.maxTouchPoints || 0;
+                var iPad = /iPad/.test(ua) || (navigator.platform === "MacIntel" && touch > 1);
+                var iPhone = /iPhone|iPod/.test(ua);
+                var android = /Android/i.test(ua);
+                var w = window.innerWidth;
+                var h = window.innerHeight;
+                var coarse = window.matchMedia("(pointer: coarse)").matches || touch > 0;
+                var platform = "desktop";
+                if (w < 700 || iPhone || (coarse && !iPad && Math.min(w, h) < 520)) platform = "phone";
+                else if (iPad || (android && coarse && Math.min(w, h) >= 520) || (coarse && w < 1280 && h < 1100)) platform = "tablet";
+                else if (w < 1100 || (w < 1280 && h < 860)) platform = "tablet";
+                document.documentElement.setAttribute("data-platform", platform);
+                document.documentElement.setAttribute("data-orientation", w >= h ? "landscape" : "portrait");
+                document.documentElement.setAttribute("data-ios", (iPad || iPhone) ? "1" : "0");
+            }
+            applyPlatform();
+            window.addEventListener("resize", applyPlatform);
+            window.addEventListener("orientationchange", applyPlatform);
+        })();
+    </script>
     <title>Aflatoon Mental Maths Academy | 3-Stage 60-Day Speed Mastery (₹99/-)</title>
-    <script src="focus-mode.js?v=5"></script>
+    <script src="auth-config.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="mental-course-auth.js?v=2"></script>
+    <script src="account-sync.js?v=3"></script>
+    <script src="focus-mode.js?v=9"></script>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Original Theme (Fredoka, Nunito, Inter) + Liquid Glass Theme (Outfit, Plus Jakarta Sans, Space Grotesk, JetBrains Mono) -->
@@ -526,9 +555,138 @@
 
         /* Printable Certificate Frame */
         .certificate-frame {
-            background: radial-gradient(circle at center, #ffffff 0%, #fefce8 100%);
+            background: radial-gradient(circle at center, #fffdf8 0%, #f8ecd4 100%);
             border: 10px double #ca8a04;
             box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.35), inset 0 0 0 4px #fef08a;
+            color: #1c1917;
+        }
+
+        /* Payment and certificate sit over a dark scrim. Keep them on the same warm paper as the app. */
+        body.theme-liquid #paymentModal,
+        body.theme-liquid #certificateModal,
+        body.theme-liquid #childManagerModal,
+        body.theme-liquid #phoneLoginModal {
+            background: rgba(68, 40, 22, 0.46) !important;
+        }
+        body.theme-liquid #paymentModal > .liquid-glass,
+        body.theme-liquid #certificateModal > .liquid-glass,
+        body.theme-liquid #childManagerModal > .liquid-glass,
+        body.theme-liquid #phoneLoginModal > .liquid-glass {
+            background: linear-gradient(180deg, #fbf6ee 0%, #f3e6d4 100%) !important;
+            color: #1c1917 !important;
+        }
+        body.theme-liquid #paymentModal > .liquid-glass h3,
+        body.theme-liquid #paymentModal > .liquid-glass p,
+        body.theme-liquid #paymentModal > .liquid-glass label,
+        body.theme-liquid #paymentModal > .liquid-glass span,
+        body.theme-liquid #certificateModal > .liquid-glass h2,
+        body.theme-liquid #certificateModal > .liquid-glass h3,
+        body.theme-liquid #certificateModal > .liquid-glass p,
+        body.theme-liquid #certificateModal > .liquid-glass span,
+        body.theme-liquid #certificateModal > .liquid-glass div,
+        body.theme-liquid #childManagerModal > .liquid-glass h3,
+        body.theme-liquid #childManagerModal > .liquid-glass p,
+        body.theme-liquid #childManagerModal > .liquid-glass label,
+        body.theme-liquid #childManagerModal > .liquid-glass div,
+        body.theme-liquid #phoneLoginModal > .liquid-glass h3,
+        body.theme-liquid #phoneLoginModal > .liquid-glass p,
+        body.theme-liquid #phoneLoginModal > .liquid-glass span,
+        body.theme-liquid #phoneLoginModal > .liquid-glass div {
+            color: #1c1917;
+        }
+        body.theme-liquid #childManagerModal input,
+        body.theme-liquid #childManagerModal select {
+            background: #fffdf8;
+            color: #1c1917;
+        }
+        #certificateModal {
+            overflow: hidden;
+        }
+        #certificatePrintableArea {
+            position: relative;
+            overflow: hidden;
+        }
+        .cert-sample-mark {
+            position: absolute;
+            inset: 0;
+            z-index: 30;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            user-select: none;
+        }
+        .cert-sample-mark span {
+            display: block;
+            transform: rotate(-22deg);
+            font-weight: 800;
+            font-size: clamp(3.2rem, 14vw, 7rem);
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            line-height: 1;
+            color: rgba(154, 52, 18, 0.72) !important;
+            border: 0.08em solid rgba(154, 52, 18, 0.72);
+            background: rgba(255, 251, 235, 0.45);
+            padding: 0.08em 0.28em 0.12em;
+            border-radius: 0.12em;
+            text-shadow: 0 0 1px rgba(255, 251, 235, 0.9);
+        }
+        .cert-sample-mark.hidden {
+            display: none !important;
+        }
+        #certPrintBtn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            filter: grayscale(0.5);
+        }
+        #focusModeBtn.hidden {
+            display: none !important;
+        }
+        #focusModeBtn.is-on,
+        body.theme-liquid #focusModeBtn.is-on {
+            background: #047857 !important;
+            color: #ffffff !important;
+            border-color: #065f46 !important;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.45);
+        }
+        #focusModeBtn.is-on i,
+        #focusModeBtn.is-on span {
+            color: #ffffff !important;
+        }
+        #profileView .profile-card {
+            background: linear-gradient(180deg, #fbf6ee 0%, #f3e6d4 100%);
+            color: #1c1917;
+            border: 1px solid #e7d3b8;
+        }
+        @media (max-height: 760px) {
+            #certificatePrintableArea {
+                border-width: 4px;
+                box-shadow: none;
+            }
+        }
+        body.theme-liquid #certificatePrintableArea {
+            background: radial-gradient(circle at center, #fffdf8 0%, #f8ecd4 100%) !important;
+            color: #1c1917 !important;
+        }
+        body.theme-liquid #paymentModal .bg-white\/80,
+        body.theme-liquid #paymentModal .bg-white,
+        body.theme-liquid #certificatePrintableArea .bg-white\/90 {
+            background: #fffdf8 !important;
+        }
+        body.theme-liquid #paymentModal .btn-3d-indigo,
+        body.theme-liquid #paymentModal .btn-3d-indigo span,
+        body.theme-liquid #paymentModal .btn-3d-indigo i,
+        body.theme-liquid #paymentModal .bg-emerald-600,
+        body.theme-liquid #paymentModal #payTabUpi.bg-indigo-600,
+        body.theme-liquid #paymentModal #payTabRazorpay.bg-indigo-600,
+        body.theme-liquid #certificateModal .btn-3d-indigo,
+        body.theme-liquid #certificateModal .btn-3d-indigo span,
+        body.theme-liquid #certificateModal .btn-3d-indigo i,
+        body.theme-liquid #certificateModal .bg-indigo-600,
+        body.theme-liquid #certificatePrintableArea .text-white,
+        body.theme-liquid #childManagerModal .bg-emerald-600,
+        body.theme-liquid #childManagerModal .bg-indigo-600 {
+            color: #fff !important;
         }
 
         @media print {
@@ -588,42 +746,28 @@
     <header class="shrink-0 z-40 liquid-glass-header no-print">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-2 sm:gap-4">
             <!-- Brand Title: Maths (Black) + Aflatoon (Multicolour) -->
-            <div class="flex items-center gap-2.5 cursor-pointer group shrink-0" onclick="app.showHomePage()">
-                <div>
-                    <div class="flex items-center gap-2">
-                        <span class="inline-flex items-baseline">
-                            <span class="font-heading font-bold text-xl sm:text-2xl tracking-tight text-black">Maths</span><span class="aflatoon-magic text-xl sm:text-2xl tracking-tight"><i class="fa-solid fa-bolt aflatoon-bolt"></i>Aflatoon</span>
-                        </span>
-                        <span class="theme-pill-btn bg-indigo-100 text-indigo-900 text-[10px] font-extrabold px-2 py-0.5 rounded-full border border-indigo-300 hidden sm:inline-block">3-STAGE ACADEMY</span>
-                    </div>
-                </div>
-            </div>
+                        <div class="flex items-center gap-2">
+                            <span class="inline-flex items-baseline cursor-pointer" onclick="app.showHomePage()">
+                                <span class="font-heading font-bold text-xl sm:text-2xl tracking-tight text-black">Maths</span><span class="aflatoon-magic text-xl sm:text-2xl tracking-tight"><i class="fa-solid fa-bolt aflatoon-bolt"></i>Aflatoon</span>
+                            </span>
+                            <button type="button" id="childProfileBtn" onclick="app.showProfilePage()" class="theme-pill-btn bg-white hover:bg-amber-50 text-amber-900 border border-amber-200 px-2.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shrink-0" title="Child profiles and course dates">
+                                <i class="fa-solid fa-user"></i>
+                                <span id="childProfileLabel" class="max-w-[8rem] truncate">Add a child</span>
+                            </button>
+                            <span class="theme-pill-btn bg-indigo-100 text-indigo-900 text-[10px] font-extrabold px-2 py-0.5 rounded-full border border-indigo-300 hidden sm:inline-block">3-STAGE ACADEMY</span>
+                        </div>
 
-            <!-- Page Navigation Pills -->
-            <nav class="hidden md:flex items-center gap-1 bg-slate-200/70 backdrop-blur-md p-1 rounded-xl border border-white/80">
-                <button type="button" id="topNav-home" onclick="app.showHomePage()" class="px-3 py-1 rounded-lg text-xs font-heading font-bold transition bg-indigo-600 text-white shadow-sm">
-                    <i class="fa-solid fa-house mr-1"></i>Home
-                </button>
-                <button type="button" id="topNav-courses" onclick="app.showCourseSelectionPage()" class="px-3 py-1 rounded-lg text-xs font-heading font-bold transition text-slate-700 hover:text-slate-950">
-                    <i class="fa-solid fa-layer-group mr-1"></i>Courses (₹99/-)
-                </button>
-                <button type="button" id="topNav-course" onclick="app.showCoursePage()" class="px-3 py-1 rounded-lg text-xs font-heading font-bold transition text-slate-700 hover:text-slate-950">
-                    <i class="fa-solid fa-calendar-days mr-1"></i>60-Day Plan
-                </button>
-            </nav>
-
-            <!-- Quick Assessment, Medal Counter & Certificate Button -->
             <div class="flex items-center gap-1.5 sm:gap-2">
 
-                <button type="button" id="focusModeBtn" class="theme-pill-btn bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 px-2.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shrink-0" title="Focus mode: the camera watches the sprint. Nothing is recorded.">
-                    <span id="focusModeDot" hidden></span>
-                    <i class="fa-solid fa-eye"></i>
-                    <span id="focusModeLabel">Focus</span>
+                <button type="button" id="phoneLoginBtn" onclick="app.openGoogleLogin()" class="theme-pill-btn bg-white hover:bg-indigo-50 text-indigo-700 border border-indigo-200 px-2.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shrink-0" title="Log in with Google">
+                    <i class="fa-brands fa-google"></i>
+                    <span id="phoneLoginBtnLabel">Login</span>
                 </button>
 
-                <button onclick="app.openDiagnosticModal()" class="theme-quick-assess-btn bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-slate-950 font-heading font-bold text-xs px-2.5 py-1.5 rounded-xl shadow-sm flex items-center gap-1.5 transition shrink-0" title="Take a quick assessment to decide which course is the best fit to start">
-                    <i class="fa-solid fa-compass"></i>
-                    <span class="hidden lg:inline">Quick Assessment</span>
+                <button type="button" id="focusModeBtn" class="hidden theme-pill-btn bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 px-2.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shrink-0" title="Focus mode: the camera watches the sprint. Nothing is recorded.">
+                    <span id="focusModeDot" hidden></span>
+                    <i class="fa-solid fa-eye"></i>
+                    <span id="focusModeLabel">Focus Mode Off</span>
                 </button>
 
                 <button onclick="app.showCoursePage()" title="Medals Earned in Current 60-Day Course" class="theme-pill-btn flex items-center gap-1.5 bg-amber-50 hover:bg-amber-100 border border-amber-200 px-2.5 py-1.5 rounded-xl transition shrink-0">
@@ -849,7 +993,7 @@
                 </div>
 
                 <!-- Mode Tabs -->
-                <div class="flex gap-3 mt-3 border-b border-indigo-800/80">
+                <div id="dayTabs" class="flex gap-3 mt-3 border-b border-indigo-800/80">
                     <button id="tabBtnLesson" onclick="app.switchDayTab('lesson')" class="px-5 py-3 font-heading font-bold text-sm sm:text-base rounded-t-2xl transition flex items-center gap-2 border-b-4 border-amber-400 bg-white/10 text-white">
                         <i class="fa-solid fa-book-open-reader text-amber-300"></i>
                         <span class="flex items-center gap-1.5 flex-wrap">
@@ -1264,120 +1408,117 @@
         </div>
     </div>
 
+    <main id="profileView" class="hidden flex-1 overflow-hidden flex">
+        <section class="w-full h-full overflow-y-auto px-4 sm:px-6 py-4">
+            <div class="max-w-3xl mx-auto space-y-4">
+                <div class="liquid-glass rounded-3xl p-5 sm:p-6">
+                    <div class="flex flex-wrap items-start justify-between gap-3">
+                        <div>
+                            <p class="text-[11px] font-extrabold uppercase tracking-widest text-amber-800">Profiles</p>
+                            <h2 class="font-heading text-2xl sm:text-3xl font-bold text-slate-900">Children and courses</h2>
+                            <p class="text-sm text-slate-700 mt-1">After payment, a course stays open for 3 months. Each child has separate dates.</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button type="button" onclick="app.showHomePage()" class="bg-slate-100 text-slate-800 font-bold text-xs px-3 py-2 rounded-xl">Home</button>
+                            <button type="button" onclick="app.openChildManager()" class="bg-emerald-600 text-white font-heading font-bold text-xs px-3 py-2 rounded-xl">Add a child</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="profileChildList" class="space-y-3"></div>
+            </div>
+        </section>
+    </main>
+
     <!-- MODAL 2: OFFICIAL COURSE GRADUATION CERTIFICATE & OVERALL AVERAGE MEDAL   -->
     <!-- ========================================================================= -->
-    <div id="certificateModal" class="hidden fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-        <div class="liquid-glass rounded-3xl max-w-4xl w-full p-5 sm:p-8 animate-pop relative my-8">
-            <!-- Top Control Bar (Hidden when printing) -->
-            <div class="flex flex-wrap items-center justify-between gap-3 pb-5 mb-5 border-b border-slate-200 no-print">
-                <div class="flex items-center gap-2">
-                    <i class="fa-solid fa-award text-amber-500 text-xl"></i>
-                    <span class="font-heading font-bold text-lg text-slate-900">Course Graduation Certificate & Medal Report</span>
+    <div id="certificateModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-3 overflow-hidden">
+        <div class="liquid-glass rounded-3xl w-full max-w-4xl h-[calc(100dvh-1rem)] max-h-[calc(100dvh-1rem)] p-3 sm:p-4 flex flex-col gap-2 overflow-hidden">
+            <div class="flex items-center justify-between gap-2 shrink-0 no-print">
+                <div class="min-w-0">
+                    <div class="font-heading font-bold text-base sm:text-lg text-slate-900 truncate">Certificate</div>
+                    <div id="certProgressStatusTitle" class="text-[11px] font-bold text-slate-600 truncate">Live preview</div>
                 </div>
-                <div class="flex flex-wrap items-center gap-2">
-                    <button onclick="app.simulateFullCourseCompletion()" class="bg-purple-100 hover:bg-purple-200 text-purple-800 font-bold text-xs px-3.5 py-2 rounded-xl border border-purple-300 transition flex items-center gap-1.5" title="Parent/Teacher Preview: Simulate all 60 Days Completed with Medals">
-                        <i class="fa-solid fa-wand-sparkles"></i>
-                        <span>Demo: Simulate 60-Day Completion</span>
-                    </button>
-                    <button onclick="window.print()" class="btn-3d-indigo text-white font-heading font-bold text-xs px-4 py-2 rounded-xl flex items-center gap-1.5">
-                        <i class="fa-solid fa-print"></i>
-                        <span>Print / Save PDF Certificate</span>
-                    </button>
-                    <button onclick="app.closeCertificateModal()" class="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
+                <div class="flex items-center gap-1.5 shrink-0">
+                    <button type="button" onclick="app.simulateFullCourseCompletion()" class="bg-purple-100 hover:bg-purple-200 text-purple-800 font-bold text-[11px] px-2.5 py-1.5 rounded-xl border border-purple-300" title="Preview a completed certificate">Preview</button>
+                    <button type="button" id="certPrintBtn" disabled onclick="app.printCertificate()" class="btn-3d-indigo text-white font-heading font-bold text-[11px] px-3 py-1.5 rounded-xl" title="Print unlocks when all 60 days are complete">Print</button>
+                    <button type="button" onclick="app.closeCertificateModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600" aria-label="Close certificate"><i class="fa-solid fa-xmark"></i></button>
                 </div>
             </div>
+            <div id="certChildRow" class="flex items-center gap-1.5 overflow-x-auto shrink-0 no-print"></div>
+            <p id="certProgressStatusSub" class="hidden"></p>
+            <div id="certProgressNotice" class="hidden"></div>
 
-            <!-- Progress Notice Banner if < 60 days completed (Hidden when printing) -->
-            <div id="certProgressNotice" class="mb-5 bg-indigo-50 border border-indigo-200 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 no-print">
-                <div class="text-xs sm:text-sm text-indigo-950">
-                    <strong id="certProgressStatusTitle">Live Certificate Preview:</strong>
-                    <span id="certProgressStatusSub">You have completed 0 of 60 levels so far. Your Overall Average Medal updates automatically after every daily 35-question sprint!</span>
-                </div>
-                <button onclick="app.simulateFullCourseCompletion()" class="shrink-0 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition">
-                    Test Full 60-Day Certificate →
-                </button>
-            </div>
-
-            <!-- PRINTABLE CERTIFICATE FRAME -->
-            <div id="certificatePrintableArea" class="certificate-frame rounded-2xl p-6 sm:p-10 text-center relative overflow-hidden">
-                <div class="max-w-2xl mx-auto space-y-5">
-                    <!-- Top Header -->
-                    <div class="flex items-center justify-center gap-2">
-                        <span class="aflatoon-magic-pill text-base"><i class="fa-solid fa-bolt aflatoon-bolt"></i>Aflatoon</span>
-                        <span class="font-heading font-bold text-slate-800 text-lg tracking-wide uppercase">Mental Mathematics Academy</span>
-                    </div>
-
+            <div id="certificatePrintableArea" class="certificate-frame flex-1 min-h-0 rounded-2xl px-4 py-3 overflow-hidden">
+                <div class="h-full flex flex-col justify-between gap-2 text-center relative z-0">
                     <div class="space-y-1">
-                        <div class="text-xs font-extrabold uppercase tracking-[0.25em] text-amber-700">Official 60-Day (2-Month) Diploma of Speed Mastery</div>
-                        <h2 class="font-heading text-3xl sm:text-5xl font-bold text-slate-900">Certificate of Achievement</h2>
-                    </div>
-
-                    <p class="font-kid text-sm sm:text-base text-slate-600 italic">This is proudly presented to</p>
-
-                    <!-- Student Name -->
-                    <div class="py-2 border-b-2 border-amber-400/80 max-w-md mx-auto">
-                        <div id="certStudentNameDisplay" class="font-heading text-3xl sm:text-4xl font-bold text-indigo-950 tracking-wide">
-                            Young Mathematician
+                        <div class="flex items-center justify-center gap-2">
+                            <span class="aflatoon-magic-pill text-xs"><i class="fa-solid fa-bolt aflatoon-bolt"></i>Aflatoon</span>
+                            <span class="font-heading font-bold text-slate-800 text-sm tracking-wide uppercase">Mental Mathematics Academy</span>
                         </div>
+                        <div class="text-[10px] font-extrabold uppercase tracking-[0.18em] text-amber-800">60-Day Diploma of Speed Mastery</div>
+                        <h2 class="font-heading text-2xl sm:text-3xl font-bold text-slate-900 leading-none">Certificate of Achievement</h2>
                     </div>
 
-                    <p class="font-kid text-sm sm:text-base text-slate-700 leading-relaxed max-w-xl mx-auto">
-                        for successfully mastering the 60-Day (2-Month • 2,100 Questions) mental calculation curriculum in the
-                        <strong id="certCourseNameDisplay" class="text-indigo-700">Foundation Course</strong>
-                        with an Overall Average Standing of:
+                    <div>
+                        <p class="text-xs text-slate-600">Presented to</p>
+                        <div class="flex items-center justify-center gap-2 flex-wrap">
+                            <div id="certStudentNameDisplay" class="font-heading text-2xl sm:text-3xl font-bold text-indigo-950 leading-tight">Student name</div>
+                            <button type="button" id="certAddChildBeside" onclick="app.openChildManager()" class="no-print theme-pill-btn bg-white text-amber-900 border border-amber-300 px-2.5 py-1 rounded-xl text-xs font-bold">Add a child</button>
+                        </div>
+                        <p id="certChildMeta" class="text-[11px] font-bold text-slate-700 mt-0.5"></p>
+                    </div>
+
+                    <p class="text-xs sm:text-sm text-slate-700 leading-snug max-w-2xl mx-auto">
+                        for the 60-day mental calculation curriculum in the
+                        <strong id="certCourseNameDisplay" class="text-indigo-800">Foundation Course</strong>
                     </p>
 
-                    <!-- Overall Average Medal Centerpiece -->
-                    <div class="py-3 flex flex-col items-center justify-center">
-                        <div id="certOverallMedalBadge" class="medal-gold px-8 py-3 rounded-2xl inline-flex items-center gap-3 shadow-lg">
-                            <span id="certOverallMedalEmoji" class="text-3xl">🥇</span>
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3">
+                        <div id="certOverallMedalBadge" class="medal-gold px-4 py-2 rounded-2xl inline-flex items-center gap-2 shadow">
+                            <span id="certOverallMedalEmoji" class="text-2xl">🥇</span>
                             <div class="text-left">
-                                <div class="text-[10px] font-extrabold uppercase tracking-wider opacity-80">Overall Average Medal</div>
-                                <div id="certOverallMedalLabel" class="font-heading text-2xl font-bold leading-none">GOLD MEDALIST</div>
+                                <div class="text-[9px] font-extrabold uppercase tracking-wider">Overall medal</div>
+                                <div id="certOverallMedalLabel" class="font-heading text-lg font-bold leading-none">GOLD MEDALIST</div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-4 gap-1.5 w-full sm:w-auto sm:min-w-[22rem]">
+                            <div class="bg-white/90 border border-amber-200 rounded-xl px-1.5 py-1.5">
+                                <div class="text-[9px] font-bold uppercase text-slate-600">Days</div>
+                                <div id="certStatLevels" class="font-heading text-base font-bold text-slate-900">0 / 60</div>
+                            </div>
+                            <div class="bg-white/90 border border-amber-200 rounded-xl px-1.5 py-1.5">
+                                <div class="text-[9px] font-bold uppercase text-amber-800">Gold</div>
+                                <div id="certStatGold" class="font-heading text-base font-bold text-amber-700">0</div>
+                            </div>
+                            <div class="bg-white/90 border border-amber-200 rounded-xl px-1.5 py-1.5">
+                                <div class="text-[9px] font-bold uppercase text-slate-600">Silver</div>
+                                <div id="certStatSilver" class="font-heading text-base font-bold text-slate-800">0</div>
+                            </div>
+                            <div class="bg-white/90 border border-amber-200 rounded-xl px-1.5 py-1.5">
+                                <div class="text-[9px] font-bold uppercase text-orange-800">Bronze</div>
+                                <div id="certStatBronze" class="font-heading text-base font-bold text-orange-800">0</div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- 60-Day Performance Summary Grid -->
-                    <div class="grid grid-cols-4 gap-3 max-w-xl mx-auto pt-2">
-                        <div class="bg-white/90 border border-amber-200 rounded-xl p-2.5">
-                            <div class="text-[10px] font-bold uppercase text-slate-400">Levels Completed</div>
-                            <div id="certStatLevels" class="font-heading text-lg font-bold text-slate-900">60 / 60</div>
-                        </div>
-                        <div class="bg-white/90 border border-amber-200 rounded-xl p-2.5">
-                            <div class="text-[10px] font-bold uppercase text-amber-700">🥇 Gold Days</div>
-                            <div id="certStatGold" class="font-heading text-lg font-bold text-amber-600">0</div>
-                        </div>
-                        <div class="bg-white/90 border border-amber-200 rounded-xl p-2.5">
-                            <div class="text-[10px] font-bold uppercase text-slate-600">🥈 Silver Days</div>
-                            <div id="certStatSilver" class="font-heading text-lg font-bold text-slate-700">0</div>
-                        </div>
-                        <div class="bg-white/90 border border-amber-200 rounded-xl p-2.5">
-                            <div class="text-[10px] font-bold uppercase text-orange-700">🥉 Bronze Days</div>
-                            <div id="certStatBronze" class="font-heading text-lg font-bold text-orange-700">0</div>
-                        </div>
-                    </div>
-
-                    <!-- Signatures & Date Footer -->
-                    <div class="grid grid-cols-3 gap-4 pt-6 text-xs text-slate-600 border-t border-amber-200/80 max-w-xl mx-auto items-end">
+                    <div class="grid grid-cols-3 gap-2 text-[11px] text-slate-700 border-t border-amber-200/80 pt-2 items-end">
                         <div>
-                            <div id="certDateDisplay" class="font-bold text-slate-900">23 Oct 2026</div>
-                            <div class="text-[10px] uppercase tracking-wider text-slate-400 mt-0.5">Date of Award</div>
+                            <div id="certDateDisplay" class="font-bold text-slate-900">—</div>
+                            <div class="text-[9px] uppercase tracking-wider">Date of award</div>
                         </div>
                         <div class="flex flex-col items-center">
-                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 text-white flex items-center justify-center shadow-md border-2 border-amber-200">
-                                <i class="fa-solid fa-bolt text-xl"></i>
+                            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 text-white flex items-center justify-center border border-amber-200">
+                                <i class="fa-solid fa-bolt text-sm"></i>
                             </div>
-                            <div class="text-[9px] font-extrabold uppercase tracking-widest text-amber-800 mt-1">Verified Seal</div>
+                            <div class="text-[9px] font-extrabold uppercase tracking-widest text-amber-900">Verified</div>
                         </div>
                         <div>
-                            <div class="font-heading font-bold text-indigo-900 text-sm">Aflatoon AI Board</div>
-                            <div class="text-[10px] uppercase tracking-wider text-slate-400 mt-0.5">Program Director</div>
+                            <div class="font-heading font-bold text-indigo-950 text-xs">Aflatoon Board</div>
+                            <div class="text-[9px] uppercase tracking-wider">Program director</div>
                         </div>
                     </div>
                 </div>
+                <div id="certSampleMark" class="cert-sample-mark" aria-hidden="true"><span>Sample</span></div>
             </div>
         </div>
     </div>
@@ -1385,28 +1526,43 @@
     <!-- ========================================================================= -->
     <!-- MODAL 3: STUDENT PROFILE EDITOR                                           -->
     <!-- ========================================================================= -->
-    <div id="studentProfileModal" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4 no-print">
-        <div class="liquid-glass rounded-3xl max-w-md w-full p-6 animate-pop space-y-4">
-            <div class="flex items-center justify-between">
-                <h3 class="font-heading text-xl font-bold text-slate-900">Student Profile & Certificate Name</h3>
-                <button onclick="app.closeStudentProfileModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-            <div class="space-y-3">
+    <div id="childManagerModal" class="hidden fixed inset-0 z-[120] flex items-center justify-center p-4 no-print">
+        <div class="liquid-glass rounded-3xl max-w-lg w-full p-5 sm:p-6 space-y-3 max-h-[calc(100dvh-2rem)] overflow-y-auto">
+            <div class="flex items-start justify-between gap-3">
                 <div>
-                    <label for="profileNameInput" class="block text-xs font-bold uppercase text-slate-500 mb-1">Student Full Name</label>
-                    <input id="profileNameInput" type="text" placeholder="Enter student's name" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 font-semibold text-sm focus:border-indigo-600 focus:outline-none">
+                    <p class="text-[11px] font-extrabold uppercase tracking-widest text-amber-800">Children</p>
+                    <h3 class="font-heading text-2xl font-bold text-slate-900">Who is learning?</h3>
                 </div>
-                <div>
-                    <label for="profileAgeInput" class="block text-xs font-bold uppercase text-slate-500 mb-1">Daily Goal (Minutes)</label>
-                    <input id="profileAgeInput" type="number" min="5" max="60" value="15" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 font-semibold text-sm focus:border-indigo-600 focus:outline-none">
+                <button type="button" onclick="app.closeChildManager()" class="w-9 h-9 rounded-xl bg-slate-100 text-slate-700" aria-label="Close children"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p class="text-sm text-slate-700">Each child has a separate course unlock, progress, and certificate. A course stays closed until at least one child profile is saved. Paying then opens that course only for the child selected here.</p>
+            <div id="childList" class="space-y-2"></div>
+            <form id="childForm" class="space-y-2 border-t border-amber-200/80 pt-3" onsubmit="event.preventDefault(); app.saveChildProfile();">
+                <div class="font-heading font-bold text-slate-900" id="childFormTitle">Add a child</div>
+                <label class="block text-[11px] font-extrabold uppercase text-slate-600" for="childNameInput">Name</label>
+                <input id="childNameInput" type="text" autocomplete="name" class="w-full px-3 py-2 rounded-xl border border-slate-300 font-semibold text-sm">
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-[11px] font-extrabold uppercase text-slate-600" for="childDobInput">Date of birth</label>
+                        <input id="childDobInput" type="date" class="w-full px-3 py-2 rounded-xl border border-slate-300 font-semibold text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-extrabold uppercase text-slate-600" for="childGenderInput">Gender</label>
+                        <select id="childGenderInput" class="w-full px-3 py-2 rounded-xl border border-slate-300 font-semibold text-sm bg-white">
+                            <option value="">Choose</option>
+                            <option value="Girl">Girl</option>
+                            <option value="Boy">Boy</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
-            <div class="flex gap-3 pt-2">
-                <button onclick="app.closeStudentProfileModal()" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl transition">Cancel</button>
-                <button onclick="app.saveStudentProfile()" class="w-1/2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl transition">Save Profile</button>
-            </div>
+                <label class="block text-[11px] font-extrabold uppercase text-slate-600" for="childSchoolInput">School name</label>
+                <input id="childSchoolInput" type="text" autocomplete="organization" class="w-full px-3 py-2 rounded-xl border border-slate-300 font-semibold text-sm">
+                <p id="childFormError" class="hidden text-sm font-bold text-rose-700"></p>
+                <div class="flex gap-2">
+                    <button type="button" onclick="app.resetChildForm()" class="w-1/3 bg-slate-100 text-slate-800 font-bold py-2.5 rounded-xl">Clear</button>
+                    <button type="submit" class="w-2/3 bg-emerald-600 text-white font-heading font-bold py-2.5 rounded-xl">Save child</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -1430,6 +1586,32 @@
     </div>
 
     <!-- ========================================================================= -->
+    <!-- GOOGLE LOGIN (MATHS AFLATOON ONLY)                                        -->
+    <!-- ========================================================================= -->
+    <div id="phoneLoginModal" class="hidden fixed inset-0 z-[110] flex items-center justify-center p-4 no-print">
+        <div class="liquid-glass rounded-3xl max-w-md w-full p-5 sm:p-6 space-y-4" role="dialog" aria-modal="true" aria-labelledby="phoneLoginTitle">
+            <div class="flex items-start justify-between gap-3">
+                <div>
+                    <p class="text-[11px] font-extrabold uppercase tracking-widest text-indigo-700">Maths Aflatoon</p>
+                    <h3 id="phoneLoginTitle" class="font-heading text-2xl font-bold text-slate-900">Log in with Google</h3>
+                </div>
+                <button type="button" onclick="app.closeGoogleLogin()" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700" aria-label="Close login">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div id="phoneLoginStepPhone" class="space-y-3">
+                <p class="text-sm text-slate-600">This login is only for Maths Aflatoon. Your course progress and focus code are saved to this Google account.</p>
+                <div id="aflatoonGoogleSlot" class="flex justify-center min-h-[44px]"></div>
+            </div>
+            <div id="phoneLoginStepAccount" class="hidden space-y-3">
+                <p id="phoneLoginAccountText" class="text-sm font-bold text-slate-700">You are logged in.</p>
+                <button type="button" onclick="app.logoutGoogle()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-heading font-bold py-3 rounded-xl">Log out</button>
+            </div>
+            <p id="phoneLoginError" class="hidden text-sm font-bold text-rose-700"></p>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
     <!-- PAYMENT: UPI OR RAZORPAY BEFORE A COURSE OPENS                            -->
     <!-- ========================================================================= -->
     <div id="paymentModal" class="hidden fixed inset-0 z-[100] bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto no-print">
@@ -1439,12 +1621,16 @@
                     <p class="text-[11px] font-extrabold uppercase tracking-widest text-indigo-700">Unlock this course</p>
                     <h3 id="paymentTitle" class="font-heading text-2xl font-bold text-slate-900">Pay ₹99/-</h3>
                     <p id="paymentCourseName" class="text-sm font-bold text-slate-600">Foundation Course</p>
+                    <div class="flex items-center justify-between gap-2">
+                        <p id="paymentChildLine" class="text-sm font-bold text-amber-950">Choose a child before paying.</p>
+                        <button type="button" onclick="app.openChildManager()" class="shrink-0 text-xs font-bold text-indigo-800 underline">Change child</button>
+                    </div>
                 </div>
                 <button type="button" onclick="app.closePaymentModal()" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700" aria-label="Close payment">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
-            <p class="text-sm text-slate-600">Each course is paid separately. Pay ₹99 with UPI or Razorpay, then enter the access code to open it.</p>
+            <p class="text-sm text-slate-600">Each course is paid separately. After the access code, that course stays open for 3 months from the payment date.</p>
             <div class="grid grid-cols-2 gap-2 bg-slate-100 p-1 rounded-2xl">
                 <button type="button" id="payTabUpi" onclick="app.switchPaymentTab('upi')" class="py-2.5 rounded-xl font-heading font-bold text-sm bg-indigo-600 text-white">UPI</button>
                 <button type="button" id="payTabRazorpay" onclick="app.switchPaymentTab('razorpay')" class="py-2.5 rounded-xl font-heading font-bold text-sm text-slate-700">Razorpay</button>
@@ -3258,8 +3444,11 @@
                 theme: 'liquid', // 'liquid' | 'original'
                 activeCourse: 'foundation', // 'beginner' | 'foundation' | 'advanced'
                 aiRecommendedCourse: null,
-                studentName: 'Aarav Sharma',
+                studentName: '',
                 studentAge: 10,
+                children: [],
+                childRecords: {},
+                activeChildId: '',
                 enrolledAt: {
                     beginner: '2026-10-23',
                     foundation: '2026-10-23',
@@ -3471,6 +3660,7 @@
             },
 
             loadState() {
+                let hadSaved = false;
                 try {
                     const raw = localStorage.getItem(this.STORAGE_KEY);
                     if (raw) {
@@ -3478,22 +3668,191 @@
                         this.state = Object.assign(this.state, parsed);
                         this.state.theme = 'liquid';
                         if (!this.state.progress) this.state.progress = { beginner: {}, foundation: {}, advanced: {} };
+                        hadSaved = true;
                     }
                 } catch (e) {
                     // Fallback to in-memory state
                 }
+                if (hadSaved && this.ensureChildRecords()) this.saveState();
+                else this.paintChildButton();
             },
 
             saveState() {
+                this.stashActiveChild();
+                this.normalizeAccessWindows();
                 try {
                     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.state));
                 } catch (e) {
                     // Ignore storage quota/sandbox errors
                 }
+                if (this.account && !this.applyingRemote) this.pushAflatoonProgress();
                 this.renderCourseSelectorCards();
                 this.updateNavCourseButtons();
                 this.updateDashboardStats();
                 this.renderRoadmap();
+                this.paintChildButton();
+            },
+
+            activeChild() {
+                const id = this.state.activeChildId;
+                return (this.state.children || []).find(child => child.id === id) || null;
+            },
+
+            childProfileComplete(child) {
+                return !!(child && String(child.name || '').trim() && child.dob && (child.gender === 'Girl' || child.gender === 'Boy') && String(child.school || '').trim());
+            },
+
+            requireChild(next) {
+                if (this.childProfileComplete(this.activeChild())) {
+                    next();
+                    return;
+                }
+                this.pendingAfterChild = next;
+                this.openChildManager();
+                const current = this.activeChild();
+                if (current) this.editChild(current.id);
+                this.showChildError('Add a child profile before starting a course. Name, date of birth, gender, and school are required.');
+            },
+
+            resumeAfterChild() {
+                if (!this.pendingAfterChild || !this.childProfileComplete(this.activeChild())) return;
+                const pending = this.pendingAfterChild;
+                this.pendingAfterChild = null;
+                this.closeChildManager();
+                pending();
+            },
+
+            snapshotRecord() {
+                return {
+                    paid: JSON.parse(JSON.stringify(this.state.paid || {})),
+                    progress: JSON.parse(JSON.stringify(this.state.progress || { beginner: {}, foundation: {}, advanced: {} })),
+                    enrolledAt: JSON.parse(JSON.stringify(this.state.enrolledAt || {})),
+                    activeCourse: this.state.activeCourse || 'foundation'
+                };
+            },
+
+            emptyChildRecord() {
+                return {
+                    paid: {},
+                    progress: { beginner: {}, foundation: {}, advanced: {} },
+                    enrolledAt: {},
+                    activeCourse: 'foundation'
+                };
+            },
+
+            stashActiveChild() {
+                const child = this.activeChild();
+                if (!child) return;
+                if (!this.state.childRecords || typeof this.state.childRecords !== 'object') this.state.childRecords = {};
+                this.state.childRecords[child.id] = this.snapshotRecord();
+                this.state.studentName = child.name;
+            },
+
+            ensureChildRecords() {
+                if (!Array.isArray(this.state.children)) this.state.children = [];
+                if (!this.state.childRecords || typeof this.state.childRecords !== 'object' || Array.isArray(this.state.childRecords)) {
+                    this.state.childRecords = {};
+                }
+                let migrated = false;
+                const savedName = (this.state.studentName || '').trim();
+                if (!this.state.children.length && savedName) {
+                    const id = 'ch' + Date.now().toString(36);
+                    this.state.children.push({ id: id, name: savedName, dob: '', gender: '', school: '' });
+                    this.state.activeChildId = id;
+                    this.state.childRecords[id] = this.snapshotRecord();
+                    migrated = true;
+                }
+                if (this.state.children.length) {
+                    if (!this.state.children.some(child => child.id === this.state.activeChildId)) {
+                        this.state.activeChildId = this.state.children[0].id;
+                    }
+                    this.activateChild(this.state.activeChildId, false);
+                } else {
+                    this.state.activeChildId = '';
+                    this.paintChildButton();
+                }
+                return migrated;
+            },
+
+            activateChild(id, refresh) {
+                const child = (this.state.children || []).find(item => item.id === id);
+                if (!child) {
+                    this.state.activeChildId = '';
+                    this.paintChildButton();
+                    this.paintCertChildren();
+                    return;
+                }
+                const rec = (this.state.childRecords && this.state.childRecords[id]) || this.emptyChildRecord();
+                this.state.activeChildId = id;
+                this.state.studentName = child.name;
+                this.state.paid = JSON.parse(JSON.stringify(rec.paid || {}));
+                this.state.progress = JSON.parse(JSON.stringify(rec.progress || { beginner: {}, foundation: {}, advanced: {} }));
+                if (!this.state.progress.beginner) this.state.progress.beginner = {};
+                if (!this.state.progress.foundation) this.state.progress.foundation = {};
+                if (!this.state.progress.advanced) this.state.progress.advanced = {};
+                this.state.enrolledAt = JSON.parse(JSON.stringify(rec.enrolledAt || {}));
+                this.state.activeCourse = rec.activeCourse || 'foundation';
+                this.paintChildButton();
+                this.paintCertChildren();
+                if (refresh) this.refreshAfterChildChange();
+            },
+
+            refreshAfterChildChange() {
+                this.saveState();
+                const cert = document.getElementById('certificateModal');
+                if (cert && !cert.classList.contains('hidden')) this.renderCertificateContent();
+                const pay = document.getElementById('paymentModal');
+                if (pay && !pay.classList.contains('hidden') && this.payIntent) this.openPaymentModal(this.payIntent.courseId);
+                const dayOpen = !document.getElementById('dayModuleView').classList.contains('hidden');
+                const courseOpen = !document.getElementById('coursePageView').classList.contains('hidden');
+                if (dayOpen || courseOpen) {
+                    if (this.isCoursePaid(this.state.activeCourse)) this.showCoursePage();
+                    else this.showHomePage();
+                }
+            },
+
+            paintChildButton() {
+                const label = document.getElementById('childProfileLabel');
+                if (!label) return;
+                const child = this.activeChild();
+                label.textContent = this.childProfileComplete(child) ? child.name : 'Add a child';
+            },
+
+            paintCertChildren() {
+                const row = document.getElementById('certChildRow');
+                if (!row) return;
+                const children = this.state.children || [];
+                const chips = children.map(child => {
+                    const on = child.id === this.state.activeChildId;
+                    const cls = on
+                        ? 'shrink-0 px-2.5 py-1 rounded-full text-[11px] font-bold border bg-amber-500 text-slate-950 border-amber-600'
+                        : 'shrink-0 px-2.5 py-1 rounded-full text-[11px] font-bold border bg-white text-slate-800 border-slate-200';
+                    return '<button type="button" class="' + cls + '" onclick="app.switchChild(\'' + child.id + '\')">' + this.escapeHtml(child.name) + '</button>';
+                }).join('');
+                row.innerHTML = chips + '<button type="button" onclick="app.openChildManager()" class="shrink-0 px-2.5 py-1 rounded-full text-[11px] font-bold border border-indigo-200 bg-indigo-50 text-indigo-900">Add a child</button>';
+            },
+
+            escapeHtml(value) {
+                return String(value || '').replace(/[&<>"']/g, function (ch) {
+                    return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch];
+                });
+            },
+
+            formatChildDate(iso) {
+                if (!iso) return '';
+                const date = new Date(iso + 'T00:00:00');
+                if (Number.isNaN(date.getTime())) return '';
+                return date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+            },
+
+            courseNamesForChild(childId) {
+                const rec = (this.state.childRecords && this.state.childRecords[childId]) || {};
+                return ['beginner', 'foundation', 'advanced'].map(id => {
+                    const window = this.courseWindow(id, rec.paid, rec.enrolledAt, rec.progress);
+                    if (!window) return '';
+                    const label = COURSE_CATALOG[id].name.replace(' Course', '');
+                    return label + (window.active ? '' : ' (ended)');
+                }).filter(Boolean);
             },
 
             setupGlobalKeyboardListener() {
@@ -3502,6 +3861,10 @@
                     if (pinModal && !pinModal.classList.contains('hidden')) return;
                     const payModal = document.getElementById('paymentModal');
                     if (payModal && !payModal.classList.contains('hidden')) return;
+                    const childModal = document.getElementById('childManagerModal');
+                    if (childModal && !childModal.classList.contains('hidden')) return;
+                    const phoneModal = document.getElementById('phoneLoginModal');
+                    if (phoneModal && !phoneModal.classList.contains('hidden')) return;
                     const isPracticeVisible = !document.getElementById('dayModuleView').classList.contains('hidden') &&
                                               this.currentTab === 'practice' &&
                                               !document.getElementById('fcActiveArena').classList.contains('hidden');
@@ -3552,7 +3915,7 @@
             hideAllPages() {
                 if (window.FocusGuard) FocusGuard.onModuleStop();
                 this.stopTimer();
-                ['homeView', 'courseSelectionView', 'coursePageView', 'dayModuleView'].forEach(id => {
+                ['homeView', 'courseSelectionView', 'coursePageView', 'dayModuleView', 'profileView'].forEach(id => {
                     const el = document.getElementById(id);
                     if (el) el.classList.add('hidden');
                 });
@@ -3566,6 +3929,53 @@
                 this.hideAllPages();
                 document.getElementById('homeView').classList.remove('hidden');
                 this.setActiveTopNav('home');
+            },
+
+            showProfilePage() {
+                if (window.FocusGuard && FocusGuard.sprintLocked()) {
+                    FocusGuard.requestLeave(() => this.showProfilePage());
+                    return;
+                }
+                this.stashActiveChild();
+                this.hideAllPages();
+                document.getElementById('profileView').classList.remove('hidden');
+                this.renderProfilePage();
+            },
+
+            renderProfilePage() {
+                const box = document.getElementById('profileChildList');
+                if (!box) return;
+                const children = this.state.children || [];
+                if (!children.length) {
+                    box.innerHTML = '<div class="profile-card rounded-3xl p-5"><p class="font-bold text-slate-900">No children yet.</p><p class="text-sm text-slate-700 mt-1">Add a child to register a course and see the start and end dates.</p><button type="button" onclick="app.openChildManager()" class="mt-3 bg-emerald-600 text-white font-heading font-bold text-sm px-4 py-2 rounded-xl">Add a child</button></div>';
+                    return;
+                }
+                box.innerHTML = children.map(child => {
+                    const rec = (this.state.childRecords && this.state.childRecords[child.id]) || {};
+                    const active = child.id === this.state.activeChildId;
+                    const complete = this.childProfileComplete(child);
+                    const rows = ['beginner', 'foundation', 'advanced'].map(id => {
+                        const window = this.courseWindow(id, rec.paid, rec.enrolledAt, rec.progress);
+                        const name = COURSE_CATALOG[id].name;
+                        if (!window) {
+                            return '<div class="rounded-xl bg-white/80 border border-slate-200 px-3 py-2"><div class="font-bold text-slate-900">' + name + '</div><div class="text-xs text-slate-600">Not registered</div></div>';
+                        }
+                        const status = window.active ? 'Open' : 'Ended';
+                        const tone = window.active ? 'text-emerald-800' : 'text-rose-800';
+                        return '<div class="rounded-xl bg-white/80 border border-amber-200 px-3 py-2"><div class="flex items-center justify-between gap-2"><span class="font-bold text-slate-900">' + name + '</span><span class="text-[11px] font-extrabold uppercase ' + tone + '">' + status + '</span></div><div class="text-xs text-slate-700 mt-1">Start ' + this.escapeHtml(this.formatChildDate(window.start)) + ' · End ' + this.escapeHtml(this.formatChildDate(window.end)) + '</div></div>';
+                    }).join('');
+                    const meta = [child.school, child.gender, child.dob ? 'Born ' + this.formatChildDate(child.dob) : ''].filter(Boolean).join(' · ');
+                    return '<article class="profile-card rounded-3xl p-4 sm:p-5 space-y-3">'
+                        + '<div class="flex items-start justify-between gap-3">'
+                        + '<div><h3 class="font-heading text-xl font-bold text-slate-900">' + this.escapeHtml(child.name) + (active ? ' · current' : '') + '</h3>'
+                        + '<p class="text-xs text-slate-700">' + this.escapeHtml(meta || (complete ? '' : 'Profile incomplete')) + '</p></div>'
+                        + '<div class="flex gap-1 shrink-0">'
+                        + '<button type="button" class="text-xs font-bold px-2 py-1 rounded-lg bg-white border border-slate-200 text-slate-800" onclick="app.openChildManager(); app.editChild(\'' + child.id + '\')">Edit</button>'
+                        + (active ? '' : '<button type="button" class="text-xs font-bold px-2 py-1 rounded-lg bg-indigo-600 text-white" onclick="app.switchChild(\'' + child.id + '\')">Use</button>')
+                        + '</div></div>'
+                        + (complete ? '' : '<p class="text-xs font-bold text-amber-900">Name, date of birth, gender, and school are still needed before a course can start.</p>')
+                        + '<div class="grid gap-2">' + rows + '</div></article>';
+                }).join('');
             },
 
             showCourseSelectionPage() {
@@ -3583,30 +3993,92 @@
                     FocusGuard.requestLeave(() => this.showCoursePage());
                     return;
                 }
-                if (!this.isCoursePaid(this.state.activeCourse)) {
-                    this.ensurePaid(this.state.activeCourse, () => this.showCoursePage());
-                    return;
-                }
-                this.hideAllPages();
-                document.getElementById('coursePageView').classList.remove('hidden');
-                this.setActiveTopNav('course');
-                this.renderRoadmap();
+                this.requireChild(() => {
+                    if (!this.isCoursePaid(this.state.activeCourse)) {
+                        this.ensurePaid(this.state.activeCourse, () => this.showCoursePage());
+                        return;
+                    }
+                    this.hideAllPages();
+                    document.getElementById('coursePageView').classList.remove('hidden');
+                    this.setActiveTopNav('course');
+                    this.renderRoadmap();
+                });
             },
 
             isCoursePaid(courseId) {
-                if (this.state.paid && this.state.paid[courseId]) return true;
-                const prog = (this.state.progress && this.state.progress[courseId]) || {};
-                return Object.keys(prog).some(day => prog[day] && prog[day].completed);
+                const window = this.courseWindow(courseId, this.state.paid, this.state.enrolledAt, this.state.progress);
+                return !!(window && window.active);
+            },
+
+            todayIso() {
+                const date = new Date();
+                return date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
+            },
+
+            addMonths(iso, months) {
+                const parts = String(iso || this.todayIso()).split('-').map(Number);
+                const date = new Date(parts[0], (parts[1] || 1) - 1, parts[2] || 1);
+                date.setMonth(date.getMonth() + months);
+                return date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
+            },
+
+            courseWindow(courseId, paidMap, enrolledAt, progress) {
+                const paid = paidMap && paidMap[courseId];
+                let start = '';
+                let end = '';
+                if (paid && typeof paid === 'object' && paid.start && paid.end) {
+                    start = paid.start;
+                    end = paid.end;
+                } else if (paid === true || this.hasCompletedDays(progress, courseId)) {
+                    start = (enrolledAt && enrolledAt[courseId]) || this.todayIso();
+                    end = this.addMonths(start, 3);
+                } else {
+                    return null;
+                }
+                const today = this.todayIso();
+                return { start: start, end: end, active: today >= start && today <= end };
+            },
+
+            hasCompletedDays(progress, courseId) {
+                const days = (progress && progress[courseId]) || {};
+                return Object.keys(days).some(day => days[day] && days[day].completed);
+            },
+
+            normalizeAccessWindows() {
+                const store = (paid, enrolledAt, progress) => {
+                    const next = {};
+                    const source = paid || {};
+                    Object.keys(source).forEach(id => {
+                        const value = source[id];
+                        if (value && typeof value === 'object' && value.start && value.end) next[id] = { start: value.start, end: value.end };
+                    });
+                    ['beginner', 'foundation', 'advanced'].forEach(id => {
+                        if (next[id]) return;
+                        const window = this.courseWindow(id, source, enrolledAt, progress);
+                        if (window) next[id] = { start: window.start, end: window.end };
+                    });
+                    return next;
+                };
+                this.state.paid = store(this.state.paid, this.state.enrolledAt, this.state.progress);
+                Object.keys(this.state.childRecords || {}).forEach(id => {
+                    const rec = this.state.childRecords[id];
+                    if (!rec) return;
+                    rec.paid = store(rec.paid, rec.enrolledAt, rec.progress);
+                });
+                const active = this.state.childRecords && this.state.childRecords[this.state.activeChildId];
+                if (active) active.paid = JSON.parse(JSON.stringify(this.state.paid || {}));
             },
 
             ensurePaid(courseId, next) {
                 if (!COURSE_CATALOG[courseId]) return;
-                if (this.isCoursePaid(courseId)) {
-                    next();
-                    return;
-                }
-                this.payIntent = { courseId: courseId, next: next };
-                this.openPaymentModal(courseId);
+                this.requireChild(() => {
+                    if (this.isCoursePaid(courseId)) {
+                        next();
+                        return;
+                    }
+                    this.payIntent = { courseId: courseId, next: next };
+                    this.openPaymentModal(courseId);
+                });
             },
 
             selectCourse(courseId, goToCoursePage = false) {
@@ -3630,6 +4102,15 @@
                 if (!course) return;
                 document.getElementById('paymentTitle').textContent = 'Pay ' + course.priceLabel;
                 document.getElementById('paymentCourseName').textContent = course.name;
+                const child = this.activeChild();
+                const start = this.todayIso();
+                const end = this.addMonths(start, 3);
+                const existing = this.courseWindow(courseId, this.state.paid, this.state.enrolledAt, this.state.progress);
+                let line = child
+                    ? '₹99 opens ' + course.name + ' for ' + child.name + ' from ' + this.formatChildDate(start) + ' to ' + this.formatChildDate(end) + '.'
+                    : 'Add a child before paying.';
+                if (existing && !existing.active) line += ' The last access ended on ' + this.formatChildDate(existing.end) + '.';
+                document.getElementById('paymentChildLine').textContent = line;
                 const note = 'Maths Aflatoon ' + course.name;
                 const upi = 'upi://pay?pa=8976263041@ptsbi&pn=' + encodeURIComponent('Glasshouse Interactive') + '&am=99.00&cu=INR&tn=' + encodeURIComponent(note);
                 document.getElementById('paymentUpiLink').href = upi;
@@ -3676,6 +4157,177 @@
                 }
             },
 
+            account: null,
+            googleReady: false,
+
+            showLoginError(message) {
+                const el = document.getElementById('phoneLoginError');
+                el.textContent = message || '';
+                el.classList.toggle('hidden', !message);
+            },
+
+            paintAccount() {
+                const label = document.getElementById('phoneLoginBtnLabel');
+                const focusBtn = document.getElementById('focusModeBtn');
+                const loggedIn = !!(this.account && this.account.email);
+                if (focusBtn) focusBtn.classList.toggle('hidden', !loggedIn);
+                if (!loggedIn && window.FocusGuard && FocusGuard.turnOff) FocusGuard.turnOff();
+                if (!label) return;
+                if (!loggedIn) {
+                    label.textContent = 'Login';
+                    return;
+                }
+                const shown = (this.account.name || '').trim() || this.account.email.split('@')[0];
+                label.textContent = shown.length > 16 ? shown.slice(0, 15) + '…' : shown;
+            },
+
+            ensureGoogleButton(attempt) {
+                const tries = attempt || 0;
+                const clientId = (window.AUTH_CONFIG && window.AUTH_CONFIG.googleClientId) || '';
+                const slot = document.getElementById('aflatoonGoogleSlot');
+                if (!clientId) {
+                    this.showLoginError('Google sign-in is not configured.');
+                    return;
+                }
+                if (!window.google || !google.accounts || !google.accounts.id) {
+                    if (tries < 20) setTimeout(() => this.ensureGoogleButton(tries + 1), 250);
+                    else this.showLoginError('Google sign-in did not load. Refresh the page and try again.');
+                    return;
+                }
+                if (!this.googleReady) {
+                    google.accounts.id.initialize({
+                        client_id: clientId,
+                        callback: (response) => this.finishGoogleLogin(response),
+                        auto_select: false,
+                    });
+                    this.googleReady = true;
+                }
+                slot.innerHTML = '';
+                google.accounts.id.renderButton(slot, {
+                    theme: 'outline',
+                    size: 'large',
+                    width: 320,
+                    text: 'continue_with',
+                });
+            },
+
+            openGoogleLogin() {
+                this.showLoginError('');
+                if (this.account && this.account.email) {
+                    document.getElementById('phoneLoginStepPhone').classList.add('hidden');
+                    document.getElementById('phoneLoginStepAccount').classList.remove('hidden');
+                    document.getElementById('phoneLoginTitle').textContent = 'Your login';
+                    const who = (this.account.name || '').trim();
+                    document.getElementById('phoneLoginAccountText').textContent = who
+                        ? 'Logged in as ' + who + ' (' + this.account.email + ').'
+                        : 'Logged in as ' + this.account.email + '.';
+                } else {
+                    document.getElementById('phoneLoginStepPhone').classList.remove('hidden');
+                    document.getElementById('phoneLoginStepAccount').classList.add('hidden');
+                    document.getElementById('phoneLoginTitle').textContent = 'Log in with Google';
+                    this.ensureGoogleButton();
+                }
+                document.getElementById('phoneLoginModal').classList.remove('hidden');
+            },
+
+            closeGoogleLogin() {
+                document.getElementById('phoneLoginModal').classList.add('hidden');
+            },
+
+            acceptGoogleAccount(data) {
+                this.account = data.email ? { email: data.email, name: data.name || '' } : null;
+                this.paintAccount();
+                if (data.progress) this.applyRemoteProgress(data.progress);
+                else if (this.account) this.pushAflatoonProgress();
+                if (data.pinHash && window.FocusGuard && FocusGuard.adoptPin) FocusGuard.adoptPin(data.pinHash);
+                else if (this.account) {
+                    const localPin = localStorage.getItem('aflatoon_focus_pin') || '';
+                    if (localPin) {
+                        fetch('/api/aflatoon/focus-pin', {
+                            method: 'PUT',
+                            credentials: 'same-origin',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ pinHash: localPin })
+                        }).catch(() => {});
+                    }
+                }
+            },
+
+            async refreshPhoneAccount() {
+                try {
+                    const response = await fetch('/api/aflatoon/me', { credentials: 'same-origin', cache: 'no-store' });
+                    if (!response.ok) return;
+                    const data = await response.json();
+                    this.acceptGoogleAccount(data);
+                } catch (e) {}
+            },
+
+            async finishGoogleLogin(response) {
+                this.showLoginError('');
+                try {
+                    const result = await fetch('/api/aflatoon/google', {
+                        method: 'POST',
+                        credentials: 'same-origin',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ credential: response && response.credential })
+                    });
+                    const data = await result.json().catch(() => ({}));
+                    if (!result.ok) {
+                        this.showLoginError(data.error || 'Google sign-in could not be completed.');
+                        return;
+                    }
+                    this.acceptGoogleAccount(data);
+                    this.closeGoogleLogin();
+                } catch (e) {
+                    this.showLoginError('Google sign-in could not be completed.');
+                }
+            },
+
+            applyRemoteProgress(progress) {
+                this.applyingRemote = true;
+                const incomingChildren = progress && Array.isArray(progress.children) && progress.children.length;
+                this.state = Object.assign(this.state, progress || {});
+                this.state.theme = 'liquid';
+                if (!this.state.progress) this.state.progress = { beginner: {}, foundation: {}, advanced: {} };
+                if (!incomingChildren && this.state.activeChildId) {
+                    if (!this.state.childRecords || typeof this.state.childRecords !== 'object') this.state.childRecords = {};
+                    this.state.childRecords[this.state.activeChildId] = this.snapshotRecord();
+                }
+                this.ensureChildRecords();
+                this.stashActiveChild();
+                try {
+                    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.state));
+                } catch (e) {}
+                this.applyingRemote = false;
+                this.renderCourseSelectorCards();
+                this.updateNavCourseButtons();
+                this.updateDashboardStats();
+                this.renderRoadmap();
+                this.paintChildButton();
+            },
+
+            pushAflatoonProgress() {
+                clearTimeout(this.progressTimer);
+                this.progressTimer = setTimeout(() => {
+                    fetch('/api/aflatoon/progress', {
+                        method: 'PUT',
+                        credentials: 'same-origin',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ state: this.state })
+                    }).catch(() => {});
+                }, 400);
+            },
+
+            async logoutGoogle() {
+                if (window.FocusGuard && FocusGuard.turnOff) FocusGuard.turnOff();
+                try {
+                    await fetch('/api/aflatoon/logout', { method: 'POST', credentials: 'same-origin' });
+                } catch (e) {}
+                this.account = null;
+                this.paintAccount();
+                this.closeGoogleLogin();
+            },
+
             confirmAccessCode() {
                 const feedback = document.getElementById('payAccessFeedback');
                 const entered = document.getElementById('payAccessCode').value.trim().toLowerCase();
@@ -3687,8 +4339,14 @@
                 }
                 const intent = this.payIntent;
                 if (!intent) return;
+                if (!this.activeChild()) {
+                    feedback.textContent = 'Add a child first. This payment is for one child.';
+                    feedback.className = 'text-sm font-bold text-rose-700';
+                    return;
+                }
                 if (!this.state.paid) this.state.paid = {};
-                this.state.paid[intent.courseId] = true;
+                const start = this.todayIso();
+                this.state.paid[intent.courseId] = { start: start, end: this.addMonths(start, 3) };
                 this.saveState();
                 const next = intent.next;
                 this.closePaymentModal();
@@ -3848,7 +4506,8 @@
                 const prevBtn = document.getElementById('prevTopicPageBtn');
                 const nextBtn = document.getElementById('nextTopicPageBtn');
 
-                if (stageTag) stageTag.textContent = `${ms.title} • 35 Questions / Day`;
+                const child = this.activeChild();
+                if (stageTag) stageTag.textContent = `${child ? child.name + ' · ' : ''}${ms.title} • 35 Questions / Day`;
                 if (heading) heading.textContent = `${courseMeta.name} — Days ${startDay} to ${endDay}`;
                 if (indicator) indicator.textContent = `Page ${page + 1} / 10 (Days ${startDay}–${endDay})`;
                 if (prevBtn) prevBtn.disabled = (page === 0);
@@ -3922,8 +4581,12 @@
             // DAY MODULE VIEW (LESSON + 50 QUESTIONS)
             // =========================================================================
             openDay(dayNum, initialTab = 'lesson') {
+                this.requireChild(() => this.openDayAfterChild(dayNum, initialTab));
+            },
+
+            openDayAfterChild(dayNum, initialTab = 'lesson') {
                 if (!this.isCoursePaid(this.state.activeCourse)) {
-                    this.ensurePaid(this.state.activeCourse, () => this.openDay(dayNum, initialTab));
+                    this.ensurePaid(this.state.activeCourse, () => this.openDayAfterChild(dayNum, initialTab));
                     return;
                 }
                 this.stopTimer();
@@ -4425,7 +5088,14 @@
             startDiagnosticQuiz() {
                 const nameVal = document.getElementById('diagStudentName').value.trim();
                 const ageVal = parseInt(document.getElementById('diagStudentAge').value) || 10;
-                if (nameVal) this.state.studentName = nameVal;
+                const child = this.activeChild();
+                if (nameVal && child) {
+                    child.name = nameVal;
+                    this.state.studentName = nameVal;
+                    this.paintChildButton();
+                } else if (nameVal) {
+                    this.prefillChildName = nameVal;
+                }
                 this.state.studentAge = ageVal;
 
                 this.diagDeck = generateDynamicDiagnosticDeck();
@@ -4584,6 +5254,12 @@
                 document.getElementById('certificateModal').classList.remove('hidden');
             },
 
+            printCertificate() {
+                const stats = this.getCourseMedalStats(this.state.activeCourse);
+                if (!stats || stats.completed < 60) return;
+                window.print();
+            },
+
             closeCertificateModal() {
                 document.getElementById('certificateModal').classList.add('hidden');
             },
@@ -4592,45 +5268,57 @@
                 const cid = this.state.activeCourse;
                 const courseMeta = COURSE_CATALOG[cid];
                 const stats = this.getCourseMedalStats(cid);
+                const child = this.activeChild();
 
-                document.getElementById('certStudentNameDisplay').textContent = this.state.studentName || 'Young Mathematician';
-                document.getElementById('certCourseNameDisplay').textContent = `${courseMeta.name}`;
-                document.getElementById('certStatLevels').textContent = `${stats.completed} / 60`;
+                document.getElementById('certStudentNameDisplay').textContent = child ? child.name : 'Student name';
+                document.getElementById('certAddChildBeside').classList.toggle('hidden', !!child);
+                document.getElementById('certSampleMark').classList.toggle('hidden', stats.completed >= 60);
+                const printBtn = document.getElementById('certPrintBtn');
+                const readyToPrint = stats.completed >= 60;
+                printBtn.disabled = !readyToPrint;
+                printBtn.title = readyToPrint ? 'Print this certificate' : 'Print unlocks when all 60 days are complete';
+                const bits = [];
+                if (child && child.school) bits.push(child.school);
+                if (child && child.gender) bits.push(child.gender);
+                if (child && child.dob) bits.push('Born ' + this.formatChildDate(child.dob));
+                document.getElementById('certChildMeta').textContent = bits.join(' · ');
+                document.getElementById('certCourseNameDisplay').textContent = courseMeta.name;
+                document.getElementById('certStatLevels').textContent = stats.completed + ' / 60';
                 document.getElementById('certStatGold').textContent = stats.gold;
                 document.getElementById('certStatSilver').textContent = stats.silver;
                 document.getElementById('certStatBronze').textContent = stats.bronze;
-
-                const notice = document.getElementById('certProgressNotice');
-                if (stats.completed >= 60) {
-                    notice.className = "mb-5 bg-emerald-50 border border-emerald-300 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 no-print";
-                    document.getElementById('certProgressStatusTitle').textContent = "🎉 Congratulations! All 60 Days Completed!";
-                    document.getElementById('certProgressStatusSub').textContent = `Official 60-Day Course Graduation Certificate unlocked with an Overall Average ${stats.avgLabel}!`;
-                } else {
-                    notice.className = "mb-5 bg-indigo-50 border border-indigo-200 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 no-print";
-                    document.getElementById('certProgressStatusTitle').textContent = `Course In Progress (${stats.completed} / 60 Levels Completed):`;
-                    document.getElementById('certProgressStatusSub').textContent = `Complete all 60 daily levels (or click 'Test Full 60-Day Certificate' to preview graduation) to finalize your Overall Average Medal.`;
-                }
+                document.getElementById('certDateDisplay').textContent = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+                document.getElementById('certProgressStatusTitle').textContent = child
+                    ? (stats.completed >= 60 ? child.name + ' · all 60 days complete' : child.name + ' · ' + stats.completed + ' of 60 days')
+                    : 'Add a child to name this certificate';
+                this.paintCertChildren();
 
                 const badgeEl = document.getElementById('certOverallMedalBadge');
                 const emojiEl = document.getElementById('certOverallMedalEmoji');
                 const labelEl = document.getElementById('certOverallMedalLabel');
+                const medalClass = 'px-4 py-2 rounded-2xl inline-flex items-center gap-2 shadow';
 
                 if (stats.avgMedal === 'gold' || stats.completed === 0) {
-                    badgeEl.className = "medal-gold px-8 py-3 rounded-2xl inline-flex items-center gap-3 shadow-lg";
+                    badgeEl.className = 'medal-gold ' + medalClass;
                     emojiEl.textContent = '🥇';
-                    labelEl.textContent = stats.completed === 0 ? 'GOLD MEDAL (PREVIEW)' : 'GOLD MEDALIST';
+                    labelEl.textContent = stats.completed === 0 ? 'GOLD MEDAL' : 'GOLD MEDALIST';
                 } else if (stats.avgMedal === 'silver') {
-                    badgeEl.className = "medal-silver px-8 py-3 rounded-2xl inline-flex items-center gap-3 shadow-lg";
+                    badgeEl.className = 'medal-silver ' + medalClass;
                     emojiEl.textContent = '🥈';
                     labelEl.textContent = 'SILVER MEDALIST';
                 } else {
-                    badgeEl.className = "medal-bronze px-8 py-3 rounded-2xl inline-flex items-center gap-3 shadow-lg";
+                    badgeEl.className = 'medal-bronze ' + medalClass;
                     emojiEl.textContent = '🥉';
                     labelEl.textContent = 'BRONZE MEDALIST';
                 }
             },
 
             simulateFullCourseCompletion() {
+                if (!this.activeChild()) {
+                    this.openChildManager();
+                    this.showChildError('Add a child before previewing a certificate.');
+                    return;
+                }
                 const cid = this.state.activeCourse;
                 if (!this.state.progress[cid]) this.state.progress[cid] = {};
 
@@ -4657,23 +5345,141 @@
             // =========================================================================
             // STUDENT PROFILE & RESET MODALS
             // =========================================================================
-            openStudentProfileModal() {
-                document.getElementById('profileNameInput').value = this.state.studentName || '';
-                document.getElementById('profileAgeInput').value = this.state.studentAge || 10;
-                document.getElementById('studentProfileModal').classList.remove('hidden');
+            openChildManager() {
+                this.resetChildForm();
+                if (this.prefillChildName) document.getElementById('childNameInput').value = this.prefillChildName;
+                document.getElementById('childDobInput').max = new Date().toISOString().slice(0, 10);
+                this.renderChildList();
+                document.getElementById('childManagerModal').classList.remove('hidden');
             },
 
-            closeStudentProfileModal() {
-                document.getElementById('studentProfileModal').classList.add('hidden');
+            closeChildManager() {
+                this.pendingAfterChild = null;
+                document.getElementById('childManagerModal').classList.add('hidden');
             },
 
-            saveStudentProfile() {
-                const name = document.getElementById('profileNameInput').value.trim();
-                const age = parseInt(document.getElementById('profileAgeInput').value) || 10;
-                if (name) this.state.studentName = name;
-                this.state.studentAge = age;
-                this.saveState();
-                this.closeStudentProfileModal();
+            showChildError(message) {
+                const el = document.getElementById('childFormError');
+                if (!el) return;
+                el.textContent = message || '';
+                el.classList.toggle('hidden', !message);
+            },
+
+            resetChildForm() {
+                this.editingChildId = null;
+                document.getElementById('childFormTitle').textContent = 'Add a child';
+                document.getElementById('childNameInput').value = '';
+                document.getElementById('childDobInput').value = '';
+                document.getElementById('childGenderInput').value = '';
+                document.getElementById('childSchoolInput').value = '';
+                this.showChildError('');
+            },
+
+            renderChildList() {
+                const box = document.getElementById('childList');
+                if (!box) return;
+                const children = this.state.children || [];
+                if (!children.length) {
+                    box.innerHTML = '<p class="text-sm font-bold text-slate-700">No children yet. Add the first child below.</p>';
+                    return;
+                }
+                box.innerHTML = children.map(child => {
+                    const active = child.id === this.state.activeChildId;
+                    const names = this.courseNamesForChild(child.id);
+                    const access = names.length ? names.join(', ') : 'No course unlocked yet';
+                    const meta = [child.school, access].filter(Boolean).join(' · ');
+                    return '<div class="flex items-center justify-between gap-2 rounded-2xl border ' + (active ? 'border-amber-400 bg-amber-50' : 'border-slate-200 bg-white') + ' px-3 py-2">'
+                        + '<div class="min-w-0"><div class="font-bold text-slate-900 truncate">' + this.escapeHtml(child.name) + (active ? ' · current' : '') + '</div>'
+                        + '<div class="text-[11px] text-slate-600 truncate">' + this.escapeHtml(meta) + '</div></div>'
+                        + '<div class="flex gap-1 shrink-0">'
+                        + '<button type="button" class="text-xs font-bold px-2 py-1 rounded-lg bg-white border border-slate-200 text-slate-800" onclick="app.editChild(\'' + child.id + '\')">Edit</button>'
+                        + (active ? '' : '<button type="button" class="text-xs font-bold px-2 py-1 rounded-lg bg-indigo-600 text-white" onclick="app.switchChild(\'' + child.id + '\')">Use</button>')
+                        + '</div></div>';
+                }).join('');
+            },
+
+            editChild(id) {
+                const child = (this.state.children || []).find(item => item.id === id);
+                if (!child) return;
+                this.editingChildId = id;
+                document.getElementById('childFormTitle').textContent = 'Edit ' + child.name;
+                document.getElementById('childNameInput').value = child.name || '';
+                document.getElementById('childDobInput').value = child.dob || '';
+                document.getElementById('childGenderInput').value = child.gender || '';
+                document.getElementById('childSchoolInput').value = child.school || '';
+                this.showChildError('');
+            },
+
+            switchChild(id) {
+                if (!id || id === this.state.activeChildId) return;
+                if (window.FocusGuard && FocusGuard.sprintLocked()) {
+                    this.openChildManager();
+                    this.showChildError('Finish this sprint, or enter the focus code, before changing child.');
+                    return;
+                }
+                this.stashActiveChild();
+                this.activateChild(id, true);
+                this.renderChildList();
+                if (!document.getElementById('profileView').classList.contains('hidden')) this.renderProfilePage();
+                this.resumeAfterChild();
+            },
+
+            readChildForm() {
+                const name = document.getElementById('childNameInput').value.trim();
+                const dob = document.getElementById('childDobInput').value;
+                const gender = document.getElementById('childGenderInput').value;
+                const school = document.getElementById('childSchoolInput').value.trim();
+                if (!name) return this.showChildError('Enter the child’s name.');
+                if (!dob) return this.showChildError('Enter the date of birth.');
+                const born = new Date(dob + 'T00:00:00');
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                if (Number.isNaN(born.getTime()) || born > today) return this.showChildError('Enter a date of birth that is not in the future.');
+                if (gender !== 'Girl' && gender !== 'Boy') return this.showChildError('Choose girl or boy.');
+                if (!school) return this.showChildError('Enter the school name.');
+                return { name: name, dob: dob, gender: gender, school: school };
+            },
+
+            saveChildProfile() {
+                const details = this.readChildForm();
+                if (!details) return;
+                if (!Array.isArray(this.state.children)) this.state.children = [];
+                if (!this.state.childRecords || typeof this.state.childRecords !== 'object') this.state.childRecords = {};
+
+                if (this.editingChildId) {
+                    const child = this.state.children.find(item => item.id === this.editingChildId);
+                    if (!child) return;
+                    child.name = details.name;
+                    child.dob = details.dob;
+                    child.gender = details.gender;
+                    child.school = details.school;
+                    if (this.state.activeChildId === child.id) this.state.studentName = child.name;
+                    this.saveState();
+                    this.renderChildList();
+                    if (!document.getElementById('profileView').classList.contains('hidden')) this.renderProfilePage();
+                    this.paintCertChildren();
+                    if (!document.getElementById('certificateModal').classList.contains('hidden')) this.renderCertificateContent();
+                    this.prefillChildName = '';
+                    this.resetChildForm();
+                    this.resumeAfterChild();
+                    return;
+                }
+
+                if (window.FocusGuard && FocusGuard.sprintLocked()) {
+                    this.showChildError('Finish this sprint, or enter the focus code, before adding another child.');
+                    return;
+                }
+                const firstChild = !this.activeChild();
+                const record = firstChild ? this.snapshotRecord() : this.emptyChildRecord();
+                if (!firstChild) this.stashActiveChild();
+                const id = 'ch' + Date.now().toString(36) + Math.random().toString(16).slice(2, 6);
+                this.state.children.push({ id: id, name: details.name, dob: details.dob, gender: details.gender, school: details.school });
+                this.state.childRecords[id] = record;
+                this.activateChild(id, true);
+                this.prefillChildName = '';
+                this.renderChildList();
+                this.resetChildForm();
+                this.resumeAfterChild();
             },
 
             openResetModal() {
@@ -4697,23 +5503,7 @@
                 try { await AccountSync.ready(); } catch (e) {}
             }
             app.init();
-            var requireCourse = function (id) {
-                if (!window.MentalCourse || !MentalCourse.ready) return true;
-                if (MentalCourse.ready(id)) return true;
-                var next = "maths-aflatoon.html#" + encodeURIComponent(id);
-                location.href = "index.html?login=mental&next=" + encodeURIComponent(next);
-                return false;
-            };
-            var selectCourse = app.selectCourse.bind(app);
-            app.selectCourse = function (courseId, skipScroll) {
-                if (!requireCourse(courseId)) return;
-                selectCourse(courseId, skipScroll);
-            };
-            var openDay = app.openDay.bind(app);
-            app.openDay = function (dayNum, initialTab) {
-                if (!requireCourse(app.state.activeCourse)) return;
-                openDay(dayNum, initialTab);
-            };
+            try { await app.refreshPhoneAccount(); } catch (e) {}
             var pending = window.FocusGuard && FocusGuard.unfinishedSprint && FocusGuard.unfinishedSprint();
             if (pending && pending.course && pending.day) {
                 app.state.activeCourse = pending.course;
@@ -4724,5 +5514,135 @@
             if (hash && app.courses && app.courses[hash]) app.selectCourse(hash, true);
         };
     </script>
+    <style id="platform-fit">
+        html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+        body.theme-liquid {
+            height: 100dvh;
+            max-height: 100dvh;
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+        }
+        header { padding-top: env(safe-area-inset-top); }
+        button, a, input, select { touch-action: manipulation; }
+        html[data-ios="1"] body.theme-liquid,
+        html[data-platform="phone"] body.theme-liquid,
+        html[data-platform="tablet"] body.theme-liquid {
+            background-attachment: scroll;
+        }
+        html[data-platform="phone"] #liquidAmbientOrbs > div,
+        html[data-platform="tablet"] #liquidAmbientOrbs > div { display: none; }
+
+        html[data-platform="phone"] header > div,
+        html[data-platform="tablet"] header > div {
+            height: auto;
+            flex-wrap: wrap;
+            row-gap: 0.35rem;
+            padding-top: 0.35rem;
+            padding-bottom: 0.35rem;
+        }
+        html[data-platform="phone"] #phoneLoginBtnLabel { display: none; }
+        html[data-platform="phone"] #homeView,
+        html[data-platform="tablet"] #homeView,
+        html[data-platform="phone"] #courseSelectionView,
+        html[data-platform="tablet"] #courseSelectionView,
+        html[data-platform="phone"] #coursePageView,
+        html[data-platform="tablet"] #coursePageView,
+        html[data-platform="phone"] #dayModuleView,
+        html[data-platform="tablet"] #dayModuleView,
+        html[data-platform="phone"] #profileView,
+        html[data-platform="tablet"] #profileView {
+            overflow-x: hidden;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            align-items: stretch;
+        }
+        html[data-platform="phone"] #homeView > section,
+        html[data-platform="tablet"] #homeView > section,
+        html[data-platform="phone"] #courseSelectionView > section,
+        html[data-platform="tablet"] #courseSelectionView > section {
+            height: auto;
+            min-height: 100%;
+            align-items: flex-start;
+        }
+        html[data-platform="phone"] #coursePageView > section,
+        html[data-platform="tablet"] #coursePageView > section,
+        html[data-platform="phone"] #coursePageView > section > div,
+        html[data-platform="tablet"] #coursePageView > section > div {
+            height: auto;
+            min-height: 100%;
+            justify-content: flex-start;
+        }
+        html[data-platform="phone"] #homeView h1 { font-size: 1.85rem; line-height: 1.12; }
+        html[data-platform="tablet"] #homeView h1 { font-size: clamp(1.9rem, 4vw, 2.7rem); line-height: 1.12; }
+        html[data-platform="phone"] #homeView .grid-cols-2,
+        html[data-platform="tablet"][data-orientation="portrait"] #homeView .grid-cols-2 {
+            grid-template-columns: 1fr;
+        }
+        html[data-platform="phone"] #homeView .lg\:col-span-5,
+        html[data-platform="tablet"] #homeView .lg\:col-span-5 { display: none !important; }
+        html[data-platform="phone"] #homeView .whitespace-nowrap,
+        html[data-platform="tablet"] #homeView .whitespace-nowrap { white-space: normal; }
+
+        html[data-platform="phone"] #threeStageCardsGrid,
+        html[data-platform="tablet"][data-orientation="portrait"] #threeStageCardsGrid {
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+        html[data-platform="tablet"][data-orientation="landscape"] #threeStageCardsGrid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.75rem;
+        }
+        html[data-platform="phone"] #roadmapContainer {
+            height: auto;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+            align-content: start;
+        }
+        html[data-platform="tablet"][data-orientation="portrait"] #roadmapContainer {
+            height: auto;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.75rem;
+            align-content: start;
+        }
+        html[data-platform="tablet"][data-orientation="landscape"] #roadmapContainer {
+            height: auto;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.75rem;
+            align-content: start;
+        }
+        html[data-platform="phone"] #roadmapContainer > div,
+        html[data-platform="tablet"] #roadmapContainer > div { height: auto; }
+
+        html[data-platform="phone"] #dayTabs,
+        html[data-platform="tablet"][data-orientation="portrait"] #dayTabs { flex-wrap: wrap; }
+        html[data-platform="phone"] #tabBtnLesson,
+        html[data-platform="phone"] #tabBtnPractice,
+        html[data-platform="tablet"][data-orientation="portrait"] #tabBtnLesson,
+        html[data-platform="tablet"][data-orientation="portrait"] #tabBtnPractice {
+            flex: 1 1 12rem;
+            min-width: 0;
+            padding: 0.65rem 0.7rem;
+            font-size: 0.82rem;
+        }
+        html[data-platform="phone"] #fcActiveArena,
+        html[data-platform="tablet"][data-orientation="portrait"] #fcActiveArena {
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+        }
+        html[data-platform="tablet"][data-orientation="landscape"] #fcActiveArena {
+            grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+            gap: 0.75rem;
+        }
+        html[data-platform="phone"] #flashcardBox,
+        html[data-platform="tablet"] #flashcardBox { min-height: 0; padding: 1rem; }
+        html[data-platform="phone"] #fcQuestionPrompt { font-size: 1.65rem !important; }
+        html[data-platform="tablet"] #fcQuestionPrompt { font-size: 2rem !important; }
+        html[data-platform="phone"] .numpad-btn,
+        html[data-platform="tablet"] .numpad-btn { min-height: 2.75rem; }
+        html[data-ios="1"] input,
+        html[data-ios="1"] select,
+        html[data-ios="1"] textarea { font-size: max(16px, 1em); }
+    </style>
 </body>
 </html>

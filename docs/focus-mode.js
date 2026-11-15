@@ -54,6 +54,19 @@
     try {
       localStorage.setItem(PIN_KEY, hash);
     } catch (err) { /* ignore */ }
+    fetch("/api/aflatoon/focus-pin", {
+      method: "PUT",
+      credentials: "same-origin",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ pinHash: hash }),
+    }).catch(function () {});
+  }
+
+  function adoptPin(hash) {
+    if (!hash) return;
+    try {
+      localStorage.setItem(PIN_KEY, hash);
+    } catch (err) { /* ignore */ }
   }
 
   function loadSprint() {
@@ -102,7 +115,7 @@
     btn.classList.toggle("is-on", enabled);
     btn.classList.toggle("is-watching", watching);
     if (label) {
-      label.textContent = starting ? "Camera…" : watching ? "Watching" : enabled ? "Focus on" : "Focus";
+      label.textContent = enabled ? "Focus Mode On" : "Focus Mode Off";
     }
     if (dot) dot.hidden = !watching;
     if (starting) {
@@ -120,11 +133,14 @@
     if ($("focusNudge")) return;
     var style = document.createElement("style");
     style.textContent = [
-      "#focusModeBtn.is-on { background:#059669; color:#fff; border-color:#047857; }",
+      "#focusModeBtn.is-on { background:#047857 !important; color:#fff !important; border-color:#065f46 !important; box-shadow:0 0 0 3px rgba(16,185,129,.45); }",
       "#focusModeBtn.is-watching { box-shadow:0 0 0 3px rgba(16,185,129,.35); }",
       "#focusModeDot { width:.55rem; height:.55rem; border-radius:999px; background:#f87171; box-shadow:0 0 0 0 rgba(248,113,113,.7); animation:focusPulse 1.4s infinite; }",
       "@keyframes focusPulse { 70% { box-shadow:0 0 0 6px rgba(248,113,113,0);} 100% { box-shadow:0 0 0 0 rgba(248,113,113,0);} }",
-      "#focusCamPip { position:fixed; right:1rem; bottom:1rem; z-index:60; width:7.5rem; border-radius:1rem; overflow:hidden; border:2px solid #fff; box-shadow:0 10px 30px rgba(15,23,42,.28); background:#0f172a; }",
+      "#focusCamPip { position:fixed; right:max(.75rem, env(safe-area-inset-right)); bottom:max(.75rem, env(safe-area-inset-bottom)); z-index:60; width:7.5rem; border-radius:1rem; overflow:hidden; border:2px solid #fff; box-shadow:0 10px 30px rgba(15,23,42,.28); background:#0f172a; }",
+      "html[data-platform='phone'] #focusCamPip, html[data-platform='tablet'] #focusCamPip { width:6.4rem; }",
+      "#focusCamStart { position:fixed; left:50%; bottom:max(5.5rem, calc(env(safe-area-inset-bottom) + 4.5rem)); transform:translateX(-50%); z-index:70; border:0; border-radius:999px; background:#4f46e5; color:#fff; font:800 .95rem/1.2 Nunito, sans-serif; padding:.9rem 1.15rem; box-shadow:0 12px 30px rgba(15,23,42,.28); }",
+      "#focusCamStart[hidden] { display:none !important; }",
       "#focusCamPip video { width:100%; height:5.4rem; object-fit:cover; transform:scaleX(-1); display:block; }",
       "#focusCamPip p { margin:0; padding:.3rem .4rem .4rem; color:#e2e8f0; font:700 .62rem/1.2 Fredoka, Nunito, sans-serif; text-align:center; }",
       "#focusNudge { position:fixed; inset:0; z-index:80; display:flex; align-items:center; justify-content:center; padding:1.25rem; background:rgba(15,23,42,.45); pointer-events:none; }",
@@ -154,9 +170,17 @@
     var pip = document.createElement("div");
     pip.id = "focusCamPip";
     pip.className = "hidden no-print";
-    pip.innerHTML = '<video id="focusCamVideo" playsinline autoplay muted></video><p>Focus camera · not saved</p>';
+    pip.innerHTML = '<video id="focusCamVideo" playsinline webkit-playsinline autoplay muted></video><p>Focus camera · not saved</p>';
     document.body.appendChild(pip);
     video = pip.querySelector("video");
+    prepareVideo();
+    var start = document.createElement("button");
+    start.id = "focusCamStart";
+    start.type = "button";
+    start.hidden = true;
+    start.textContent = "Tap to start the focus camera";
+    start.addEventListener("click", function () { startCamera(); });
+    document.body.appendChild(start);
 
     var nudge = document.createElement("div");
     nudge.id = "focusNudge";
@@ -164,7 +188,7 @@
     nudge.setAttribute("role", "alertdialog");
     nudge.setAttribute("aria-live", "assertive");
     nudge.setAttribute("aria-label", "Please focus");
-    nudge.innerHTML = '<div id="focusNudgeCard"><div style="font-size:2.4rem" aria-hidden="true">👀</div><h2>Please focus</h2><p>Look at the screen. This closes when your eyes are back on the lesson.</p><p id="focusNudgeNote">The camera stays on this computer. Nothing is recorded.</p></div>';
+    nudge.innerHTML = '<div id="focusNudgeCard"><div style="font-size:2.4rem" aria-hidden="true">👀</div><h2>Please focus</h2><p>Look at the screen. This closes when your eyes are back on the lesson.</p><p id="focusNudgeNote">The camera stays on this device. Nothing is recorded.</p></div>';
     document.body.appendChild(nudge);
 
     var toast = document.createElement("div");
@@ -290,6 +314,11 @@
     paintButton();
   }
 
+  function turnOff() {
+    closePin();
+    disableFocus();
+  }
+
   function showToast(text) {
     ensureChrome();
     var toast = $("focusToast");
@@ -376,21 +405,26 @@
       "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.17/wasm"
     );
     var model = "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task";
-    try {
-      detector = await vision.FaceLandmarker.createFromOptions(fileset, {
-        baseOptions: { modelAssetPath: model, delegate: "GPU" },
-        runningMode: "VIDEO",
-        numFaces: 1,
-        outputFaceBlendshapes: true
-      });
-    } catch (err) {
-      detector = await vision.FaceLandmarker.createFromOptions(fileset, {
-        baseOptions: { modelAssetPath: model, delegate: "CPU" },
-        runningMode: "VIDEO",
-        numFaces: 1,
-        outputFaceBlendshapes: true
-      });
+    var attempts = isIos()
+      ? [["CPU", true], ["CPU", false]]
+      : [["GPU", true], ["CPU", true], ["CPU", false]];
+    var lastError = null;
+    for (var i = 0; i < attempts.length; i++) {
+      try {
+        detector = await vision.FaceLandmarker.createFromOptions(fileset, {
+          baseOptions: { modelAssetPath: model, delegate: attempts[i][0] },
+          runningMode: "VIDEO",
+          numFaces: 1,
+          outputFaceBlendshapes: attempts[i][1]
+        });
+        lastError = null;
+        break;
+      } catch (err) {
+        detector = null;
+        lastError = err;
+      }
     }
+    if (!detector) throw lastError || new Error("Focus check could not load.");
     detectorKind = "landmarker";
   }
 
@@ -422,7 +456,7 @@
     if (!watching) return;
     raf = requestAnimationFrame(loop);
     if (document.hidden || busy) return;
-    if (!video || video.readyState < 2) return;
+    if (!video || video.readyState < 2 || !video.videoWidth) return;
     if (now - lastCheck < CHECK_MS) return;
     lastCheck = now;
     busy = true;
@@ -433,6 +467,37 @@
     }).then(function () {
       busy = false;
     });
+  }
+
+  function isIos() {
+    var ua = navigator.userAgent || "";
+    var touch = navigator.maxTouchPoints || 0;
+    return /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && touch > 1);
+  }
+
+  function prepareVideo() {
+    if (!video) return;
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    video.setAttribute("muted", "");
+    video.setAttribute("playsinline", "");
+    video.setAttribute("webkit-playsinline", "");
+    video.autoplay = true;
+    video.disablePictureInPicture = true;
+  }
+
+  function showCameraTap(message) {
+    ensureChrome();
+    var btn = $("focusCamStart");
+    if (!btn) return;
+    btn.hidden = false;
+    btn.textContent = message || "Tap to start the focus camera";
+  }
+
+  function hideCameraTap() {
+    var btn = $("focusCamStart");
+    if (btn) btn.hidden = true;
   }
 
   function cameraErrorText(err) {
@@ -447,10 +512,15 @@
   }
 
   function openStream() {
-    var tries = [
-      { audio: false, video: { facingMode: "user", width: { ideal: 640 }, height: { ideal: 480 } } },
-      { audio: false, video: true }
-    ];
+    var tries = isIos()
+      ? [
+        { audio: false, video: { facingMode: "user" } },
+        { audio: false, video: true }
+      ]
+      : [
+        { audio: false, video: { facingMode: "user", width: { ideal: 640 }, height: { ideal: 480 } } },
+        { audio: false, video: true }
+      ];
     var last = Promise.reject(new Error("No camera"));
     tries.forEach(function (constraints) {
       last = last.catch(function (err) {
@@ -475,26 +545,46 @@
 
   async function startCamera() {
     if (watching || starting) return;
+    ensureChrome();
+    if (!window.isSecureContext) {
+      showToast("Focus mode needs a secure page. Open this site with https.");
+      return;
+    }
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       showToast("This browser cannot use the camera for Focus mode.");
       return;
     }
     starting = true;
     paintButton();
-    ensureChrome();
+    hideCameraTap();
     try {
+      var pip = $("focusCamPip");
+      pip.classList.remove("hidden");
+      prepareVideo();
       stream = await openStream();
       video.srcObject = stream;
+      prepareVideo();
+      if (video.readyState < 1) {
+        await new Promise(function (resolve) {
+          var done = function () {
+            video.removeEventListener("loadedmetadata", done);
+            resolve();
+          };
+          video.addEventListener("loadedmetadata", done);
+          setTimeout(resolve, 1500);
+        });
+      }
       await video.play();
       watching = true;
       awaySince = 0;
       backSince = 0;
-      $("focusCamPip").classList.remove("hidden");
       if (!raf) raf = requestAnimationFrame(loop);
       armDetector();
     } catch (err) {
       stopCamera();
+      var blocked = err && (err.name === "NotAllowedError" || err.name === "PermissionDeniedError" || err.name === "NotAllowedError");
       showToast(cameraErrorText(err));
+      if (isIos() || blocked) showCameraTap("Tap to start the focus camera");
     } finally {
       starting = false;
       paintButton();
@@ -517,6 +607,7 @@
     if (video) video.srcObject = null;
     var pip = $("focusCamPip");
     if (pip) pip.classList.add("hidden");
+    hideCameraTap();
     paintButton();
   }
 
@@ -608,6 +699,8 @@
     requestLeave: requestLeave,
     sprintLocked: sprintLocked,
     unfinishedSprint: unfinishedSprint,
+    adoptPin: adoptPin,
+    turnOff: turnOff,
     lookingFromLandmarks: lookingFromLandmarks,
     noteFocus: noteFocus
   };
