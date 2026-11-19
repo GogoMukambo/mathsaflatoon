@@ -1,0 +1,1720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Wordle of the Day — Six Letters</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Libre+Baskerville:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-color: #ffffff;
+      --text-color: #1a1a1b;
+      --border-color: #d3d6da;
+      --border-active: #878a8c;
+      --key-bg: #d3d6da;
+      --key-text: #1a1a1b;
+      --modal-bg: #ffffff;
+      --modal-overlay: rgba(255, 255, 255, 0.85);
+      --toast-bg: #1a1a1b;
+      --toast-text: #ffffff;
+      --color-correct: #6aaa64;
+      --color-present: #c9b458;
+      --color-absent: #787c7e;
+      --tile-text-revealed: #ffffff;
+    }
+
+    html.dark {
+      --bg-color: #121213;
+      --text-color: #ffffff;
+      --border-color: #3a3a3c;
+      --border-active: #565758;
+      --key-bg: #818384;
+      --key-text: #ffffff;
+      --modal-bg: #121213;
+      --modal-overlay: rgba(0, 0, 0, 0.75);
+      --toast-bg: #ffffff;
+      --toast-text: #121213;
+      --color-correct: #538d4e;
+      --color-present: #b59f3b;
+      --color-absent: #3a3a3c;
+      --tile-text-revealed: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+
+    .brand-title {
+      font-family: 'Libre Baskerville', Georgia, serif;
+      letter-spacing: -0.02em;
+    }
+
+    /* Header */
+    header {
+      border-bottom: 1px solid var(--border-color);
+      height: 54px;
+      flex-shrink: 0;
+    }
+
+    /* Board & Tiles */
+    .game-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 8px 8px 12px;
+      overflow: hidden;
+    }
+
+    .board-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 0;
+      padding: 4px 0;
+    }
+
+    .board {
+      display: grid;
+      grid-template-rows: repeat(7, 1fr);
+      gap: 5px;
+      width: 100%;
+      max-width: 345px;
+      aspect-ratio: 6 / 7;
+      max-height: 100%;
+    }
+
+    .board-row {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 5px;
+    }
+
+    .tile {
+      width: 100%;
+      height: 100%;
+      border: 2px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(1.15rem, 4.3vw, 1.7rem);
+      font-weight: 800;
+      text-transform: uppercase;
+      line-height: 1;
+      color: var(--text-color);
+      background-color: transparent;
+      border-radius: 4px;
+      transition: border-color 0.1s ease;
+      position: relative;
+    }
+
+    .tile[data-state="tbd"] {
+      border-color: var(--border-active);
+      animation: popIn 0.12s ease-out forwards;
+    }
+
+    .tile[data-state="correct"] {
+      background-color: var(--color-correct);
+      border-color: var(--color-correct);
+      color: var(--tile-text-revealed);
+    }
+
+    .tile[data-state="present"] {
+      background-color: var(--color-present);
+      border-color: var(--color-present);
+      color: var(--tile-text-revealed);
+    }
+
+    .tile[data-state="absent"] {
+      background-color: var(--color-absent);
+      border-color: var(--color-absent);
+      color: var(--tile-text-revealed);
+    }
+
+    /* Keyframe Animations */
+    @keyframes popIn {
+      0% { transform: scale(0.85); opacity: 0.7; }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes shake {
+      10%, 90% { transform: translateX(-2px); }
+      20%, 80% { transform: translateX(4px); }
+      30%, 50%, 70% { transform: translateX(-6px); }
+      40%, 60% { transform: translateX(6px); }
+    }
+
+    .shake {
+      animation: shake 0.45s cubic-bezier(.36,.07,.19,.97) both;
+    }
+
+    @keyframes flipIn {
+      0% { transform: rotateX(0deg); }
+      100% { transform: rotateX(-90deg); }
+    }
+
+    @keyframes flipOut {
+      0% { transform: rotateX(-90deg); }
+      100% { transform: rotateX(0deg); }
+    }
+
+    .flip-in {
+      animation: flipIn 0.22s ease-in forwards;
+    }
+
+    .flip-out {
+      animation: flipOut 0.22s ease-out forwards;
+    }
+
+    @keyframes bounceWin {
+      0%, 20% { transform: translateY(0); }
+      40% { transform: translateY(-24px); }
+      50% { transform: translateY(4px); }
+      60% { transform: translateY(-12px); }
+      80% { transform: translateY(2px); }
+      100% { transform: translateY(0); }
+    }
+
+    .bounce {
+      animation: bounceWin 0.85s ease forwards;
+    }
+
+    /* On-Screen Keyboard */
+    .keyboard {
+      width: 100%;
+      max-width: 500px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      flex-shrink: 0;
+      padding-top: 4px;
+    }
+
+    .kb-row {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      width: 100%;
+    }
+
+    .key {
+      height: clamp(46px, 7.2vh, 56px);
+      flex: 1;
+      border-radius: 5px;
+      border: none;
+      background-color: var(--key-bg);
+      color: var(--key-text);
+      font-family: inherit;
+      font-weight: 700;
+      font-size: clamp(0.75rem, 3.1vw, 0.92rem);
+      text-transform: uppercase;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.25s ease, color 0.25s ease, transform 0.08s ease;
+      padding: 0;
+    }
+
+    .key:active {
+      transform: scale(0.94);
+    }
+
+    .key.wide {
+      flex: 1.55;
+      font-size: clamp(0.68rem, 2.6vw, 0.8rem);
+    }
+
+    .key[data-state="correct"] {
+      background-color: var(--color-correct);
+      color: #ffffff;
+    }
+
+    .key[data-state="present"] {
+      background-color: var(--color-present);
+      color: #ffffff;
+    }
+
+    .key[data-state="absent"] {
+      background-color: var(--color-absent);
+      color: #ffffff;
+    }
+
+    /* Toast Container */
+    #toast-container {
+      position: fixed;
+      top: 66px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      pointer-events: none;
+    }
+
+    .toast {
+      background-color: var(--toast-bg);
+      color: var(--toast-text);
+      padding: 11px 18px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
+      opacity: 1;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      white-space: nowrap;
+    }
+
+    .toast.fade-out {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+
+    /* Modals */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background-color: var(--modal-overlay);
+      backdrop-filter: blur(2px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 900;
+      padding: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .modal-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      background-color: var(--modal-bg);
+      color: var(--text-color);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 440px;
+      max-height: 90dvh;
+      overflow-y: auto;
+      padding: 22px 24px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.22);
+      transform: translateY(10px) scale(0.98);
+      transition: transform 0.2s ease;
+      position: relative;
+    }
+
+    .modal-backdrop.open .modal-card {
+      transform: translateY(0) scale(1);
+    }
+
+    /* Mini example tiles in Help Modal */
+    .mini-tile {
+      width: 36px;
+      height: 36px;
+      border: 2px solid var(--border-color);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.05rem;
+      border-radius: 4px;
+    }
+    .mini-tile.correct { background-color: var(--color-correct); border-color: var(--color-correct); color: #fff; }
+    .mini-tile.present { background-color: var(--color-present); border-color: var(--color-present); color: #fff; }
+    .mini-tile.absent { background-color: var(--color-absent); border-color: var(--color-absent); color: #fff; }
+
+    /* Distribution Bar */
+    .dist-bar {
+      background-color: var(--color-absent);
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 0.78rem;
+      padding: 2px 8px;
+      border-radius: 3px;
+      min-width: 24px;
+      text-align: right;
+      transition: width 0.5s ease;
+    }
+    .dist-bar.highlight {
+      background-color: var(--color-correct);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="w-full px-3 sm:px-5 flex items-center justify-between">
+    <div class="flex items-center gap-1 sm:gap-2">
+      <button id="btn-help" aria-label="How to Play" class="p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition" title="How to Play">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+      </button>
+      <a id="btn-back-academy" href="maths-aflatoon.html" class="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider px-2.5 py-1.5 rounded-md border border-current/25 hover:bg-black/5 dark:hover:bg-white/10 transition" title="Back to Maths Aflatoon">
+        ← Academy
+      </a>
+    </div>
+
+    <div class="flex flex-col items-center gap-0.5">
+      <div class="flex items-center gap-2">
+        <h1 class="brand-title text-2xl sm:text-3xl font-bold tracking-tight select-none">Wordle</h1>
+        <span class="text-xs font-extrabold px-1.5 py-0.5 rounded bg-[#6aaa64] text-white tracking-wider">6</span>
+      </div>
+      <p id="daily-label" class="text-[10px] sm:text-xs font-bold uppercase tracking-widest opacity-70">Word of the Day</p>
+    </div>
+
+    <div class="flex items-center gap-1 sm:gap-2">
+      <button id="btn-stats" aria-label="Statistics" class="p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition" title="Statistics">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="20" x2="18" y2="10"></line>
+          <line x1="12" y1="20" x2="12" y2="4"></line>
+          <line x1="6" y1="20" x2="6" y2="14"></line>
+        </svg>
+      </button>
+      <button id="btn-theme" aria-label="Toggle Dark Mode" class="p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition" title="Toggle Theme">
+        <!-- Sun Icon (shown in dark mode) -->
+        <svg id="icon-sun" class="hidden" xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <!-- Moon Icon (shown in light mode) -->
+        <svg id="icon-moon" xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" aria-live="polite"></div>
+
+  <!-- Main Game Area -->
+  <main class="game-container">
+    <!-- 7x6 Tile Board -->
+    <div class="board-wrapper">
+      <div id="board" class="board" role="grid" aria-label="Wordle 6-letter Game Board"></div>
+    </div>
+
+    <!-- On-Screen QWERTY Keyboard -->
+    <div id="keyboard" class="keyboard" role="group" aria-label="On-screen keyboard">
+      <div class="kb-row">
+        <button class="key" data-key="Q">Q</button>
+        <button class="key" data-key="W">W</button>
+        <button class="key" data-key="E">E</button>
+        <button class="key" data-key="R">R</button>
+        <button class="key" data-key="T">T</button>
+        <button class="key" data-key="Y">Y</button>
+        <button class="key" data-key="U">U</button>
+        <button class="key" data-key="I">I</button>
+        <button class="key" data-key="O">O</button>
+        <button class="key" data-key="P">P</button>
+      </div>
+      <div class="kb-row px-3 sm:px-5">
+        <button class="key" data-key="A">A</button>
+        <button class="key" data-key="S">S</button>
+        <button class="key" data-key="D">D</button>
+        <button class="key" data-key="F">F</button>
+        <button class="key" data-key="G">G</button>
+        <button class="key" data-key="H">H</button>
+        <button class="key" data-key="J">J</button>
+        <button class="key" data-key="K">K</button>
+        <button class="key" data-key="L">L</button>
+      </div>
+      <div class="kb-row">
+        <button class="key wide" data-key="ENTER">ENTER</button>
+        <button class="key" data-key="Z">Z</button>
+        <button class="key" data-key="X">X</button>
+        <button class="key" data-key="C">C</button>
+        <button class="key" data-key="V">V</button>
+        <button class="key" data-key="B">B</button>
+        <button class="key" data-key="N">N</button>
+        <button class="key" data-key="M">M</button>
+        <button class="key wide" data-key="BACKSPACE" aria-label="Backspace">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path>
+            <line x1="18" y1="9" x2="12" y2="15"></line>
+            <line x1="12" y1="9" x2="18" y2="15"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Help / How to Play Modal -->
+  <div id="modal-help" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="help-title">
+    <div class="modal-card">
+      <div class="flex items-center justify-between mb-3">
+        <h2 id="help-title" class="text-xl font-extrabold tracking-tight">How To Play</h2>
+        <button class="close-modal p-1.5 rounded-lg hover:bg-black/10 dark:hover:bg-white/10" aria-label="Close">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <p class="text-sm opacity-90 mb-3">Guess the <strong>6-letter Wordle of the Day</strong> in 7 tries. Everyone gets the same word today; a new word appears tomorrow.</p>
+      <ul class="text-sm space-y-1.5 list-disc pl-5 opacity-90 mb-4">
+        <li>Each guess must be a valid 6-letter English word.</li>
+        <li>The color of the tiles will change to show how close your guess was to the word.</li>
+      </ul>
+
+      <div class="border-t border-b border-current/15 py-3.5 my-3 space-y-4">
+        <p class="text-xs font-bold uppercase tracking-wider opacity-75">Examples</p>
+
+        <div>
+          <div class="flex gap-1.5 mb-1.5">
+            <span class="mini-tile correct">P</span>
+            <span class="mini-tile">L</span>
+            <span class="mini-tile">A</span>
+            <span class="mini-tile">N</span>
+            <span class="mini-tile">E</span>
+            <span class="mini-tile">T</span>
+          </div>
+          <p class="text-xs opacity-90"><strong>P</strong> is in the word and in the correct spot.</p>
+        </div>
+
+        <div>
+          <div class="flex gap-1.5 mb-1.5">
+            <span class="mini-tile">S</span>
+            <span class="mini-tile">I</span>
+            <span class="mini-tile present">L</span>
+            <span class="mini-tile">V</span>
+            <span class="mini-tile">E</span>
+            <span class="mini-tile">R</span>
+          </div>
+          <p class="text-xs opacity-90"><strong>L</strong> is in the word but in the wrong spot.</p>
+        </div>
+
+        <div>
+          <div class="flex gap-1.5 mb-1.5">
+            <span class="mini-tile">B</span>
+            <span class="mini-tile">R</span>
+            <span class="mini-tile">I</span>
+            <span class="mini-tile absent">G</span>
+            <span class="mini-tile">H</span>
+            <span class="mini-tile">T</span>
+          </div>
+          <p class="text-xs opacity-90"><strong>G</strong> is not in the word in any spot.</p>
+        </div>
+      </div>
+
+      <button class="close-modal w-full mt-2 py-2.5 rounded-lg font-bold text-sm uppercase tracking-wider bg-[#6aaa64] hover:bg-[#5b9955] text-white transition">
+        Let's Play
+      </button>
+    </div>
+  </div>
+
+  <!-- Statistics & Play Again Modal -->
+  <div id="modal-stats" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="stats-title">
+    <div class="modal-card">
+      <div class="flex items-center justify-between mb-4">
+        <h2 id="stats-title" class="text-lg font-extrabold uppercase tracking-wider">Statistics</h2>
+        <button class="close-modal p-1.5 rounded-lg hover:bg-black/10 dark:hover:bg-white/10" aria-label="Close">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Secret Word Reveal Banner (Shown when round ends) -->
+      <div id="word-reveal-box" class="hidden mb-4 p-3 rounded-lg border border-current/15 bg-black/5 dark:bg-white/5 text-center">
+        <p id="round-outcome-label" class="text-xs uppercase font-bold tracking-wider opacity-75 mb-1">The Word Was</p>
+        <p id="secret-word-display" class="text-2xl font-extrabold tracking-[0.22em] text-[#6aaa64]">PLANET</p>
+      </div>
+
+      <!-- 4 Key Metric Boxes -->
+      <div class="grid grid-cols-4 gap-2 text-center mb-5">
+        <div class="p-2 rounded-lg bg-black/5 dark:bg-white/5">
+          <div id="stat-played" class="text-2xl sm:text-3xl font-extrabold">0</div>
+          <div class="text-[11px] leading-tight opacity-75 mt-0.5">Played</div>
+        </div>
+        <div class="p-2 rounded-lg bg-black/5 dark:bg-white/5">
+          <div id="stat-win-pct" class="text-2xl sm:text-3xl font-extrabold">0</div>
+          <div class="text-[11px] leading-tight opacity-75 mt-0.5">Win %</div>
+        </div>
+        <div class="p-2 rounded-lg bg-black/5 dark:bg-white/5">
+          <div id="stat-streak" class="text-2xl sm:text-3xl font-extrabold">0</div>
+          <div class="text-[11px] leading-tight opacity-75 mt-0.5">Current Streak</div>
+        </div>
+        <div class="p-2 rounded-lg bg-black/5 dark:bg-white/5">
+          <div id="stat-max-streak" class="text-2xl sm:text-3xl font-extrabold">0</div>
+          <div class="text-[11px] leading-tight opacity-75 mt-0.5">Max Streak</div>
+        </div>
+      </div>
+
+      <!-- Guess Distribution -->
+      <h3 class="text-xs font-extrabold uppercase tracking-wider mb-2.5">Guess Distribution</h3>
+      <div id="guess-distribution" class="space-y-1.5 mb-5">
+        <!-- Populated dynamically -->
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex gap-2.5 pt-2 border-t border-current/15">
+        <button id="btn-share" class="hidden flex-1 py-3 px-4 rounded-lg font-bold text-sm uppercase tracking-wider border-2 border-[#6aaa64] text-[#6aaa64] hover:bg-[#6aaa64]/10 transition flex items-center justify-center gap-2">
+          <span>Share</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="18" cy="5" r="3"></circle>
+            <circle cx="6" cy="12" r="3"></circle>
+            <circle cx="18" cy="19" r="3"></circle>
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+          </svg>
+        </button>
+        <button id="btn-play-again" class="flex-1 py-3 px-4 rounded-lg font-bold text-sm uppercase tracking-wider bg-[#6aaa64] hover:bg-[#5b9955] text-white shadow-md transition flex items-center justify-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+          </svg>
+          <span id="play-again-label">New Game</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * Built-in 6-Letter English Dictionary
+     * Contains hundreds of common, curated 6-letter words for both target answers
+     * and valid guess verification.
+     */
+    const TARGET_WORDS = [
+      "ABROAD", "ACCEPT", "ACCESS", "ACROSS", "ACTION", "ACTIVE", "ACTUAL",
+      "ADVICE", "ADVISE", "AFFECT", "AFFORD", "AFRAID", "AGENCY", "AGENDA", "ALMOST",
+      "ALWAYS", "AMOUNT", "ANCHOR", "ANIMAL", "ANNUAL", "ANSWER", "ANYONE", "ANYWAY",
+      "APPEAL", "APPEAR", "AROUND", "ARRIVE", "ARTIST", "ASPECT", "ASSESS", "ASSIST",
+      "ASSUME", "ATTACK", "ATTEND", "AUTHOR", "AVENUE", "BACKED", "BACKUP", "BAKERY",
+      "BALLOT", "BANANA", "BANKER", "BARELY", "BARREL", "BASKET", "BATTLE", "BEAUTY",
+      "BECAME", "BECOME", "BEFORE", "BEHALF", "BEHAVE", "BEHIND", "BELIEF", "BELONG",
+      "BESIDE", "BETTER", "BEYOND", "BISHOP", "BITTER", "BORDER", "BOTTLE", "BOTTOM",
+      "BOUGHT", "BOUNCE", "BRANCH", "BREATH", "BREEZE", "BRIDGE", "BRIGHT", "BROKEN",
+      "BRONZE", "BUDGET", "BURDEN", "BUREAU", "BUTTON", "CAMERA", "CAMPUS", "CANCEL",
+      "CANCER", "CANDLE", "CANYON", "CARBON", "CAREER", "CARPET", "CASTLE", "CASUAL",
+      "CAUGHT", "CENTER", "CENTRE", "CHANCE", "CHANGE", "CHARGE", "CHOICE", "CHOOSE",
+      "CHOSEN", "CHURCH", "CIRCLE", "CLIENT", "CLOSED", "CLOSER", "COFFEE", "COLUMN",
+      "COMBAT", "COMMON", "COMPLY", "COPPER", "CORNER", "COSTLY", "COUNTY", "COUPLE",
+      "COURSE", "CREATE", "CREDIT", "CRISIS", "CUSTOM", "DAMAGE", "DANCER", "DANGER",
+      "DEALER", "DEBATE", "DECADE", "DECIDE", "DEFEAT", "DEFEND", "DEFINE", "DEGREE",
+      "DEMAND", "DEPEND", "DEPUTY", "DESERT", "DESIGN", "DESIRE", "DETAIL", "DETECT",
+      "DEVICE", "DIFFER", "DINNER", "DIRECT", "DOCTOR", "DOLLAR", "DOMAIN", "DOUBLE",
+      "DRAGON", "DRAWER", "DRIVEN", "DRIVER", "DURING", "EASILY", "EDITOR", "EFFECT",
+      "EFFORT", "EIGHTH", "EITHER", "ELEVEN", "EMERGE", "EMPIRE", "EMPLOY", "ENABLE",
+      "ENERGY", "ENGAGE", "ENGINE", "ENOUGH", "ENSURE", "ENTIRE", "ENTITY", "EQUITY",
+      "ESCAPE", "ESTATE", "ETHNIC", "EXCEED", "EXCEPT", "EXCESS", "EXPAND", "EXPECT",
+      "EXPERT", "EXPORT", "EXTEND", "EXTENT", "FABRIC", "FACTOR", "FAILED", "FAIRLY",
+      "FALLEN", "FAMILY", "FAMOUS", "FATHER", "FELLOW", "FEMALE", "FIGURE", "FINGER",
+      "FINISH", "FISCAL", "FLAVOR", "FLIGHT", "FLOWER", "FOLLOW", "FORCED", "FOREST",
+      "FORGET", "FORMAL", "FORMAT", "FORMER", "FOSTER", "FOUGHT", "FOURTH", "FREEZE",
+      "FRENCH", "FRIEND", "FROZEN", "FUTURE", "GALAXY", "GARDEN", "GATHER", "GENDER",
+      "GENTLE", "GIFTED", "GLOBAL", "GOLDEN", "GROUND", "GROWTH", "GUILTY", "HAMMER",
+      "HANDED", "HANDLE", "HAPPEN", "HARBOR", "HARDLY", "HEALTH", "HEAVEN", "HEIGHT",
+      "HIDDEN", "HOLDER", "HONEST", "HORROR", "HUMBLE", "HUNGER", "HUNTER", "IGNORE",
+      "IMPACT", "IMPORT", "INCOME", "INDEED", "INJURY", "INSIDE", "INSIST", "INTACT",
+      "INTEND", "INTENT", "INVEST", "ISLAND", "ITSELF", "JACKET", "JUNGLE", "JUNIOR",
+      "KEEPER", "KERNEL", "KETTLE", "KIDNEY", "KNIGHT", "LABOUR", "LADDER", "LAUNCH",
+      "LAWYER", "LEADER", "LEAGUE", "LEGACY", "LEGEND", "LENGTH", "LESSON", "LETTER",
+      "LIKELY", "LINKED", "LIQUID", "LISTEN", "LITTLE", "LOCKED", "LONELY", "LOVELY",
+      "LUXURY", "MANAGE", "MANNER", "MARBLE", "MARGIN", "MARINE", "MARKED", "MARKET",
+      "MASTER", "MATTER", "MATURE", "MEDIUM", "MEMBER", "MEMORY", "MENTAL", "MERELY",
+      "METHOD", "MIDDLE", "MILLER", "MINUTE", "MIRROR", "MOBILE", "MODERN", "MODEST",
+      "MOMENT", "MONKEY", "MOSTLY", "MOTHER", "MOTION", "MURDER", "MUSEUM", "MUTUAL",
+      "MYSELF", "NARROW", "NATION", "NATIVE", "NATURE", "NEARBY", "NEARLY", "NEEDLE",
+      "NEPHEW", "NOBODY", "NORMAL", "NOTICE", "NOTION", "NUMBER", "OBJECT", "OBTAIN",
+      "OCCUPY", "OFFICE", "OFFSET", "ONLINE", "OPTION", "ORANGE", "ORIGIN", "OUTLET",
+      "OUTPUT", "OXFORD", "PACKED", "PALACE", "PARENT", "PARTLY", "PATENT", "PATROL",
+      "PENCIL", "PEOPLE", "PEPPER", "PERIOD", "PERMIT", "PERSON", "PHRASE", "PICKED",
+      "PICNIC", "PILLOW", "PLANET", "PLAYER", "PLEASE", "PLENTY", "POCKET", "POETRY",
+      "POLICE", "POLICY", "POLISH", "PORTAL", "POSTER", "POTATO", "POWDER", "PRAISE",
+      "PRAYER", "PREFER", "PRETTY", "PRIEST", "PRINCE", "PRISON", "PROFIT", "PROPER",
+      "PROVEN", "PUBLIC", "PURPLE", "PURSUE", "PUZZLE", "RABBIT", "RACIAL", "RANDOM",
+      "RARELY", "RATHER", "RATING", "READER", "REALLY", "REASON", "RECALL", "RECENT",
+      "RECIPE", "RECORD", "REDUCE", "REFORM", "REFUSE", "REGARD", "REGIME", "REGION",
+      "REGRET", "REJECT", "RELATE", "RELIEF", "REMAIN", "REMOTE", "REMOVE", "REPAIR",
+      "REPEAT", "REPORT", "RESCUE", "RESORT", "RESULT", "RETAIL", "RETAIN", "RETURN",
+      "REVEAL", "REVIEW", "REWARD", "RHYTHM", "RIBBON", "ROBUST", "ROCKET", "RUBBER",
+      "RUNNER", "SACRED", "SAFETY", "SALARY", "SAMPLE", "SCHEME", "SCHOOL", "SCREEN",
+      "SCRIPT", "SEARCH", "SEASON", "SECOND", "SECRET", "SECTOR", "SECURE", "SELECT",
+      "SELLER", "SENIOR", "SERIES", "SERVER", "SETTLE", "SEVERE", "SHADOW", "SHAPED",
+      "SHARED", "SHIELD", "SHOULD", "SHOWER", "SIGNAL", "SIGNED", "SILENT", "SILVER",
+      "SIMPLE", "SIMPLY", "SINGLE", "SISTER", "SKETCH", "SLIGHT", "SMOOTH", "SOCCER",
+      "SOCIAL", "SOURCE", "SPEECH", "SPIRIT", "SPOKEN", "SPREAD", "SPRING", "SQUARE",
+      "STABLE", "STATUS", "STEADY", "STOLEN", "STREAM", "STREET", "STRESS", "STRICT",
+      "STRIKE", "STRING", "STRONG", "STUDIO", "SUBMIT", "SUDDEN", "SUFFER", "SUMMER",
+      "SUMMIT", "SUPPLY", "SURELY", "SURVEY", "SWITCH", "SYMBOL", "SYSTEM", "TABLET",
+      "TALENT", "TARGET", "TAUGHT", "TEMPLE", "TENANT", "TENDER", "TENNIS", "THEORY",
+      "THIRTY", "THOUGH", "THREAT", "THROWN", "TICKET", "TIMBER", "TISSUE", "TOWARD",
+      "TRAVEL", "TREATY", "TUNNEL", "TURKEY", "TWELVE", "TWENTY", "UNABLE", "UNIQUE",
+      "UNITED", "UNLESS", "UNLIKE", "UPDATE", "USEFUL", "VALLEY", "VARIED", "VECTOR",
+      "VELVET", "VENDOR", "VERSUS", "VICTIM", "VISION", "VISUAL", "VOLUME", "WALKER",
+      "WEALTH", "WEAPON", "WEEKLY", "WEIGHT", "WINDOW", "WINNER", "WINTER", "WISDOM",
+      "WITHIN", "WONDER", "WOODEN", "WORKER", "WORTHY", "WRITER", "YELLOW", "ZODIAC"
+    ];
+
+    // Extra valid non-plural, non-gerund 6-letter words accepted as guesses
+    const EXTRA_VALID_WORDS = [
+      "ABACUS", "ABDUCT", "ABLAZE", "ABOARD", "ABSENT", "ABSORB", "ABSURD", "ACCENT",
+      "ACCORD", "ACCUSE", "ACIDIC", "ACQUIT", "ADDICT", "ADHERE", "ADJUST", "ADMIRE",
+      "ADORED", "ADVENT", "ADVERT", "AERIAL", "AFFAIR", "AFFIRM", "AFLOAT", "AGREED",
+      "AIRWAY", "ALLEGE", "ALLIED", "ALMOND", "ALPINE", "AMAZED", "AMIDST", "AMUSED",
+      "ANGLED", "ANTHEM", "APATHY", "APIECE", "ARCADE", "ARCHER", "ARCTIC", "ARISEN",
+      "ARMOUR", "ARREST", "ARTERY", "ARTFUL", "ASHORE", "ASLEEP", "ASSERT", "ASSIGN",
+      "ASSORT", "ASSURE", "ASTHMA", "ASYLUM", "ATOMIC", "ATTAIN", "ATTIRE", "AUGUST",
+      "AUNTIE", "AUTUMN", "AVATAR", "AVENGE", "AWAITS", "AWAKEN", "BADGER", "BAFFLE",
+      "BAGGED", "BALLET", "BAMBOO", "BANDIT", "BANGED", "BANISH", "BANKED", "BANNER",
+      "BANTER", "BARBER", "BARKED", "BARLEY", "BASICS", "BATHED", "BATTER", "BEACON",
+      "BEADED", "BEAGLE", "BEAMED", "BEARER", "BEATEN", "BEETLE", "BEGGAR", "BEGGED",
+      "BELIED", "BELLOW", "BELTED", "BENDED", "BENIGN", "BEREFT", "BETRAY", "BEWARE",
+      "BICEPS", "BICKER", "BIDDER", "BIGGER", "BIKINI", "BILLED", "BINARY", "BINDER",
+      "BIOPSY", "BISTRO", "BITTEN", "BLAMED", "BLEACH", "BLONDE", "BLOODY", "BLOUSE",
+      "BLOWER", "BLUISH", "BOATED", "BODILY", "BOILED", "BOILER", "BOLDER", "BOLDLY",
+      "BOLTED", "BOMBER", "BONDED", "BONNET", "BOOKED", "BOOTED", "BORROW", "BOTANY",
+      "BOTHER", "BOUNTY", "BOWLER", "BOYISH", "BRACED", "BRAINY", "BRAKED", "BRANDY",
+      "BRASSY", "BRAVELY", "BRAVER", "BRAZEN", "BREACH", "BREAST", "BREWERY", "BRIBED",
+      "BRIDAL", "BROKER", "BROWSE", "BRUISE", "BRUNCH", "BRUTAL", "BUBBLE", "BUCKET",
+      "BUCKLE", "BUDDED", "BUFFER", "BUFFET", "BUGGED", "BULLET", "BUMBLE", "BUMPED",
+      "BUMPER", "BUNDLE", "BUNKER", "BURGER", "BURIAL", "BURIED", "BURNED", "BURNER",
+      "BURROW", "BUSIER", "BUSILY", "BUSTER", "BUTLER", "BUTTER", "BUZZED", "BUZZER",
+      "BYPASS", "CACHED", "CACTUS", "CAESAR", "CALLER", "CALMED", "CALMER", "CALMLY",
+      "CAMPED", "CAMPER", "CANARY", "CANDID", "CANINE", "CANNED", "CANNON", "CANOPY",
+      "CANVAS", "CARING", "CARNAL", "CARROT", "CARTEL", "CARTON", "CARVED", "CARVER",
+      "CASINO", "CASKET", "CASTER", "CATCHY", "CATTLE", "CAUSAL", "CAUSED", "CAVEAT",
+      "CAVERN", "CAVITY", "CEASED", "CELERY", "CELLAR", "CEMENT", "CENSOR", "CENSUS",
+      "CEREAL", "CHALET", "CHAPEL", "CHASED", "CHASER", "CHEEKY", "CHEERY", "CHEESE",
+      "CHEESY", "CHERRY", "CHILLY", "CHISEL", "CHORUS", "CHROME", "CHUNKY", "CINEMA",
+      "CIRCUS", "CITRUS", "CLARET", "CLASSY", "CLAUSE", "CLAWED", "CLERGY", "CLEVER",
+      "CLIMAX", "CLINIC", "CLIQUE", "CLONED", "CLOSET", "CLOTHE", "CLOUDY", "CLOVER",
+      "CLUMSY", "CLUTCH", "COARSE", "COATED", "COBALT", "COBWEB", "COFFIN", "COILED",
+      "COINED", "COLLAR", "COLONY", "COLOUR", "COMEDY", "COMMIT", "COMPEL", "CONCUR",
+      "CONDOR", "CONFER", "CONVEX", "CONVEY", "CONVOY", "COOKED", "COOKER", "COOKIE",
+      "COOLED", "COOLER", "COPIED", "CORDON", "CORPSE", "CORPUS", "COTTON", "COUPON",
+      "COUSIN", "COVERT", "COWARD", "COWBOY", "CRADLE", "CRAFTY", "CRATER", "CRAVED",
+      "CRAYON", "CRAZED", "CREAMY", "CREASE", "CREEPY", "CRINGE", "CRISPY", "CRITIC",
+      "CRUISE", "CRUNCH", "CRYPTO", "CUCKOO", "CUDDLE", "CURBED", "CURFEW", "CURLED",
+      "CURSOR", "CURVED", "CUTTER", "CYCLIC", "CYMBAL", "DABBLE", "DAGGER", "DAINTY",
+      "DAMNED", "DAMPEN", "DANDY", "DARKEN", "DARKER", "DARKLY", "DASHED", "DAZZLE",
+      "DEADLY", "DEAFEN", "DEARLY", "DEBRIS", "DEBTOR", "DECEIT", "DECENT", "DECKED",
+      "DECODE", "DECREE", "DEDUCT", "DEEMED", "DEEPEN", "DEEPER", "DEEPLY", "DEFECT",
+      "DEFIED", "DEFORM", "DEFRAY", "DEFTLY", "DELETE", "DELUGE", "DELUXE", "DENIAL",
+      "DENIED", "DENOTE", "DENTAL", "DEPART", "DEPICT", "DEPLOY", "DEPORT", "DEPOSE",
+      "DERIVE", "DETACH", "DETAIN", "DETOUR", "DEVISE", "DEVOTE", "DEVOUR", "DIAPER",
+      "DIESEL", "DIETED", "DIGEST", "DILUTE", "DIMMED", "DIMPLE", "DIPPED", "DISARM",
+      "DISCUS", "DISMAL", "DISMAY", "DISOWN", "DISPEL", "DISTIL", "DIVERT", "DIVIDE",
+      "DIVINE", "DOCKED", "DODGED", "DOGGED", "DONATE", "DONKEY", "DOOMED", "DOSAGE",
+      "DOTTED", "DOUGHY", "DRAPED", "DREAMT", "DREAMY", "DREARY", "DRESSY", "DRIERS",
+      "DRIPPED", "DROOPS", "DRUNKS", "DUCHESS", "DUCKED", "DUFFEL", "DULLED", "DUMBER",
+      "DUMPED", "DUPLEX", "DUSTED", "DYNASTY", "EARNED", "EARNER", "EARTHY", "EASIER",
+      "EASTER", "ECHOED", "ECZEMA", "EDIBLE", "EDITED", "EGGNOG", "EGOISM", "ELAPSE",
+      "ELDEST", "ELICIT", "ELIXIR", "EMBARK", "EMBLEM", "EMBODY", "EMBRYO", "EMPATH",
+      "ENACTS", "ENAMEL", "ENCAMP", "ENCODE", "ENCORE", "ENDURE", "ENIGMA", "ENLIST",
+      "ENMITY", "ENRICH", "ENROLL", "ENSIGN", "ENTICE", "ENTOMB", "ENVIED", "ENZYME",
+      "EQUATE", "EQUINE", "ERASED", "ERASER", "ERODED", "ERRAND", "ESCORT", "ESTEEM",
+      "ETCHED", "ETHICS", "EULOGY", "EUREKA", "EVENLY", "EVINCE", "EVOKED", "EVOLVE",
+      "EXCISE", "EXCITE", "EXCUSE", "EXEMPT", "EXHALE", "EXHUME", "EXILED", "EXODUS",
+      "EXOTIC", "EXPEND", "EXPIRE", "EXPOSE", "EXTORT", "EYELID", "FABLED", "FACADE",
+      "FACIAL", "FAINT", "FAIRER", "FALCON", "FALTER", "FAMINE", "FANGED", "FARMED",
+      "FARMER", "FASTEN", "FASTER", "FATHOM", "FATTEN", "FAUCET", "FAULTY", "FAVOUR",
+      "FEARED", "FEEBLE", "FEEDER", "FEELER", "FELINE", "FELONY", "FENCED", "FENDER",
+      "FERRET", "FERVOR", "FETISH", "FEUDAL", "FIANCE", "FIASCO", "FICKLE", "FIDDLE",
+      "FIERCE", "FILLED", "FILLER", "FILMED", "FILTER", "FILTHY", "FINALE", "FINDER",
+      "FINELY", "FINERY", "FINEST", "FINITE", "FIRMER", "FIRMLY", "FISHER", "FISTED",
+      "FITTED", "FITTER", "FIZZLE", "FLABBY", "FLAGON", "FLAKY", "FLAMED", "FLARED",
+      "FLASHY", "FLAWED", "FLAXEN", "FLEECE", "FLESHY", "FLIMSY", "FLINCH", "FLOPPY",
+      "FLORAL", "FLOWED", "FLUENT", "FLUFFY", "FLUNKY", "FLURRY", "FOAMED", "FODDER",
+      "FOGGED", "FOILED", "FOLDED", "FOLDER", "FONDLE", "FONDLY", "FORAGE", "FORBID",
+      "FORGED", "FORGER", "FORGOT", "FORKED", "FORMED", "FOSSIL", "FOULED", "FRACAS",
+      "FRAMED", "FRANTIC", "FRAYED", "FREAKY", "FREELY", "FRENZY", "FRESCO", "FRIDGE",
+      "FRIGHT", "FRINGE", "FRISKY", "FROLIC", "FROSTY", "FRUGAL", "FRUITY", "FUDGED",
+      "FUELED", "FULFIL", "FULLER", "FUMBLE", "FUNDED", "FUNGAL", "FUNGUS", "FUNNEL",
+      "FUSION", "FUTILE", "GADGET", "GAINED", "GAINER", "GALLON", "GALLOP", "GAMBLE",
+      "GANDER", "GARAGE", "GARLIC", "GARNET", "GASHED", "GASPED", "GAUGED", "GEARED",
+      "GEEZER", "GENIUS", "GENTLY", "GERBIL", "GEYSER", "GHETTO", "GIGGLE", "GILDED",
+      "GINGER", "GIRDER", "GIRDLE", "GLADLY", "GLAMOR", "GLANCE", "GLARED", "GLASSY",
+      "GLAZED", "GLIDED", "GLIDER", "GLITCH", "GLOOMY", "GLOSSY", "GLOWED", "GLOWER",
+      "GLUTEN", "GNARLY", "GOBBLE", "GOBLET", "GOBLIN", "GODSON", "GOLFED", "GOLFER",
+      "GOOFED", "GOSPEL", "GOSSIP", "GOTHIC", "GOVERN", "GRACED", "GRADED", "GRAINY",
+      "GRANNY", "GRASSY", "GRATED", "GRATER", "GRAVEL", "GREASE", "GREASY", "GREEDY",
+      "GRIEVE", "GRIMLY", "GRIPPE", "GROCER", "GROOVE", "GROPED", "GROUSE", "GRUDGE",
+      "GRUMPY", "GUIDED", "GUITAR", "GULPED", "GUMMED", "GUNMAN", "GUNMEN", "GUNNED",
+      "GURGLE", "GUSHED", "GUTTER", "GUZZLE", "GYPSUM", "HACKED", "HACKER", "HAGGLE",
+      "HAILED", "HAIRDO", "HALTED", "HALVES", "HAMLET", "HAMPER", "HANGAR", "HANGED",
+      "HANGER", "HARASS", "HARDEN", "HARDER", "HARMED", "HARROW", "HASSLE", "HASTEN",
+      "HATRED", "HAULED", "HAZARD", "HEADED", "HEADER", "HEALED", "HEALER", "HEAPED",
+      "HEARTY", "HEATED", "HEATER", "HECKLE", "HECTIC", "HEDGED", "HEEDED", "HELIUM",
+      "HELMET", "HELPED", "HELPER", "HERALD", "HERBAL", "HERDED", "HEREBY", "HEREIN",
+      "HERESY", "HERMIT", "HEROIC", "HEROIN", "HICCUP", "HIGHER", "HIGHLY", "HIJACK",
+      "HINDER", "HINGED", "HINTED", "HIPPIE", "HISSED", "HITHER", "HITTER", "HOARSE",
+      "HOBBIT", "HOBBLE", "HOCKEY", "HOLLER", "HOLLOW", "HOMAGE", "HOMELY", "HOODED",
+      "HOOKED", "HOOPED", "HOPPED", "HORNED", "HORNET", "HORRID", "HOSTEL", "HOTTER",
+      "HOURLY", "HOUSED", "HOWLED", "HUBBUB", "HUDDLE", "HUFFED", "HUGGED", "HUMANE",
+      "HUMBLY", "HUMMED", "HUMOUR", "HUNGRY", "HUNTED", "HURDLE", "HURLED", "HURRAY",
+      "HUSHED", "HUSTLE", "HYBRID", "HYPHEN", "ICICLE", "ICONIC", "IGNITE", "IGUANA",
+      "IMBIBE", "IMMUNE", "IMPAIR", "IMPALA", "IMPART", "IMPEDE", "IMPOSE", "IMPUGN",
+      "IMPURE", "INBORN", "INBRED", "INCITE", "INDENT", "INDICT", "INDIGO", "INDUCE",
+      "INDUCT", "INFANT", "INFECT", "INFEST", "INFLUX", "INFORM", "INFUSE", "INGEST",
+      "INHALE", "INJECT", "INJURE", "INLAID", "INLAND", "INMATE", "INNATE", "INSANE",
+      "INSECT", "INSERT", "INSTEP", "INSULT", "INSURE", "INTAKE", "INTERN", "INVADE",
+      "INVENT", "INVERT", "INVITE", "INVOKE", "INWARD", "IODINE", "JABBED", "JACKAL",
+      "JAGGED", "JAILED", "JAILER", "JAMMED", "JARGON", "JAUNTY", "JAZZED", "JERKED",
+      "JERSEY", "JESTER", "JIGGLE", "JIGSAW", "JINGLE", "JOCKEY", "JOGGED", "JOGGER",
+      "JOINED", "JOINER", "JOVIAL", "JOYFUL", "JOYOUS", "JUDGED", "JUGGLE", "JUICY",
+      "JUMBLE", "JUMPED", "JUMPER", "JURIES", "JUSTLY", "KARATE", "KEENED", "KEENLY",
+      "KENNEL", "KEYPAD", "KHAKIS", "KICKED", "KICKER", "KIDNAP", "KILLED", "KILLER",
+      "KINDLE", "KINDLY", "KINGLY", "KISSED", "KITSCH", "KITTEN", "KNEELS", "KNIVES",
+      "LACKED", "LAGGED", "LAGOON", "LAMBDA", "LAMENT", "LANDED", "LAPSED", "LAPTOP",
+      "LARGER", "LARVAE", "LASHED", "LASTED", "LASTLY", "LATELY", "LATEST", "LATHER",
+      "LATTER", "LAUREL", "LAVISH", "LAWFUL", "LAYOUT", "LAZILY", "LEADEN", "LEAFED",
+      "LEAKED", "LEANED", "LEAPED", "LEARNT", "LEASED", "LEGION", "LENDER", "LENIENT",
+      "LESSEN", "LESSER", "LETHAL", "LIABLE", "LIAISE", "LICKED", "LIFTED", "LIFTER",
+      "LIMBER", "LIMPED", "LINEAR", "LINGER", "LINTELS", "LIQUOR", "LISTED", "LITTER",
+      "LIVELY", "LIZARD", "LOADED", "LOADER", "LOAFER", "LOANED", "LOATHE", "LOCALE",
+      "LOCATE", "LOCKER", "LOCKET", "LOCUST", "LODGED", "LODGER", "LOGGED", "LOGGER",
+      "LOITER", "LONGER", "LOOKED", "LOOMED", "LOOPED", "LOOSEN", "LOOSER", "LOOTED",
+      "LOOTER", "LOTION", "LOUDER", "LOUDLY", "LOUNGE", "LOWERS", "LOWEST", "LUBRIC",
+      "LUCKED", "LUMBER", "LUMPED", "LUNACY", "LUNGED", "LURKED", "LUSTER", "LUSTRE",
+      "MADAME", "MADDEN", "MADMAN", "MADMEN", "MAGGOT", "MAGNET", "MAIDEN", "MAILED",
+      "MAILER", "MAIMED", "MAINLY", "MAKEUP", "MALADY", "MALICE", "MALIGN", "MALLET",
+      "MANGER", "MANGLE", "MANIAC", "MANTEL", "MANTLE", "MANUAL", "MANURE", "MAPPED",
+      "MARINA", "MARKER", "MAROON", "MARRED", "MARROW", "MARSHY", "MARTYR", "MARVEL",
+      "MASCOT", "MASHED", "MASKED", "MATRIX", "MATRON", "MATTED", "MAYHEM", "MEADOW",
+      "MEAGER", "MEAGRE", "MEANER", "MEANLY", "MEASLY", "MEDDLE", "MEDIAN", "MEDLEY",
+      "MELLOW", "MELODY", "MELTED", "MEMOIR", "MENACE", "MENDED", "MENTOR", "MERGED",
+      "MERGER", "MERRILY", "MESHED", "METEOR", "METRES", "METRIC", "MIDDAY", "MIDGET",
+      "MIDWAY", "MIGHTY", "MILDER", "MILDLY", "MILKED", "MINCED", "MINDED", "MINGLE",
+      "MINION", "MIRAGE", "MISERY", "MISFIT", "MISHAP", "MISLED", "MISSED", "MISTER",
+      "MISUSE", "MITTEN", "MOANED", "MOCKED", "MODIFY", "MODULE", "MOHAIR", "MOLDED",
+      "MOLTEN", "MONGER", "MOODY", "MOONED", "MOORED", "MOPPED", "MORALE", "MORBID",
+      "MORGUE", "MORSEL", "MORTAL", "MORTAR", "MOSAIC", "MOSQUE", "MOTIVE", "MOTTLE",
+      "MOURNS", "MOUSY", "MUFFIN", "MUFFLE", "MUGGED", "MUGGER", "MULLET", "MUMBLE",
+      "MURKY", "MUSCLE", "MUSHY", "MUSKET", "MUSSEL", "MUSTER", "MUTANT", "MUTATE",
+      "MUTINY", "MUTTER", "MUTTON", "MUZZLE", "MYSTIC", "NAGGED", "NAILED", "NAMELY",
+      "NAPKIN", "NASAL", "NAUSEA", "NAVAL", "NEARER", "NEATLY", "NEBULA", "NECTAR",
+      "NEEDED", "NEGATE", "NESTED", "NESTLE", "NETTLE", "NEURAL", "NEUTER", "NEWEST",
+      "NEWLY", "NIBBLE", "NICELY", "NICEST", "NICKEL", "NIMBLE", "NINETY", "NIPPLE",
+      "NOBLER", "NODDED", "NOISY", "NOODLE", "NOTARY", "NOTED", "NOTIFY", "NOUGHT",
+      "NOVICE", "NOZZLE", "NUANCE", "NUCLEI", "NUDGED", "NUGGET", "NURSED", "NUTMEG",
+      "NYLONS", "OAKEN", "OBEYED", "OBLIGE", "OBLONG", "OBSESS", "OBTUSE", "OCCULT",
+      "OCTAVE", "ODDITY", "OFFEND", "OILED", "OLDEST", "OMELET", "ONRUSH", "ONWARD",
+      "OPAQUE", "OPENED", "OPENER", "OPENLY", "OPIATE", "OPPOSE", "OPTICS", "ORACLE",
+      "ORALLY", "ORATOR", "ORCHID", "ORDAIN", "ORDEAL", "ORIENT", "ORPHAN", "OUSTED",
+      "OUTBID", "OUTCRY", "OUTDID", "OUTFIT", "OUTLAW", "OUTLAY", "OUTRUN", "OUTSET",
+      "OUTWIT", "OVERDO", "OVERLY", "OXYGEN", "OYSTER", "PACKER", "PACKET", "PADDED",
+      "PADDLE", "PAINED", "PAIRED", "PALATE", "PALEST", "PALLET", "PAMPER", "PANTED",
+      "PANTRY", "PAPAYA", "PARADE", "PARCEL", "PARDON", "PARISH", "PARKED", "PARLOR",
+      "PARODY", "PARROT", "PARSON", "PARTED", "PASSED", "PASTEL", "PASTOR", "PASTRY",
+      "PATCHY", "PATHOS", "PATRON", "PAUSED", "PAWNED", "PAYDAY", "PEACOCK", "PEAKED",
+      "PEANUT", "PEARLY", "PEBBLE", "PECKED", "PEDDLE", "PEEKED", "PEELED", "PEERED",
+      "PELLET", "PELVIS", "PERILS", "PERISH", "PERUSE", "PESTER", "PETITE", "PETROL",
+      "PEWTER", "PHOBIA", "PHONED", "PHYSIC", "PICKER", "PICKET", "PICKLE", "PIERCE",
+      "PIGEON", "PIGLET", "PILLAR", "PINNED", "PIRATE", "PISTOL", "PISTON", "PITIED",
+      "PLACED", "PLACID", "PLAGUE", "PLANED", "PLASMA", "PLATED", "PLAYED", "PLEDGE",
+      "PLIGHT", "PLOUGH", "PLOWED", "PLUNGE", "PLURAL", "PODIUM", "POETIC", "POINTY",
+      "POISED", "POISON", "POLITE", "POLLEN", "POMPOUS", "PONDER", "POOLED", "POORER",
+      "POORLY", "POPLAR", "POPPED", "PORING", "PORKER", "PORTER", "PORTLY", "POSED",
+      "POSTAL", "POSTED", "POTENT", "POTION", "POTTER", "POUNCE", "POURED", "PRANCE",
+      "PRAYED", "PREACH", "PREFIX", "PRELIM", "PREPPY", "PRESET", "PREYED", "PRICED",
+      "PRICEY", "PRIDED", "PRIMAL", "PRIMED", "PRIMER", "PRISSY", "PRIZED", "PROBED",
+      "PROMPT", "PROPEL", "PROTON", "PROVED", "PRUNED", "PSALMS", "PSEUDO", "PSYCHE",
+      "PUCKER", "PUDDLE", "PUFFED", "PULLED", "PULLEY", "PULPIT", "PUMPED", "PUNISH",
+      "PUPPET", "PURELY", "PUREST", "PURGED", "PURIFY", "PURITY", "PURRED", "PUSHED",
+      "PUSHER", "PUTTER", "PYJAMA", "PYTHON", "QUAINT", "QUAKED", "QUARRY", "QUARTZ",
+      "QUENCH", "QUEUED", "QUICHE", "QUINCE", "QUIRKY", "QUIVER", "QUOTED", "RABBLE",
+      "RACKED", "RACKET", "RADIAL", "RADISH", "RADIUS", "RAFFLE", "RAFTER", "RAGGED",
+      "RAIDED", "RAIDER", "RAILED", "RAINED", "RAISED", "RAISER", "RAISIN", "RAKISH",
+      "RAMBLE", "RAMMED", "RANCID", "RANGED", "RANGER", "RANKED", "RANSOM", "RANTED",
+      "RAREST", "RARITY", "RASCAL", "RASHLY", "RATIFY", "RATION", "RATTLE", "RAVAGE",
+      "RAVINE", "RAWEST", "READER", "REAPED", "REAPER", "REARED", "REBORN", "REBUFF",
+      "REBUKE", "RECANT", "RECAST", "RECEDE", "RECESS", "RECITE", "RECKON", "RECOIL",
+      "RECOUP", "RECTOR", "REDEEM", "REFILL", "REFINE", "REFUGE", "REFUND", "REFUTE",
+      "REGAIN", "REGENT", "REJOIN", "RELENT", "RELIED", "RELISH", "RELIVE", "RELOAD",
+      "REMAND", "REMARK", "REMEDY", "REMIND", "REMISS", "RENAME", "RENDER", "RENOWN",
+      "RENTAL", "RENTED", "REOPEN", "REPAID", "REPEAL", "REPENT", "REPLAY", "REPOSE",
+      "REPUTE", "RESENT", "RESIDE", "RESIGN", "RESTED", "RESUME", "RETAKE", "RETARD",
+      "RETINA", "RETIRE", "RETORT", "REVERE", "REVERT", "REVISE", "REVIVE", "REVOKE",
+      "REVOLT", "REWIND", "REWORK", "RICHER", "RICHLY", "RIDDEN", "RIDDLE", "RIGGED",
+      "RIGOUR", "RINSED", "RIOTED", "RIOTER", "RIPPED", "RIPPLE", "RISKED", "RITUAL",
+      "ROAMED", "ROARED", "ROBBED", "ROBBER", "ROCKED", "ROCKER", "RODENT", "ROLLED",
+      "ROLLER", "ROOFED", "ROOKIE", "ROOMED", "ROOTED", "ROSARY", "ROSTER", "ROTATE",
+      "ROTTED", "ROTTEN", "ROTUND", "ROUSED", "ROUTED", "ROUTER", "RUBBED", "RUBBLE",
+      "RUDDER", "RUDELY", "RUDEST", "RUFFLE", "RUGGED", "RUINED", "RUMBLE", "RUMOUR",
+      "RUNWAY", "RUSHED", "RUSTED", "RUSTIC", "RUSTLE", "SACKED", "SADDEN", "SADDER",
+      "SADDLE", "SADISM", "SAFARI", "SAFELY", "SAFEST", "SAGGED", "SAILOR", "SALMON",
+      "SALOON", "SALTED", "SALUTE", "SANDAL", "SANDED", "SANITY", "SATIRE", "SAUCER",
+      "SAVAGE", "SAVIOR", "SAVOUR", "SCABBY", "SCALED", "SCANTY", "SCARED", "SCENIC",
+      "SCORCH", "SCORED", "SCORER", "SCRAPE", "SCRAWL", "SCREAM", "SCRIBE", "SCROLL",
+      "SCULPT", "SCURRY", "SEALED", "SEAMAN", "SEAMEN", "SEATED", "SEDATE", "SEDUCE",
+      "SEEKER", "SEEMED", "SEESAW", "SEIZED", "SELDOM", "SENATE", "SENDER", "SENSED",
+      "SENSOR", "SENTRY", "SEQUEL", "SERENE", "SERIAL", "SERMON", "SERVED", "SESAME",
+      "SHABBY", "SHADED", "SHAKEN", "SHAKER", "SHALLOW", "SHAMED", "SHAVED", "SHAVEN",
+      "SHEATH", "SHIFTY", "SHINED", "SHIVER", "SHODDY", "SHOVED", "SHOVEL", "SHOWED",
+      "SHREWD", "SHRIEK", "SHRILL", "SHRIMP", "SHRINE", "SHRINK", "SHROUD", "SHRUNK",
+      "SHUDDER", "SHUFFLE", "SHUNNED", "SHUTUP", "SICKLE", "SICKLY", "SIFTED", "SIGHED",
+      "SIGNET", "SILKEN", "SIMMER", "SINGER", "SINKER", "SINNED", "SINNER", "SIPPED",
+      "SKATED", "SKATER", "SKEWER", "SKINNY", "SLANGS", "SLATED", "SLAYER", "SLEEPY",
+      "SLEEVE", "SLEIGH", "SLENDER", "SLICED", "SLICER", "SLIDER", "SLOPED", "SLOPPY",
+      "SLOUCH", "SLOWED", "SLOWER", "SLOWLY", "SLUDGE", "SLURRY", "SMELLY", "SMILED",
+      "SMOKED", "SMOKER", "SMUDGE", "SNEAKY", "SNEEZE", "SNIPER", "SNOOZE", "SNORED",
+      "SNOWED", "SOAKED", "SOAPED", "SOARED", "SOBBED", "SOCKET", "SODIUM", "SOFTEN",
+      "SOFTER", "SOFTLY", "SOILED", "SOLACE", "SOLDER", "SOLELY", "SOLEMN", "SOLVED",
+      "SOLVER", "SOMBER", "SOMBRE", "SONATA", "SONNET", "SOONER", "SOOTHE", "SORDID",
+      "SORROW", "SORTED", "SOUGHT", "SPACED", "SPACER", "SPARED", "SPARSE", "SPEEDY",
+      "SPHERE", "SPICED", "SPIDER", "SPIKED", "SPINAL", "SPIRAL", "SPLASH", "SPLEEN",
+      "SPLICE", "SPONGE", "SPOOKY", "SPORTY", "SPOTTY", "SPOUSE", "SPRAIN", "SPRAWL",
+      "SPRINT", "SPROUT", "SPRUCE", "SPRUNG", "SQUASH", "SQUEAK", "SQUEAL", "SQUINT",
+      "SQUIRE", "SQUIRM", "SQUIRT", "STAGED", "STAKED", "STAMEN", "STANCE", "STANZA",
+      "STAPLE", "STARCH", "STARED", "STARRY", "STARVE", "STATED", "STATIC", "STATUE",
+      "STAYED", "STEAMY", "STENCH", "STEREO", "STEWED", "STICKY", "STIFLE", "STIGMA",
+      "STINGY", "STITCH", "STOCKY", "STODGY", "STOKED", "STONED", "STORED", "STORMY",
+      "STRAIN", "STRAIT", "STRAND", "STREAK", "STRIDE", "STRIFE", "STRIVE", "STROKE",
+      "STROLL", "STRUCK", "STRUNG", "STUFFY", "STUPID", "STURDY", "STYLED", "SUBDUE",
+      "SUBTLE", "SUBTLY", "SUBURB", "SUCKED", "SUCKER", "SUGARY", "SUITED", "SUITOR",
+      "SULFUR", "SULLEN", "SULTAN", "SUMMON", "SUNDAE", "SUNKEN", "SUNLIT", "SUNSET",
+      "SUPERB", "SUPPER", "SURFED", "SURFER", "SURGED", "SUTURE", "SWAYED", "SWEATY",
+      "SWERVE", "SWIPED", "SWIVEL", "SYNTAX", "TACKLE", "TACTIC", "TAGGED", "TAILED",
+      "TAILOR", "TALKED", "TALKER", "TALLER", "TALLOW", "TAMPER", "TANDEM", "TANGLE",
+      "TANKER", "TANNED", "TAPPED", "TARIFF", "TARMAC", "TARRED", "TARTAN", "TASKED",
+      "TASSEL", "TASTED", "TASTER", "TATTER", "TAVERN", "TEACUP", "TEAMED", "TEAPOT",
+      "TEARED", "TEASED", "TEASER", "TECHIE", "TEETHE", "TELLER", "TEMPER", "TENDED",
+      "TENDON", "TENSED", "TENSOR", "TENURE", "TERMED", "TERROR", "TESTED", "TESTER",
+      "TETHER", "THATCH", "THAWED", "THEIRS", "THENCE", "THESIS", "THINLY", "THIRST",
+      "THORNY", "THRASH", "THREAD", "THRILL", "THRIVE", "THROAT", "THRONE", "THRONG",
+      "THRUST", "THWART", "TICKED", "TICKER", "TICKLE", "TIDAL", "TIDIED", "TIERED",
+      "TIMELY", "TINDER", "TINGED", "TINGLE", "TINKER", "TINKLE", "TINNED", "TINSEL",
+      "TINTED", "TIPPED", "TIPTOE", "TIRADE", "TITLED", "TOASTY", "TODDLE", "TOFFEE",
+      "TOGGLE", "TOILET", "TOLLED", "TOMATO", "TONGUE", "TONSIL", "TOOLED", "TOPPED",
+      "TOPPLE", "TORQUE", "TORRID", "TOSSED", "TOUCHY", "TOURED", "TRACED", "TRACER",
+      "TRADED", "TRADER", "TRAGIC", "TRANCE", "TRASHY", "TRAUMA", "TREBLE", "TREMOR",
+      "TRENCH", "TRENDY", "TRIBAL", "TRICKY", "TRIFLE", "TRIGON", "TRINITY", "TRIPOD",
+      "TRIVIA", "TROPHY", "TROPIC", "TROUGH", "TROUPE", "TROWEL", "TRUANT", "TRUDGE",
+      "TRUEST", "TRUSTY", "TUCKED", "TUFTED", "TUGGED", "TUMBLE", "TUMOUR", "TUNDRA",
+      "TURBAN", "TURBID", "TURNED", "TURNER", "TURNIP", "TURRET", "TURTLE", "TUXEDO",
+      "TWINED", "TWISTY", "TWITCH", "TYCOON", "TYPIFY", "TYPIST", "TYRANT", "UGLIER",
+      "UMPIRE", "UNBORN", "UNCOIL", "UNCOOK", "UNDEAD", "UNDONE", "UNDULY", "UNEASY",
+      "UNEVEN", "UNFAIR", "UNFOLD", "UNFURL", "UNHOLY", "UNHOOK", "UNISON", "UNJUST",
+      "UNKIND", "UNLAID", "UNLOAD", "UNLOCK", "UNMADE", "UNMASK", "UNPACK", "UNPAID",
+      "UNPLUG", "UNREAL", "UNREST", "UNRIPE", "UNROLL", "UNRULY", "UNSAFE", "UNSAID",
+      "UNSEAL", "UNSEEN", "UNSENT", "UNSUNG", "UNSURE", "UNTIDY", "UNTIED", "UNTOLD",
+      "UNTRUE", "UNUSED", "UNVEIL", "UNWELL", "UNWIND", "UNWISE", "UNWRAP", "UPBEAT",
+      "UPHELD", "UPHILL", "UPHOLD", "UPKEEP", "UPLAND", "UPLIFT", "UPLOAD", "UPMOST",
+      "UPROAR", "UPROOT", "UPSHOT", "UPSIDE", "UPTAKE", "UPTOWN", "UPTURN", "UPWARD",
+      "URANUS", "URCHIN", "URGENT", "USABLE", "UTMOST", "UTOPIA", "VACANT", "VACATE",
+      "VACUUM", "VAINLY", "VALLEY", "VALOUR", "VALUED", "VANDAL", "VANISH", "VANITY",
+      "VAPOUR", "VASSAL", "VASTLY", "VEERED", "VEGGIE", "VEILED", "VENEER", "VENTED",
+      "VERBAL", "VERGED", "VERIFY", "VERMIN", "VERSED", "VERTEX", "VESSEL", "VESTED",
+      "VETOED", "VIABLE", "VICTOR", "VIEWED", "VIEWER", "VIGOUR", "VIKING", "VIOLET",
+      "VIOLIN", "VIRGIN", "VIRTUE", "VISAGE", "VITALS", "VOICED", "VOIDED", "VOLLEY",
+      "VOTED", "VOYAGE", "VULGAR", "WAFFLE", "WAGGED", "WAITED", "WAITER", "WAIVED",
+      "WALKED", "WALLED", "WALLET", "WALLOP", "WALLOW", "WALNUT", "WALRUS", "WANDER",
+      "WANTED", "WANTON", "WARBLE", "WARDEN", "WARILY", "WARMED", "WARMER", "WARMLY",
+      "WARMTH", "WARNED", "WARPED", "WARREN", "WASHED", "WASHER", "WASTED", "WASTER",
+      "WATERY", "WAVED", "WAXING", "WEAKEN", "WEAKER", "WEAKLY", "WEARER", "WEASEL",
+      "WEAVER", "WEBBED", "WEDDED", "WEEDED", "WELDED", "WELDER", "WELFARE", "WELLED",
+      "WHALER", "WHIMSY", "WHINED", "WHIRLS", "WHISKY", "WHOLLY", "WICKED", "WICKER",
+      "WICKET", "WIDELY", "WIDENS", "WIDEST", "WIDGET", "WIGGLE", "WILDER", "WILDLY",
+      "WILFUL", "WILLED", "WILLOW", "WILTED", "WIMPY", "WINCED", "WINDED", "WINERY",
+      "WINGED", "WINKED", "WINTRY", "WISELY", "WISEST", "WISHED", "WIZARD", "WOBBLE",
+      "WOEFUL", "WOLVES", "WOOING", "WOOLEN", "WOOLLY", "WORDED", "WORKED", "WOUND",
+      "WOVEN", "WREATH", "WRENCH", "WRITHE", "YAMMER", "YANKED", "YAWNED", "YEARLY",
+      "YELLED", "YELPED", "YEOMAN", "YOGURT", "YONDER", "ZEALOT", "ZENITH", "ZEROED",
+      "ZIGZAG", "ZIPPED", "ZIPPER", "ZOMBIE", "ZOOMED"
+    ];
+
+    // Words genuinely ending in -ING or -S that are NOT gerunds/participles or simple plurals
+    const NON_INFLECTED_EXCEPTIONS = new Set([
+      "SPRING", "STRING", "DURING", "AWAITING", "CEILING", "STERLING", "DARLING",
+      "MORNING", "EVENING", "NOTHING", "MEANING", "FEELING", "MEETING", "SETTING",
+      "WEDDING", "PUDDING", "BUILDING", "PAINTING", "TRAINING", "WARNING",
+      "ACROSS", "ALWAYS", "CAMPUS", "CHORUS", "CIRCUS", "CRISIS", "DISCUS",
+      "FAMOUS", "GENIUS", "SERIES", "STATUS", "TENNIS", "VERSUS", "CACTUS",
+      "CENSUS", "CORPUS", "EXODUS", "FUNGUS", "INFLUX", "LOCUST", "MUCUS",
+      "PATHOS", "RADIUS", "SESAME", "URANUS", "WALRUS", "BICEPS", "DEBRIS",
+      "ETHICS", "OPTICS", "PHYSIC", "HUMMUS", "LITMUS", "NEXUS", "SINUS"
+    ]);
+
+    /**
+     * Safeguard filter to ensure no -ING verb forms or simple -S/-ES plurals
+     * slip into the target pool or valid guess dictionary.
+     */
+    function isAllowedBaseWord(word) {
+      if (word.length !== 6 || !/^[A-Z]{6}$/.test(word)) return false;
+      if (NON_INFLECTED_EXCEPTIONS.has(word)) return true;
+
+      // Exclude 6-letter words formed by adding -ING to a verb stem
+      if (word.endsWith("ING")) return false;
+
+      // Exclude simple plural nouns / 3rd-person verbs ending in -S (unless genuine -SS, -US, -IS, -AS, -OS base words)
+      if (word.endsWith("S")) {
+        if (word.endsWith("SS") || word.endsWith("US") || word.endsWith("IS") || word.endsWith("AS") || word.endsWith("OS")) {
+          return true;
+        }
+        return false;
+      }
+
+      return true;
+    }
+
+    // Normalize & construct a Set of strictly 6-letter uppercase words for O(1) lookup
+    const VALID_DICTIONARY = new Set(
+      [...TARGET_WORDS, ...EXTRA_VALID_WORDS]
+        .map(w => w.trim().toUpperCase())
+        .filter(isAllowedBaseWord)
+    );
+
+    const CLEAN_TARGETS = TARGET_WORDS
+      .map(w => w.trim().toUpperCase())
+      .filter(isAllowedBaseWord);
+
+    // Game Constants
+    const WORD_LENGTH = 6;
+    const MAX_ATTEMPTS = 7;
+    const WIN_PRAISE = [
+      "Genius!",
+      "Magnificent!",
+      "Impressive!",
+      "Splendid!",
+      "Great!",
+      "Nice!",
+      "Phew!"
+    ];
+
+    // Storage Keys
+    const STORAGE_KEY_STATS = "wordle6_stats_v1";
+    const STORAGE_KEY_THEME = "wordle6_theme_v1";
+    const STORAGE_KEY_DAILY_PREFIX = "wordle6_daily_v1_";
+    const DAILY_MODE = true;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const childScope = (urlParams.get("child") || "default").replace(/[^\w-]/g, "") || "default";
+    const returnHref = urlParams.get("return") || "maths-aflatoon.html";
+
+  function dailyStorageKey() {
+      return STORAGE_KEY_DAILY_PREFIX + childScope;
+    }
+
+    function todayKey() {
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return y + "-" + m + "-" + day;
+    }
+
+    function dailyWordForDate(dateKey) {
+      let hash = 0;
+      for (let i = 0; i < dateKey.length; i++) {
+        hash = (hash * 31 + dateKey.charCodeAt(i)) >>> 0;
+      }
+      return CLEAN_TARGETS[hash % CLEAN_TARGETS.length];
+    }
+
+    function readDailyStore() {
+      try {
+        const raw = localStorage.getItem(dailyStorageKey());
+        return raw ? JSON.parse(raw) : {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function writeDailyStore(store) {
+      try {
+        localStorage.setItem(dailyStorageKey(), JSON.stringify(store));
+      } catch (e) {
+        console.warn("Unable to save daily puzzle:", e);
+      }
+    }
+
+    function snapshotKeyStates() {
+      const states = {};
+      keyboardEl.querySelectorAll(".key[data-key]").forEach((keyBtn) => {
+        const letter = keyBtn.getAttribute("data-key");
+        const state = keyBtn.getAttribute("data-state");
+        if (/^[A-Z]$/.test(letter) && state) states[letter] = state;
+      });
+      return states;
+    }
+
+    function saveDailyPuzzle() {
+      if (!DAILY_MODE) return;
+      const dateKey = todayKey();
+      const store = readDailyStore();
+      store[dateKey] = {
+        dateKey,
+        secretWord,
+        grid,
+        currentRow,
+        currentCol,
+        isGameOver,
+        evaluatedHistory,
+        lastWinAttempt,
+        keyStates: snapshotKeyStates(),
+        statsRecorded: statsRecordedToday
+      };
+      writeDailyStore(store);
+    }
+
+    let statsRecordedToday = false;
+
+    function loadDailyPuzzle() {
+      const dateKey = todayKey();
+      const store = readDailyStore();
+      return store[dateKey] || null;
+    }
+
+    function paintBoardFromState() {
+      for (let r = 0; r < MAX_ATTEMPTS; r++) {
+        const rowEl = boardEl.children[r];
+        rowEl.classList.remove("shake");
+        for (let c = 0; c < WORD_LENGTH; c++) {
+          const tile = document.getElementById(`tile-${r}-${c}`);
+          const letter = grid[r][c] || "";
+          tile.textContent = letter;
+          tile.classList.remove("flip-in", "flip-out", "bounce");
+          tile.removeAttribute("data-state");
+          if (evaluatedHistory[r]) {
+            tile.setAttribute("data-state", evaluatedHistory[r][c]);
+          } else if (letter && r === currentRow && !isGameOver) {
+            tile.setAttribute("data-state", "tbd");
+          }
+        }
+      }
+    }
+
+    function applyKeyStates(states) {
+      if (!states) return;
+      Object.keys(states).forEach((letter) => {
+        const keyBtn = keyboardEl.querySelector(`.key[data-key="${letter}"]`);
+        if (keyBtn) keyBtn.setAttribute("data-state", states[letter]);
+      });
+    }
+
+    function restoreDailyPuzzle(saved) {
+      secretWord = saved.secretWord || dailyWordForDate(todayKey());
+      currentRow = saved.currentRow || 0;
+      currentCol = saved.currentCol || 0;
+      isGameOver = !!saved.isGameOver;
+      isAnimating = false;
+      lastWinAttempt = saved.lastWinAttempt ?? null;
+      evaluatedHistory = Array.isArray(saved.evaluatedHistory) ? saved.evaluatedHistory : [];
+      grid = Array.isArray(saved.grid)
+        ? saved.grid
+        : Array.from({ length: MAX_ATTEMPTS }, () => Array(WORD_LENGTH).fill(""));
+      statsRecordedToday = !!saved.statsRecorded;
+      paintBoardFromState();
+      document.querySelectorAll(".key").forEach((key) => key.removeAttribute("data-state"));
+      applyKeyStates(saved.keyStates);
+      updateDailyHeader();
+      if (isGameOver) {
+        document.getElementById("word-reveal-box").classList.remove("hidden");
+        document.getElementById("btn-share").classList.remove("hidden");
+        const won = !!lastWinAttempt;
+        document.getElementById("round-outcome-label").textContent = won
+          ? "Today\'s puzzle — solved!"
+          : "Today\'s puzzle — come back tomorrow";
+        document.getElementById("secret-word-display").textContent = secretWord;
+        document.getElementById("secret-word-display").style.color = won ? "var(--color-correct)" : "var(--color-present)";
+        document.getElementById("play-again-label").textContent = "Close";
+      }
+    }
+
+    function updateDailyHeader() {
+      const label = document.getElementById("daily-label");
+      if (label) label.textContent = "Word of the Day · " + todayKey();
+      const back = document.getElementById("btn-back-academy");
+      if (back) back.setAttribute("href", returnHref);
+    }
+
+    // Game State
+    let secretWord = "";
+    let currentRow = 0;
+    let currentCol = 0;
+    let grid = [];
+    let isGameOver = false;
+    let isAnimating = false;
+    let lastWinAttempt = null;
+    let evaluatedHistory = []; // Array of arrays containing 'correct' | 'present' | 'absent'
+
+    // Stats State
+    let stats = {
+      gamesPlayed: 0,
+      gamesWon: 0,
+      currentStreak: 0,
+      maxStreak: 0,
+      distribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0 }
+    };
+
+    // DOM Elements
+    const boardEl = document.getElementById("board");
+    const keyboardEl = document.getElementById("keyboard");
+    const toastContainer = document.getElementById("toast-container");
+    const helpModal = document.getElementById("modal-help");
+    const statsModal = document.getElementById("modal-stats");
+    const themeBtn = document.getElementById("btn-theme");
+    const iconSun = document.getElementById("icon-sun");
+    const iconMoon = document.getElementById("icon-moon");
+
+    // Initialize Application
+    function init() {
+      loadTheme();
+      loadStats();
+      buildBoardDOM();
+      bindEvents();
+      updateDailyHeader();
+      const saved = DAILY_MODE ? loadDailyPuzzle() : null;
+      const expectedWord = dailyWordForDate(todayKey());
+      if (saved && saved.dateKey === todayKey() && saved.secretWord === expectedWord) {
+        restoreDailyPuzzle(saved);
+      } else {
+        startNewGame(false);
+      }
+    }
+
+    // Build 7x6 Grid DOM
+    function buildBoardDOM() {
+      boardEl.innerHTML = "";
+      for (let r = 0; r < MAX_ATTEMPTS; r++) {
+        const rowEl = document.createElement("div");
+        rowEl.className = "board-row";
+        rowEl.setAttribute("role", "row");
+        for (let c = 0; c < WORD_LENGTH; c++) {
+          const tileEl = document.createElement("div");
+          tileEl.className = "tile";
+          tileEl.id = `tile-${r}-${c}`;
+          tileEl.setAttribute("role", "gridcell");
+          tileEl.setAttribute("aria-label", `Row ${r + 1}, Column ${c + 1}`);
+          rowEl.appendChild(tileEl);
+        }
+        boardEl.appendChild(rowEl);
+      }
+    }
+
+    // Start or Reset a Game (daily: one word per calendar day)
+    function startNewGame(announce = true) {
+      if (DAILY_MODE) {
+        const existing = loadDailyPuzzle();
+        if (existing && existing.dateKey === todayKey()) {
+          restoreDailyPuzzle(existing);
+          if (announce && !existing.isGameOver) showToast("Continuing today\'s puzzle");
+          return;
+        }
+      }
+
+      secretWord = DAILY_MODE ? dailyWordForDate(todayKey()) : CLEAN_TARGETS[Math.floor(Math.random() * CLEAN_TARGETS.length)];
+
+      currentRow = 0;
+      currentCol = 0;
+      isGameOver = false;
+      isAnimating = false;
+      lastWinAttempt = null;
+      statsRecordedToday = false;
+      evaluatedHistory = [];
+      grid = Array.from({ length: MAX_ATTEMPTS }, () => Array(WORD_LENGTH).fill(""));
+
+      // Clear Tiles
+      for (let r = 0; r < MAX_ATTEMPTS; r++) {
+        const rowEl = boardEl.children[r];
+        rowEl.classList.remove("shake");
+        for (let c = 0; c < WORD_LENGTH; c++) {
+          const tile = document.getElementById(`tile-${r}-${c}`);
+          tile.textContent = "";
+          tile.removeAttribute("data-state");
+          tile.classList.remove("flip-in", "flip-out", "bounce");
+        }
+      }
+
+      // Reset Keyboard Colors
+      document.querySelectorAll(".key").forEach(key => {
+        key.removeAttribute("data-state");
+      });
+
+      // Reset Stats Modal Round Banner
+      document.getElementById("word-reveal-box").classList.add("hidden");
+      document.getElementById("btn-share").classList.add("hidden");
+      document.getElementById("play-again-label").textContent = "New Word";
+
+      closeAllModals();
+      if (DAILY_MODE) {
+        saveDailyPuzzle();
+        updateDailyHeader();
+        if (announce) showToast("Today\'s 6-letter Wordle is ready!");
+      } else if (announce) {
+        showToast("New 6-letter word ready!");
+      }
+    }
+
+    // Handle Key Input (Physical & On-Screen)
+    function handleInput(key) {
+      if (isGameOver || isAnimating) return;
+
+      // Ignore input if a modal is currently open
+      if (helpModal.classList.contains("open") || statsModal.classList.contains("open")) {
+        return;
+      }
+
+      if (key === "BACKSPACE" || key === "DELETE") {
+        deleteLetter();
+      } else if (key === "ENTER") {
+        submitGuess();
+      } else if (/^[A-Z]$/.test(key)) {
+        addLetter(key);
+      }
+    }
+
+    function addLetter(letter) {
+      if (currentCol >= WORD_LENGTH) return;
+      grid[currentRow][currentCol] = letter;
+      const tile = document.getElementById(`tile-${currentRow}-${currentCol}`);
+      tile.textContent = letter;
+      tile.setAttribute("data-state", "tbd");
+      currentCol++;
+      saveDailyPuzzle();
+    }
+
+    function deleteLetter() {
+      if (currentCol <= 0) return;
+      currentCol--;
+      grid[currentRow][currentCol] = "";
+      const tile = document.getElementById(`tile-${currentRow}-${currentCol}`);
+      tile.textContent = "";
+      tile.removeAttribute("data-state");
+      saveDailyPuzzle();
+    }
+
+    function submitGuess() {
+      if (currentCol < WORD_LENGTH) {
+        triggerShake(currentRow);
+        showToast("Not enough letters");
+        return;
+      }
+
+      const guess = grid[currentRow].join("");
+      if (!VALID_DICTIONARY.has(guess)) {
+        triggerShake(currentRow);
+        showToast("Not in word list");
+        return;
+      }
+
+      const evaluation = evaluateGuess(guess, secretWord);
+      evaluatedHistory.push(evaluation);
+      revealRow(currentRow, guess, evaluation);
+    }
+
+    /**
+     * Exact Wordle Duplicate-Letter Evaluation Algorithm
+     * 1. First pass marks exact positional matches ('correct').
+     * 2. Second pass marks remaining letters present in target ('present') up to remaining count,
+     *    otherwise 'absent'.
+     */
+    function evaluateGuess(guess, target) {
+      const result = Array(WORD_LENGTH).fill("absent");
+      const targetLetters = target.split("");
+      const guessLetters = guess.split("");
+      const remainingCounts = {};
+
+      // Pass 1: Exact matches
+      for (let i = 0; i < WORD_LENGTH; i++) {
+        if (guessLetters[i] === targetLetters[i]) {
+          result[i] = "correct";
+          targetLetters[i] = null;
+        } else {
+          const ch = targetLetters[i];
+          remainingCounts[ch] = (remainingCounts[ch] || 0) + 1;
+        }
+      }
+
+      // Pass 2: Misplaced letters
+      for (let i = 0; i < WORD_LENGTH; i++) {
+        if (result[i] === "correct") continue;
+        const ch = guessLetters[i];
+        if (remainingCounts[ch] && remainingCounts[ch] > 0) {
+          result[i] = "present";
+          remainingCounts[ch]--;
+        }
+      }
+
+      return result;
+    }
+
+    // Sequential Tile Flip Reveal Animation
+    function revealRow(rowIdx, guess, evaluation) {
+      isAnimating = true;
+      const flipDuration = 220; // ms per half-flip
+      const staggerDelay = 260; // ms between tiles
+
+      for (let c = 0; c < WORD_LENGTH; c++) {
+        const tile = document.getElementById(`tile-${rowIdx}-${c}`);
+        const state = evaluation[c];
+
+        setTimeout(() => {
+          tile.classList.add("flip-in");
+
+          setTimeout(() => {
+            tile.classList.remove("flip-in");
+            tile.setAttribute("data-state", state);
+            tile.classList.add("flip-out");
+          }, flipDuration);
+        }, c * staggerDelay);
+      }
+
+      const totalRevealTime = (WORD_LENGTH - 1) * staggerDelay + flipDuration * 2 + 60;
+
+      setTimeout(() => {
+        updateKeyboardStates(guess, evaluation);
+        isAnimating = false;
+
+        const isWin = evaluation.every(s => s === "correct");
+        if (isWin) {
+          handleWin(rowIdx);
+        } else if (rowIdx === MAX_ATTEMPTS - 1) {
+          handleLoss();
+        } else {
+          currentRow++;
+          currentCol = 0;
+          saveDailyPuzzle();
+        }
+      }, totalRevealTime);
+    }
+
+    // Update On-Screen Keyboard Key Colors (Priority: correct > present > absent)
+    function updateKeyboardStates(guess, evaluation) {
+      const priority = { correct: 3, present: 2, absent: 1 };
+
+      for (let i = 0; i < WORD_LENGTH; i++) {
+        const letter = guess[i];
+        const newState = evaluation[i];
+        const keyBtn = keyboardEl.querySelector(`.key[data-key="${letter}"]`);
+        if (!keyBtn) continue;
+
+        const currentState = keyBtn.getAttribute("data-state");
+        const currentScore = priority[currentState] || 0;
+        const newScore = priority[newState] || 0;
+
+        if (newScore > currentScore) {
+          keyBtn.setAttribute("data-state", newState);
+        }
+      }
+    }
+
+    function handleWin(rowIdx) {
+      isGameOver = true;
+      const attemptNumber = rowIdx + 1;
+      lastWinAttempt = attemptNumber;
+
+      // Bounce tiles sequentially
+      for (let c = 0; c < WORD_LENGTH; c++) {
+        const tile = document.getElementById(`tile-${rowIdx}-${c}`);
+        setTimeout(() => {
+          tile.classList.remove("flip-out");
+          tile.classList.add("bounce");
+        }, c * 90);
+      }
+
+      showToast(WIN_PRAISE[rowIdx] || "Splendid!", 2200);
+      recordGameResult(true, attemptNumber);
+      saveDailyPuzzle();
+
+      setTimeout(() => {
+        showEndRoundStats(true);
+      }, 1500);
+    }
+
+    function handleLoss() {
+      isGameOver = true;
+      lastWinAttempt = null;
+      showToast(secretWord, 3200);
+      recordGameResult(false, null);
+      saveDailyPuzzle();
+
+      setTimeout(() => {
+        showEndRoundStats(false);
+      }, 1600);
+    }
+
+    function triggerShake(rowIdx) {
+      const rowEl = boardEl.children[rowIdx];
+      rowEl.classList.remove("shake");
+      void rowEl.offsetWidth; // Force reflow
+      rowEl.classList.add("shake");
+    }
+
+    // Toast Notifications
+    function showToast(message, duration = 1500) {
+      const toast = document.createElement("div");
+      toast.className = "toast";
+      toast.textContent = message;
+      toastContainer.prepend(toast);
+
+      setTimeout(() => {
+        toast.classList.add("fade-out");
+        setTimeout(() => toast.remove(), 260);
+      }, duration);
+    }
+
+    // Statistics Persistence & UI Rendering
+    function loadStats() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY_STATS);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          stats = {
+            ...stats,
+            ...parsed,
+            distribution: { ...stats.distribution, ...(parsed.distribution || {}) }
+          };
+        }
+      } catch (e) {
+        console.warn("Unable to read stats from localStorage:", e);
+      }
+    }
+
+    function saveStats() {
+      try {
+        localStorage.setItem(STORAGE_KEY_STATS, JSON.stringify(stats));
+      } catch (e) {
+        console.warn("Unable to save stats to localStorage:", e);
+      }
+    }
+
+    function recordGameResult(won, attemptNumber) {
+      if (DAILY_MODE && statsRecordedToday) return;
+      stats.gamesPlayed += 1;
+      if (won) {
+        stats.gamesWon += 1;
+        stats.currentStreak += 1;
+        if (stats.currentStreak > stats.maxStreak) {
+          stats.maxStreak = stats.currentStreak;
+        }
+        stats.distribution[attemptNumber] = (stats.distribution[attemptNumber] || 0) + 1;
+      } else {
+        stats.currentStreak = 0;
+      }
+      if (DAILY_MODE) statsRecordedToday = true;
+      saveStats();
+      saveDailyPuzzle();
+    }
+
+    function renderStatsModal() {
+      document.getElementById("stat-played").textContent = stats.gamesPlayed;
+      const winPct = stats.gamesPlayed > 0
+        ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100)
+        : 0;
+      document.getElementById("stat-win-pct").textContent = winPct;
+      document.getElementById("stat-streak").textContent = stats.currentStreak;
+      document.getElementById("stat-max-streak").textContent = stats.maxStreak;
+
+      const distContainer = document.getElementById("guess-distribution");
+      distContainer.innerHTML = "";
+
+      const counts = Object.values(stats.distribution);
+      const maxCount = Math.max(...counts, 1);
+
+      for (let i = 1; i <= MAX_ATTEMPTS; i++) {
+        const count = stats.distribution[i] || 0;
+        const pct = Math.max(8, Math.round((count / maxCount) * 100));
+        const isHighlight = isGameOver && lastWinAttempt === i;
+
+        const row = document.createElement("div");
+        row.className = "flex items-center gap-2 text-xs";
+        row.innerHTML = `
+          <span class="w-3 font-bold">${i}</span>
+          <div class="flex-1 flex items-center">
+            <div class="dist-bar ${isHighlight ? "highlight" : ""}" style="width: ${count > 0 ? pct : 7}%">
+              ${count}
+            </div>
+          </div>
+        `;
+        distContainer.appendChild(row);
+      }
+    }
+
+    function showEndRoundStats(won) {
+      renderStatsModal();
+      const revealBox = document.getElementById("word-reveal-box");
+      const outcomeLabel = document.getElementById("round-outcome-label");
+      const wordDisplay = document.getElementById("secret-word-display");
+      const shareBtn = document.getElementById("btn-share");
+      const playAgainLabel = document.getElementById("play-again-label");
+
+      revealBox.classList.remove("hidden");
+      outcomeLabel.textContent = won ? "Solved! The Word Was" : "Better Luck Next Time — The Word Was";
+      wordDisplay.textContent = secretWord;
+      wordDisplay.style.color = won ? "var(--color-correct)" : "var(--color-present)";
+
+      shareBtn.classList.remove("hidden");
+      playAgainLabel.textContent = DAILY_MODE ? "Close" : "Play Again";
+      openModal(statsModal);
+    }
+
+    // Generate Wordle Emoji Grid & Copy to Clipboard
+    function shareResults() {
+      const scoreText = lastWinAttempt ? `${lastWinAttempt}/${MAX_ATTEMPTS}` : `X/${MAX_ATTEMPTS}`;
+      const emojiMap = {
+        correct: "🟩",
+        present: "🟨",
+        absent: "⬛"
+      };
+
+      const rowsText = evaluatedHistory
+        .map(row => row.map(state => emojiMap[state]).join(""))
+        .join("\n");
+
+      const sharePayload = DAILY_MODE
+        ? `Wordle 6 · ${todayKey()} - ${scoreText}\n\n${rowsText}`
+        : `Wordle 6 - ${scoreText}\n\n${rowsText}`;
+
+      // Fallback-safe clipboard copy for iframe & standard contexts
+      const textArea = document.createElement("textarea");
+      textArea.value = sharePayload;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-9999px";
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand("copy");
+        showToast("Copied results to clipboard!");
+      } catch (err) {
+        showToast("Unable to copy results");
+      }
+      document.body.removeChild(textArea);
+    }
+
+    // Theme Management
+    function loadTheme() {
+      const savedTheme = localStorage.getItem(STORAGE_KEY_THEME);
+      const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const isDark = savedTheme ? savedTheme === "dark" : prefersDark;
+      applyTheme(isDark);
+    }
+
+    function applyTheme(isDark) {
+      if (isDark) {
+        document.documentElement.classList.add("dark");
+        iconSun.classList.remove("hidden");
+        iconMoon.classList.add("hidden");
+      } else {
+        document.documentElement.classList.remove("dark");
+        iconSun.classList.add("hidden");
+        iconMoon.classList.remove("hidden");
+      }
+      localStorage.setItem(STORAGE_KEY_THEME, isDark ? "dark" : "light");
+    }
+
+    // Modal Helpers
+    function openModal(modal) {
+      closeAllModals();
+      modal.classList.add("open");
+    }
+
+    function closeAllModals() {
+      helpModal.classList.remove("open");
+      statsModal.classList.remove("open");
+    }
+
+    // Event Listeners
+    function bindEvents() {
+      // Physical Keyboard
+      window.addEventListener("keydown", (e) => {
+        if (e.ctrlKey || e.metaKey || e.altKey) return;
+
+        if (e.key === "Escape") {
+          closeAllModals();
+          return;
+        }
+
+        const upper = e.key.toUpperCase();
+        if (upper === "BACKSPACE" || upper === "DELETE" || upper === "ENTER" || /^[A-Z]$/.test(upper)) {
+          e.preventDefault();
+          handleInput(upper);
+        }
+      });
+
+      // On-Screen Keyboard
+      keyboardEl.addEventListener("click", (e) => {
+        const keyBtn = e.target.closest(".key");
+        if (!keyBtn) return;
+        keyBtn.blur();
+        const key = keyBtn.getAttribute("data-key");
+        handleInput(key);
+      });
+
+      // Header Buttons
+      document.getElementById("btn-help").addEventListener("click", () => openModal(helpModal));
+      document.getElementById("btn-stats").addEventListener("click", () => {
+        renderStatsModal();
+        if (!isGameOver) {
+          document.getElementById("word-reveal-box").classList.add("hidden");
+          document.getElementById("btn-share").classList.add("hidden");
+          document.getElementById("play-again-label").textContent = "New Word";
+        }
+        openModal(statsModal);
+      });
+
+      document.getElementById("btn-play-again").addEventListener("click", () => {
+        if (DAILY_MODE) closeAllModals();
+        else startNewGame(true);
+      });
+      window.addEventListener("beforeunload", () => saveDailyPuzzle());
+      document.getElementById("btn-share").addEventListener("click", shareResults);
+
+      themeBtn.addEventListener("click", () => {
+        const isCurrentlyDark = document.documentElement.classList.contains("dark");
+        applyTheme(!isCurrentlyDark);
+      });
+
+      // Close modal buttons & backdrop clicks
+      document.querySelectorAll(".close-modal").forEach(btn => {
+        btn.addEventListener("click", closeAllModals);
+      });
+
+      [helpModal, statsModal].forEach(backdrop => {
+        backdrop.addEventListener("click", (e) => {
+          if (e.target === backdrop) closeAllModals();
+        });
+      });
+    }
+
+    // Boot Game
+    window.addEventListener("DOMContentLoaded", init);
+  </script>
+</body>
+</html>
