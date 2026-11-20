@@ -760,7 +760,7 @@
                             <span class="theme-pill-btn bg-indigo-100 text-indigo-900 text-[10px] font-extrabold px-2 py-0.5 rounded-full border border-indigo-300 hidden sm:inline-block">3-STAGE ACADEMY</span>
                         </div>
 
-            <div class="flex items-center gap-1.5 sm:gap-2">
+            <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto max-w-[58vw] sm:max-w-none shrink min-w-0 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
 
                 <button type="button" id="phoneLoginBtn" onclick="app.openGoogleLogin()" class="theme-pill-btn bg-white hover:bg-indigo-50 text-indigo-700 border border-indigo-200 px-2.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shrink-0" title="Log in with Google">
                     <i class="fa-brands fa-google"></i>
@@ -773,12 +773,13 @@
                     <span id="focusModeLabel">Focus Mode Off</span>
                 </button>
 
-                <button type="button" id="quickGamesBtn" onclick="app.showQuickGames()" class="hidden theme-pill-btn bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 px-2.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shrink-0" title="Quick games for a registered course">
+                <button type="button" id="quickGamesBtn" onclick="app.showQuickGames()" class="theme-pill-btn bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 px-2.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shrink-0" title="Quick games for a registered course">
                     <i class="fa-solid fa-gamepad"></i>
-                    <span>Quick Games</span>
+                    <span class="hidden md:inline">Quick Games</span>
+                    <span class="md:hidden">Games</span>
                 </button>
 
-                <button type="button" id="wordleBtn" onclick="app.showWordleOfDay()" class="hidden theme-pill-btn bg-violet-50 hover:bg-violet-100 text-violet-900 border border-violet-200 px-2.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shrink-0" title="One six-letter Wordle puzzle per day">
+                <button type="button" id="wordleBtn" onclick="app.showWordleOfDay()" class="theme-pill-btn bg-violet-50 hover:bg-violet-100 text-violet-900 border border-violet-200 px-2.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shrink-0" title="One six-letter Wordle puzzle per day">
                     <i class="fa-solid fa-font"></i>
                     <span class="hidden sm:inline">Wordle of the Day</span>
                     <span class="sm:hidden">Wordle</span>
@@ -828,6 +829,16 @@
                             <button onclick="app.showCourseSelectionPage()" class="w-full h-14 btn-3d-indigo text-white font-heading font-bold text-xs sm:text-sm px-4 rounded-2xl flex items-center justify-center gap-2 whitespace-nowrap">
                                 <i class="fa-solid fa-layer-group text-amber-300 text-base shrink-0"></i>
                                 <span>Select Course (₹99/-)</span>
+                            </button>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3 max-w-xl mx-auto lg:mx-0">
+                            <button type="button" onclick="app.showQuickGames()" class="w-full h-12 theme-pill-btn bg-emerald-500/90 hover:bg-emerald-400 text-white border border-emerald-300/50 font-heading font-bold text-xs sm:text-sm px-3 rounded-2xl flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-gamepad shrink-0"></i>
+                                <span>Quick Games</span>
+                            </button>
+                            <button type="button" onclick="app.showWordleOfDay()" class="w-full h-12 theme-pill-btn bg-violet-600/90 hover:bg-violet-500 text-white border border-violet-300/50 font-heading font-bold text-xs sm:text-sm px-3 rounded-2xl flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-font shrink-0"></i>
+                                <span>Wordle of the Day</span>
                             </button>
                         </div>
                     </div>
@@ -4064,17 +4075,30 @@
             },
 
             paintQuickGamesButton() {
-                const open = ['beginner', 'foundation', 'advanced'].some(id => this.isCoursePaid(id));
+                const paid = ['beginner', 'foundation', 'advanced'].some(id => this.isCoursePaid(id));
                 const quickBtn = document.getElementById('quickGamesBtn');
-                if (quickBtn) quickBtn.classList.toggle('hidden', !open);
+                if (quickBtn) {
+                    quickBtn.classList.remove('hidden');
+                    quickBtn.title = paid
+                        ? 'Quick games for a registered course'
+                        : 'Unlock a 60-day course (₹99) to play Quick Games';
+                    quickBtn.style.opacity = paid ? '1' : '0.85';
+                }
                 const wordleBtn = document.getElementById('wordleBtn');
-                if (wordleBtn) wordleBtn.classList.toggle('hidden', !open);
+                if (wordleBtn) wordleBtn.classList.remove('hidden');
+            },
+
+            academyReturnUrl() {
+                const path = window.location.pathname || '/';
+                if (path === '/' || path.endsWith('/')) return '/';
+                const base = path.split('/').pop() || 'index.html';
+                return base;
             },
 
             showWordleOfDay() {
                 const proceed = () => {
                     const child = encodeURIComponent(this.state.activeChildId || 'default');
-                    window.location.href = 'wordle-6-daily.html?child=' + child + '&return=' + encodeURIComponent('maths-aflatoon.html');
+                    window.location.href = 'wordle-6-daily.html?child=' + child + '&return=' + encodeURIComponent(this.academyReturnUrl());
                 };
                 if (!this.gamesAccess(proceed)) return;
                 proceed();
@@ -4119,7 +4143,10 @@
                 else if (this.isCoursePaid('foundation')) this.quickCourse = 'foundation';
                 else this.quickCourse = 'advanced';
 
-                if (!['beginner', 'foundation', 'advanced'].some(id => this.isCoursePaid(id))) return;
+                if (!['beginner', 'foundation', 'advanced'].some(id => this.isCoursePaid(id))) {
+                    this.showCourseSelectionPage();
+                    return;
+                }
                 this.hideAllPages();
                 document.getElementById('gamesView').classList.remove('hidden');
                 this.renderQuickGamesHub();
@@ -5406,6 +5433,7 @@
                 }
                 const shown = (this.account.name || '').trim() || this.account.email.split('@')[0];
                 label.textContent = shown.length > 16 ? shown.slice(0, 15) + '…' : shown;
+                this.paintQuickGamesButton();
             },
 
             ensureGoogleButton(attempt) {
