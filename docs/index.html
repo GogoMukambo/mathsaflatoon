@@ -5500,14 +5500,21 @@
                     });
                     const data = await result.json().catch(() => ({}));
                     if (!result.ok) {
-                        this.showLoginError(data.error || 'Google sign-in could not be completed.');
+                        const serverMsg = data.error || '';
+                        if (result.status === 404) {
+                            this.showLoginError('Sign-in API is missing on this host. Redeploy with the Vercel API routes and DATABASE_URL.');
+                        } else if (result.status === 500 && !serverMsg) {
+                            this.showLoginError('Server error during sign-in. Check DATABASE_URL on the host.');
+                        } else {
+                            this.showLoginError(serverMsg || 'Google sign-in could not be completed.');
+                        }
                         return;
                     }
                     this.acceptGoogleAccount(data);
                     this.closeGoogleLogin();
                     this.resumeAfterLogin();
                 } catch (e) {
-                    this.showLoginError('Google sign-in could not be completed.');
+                    this.showLoginError('Could not reach the sign-in API. Check your connection or site deployment.');
                 }
             },
 
