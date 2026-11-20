@@ -971,18 +971,19 @@
       "ETHICS", "OPTICS", "PHYSIC", "HUMMUS", "LITMUS", "NEXUS", "SINUS"
     ]);
 
+    function isSixLetterWord(word) {
+      return word.length === 6 && /^[A-Z]{6}$/.test(word);
+    }
+
     /**
-     * Safeguard filter to ensure no -ING verb forms or simple -S/-ES plurals
-     * slip into the target pool or valid guess dictionary.
+     * Daily answers avoid -ING and simple plurals; guesses may use any listed 6-letter word.
      */
-    function isAllowedBaseWord(word) {
-      if (word.length !== 6 || !/^[A-Z]{6}$/.test(word)) return false;
+    function isAllowedTargetWord(word) {
+      if (!isSixLetterWord(word)) return false;
       if (NON_INFLECTED_EXCEPTIONS.has(word)) return true;
 
-      // Exclude 6-letter words formed by adding -ING to a verb stem
       if (word.endsWith("ING")) return false;
 
-      // Exclude simple plural nouns / 3rd-person verbs ending in -S (unless genuine -SS, -US, -IS, -AS, -OS base words)
       if (word.endsWith("S")) {
         if (word.endsWith("SS") || word.endsWith("US") || word.endsWith("IS") || word.endsWith("AS") || word.endsWith("OS")) {
           return true;
@@ -993,16 +994,20 @@
       return true;
     }
 
-    // Normalize & construct a Set of strictly 6-letter uppercase words for O(1) lookup
-    const VALID_DICTIONARY = new Set(
-      [...TARGET_WORDS, ...EXTRA_VALID_WORDS]
-        .map(w => w.trim().toUpperCase())
-        .filter(isAllowedBaseWord)
-    );
+  function normalizeWordList(words) {
+      const out = new Set();
+      words.forEach((raw) => {
+        const word = String(raw || "").trim().toUpperCase();
+        if (isSixLetterWord(word)) out.add(word);
+      });
+      return out;
+    }
+
+    const VALID_DICTIONARY = normalizeWordList([...TARGET_WORDS, ...EXTRA_VALID_WORDS]);
 
     const CLEAN_TARGETS = TARGET_WORDS
       .map(w => w.trim().toUpperCase())
-      .filter(isAllowedBaseWord);
+      .filter(isAllowedTargetWord);
 
     // Game Constants
     const WORD_LENGTH = 6;
