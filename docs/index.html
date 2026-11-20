@@ -779,7 +779,7 @@
                     <span class="md:hidden">Games</span>
                 </button>
 
-                <button type="button" id="wordleBtn" onclick="app.showWordleOfDay()" class="theme-pill-btn bg-violet-50 hover:bg-violet-100 text-violet-900 border border-violet-200 px-2.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shrink-0" title="One six-letter Wordle puzzle per day">
+                <button type="button" id="wordleBtn" onclick="app.showWordleOfDay()" class="theme-pill-btn bg-violet-50 hover:bg-violet-100 text-violet-900 border border-violet-200 px-2.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shrink-0" title="Free daily six-letter Wordle — no login required">
                     <i class="fa-solid fa-font"></i>
                     <span class="hidden sm:inline">Wordle of the Day</span>
                     <span class="sm:hidden">Wordle</span>
@@ -4096,12 +4096,8 @@
             },
 
             showWordleOfDay() {
-                const proceed = () => {
-                    const child = encodeURIComponent(this.state.activeChildId || 'default');
-                    window.location.href = 'wordle-6-daily.html?child=' + child + '&return=' + encodeURIComponent(this.academyReturnUrl());
-                };
-                if (!this.gamesAccess(proceed)) return;
-                proceed();
+                const scope = (this.state.activeChildId || 'guest').trim() || 'guest';
+                window.location.href = 'wordle-6-daily.html?child=' + encodeURIComponent(scope) + '&return=' + encodeURIComponent(this.academyReturnUrl());
             },
 
             renderCourseQuickGames() {
