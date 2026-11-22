@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const aflatoonDb = require("./aflatoon-db");
+const razorpay = require("./razorpay");
 
 const SESSION_SECONDS = 60 * 60 * 24 * 30;
 
@@ -169,6 +170,51 @@ function handleHealthGet(req, res) {
   json(res, 200, { ok: true, database: process.env.DATABASE_URL ? "supabase" : "missing" });
 }
 
+function handlePaymentsConfigGet(req, res) {
+  json(res, 200, {
+    configured: razorpay.isConfigured(),
+    keyId: razorpay.isConfigured() ? razorpay.keyId() : "",
+  });
+}
+
+async function handlePaymentsCreateOrderPost(req, res) {
+  await withAflatoon(req, res, async () => {
+    if (!razorpay.isConfigured()) {
+      throw new aflatoonDb.HttpError(503, "Razorpay keys are missing. Set RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET on the host.");
+    }
+    const body = requestBody(req);
+    const order = await razorpay.createOrder({
+      amountPaise: body.amountPaise,
+      receipt: body.receipt,
+      notes: {
+        courseId: String(body.courseId || ""),
+        source: "aflatoon-upi-intent",
+      },
+    });
+    json(res, 200, order);
+  });
+}
+
+async function handlePaymentsVerifyPost(req, res) {
+  await withAflatoon(req, res, async () => {
+    if (!razorpay.isConfigured()) {
+      throw new aflatoonDb.HttpError(503, "Razorpay keys are missing.");
+    }
+    const body = requestBody(req);
+    const ok = razorpay.verifyCheckoutSignature({
+      orderId: body.razorpay_order_id,
+      paymentId: body.razorpay_payment_id,
+      signature: body.razorpay_signature,
+    });
+    if (!ok) throw new aflatoonDb.HttpError(400, "Payment signature could not be verified.");
+    json(res, 200, {
+      ok: true,
+      paymentId: body.razorpay_payment_id,
+      orderId: body.razorpay_order_id,
+    });
+  });
+}
+
 module.exports = {
   handleGooglePost,
   handleLogoutPost,
@@ -176,4 +222,7 @@ module.exports = {
   handleProgressPut,
   handleFocusPinPut,
   handleHealthGet,
+  handlePaymentsConfigGet,
+  handlePaymentsCreateOrderPost,
+  handlePaymentsVerifyPost,
 };

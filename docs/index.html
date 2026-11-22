@@ -32,6 +32,7 @@
     <title>Aflatoon Mental Maths Academy | 3-Stage 60-Day Speed Mastery (₹99/-)</title>
     <script src="auth-config.js"></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script src="mental-course-auth.js?v=2"></script>
     <script src="account-sync.js?v=3"></script>
     <script src="focus-mode.js?v=9"></script>
@@ -680,8 +681,6 @@
         body.theme-liquid #paymentModal .btn-3d-indigo span,
         body.theme-liquid #paymentModal .btn-3d-indigo i,
         body.theme-liquid #paymentModal .bg-emerald-600,
-        body.theme-liquid #paymentModal #payTabUpi.bg-indigo-600,
-        body.theme-liquid #paymentModal #payTabRazorpay.bg-indigo-600,
         body.theme-liquid #certificateModal .btn-3d-indigo,
         body.theme-liquid #certificateModal .btn-3d-indigo span,
         body.theme-liquid #certificateModal .btn-3d-indigo i,
@@ -773,13 +772,12 @@
                     <span id="focusModeLabel">Focus Mode Off</span>
                 </button>
 
-                <button type="button" id="quickGamesBtn" onclick="app.showQuickGames()" class="theme-pill-btn bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 px-2.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shrink-0" title="Quick games for a registered course">
+                <button type="button" id="quickGamesBtn" onclick="app.showQuickGames()" class="hidden theme-pill-btn bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 px-2.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shrink-0" title="Quick games for a registered course">
                     <i class="fa-solid fa-gamepad"></i>
-                    <span class="hidden md:inline">Quick Games</span>
-                    <span class="md:hidden">Games</span>
+                    <span>Quick Games</span>
                 </button>
 
-                <button type="button" id="wordleBtn" onclick="app.showWordleOfDay()" class="theme-pill-btn bg-violet-50 hover:bg-violet-100 text-violet-900 border border-violet-200 px-2.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shrink-0" title="Free daily six-letter Wordle — no login required">
+                <button type="button" id="wordleBtn" onclick="app.showWordleOfDay()" class="hidden theme-pill-btn bg-violet-50 hover:bg-violet-100 text-violet-900 border border-violet-200 px-2.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shrink-0" title="Free daily six-letter Wordle — no login required">
                     <i class="fa-solid fa-font"></i>
                     <span class="hidden sm:inline">Wordle of the Day</span>
                     <span class="sm:hidden">Wordle</span>
@@ -1655,7 +1653,7 @@
     </div>
 
     <!-- ========================================================================= -->
-    <!-- PAYMENT: UPI OR RAZORPAY BEFORE A COURSE OPENS                            -->
+    <!-- PAYMENT: RAZORPAY QR / CHECKOUT BEFORE A COURSE OPENS                     -->
     <!-- ========================================================================= -->
     <div id="paymentModal" class="hidden fixed inset-0 z-[100] bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto no-print">
         <div class="liquid-glass rounded-3xl max-w-md w-full p-5 sm:p-6 space-y-4" role="dialog" aria-modal="true" aria-labelledby="paymentTitle">
@@ -1673,40 +1671,22 @@
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
-            <p class="text-sm text-slate-600">Each course is paid separately. After the access code, that course stays open for 3 months from the payment date.</p>
-            <div class="grid grid-cols-2 gap-2 bg-slate-100 p-1 rounded-2xl">
-                <button type="button" id="payTabUpi" onclick="app.switchPaymentTab('upi')" class="py-2.5 rounded-xl font-heading font-bold text-sm bg-indigo-600 text-white">UPI</button>
-                <button type="button" id="payTabRazorpay" onclick="app.switchPaymentTab('razorpay')" class="py-2.5 rounded-xl font-heading font-bold text-sm text-slate-700">Razorpay</button>
+            <p class="text-sm text-slate-600">Pay ₹99 with Razorpay — scan the QR for UPI, or pay by UPI / card in checkout. The course unlocks only after Razorpay confirms payment. Access code is an alternative.</p>
+            <div class="rounded-2xl bg-white/80 border border-slate-200 p-4 text-center space-y-3">
+                <p class="text-xs font-extrabold uppercase tracking-widest text-indigo-700">Powered by Razorpay</p>
+                <img id="paymentQr" src="assets/razorpay-upi-qr.jpg" alt="Razorpay UPI QR code — Rupesh C" class="w-full max-w-[220px] mx-auto rounded-2xl border border-slate-200 bg-white object-contain">
+                <p class="text-xs text-slate-600">Scan &amp; pay with GPay, PhonePe or Paytm</p>
+                <button type="button" onclick="app.launchRazorpayCheckout()" class="w-full btn-3d-indigo text-white font-heading font-bold text-sm py-3.5 rounded-xl flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-lock"></i>
+                    <span>Pay with UPI or Card · ₹99</span>
+                </button>
+                <p id="rzpPayStatus" class="hidden text-xs font-bold text-amber-900 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2"></p>
             </div>
-            <div id="payPanelUpi" class="space-y-3">
-                <div class="rounded-2xl bg-white/80 border border-slate-200 p-3 text-center space-y-2">
-                    <p class="text-xs font-extrabold text-slate-800">Scan with Paytm, GPay or PhonePe</p>
-                    <img id="paymentQr" alt="UPI QR code" class="w-40 h-40 mx-auto bg-white rounded-xl border border-slate-200" width="160" height="160">
-                    <p class="text-xs text-slate-500">Glasshouse Interactive</p>
-                    <div class="flex items-center justify-between gap-2 bg-white border border-slate-300 rounded-xl px-3 py-2">
-                        <span class="font-mono font-extrabold text-sm text-slate-950 select-all">8976263041@ptsbi</span>
-                        <button type="button" onclick="app.copyPayText('8976263041@ptsbi', 'upiCopyLabel')" class="text-xs font-bold text-indigo-700 shrink-0"><span id="upiCopyLabel">Copy</span></button>
-                    </div>
-                    <a id="paymentUpiLink" href="upi://pay?pa=8976263041@ptsbi&amp;pn=Glasshouse%20Interactive&amp;am=99.00&amp;cu=INR" class="w-full btn-3d-indigo text-white font-heading font-bold text-sm py-3 rounded-xl flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-building-columns"></i>
-                        <span>Pay ₹99 with UPI</span>
-                    </a>
-                </div>
-            </div>
-            <div id="payPanelRazorpay" class="hidden space-y-3">
-                <div class="rounded-2xl bg-white/80 border border-slate-200 p-4 text-center space-y-3">
-                    <p class="text-sm font-bold text-slate-800">Pay ₹99 with Razorpay. UPI, cards and netbanking are accepted.</p>
-                    <a href="https://rzp.io/rzp/yzKNuDRQ" target="_blank" rel="noopener noreferrer" class="w-full btn-3d-indigo text-white font-heading font-bold text-sm py-3 rounded-xl flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-lock"></i>
-                        <span>Open Razorpay</span>
-                    </a>
-                </div>
-            </div>
-            <div class="space-y-2">
-                <label for="payAccessCode" class="text-xs font-extrabold uppercase tracking-wide text-slate-500">Access code</label>
+            <div class="space-y-2 border-t border-slate-200 pt-3">
+                <label for="payAccessCode" class="text-xs font-extrabold uppercase tracking-wide text-slate-500">Or unlock with access code</label>
                 <input id="payAccessCode" type="text" autocomplete="off" placeholder="Enter the access code" onkeydown="if(event.key==='Enter'){event.preventDefault();app.confirmAccessCode();}" class="w-full text-center font-mono font-extrabold text-base px-3 py-2.5 rounded-xl border border-slate-300 focus:border-indigo-600 focus:outline-none">
                 <p id="payAccessFeedback" class="hidden text-sm font-bold text-rose-700"></p>
-                <button type="button" onclick="app.confirmAccessCode()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-bold py-3 rounded-xl">Open course</button>
+                <button type="button" onclick="app.confirmAccessCode()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-heading font-bold py-3 rounded-xl">Unlock with code</button>
             </div>
         </div>
     </div>
@@ -3510,6 +3490,17 @@
             { id: 'advBalance', name: 'Algebraic Scale Arena', short: 'Evaluate', blurb: 'Evaluate an expression for the given x and y.', emoji: '⚖️', card: 'from-slate-900 to-rose-800 border-rose-300' },
             { id: 'advBlitz', name: 'Signed Mental Blitz', short: 'Blitz', blurb: 'Type answers with negatives and order of operations.', emoji: '⌨️', card: 'from-slate-900 to-fuchsia-800 border-fuchsia-300' }
         ];
+
+        /**
+         * Razorpay payment settings.
+         * Verified unlock needs RAZORPAY_KEY_ID + RAZORPAY_KEY_SECRET in .env on the host.
+         */
+        const AFLATOON_PAY = {
+            payeeName: 'Rupesh C',
+            amountPaise: 9900,
+            amountLabel: '₹99',
+            qrImage: 'assets/razorpay-upi-qr.jpg'
+        };
 
         /**
          * MAIN APPLICATION STATE & CONTROLLER
@@ -5360,50 +5351,124 @@
                     : 'Add a child before paying.';
                 if (existing && !existing.active) line += ' The last access ended on ' + this.formatChildDate(existing.end) + '.';
                 document.getElementById('paymentChildLine').textContent = line;
-                const note = 'Maths Aflatoon ' + course.name;
-                const upi = 'upi://pay?pa=8976263041@ptsbi&pn=' + encodeURIComponent('Glasshouse Interactive') + '&am=99.00&cu=INR&tn=' + encodeURIComponent(note);
-                document.getElementById('paymentUpiLink').href = upi;
-                document.getElementById('paymentQr').src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=8&data=' + encodeURIComponent(upi);
+                this.setRzpStatus('');
+                const qr = document.getElementById('paymentQr');
+                if (qr) qr.src = AFLATOON_PAY.qrImage;
                 const code = document.getElementById('payAccessCode');
                 const feedback = document.getElementById('payAccessFeedback');
                 code.value = '';
                 feedback.textContent = '';
                 feedback.classList.add('hidden');
-                this.switchPaymentTab('upi');
                 document.getElementById('paymentModal').classList.remove('hidden');
-                code.focus();
+            },
+
+            setRzpStatus(message) {
+                const status = document.getElementById('rzpPayStatus');
+                if (!status) return;
+                status.textContent = message || '';
+                status.classList.toggle('hidden', !message);
+            },
+
+            async launchRazorpayCheckout() {
+                const intent = this.payIntent;
+                if (!intent || !intent.courseId) return;
+                if (!this.activeChild()) {
+                    this.setRzpStatus('Add a child first. This payment is for one child.');
+                    return;
+                }
+                const course = COURSE_CATALOG[intent.courseId];
+                this.setRzpStatus('Starting Razorpay checkout…');
+                try {
+                    const orderRes = await fetch('/api/aflatoon/payments/create-order', {
+                        method: 'POST',
+                        credentials: 'same-origin',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            amountPaise: AFLATOON_PAY.amountPaise,
+                            courseId: intent.courseId,
+                            receipt: 'afl_' + intent.courseId + '_' + Date.now()
+                        })
+                    });
+                    const order = await orderRes.json().catch(() => ({}));
+                    if (!orderRes.ok) {
+                        this.setRzpStatus(order.error || 'Razorpay is not configured on this host. Set RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET.');
+                        return;
+                    }
+                    if (!window.Razorpay) {
+                        this.setRzpStatus('Razorpay checkout script did not load. Refresh and try again.');
+                        return;
+                    }
+                    const rzp = new Razorpay({
+                        key: order.keyId,
+                        amount: order.amount,
+                        currency: order.currency || 'INR',
+                        name: AFLATOON_PAY.payeeName,
+                        description: 'Maths Aflatoon ' + ((course && course.name) || intent.courseId),
+                        order_id: order.orderId,
+                        handler: (response) => this.verifyAndUnlockRazorpay(response),
+                        theme: { color: '#072654' },
+                        modal: {
+                            ondismiss: () => {
+                                this.setRzpStatus('Checkout closed. No unlock without payment confirmation.');
+                            }
+                        }
+                    });
+                    rzp.on('payment.failed', () => {
+                        this.setRzpStatus('Payment failed or was cancelled. No course unlock.');
+                    });
+                    rzp.open();
+                } catch (e) {
+                    this.setRzpStatus('Could not start Razorpay checkout.');
+                }
+            },
+
+            async verifyAndUnlockRazorpay(response) {
+                try {
+                    const result = await fetch('/api/aflatoon/payments/verify', {
+                        method: 'POST',
+                        credentials: 'same-origin',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(response)
+                    });
+                    const data = await result.json().catch(() => ({}));
+                    if (!result.ok || !data.ok) {
+                        this.setRzpStatus(data.error || 'Payment could not be verified.');
+                        return;
+                    }
+                    this.setRzpStatus('Payment confirmed. Unlocking course…');
+                    this.unlockAfterVerifiedPayment();
+                } catch (e) {
+                    this.setRzpStatus('Could not verify payment with the server.');
+                }
+            },
+
+            unlockAfterVerifiedPayment() {
+                const intent = this.payIntent;
+                if (!intent) return;
+                if (!this.activeChild()) {
+                    const feedback = document.getElementById('payAccessFeedback');
+                    if (feedback) {
+                        feedback.classList.remove('hidden');
+                        feedback.textContent = 'Add a child first. This payment is for one child.';
+                        feedback.className = 'text-sm font-bold text-rose-700';
+                    }
+                    return;
+                }
+                this.grantCourseAccess(intent.courseId, intent.next);
+            },
+
+            grantCourseAccess(courseId, next) {
+                if (!this.state.paid) this.state.paid = {};
+                const start = this.todayIso();
+                this.state.paid[courseId] = { start: start, end: this.addMonths(start, 3) };
+                this.saveState();
+                this.closePaymentModal();
+                if (typeof next === 'function') next();
             },
 
             closePaymentModal() {
                 document.getElementById('paymentModal').classList.add('hidden');
                 this.payIntent = null;
-            },
-
-            switchPaymentTab(tab) {
-                const upi = tab !== 'razorpay';
-                document.getElementById('payPanelUpi').classList.toggle('hidden', !upi);
-                document.getElementById('payPanelRazorpay').classList.toggle('hidden', upi);
-                document.getElementById('payTabUpi').className = upi
-                    ? 'py-2.5 rounded-xl font-heading font-bold text-sm bg-indigo-600 text-white'
-                    : 'py-2.5 rounded-xl font-heading font-bold text-sm text-slate-700';
-                document.getElementById('payTabRazorpay').className = upi
-                    ? 'py-2.5 rounded-xl font-heading font-bold text-sm text-slate-700'
-                    : 'py-2.5 rounded-xl font-heading font-bold text-sm bg-indigo-600 text-white';
-            },
-
-            copyPayText(text, labelId) {
-                const label = document.getElementById(labelId);
-                const done = () => {
-                    if (!label) return;
-                    const old = label.textContent;
-                    label.textContent = 'Copied';
-                    setTimeout(() => { label.textContent = old; }, 1200);
-                };
-                if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard.writeText(text).then(done).catch(done);
-                } else {
-                    done();
-                }
             },
 
             account: null,
@@ -5526,7 +5591,7 @@
                     if (!result.ok) {
                         const serverMsg = data.error || '';
                         if (result.status === 404) {
-                            this.showLoginError('Sign-in API is missing on this host. Redeploy with the Vercel API routes and DATABASE_URL.');
+                            this.showLoginError('Sign-in API is missing on this host. Deploy the Node/Vercel API and DATABASE_URL.');
                         } else if (result.status === 500 && !serverMsg) {
                             this.showLoginError('Server error during sign-in. Check DATABASE_URL on the host.');
                         } else {
@@ -5604,13 +5669,9 @@
                     feedback.className = 'text-sm font-bold text-rose-700';
                     return;
                 }
-                if (!this.state.paid) this.state.paid = {};
-                const start = this.todayIso();
-                this.state.paid[intent.courseId] = { start: start, end: this.addMonths(start, 3) };
-                this.saveState();
-                const next = intent.next;
-                this.closePaymentModal();
-                if (next) next();
+                feedback.textContent = 'Access code accepted. Unlocking…';
+                feedback.className = 'text-sm font-bold text-emerald-700';
+                this.grantCourseAccess(intent.courseId, intent.next);
             },
 
             updateNavCourseButtons() {

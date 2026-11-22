@@ -22,3 +22,5 @@ android/build-log.txt
 images/reader/_plain/
 tools/label-previews/
 content-source/
+
+!.env.example
