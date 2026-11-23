@@ -1031,6 +1031,32 @@
       .map(w => w.trim().toUpperCase())
       .filter(isAllowedTargetWord);
 
+    /** Deterministic shuffle so daily answers are not alphabetical / sequential. */
+    function seededShuffle(list, seedStr) {
+      const out = list.slice();
+      let h = 2166136261;
+      for (let i = 0; i < seedStr.length; i++) {
+        h ^= seedStr.charCodeAt(i);
+        h = Math.imul(h, 16777619);
+      }
+      const next = () => {
+        h ^= h << 13; h >>>= 0;
+        h ^= h >>> 17; h >>>= 0;
+        h ^= h << 5; h >>>= 0;
+        return (h >>> 0) / 4294967296;
+      };
+      for (let i = out.length - 1; i > 0; i--) {
+        const j = Math.floor(next() * (i + 1));
+        const tmp = out[i];
+        out[i] = out[j];
+        out[j] = tmp;
+      }
+      return out;
+    }
+
+    // Fixed seed → same shuffled order for every player; consecutive days are not A→B→C.
+    const SHUFFLED_TARGETS = seededShuffle(CLEAN_TARGETS, "aflatoon-wordle-order-v2");
+
     // Valid guess dictionary accepts ALL 6-letter words (including plurals, -ING, -ED, etc.)
     const VALID_DICTIONARY = new Set(
       [...TARGET_WORDS, ...EXTRA_VALID_WORDS]
@@ -1100,11 +1126,14 @@
     }
 
     function dailyWordForDate(dateKey) {
-      let hash = 0;
-      for (let i = 0; i < dateKey.length; i++) {
-        hash = (hash * 31 + dateKey.charCodeAt(i)) >>> 0;
-      }
-      return CLEAN_TARGETS[hash % CLEAN_TARGETS.length];
+      const parts = String(dateKey || "").split("-").map(Number);
+      const y = parts[0] || 2026;
+      const m = (parts[1] || 1) - 1;
+      const d = parts[2] || 1;
+      const dayNum = Math.floor(Date.UTC(y, m, d) / 86400000);
+      const pool = SHUFFLED_TARGETS.length ? SHUFFLED_TARGETS : CLEAN_TARGETS;
+      const idx = ((dayNum % pool.length) + pool.length) % pool.length;
+      return pool[idx];
     }
 
     function readDailyStore() {
@@ -1316,7 +1345,9 @@
         }
       }
 
-      secretWord = DAILY_MODE ? dailyWordForDate(todayKey()) : CLEAN_TARGETS[Math.floor(Math.random() * CLEAN_TARGETS.length)];
+      secretWord = DAILY_MODE
+        ? dailyWordForDate(todayKey())
+        : SHUFFLED_TARGETS[Math.floor(Math.random() * SHUFFLED_TARGETS.length)];
 
       currentRow = 0;
       currentCol = 0;
