@@ -15,6 +15,7 @@
       key === "achievers-den-home-pref" ||
       key.indexOf("achievers-den-home-pref:") === 0 ||
       key.indexOf("mental-high:") === 0 ||
+      key === "aflatoon_academy_3stage_60d_v3" ||
       key === "aflatoon_academy_3stage_90d_v2" ||
       key === "mathsprint_y5_v1_progress" ||
       key.indexOf("mathsprint_y5_v1_progress:") === 0 ||
@@ -114,7 +115,7 @@
         setRaw("mental-high:" + childId + ":" + year, String(scores[year]));
       });
       const docs = progress.documents || {};
-      if (docs.aflatoon) setRaw("aflatoon_academy_3stage_90d_v2", docs.aflatoon);
+      if (docs.aflatoon) setRaw("aflatoon_academy_3stage_60d_v3", docs.aflatoon);
       if (docs["mathsprint-y45"]) setRaw("mathsprint_y5_v1_progress:" + childId, docs["mathsprint-y45"]);
       ["y4", "y5", "y6"].forEach(function (quest) {
         if (docs["quest-" + quest]) setRaw("maths_quest_" + quest + "_profiles_v1", docs["quest-" + quest]);
@@ -177,7 +178,11 @@
     if (includeShared) {
       take(items, "achievers-den-topic-progress");
       take(items, "achievers-den-home-pref");
-      take(items, "aflatoon_academy_3stage_90d_v2");
+      if (localStorage.getItem("aflatoon_academy_3stage_60d_v3")) {
+        take(items, "aflatoon_academy_3stage_60d_v3");
+      } else {
+        take(items, "aflatoon_academy_3stage_90d_v2");
+      }
       take(items, "mathsprint_y5_v1_progress");
       ["y4", "y5", "y6"].forEach(function (quest) {
         take(items, "maths_quest_" + quest + "_profiles_v1");

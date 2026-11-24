@@ -1,4 +1,4 @@
--- Achiever's Den website database (SQLite).
+-- Website database (SQLite).
 -- Parents live in users. Each child profile belongs to one parent.
 -- Progress is stored per child: lessons, home choices, mental scores,
 -- Aflatoon / Maths Sprint days, and mental-quest module stats.
@@ -177,3 +177,42 @@ SELECT
   MAX(updated_at) AS updated_at
 FROM course_day_progress
 GROUP BY child_id, course;
+
+-- Maths Aflatoon phone login. The focus code is a hash, never the 4 digits.
+CREATE TABLE IF NOT EXISTS phone_accounts (
+  id TEXT PRIMARY KEY,
+  phone TEXT NOT NULL UNIQUE,
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS phone_sessions (
+  token TEXT PRIMARY KEY,
+  account_id TEXT NOT NULL REFERENCES phone_accounts(id) ON DELETE CASCADE,
+  created_at TEXT NOT NULL,
+  expires_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_phone_sessions_account ON phone_sessions(account_id);
+
+CREATE TABLE IF NOT EXISTS phone_otps (
+  phone TEXT PRIMARY KEY,
+  code_hash TEXT NOT NULL,
+  expires_at TEXT NOT NULL,
+  attempts INTEGER NOT NULL DEFAULT 0,
+  sent_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS phone_otp_sends (
+  id TEXT PRIMARY KEY,
+  phone TEXT NOT NULL,
+  sent_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_phone_otp_sends_phone ON phone_otp_sends(phone, sent_at);
+
+CREATE TABLE IF NOT EXISTS focus_passcodes (
+  account_id TEXT PRIMARY KEY REFERENCES phone_accounts(id) ON DELETE CASCADE,
+  pin_hash TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);

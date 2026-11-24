@@ -3,12 +3,7 @@ require("./load-env");
 const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
-class HttpError extends Error {
-  constructor(status, message) {
-    super(message);
-    this.status = status;
-  }
-}
+const { HttpError } = require("./db");
 
 const SCHEMA_PATH = path.join(__dirname, "..", "db", "aflatoon.pg.sql");
 
@@ -189,6 +184,57 @@ async function saveFocusPasscode(accountId, pinHash) {
   );
 }
 
+function hashTempFocusCode(code) {
+  return crypto.createHash("sha256").update("aflatoon-focus-temp:" + String(code || "")).digest("hex");
+}
+
+function makeTempFocusCode() {
+  return String(Math.floor(1000 + Math.random() * 9000));
+}
+
+async function createFocusTempCode(accountId) {
+  const recent = await one(
+    "SELECT sent_at FROM aflatoon.focus_temp_codes WHERE account_id = $1",
+    [accountId]
+  );
+  if (recent && recent.sent_at) {
+    const ageMs = Date.now() - Date.parse(recent.sent_at);
+    if (Number.isFinite(ageMs) && ageMs < 45000) {
+      throw new HttpError(429, "A temporary code was just emailed. Wait a moment, then try again.");
+    }
+  }
+  const code = makeTempFocusCode();
+  const stamp = now();
+  const expires = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+  await query(
+    `INSERT INTO aflatoon.focus_temp_codes (account_id, code_hash, expires_at, sent_at)
+     VALUES ($1, $2, $3, $4)
+     ON CONFLICT (account_id) DO UPDATE
+       SET code_hash = EXCLUDED.code_hash, expires_at = EXCLUDED.expires_at, sent_at = EXCLUDED.sent_at`,
+    [accountId, hashTempFocusCode(code), expires, stamp]
+  );
+  return code;
+}
+
+async function consumeFocusTempCode(accountId, code) {
+  const pin = String(code || "").trim();
+  if (!/^\d{4}$/.test(pin)) throw new HttpError(400, "Enter the 4-digit code from your email.");
+  const row = await one(
+    "SELECT code_hash, expires_at FROM aflatoon.focus_temp_codes WHERE account_id = $1",
+    [accountId]
+  );
+  if (!row) throw new HttpError(400, "No temporary code is waiting. Ask for a new email code.");
+  if (Date.parse(row.expires_at) <= Date.now()) {
+    await query("DELETE FROM aflatoon.focus_temp_codes WHERE account_id = $1", [accountId]);
+    throw new HttpError(400, "That temporary code has expired. Ask for a new email code.");
+  }
+  if (row.code_hash !== hashTempFocusCode(pin)) {
+    throw new HttpError(400, "That temporary code is not right.");
+  }
+  await query("DELETE FROM aflatoon.focus_temp_codes WHERE account_id = $1", [accountId]);
+  return true;
+}
+
 async function saveCourseProgress(accountId, state) {
   if (!state || typeof state !== "object" || Array.isArray(state)) {
     throw new HttpError(400, "Course progress could not be saved.");
@@ -210,5 +256,7 @@ module.exports = {
   accountFromToken,
   deletePhoneSession,
   saveFocusPasscode,
+  createFocusTempCode,
+  consumeFocusTempCode,
   saveCourseProgress,
 };

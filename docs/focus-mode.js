@@ -163,7 +163,19 @@
       "#focusPinActions button { flex:1; border:0; border-radius:.9rem; padding:.75rem .6rem; font:800 .95rem/1 Nunito, sans-serif; cursor:pointer; }",
       "#focusPinCancel { background:#e2e8f0; color:#0f172a; }",
       "#focusPinOk { background:#4f46e5; color:#fff; }",
-      "@media print { #focusCamPip, #focusNudge, #focusToast, #focusModeBtn, #focusPinModal { display:none !important; } }"
+      "#focusPinForgotWrap { margin-top:.75rem; text-align:center; }",
+      "#focusPinForgotWrap[hidden] { display:none !important; }",
+      "#focusPinForgotBtn, #focusPinEmailHint { border:0; background:none; color:#4f46e5; font:800 .82rem/1.35 Nunito, sans-serif; cursor:pointer; text-decoration:underline; padding:0; }",
+      "#focusPinEmailHint { display:block; color:#475569; text-decoration:none; cursor:default; margin-top:.35rem; }",
+      "#focusCameraModal { position:fixed; inset:0; z-index:96; display:flex; align-items:center; justify-content:center; padding:1.25rem; background:rgba(15,23,42,.62); }",
+      "#focusCameraModal.hidden { display:none !important; }",
+      "#focusCameraCard { width:100%; max-width:26rem; background:#fff; border-radius:1.5rem; padding:1.45rem 1.35rem 1.2rem; box-shadow:0 24px 60px rgba(15,23,42,.35); border:3px solid #f59e0b; }",
+      "#focusCameraCard h2 { margin:0 0 .45rem; font-family:Fredoka, Nunito, sans-serif; font-size:1.45rem; color:#0f172a; }",
+      "#focusCameraCard p { margin:0 0 .7rem; color:#334155; font-family:Nunito, sans-serif; font-weight:700; font-size:.95rem; }",
+      "#focusCameraCard ul { margin:.2rem 0 .9rem; padding-left:1.15rem; color:#475569; font:700 .9rem/1.45 Nunito, sans-serif; }",
+      "#focusCameraCard li { margin:.2rem 0; }",
+      "#focusCameraOk { width:100%; border:0; border-radius:.9rem; padding:.8rem .6rem; font:800 .95rem/1 Nunito, sans-serif; cursor:pointer; background:#4f46e5; color:#fff; }",
+      "@media print { #focusCamPip, #focusNudge, #focusToast, #focusModeBtn, #focusPinModal, #focusCameraModal { display:none !important; } }"
     ].join("\n");
     document.head.appendChild(style);
 
@@ -203,10 +215,11 @@
     pin.setAttribute("role", "dialog");
     pin.setAttribute("aria-modal", "true");
     pin.setAttribute("aria-labelledby", "focusPinTitle");
-    pin.innerHTML = '<form id="focusPinForm"><div id="focusPinCard"><h2 id="focusPinTitle">Parent code</h2><p id="focusPinText"></p><label>4-digit code<input id="focusPinA" inputmode="numeric" maxlength="4" autocomplete="off" pattern="[0-9]*"></label><label id="focusPinConfirmWrap">Confirm code<input id="focusPinB" inputmode="numeric" maxlength="4" autocomplete="off" pattern="[0-9]*"></label><p id="focusPinError"></p><div id="focusPinActions"><button type="button" id="focusPinCancel">Cancel</button><button type="submit" id="focusPinOk">Save code</button></div></div></form>';
+    pin.innerHTML = '<form id="focusPinForm"><div id="focusPinCard"><h2 id="focusPinTitle">Parent code</h2><p id="focusPinText"></p><label>4-digit code<input id="focusPinA" inputmode="numeric" maxlength="4" autocomplete="off" pattern="[0-9]*"></label><label id="focusPinConfirmWrap">Confirm code<input id="focusPinB" inputmode="numeric" maxlength="4" autocomplete="off" pattern="[0-9]*"></label><p id="focusPinError"></p><div id="focusPinActions"><button type="button" id="focusPinCancel">Cancel</button><button type="submit" id="focusPinOk">Save code</button></div><div id="focusPinForgotWrap" hidden><button type="button" id="focusPinForgotBtn">Forgot code? Email a temporary 4-digit code</button><span id="focusPinEmailHint" hidden></span></div></div></form>';
     document.body.appendChild(pin);
     pin.addEventListener("submit", submitPin);
     $("focusPinCancel").addEventListener("click", closePin);
+    $("focusPinForgotBtn").addEventListener("click", emailTempCode);
     ["focusPinA", "focusPinB"].forEach(function (id) {
       var input = $(id);
       input.addEventListener("input", function () {
@@ -215,6 +228,102 @@
       input.addEventListener("keydown", function (event) {
         event.stopPropagation();
       });
+    });
+
+    var camModal = document.createElement("div");
+    camModal.id = "focusCameraModal";
+    camModal.className = "hidden no-print";
+    camModal.setAttribute("role", "alertdialog");
+    camModal.setAttribute("aria-modal", "true");
+    camModal.setAttribute("aria-labelledby", "focusCameraTitle");
+    camModal.innerHTML =
+      '<div id="focusCameraCard">' +
+      '<h2 id="focusCameraTitle">No camera detected</h2>' +
+      '<p id="focusCameraLead">Focus Mode needs a working camera on this device. No camera was found, so Focus Mode cannot be turned on.</p>' +
+      '<p>What Focus Mode does:</p>' +
+      '<ul>' +
+      '<li>Uses the camera only while a sprint or lesson is open.</li>' +
+      '<li>Checks that the child is looking at the screen.</li>' +
+      '<li>Shows a gentle “Please focus” reminder if they look away.</li>' +
+      '<li>Nothing is recorded or uploaded — the video stays on this device.</li>' +
+      '<li>A parent 4-digit code is needed to turn Focus Mode off.</li>' +
+      '</ul>' +
+      '<button type="button" id="focusCameraOk">Got it</button>' +
+      '</div>';
+    document.body.appendChild(camModal);
+    camModal.addEventListener("click", function (event) {
+      if (event.target === camModal) closeCameraError();
+    });
+    $("focusCameraOk").addEventListener("click", closeCameraError);
+  }
+
+  function showCameraError(reason) {
+    ensureChrome();
+    var lead = $("focusCameraLead");
+    var title = $("focusCameraTitle");
+    if (title) title.textContent = "No camera detected";
+    if (lead) {
+      if (reason === "secure") {
+        lead.textContent = "Focus Mode needs a secure page (https) and a camera. Open this site with https, then try again.";
+      } else if (reason === "unsupported") {
+        lead.textContent = "This browser cannot use the camera for Focus Mode. Try Chrome or Edge on a device with a camera.";
+      } else {
+        lead.textContent = "Focus Mode needs a working camera on this device. No camera was detected, so Focus Mode cannot be turned on.";
+      }
+    }
+    var modal = $("focusCameraModal");
+    if (modal) modal.classList.remove("hidden");
+  }
+
+  function closeCameraError() {
+    var modal = $("focusCameraModal");
+    if (modal) modal.classList.add("hidden");
+  }
+
+  function probeCamera() {
+    if (!window.isSecureContext) {
+      return Promise.resolve({ ok: false, reason: "secure" });
+    }
+    if (!navigator.mediaDevices || typeof navigator.mediaDevices.getUserMedia !== "function") {
+      return Promise.resolve({ ok: false, reason: "unsupported" });
+    }
+    var listPromise = typeof navigator.mediaDevices.enumerateDevices === "function"
+      ? navigator.mediaDevices.enumerateDevices().catch(function () { return []; })
+      : Promise.resolve([]);
+    return listPromise.then(function (devices) {
+      var cams = (devices || []).filter(function (d) { return d && d.kind === "videoinput"; });
+      if (cams.length) return { ok: true };
+      return navigator.mediaDevices.getUserMedia({ audio: false, video: true }).then(function (media) {
+        media.getTracks().forEach(function (track) { track.stop(); });
+        return { ok: true };
+      }).catch(function (err) {
+        var name = err && err.name;
+        if (name === "NotAllowedError" || name === "PermissionDeniedError") {
+          // Camera exists; permission can be granted when a sprint starts.
+          return { ok: true };
+        }
+        if (name === "NotFoundError" || name === "DevicesNotFoundError" || name === "OverconstrainedError") {
+          return { ok: false, reason: "none" };
+        }
+        return { ok: false, reason: "none" };
+      });
+    });
+  }
+
+  function requestEnableFocus() {
+    var modal = $("focusPinModal");
+    if (modal && !modal.classList.contains("hidden")) return;
+    var camModal = $("focusCameraModal");
+    if (camModal && !camModal.classList.contains("hidden")) return;
+    probeCamera().then(function (result) {
+      if (!result.ok) {
+        showCameraError(result.reason || "none");
+        return;
+      }
+      if (!loadPin()) openPin("setup");
+      else enableFocus();
+    }).catch(function () {
+      showCameraError("none");
     });
   }
 
@@ -227,21 +336,30 @@
     $("focusPinError").textContent = "";
     var confirmWrap = $("focusPinConfirmWrap");
     var purpose = "Focus uses the camera during a sprint. If the child looks away, it asks them to look back. Nothing is recorded.";
+    var forgotWrap = $("focusPinForgotWrap");
+    var emailHint = $("focusPinEmailHint");
+    if (emailHint) {
+      emailHint.hidden = true;
+      emailHint.textContent = "";
+    }
     if (mode === "setup") {
       $("focusPinTitle").textContent = "Parent: set a 4-digit code";
       $("focusPinText").textContent = purpose + " Set a 4-digit parent code and type it again. Only this code can turn Focus off or leave a sprint early.";
       confirmWrap.hidden = false;
       $("focusPinOk").textContent = "Save code";
+      if (forgotWrap) forgotWrap.hidden = true;
     } else if (mode === "off") {
       $("focusPinTitle").textContent = "Turn Focus off";
-      $("focusPinText").textContent = purpose + " Enter the parent code to turn Focus off.";
+      $("focusPinText").textContent = purpose + " Enter the parent code to turn Focus off. If you forget it, email a temporary code to your registered address.";
       confirmWrap.hidden = true;
       $("focusPinOk").textContent = "Turn off";
+      if (forgotWrap) forgotWrap.hidden = false;
     } else {
       $("focusPinTitle").textContent = "Leave this sprint";
-      $("focusPinText").textContent = purpose + " Enter the parent code to leave. Without the code, finish all the questions first.";
+      $("focusPinText").textContent = purpose + " Enter the parent code to leave. Without the code, finish all the questions first. Forgot it? Email a temporary code.";
       confirmWrap.hidden = true;
       $("focusPinOk").textContent = "Leave";
+      if (forgotWrap) forgotWrap.hidden = false;
     }
     $("focusPinModal").classList.remove("hidden");
     setTimeout(function () {
@@ -255,6 +373,79 @@
     pinAction = null;
     var modal = $("focusPinModal");
     if (modal) modal.classList.add("hidden");
+  }
+
+  function finishPinUnlock() {
+    var mode = pinMode;
+    var action = pinAction;
+    closePin();
+    if (mode === "off") {
+      disableFocus();
+      return;
+    }
+    sprint = null;
+    saveSprint();
+    if (action) action();
+  }
+
+  function emailTempCode() {
+    var err = $("focusPinError");
+    var hint = $("focusPinEmailHint");
+    var btn = $("focusPinForgotBtn");
+    if (err) err.textContent = "";
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = "Sending email…";
+    }
+    fetch("/api/aflatoon/focus-pin/email-code", {
+      method: "POST",
+      credentials: "same-origin",
+      headers: { "Content-Type": "application/json" },
+      body: "{}",
+    })
+      .then(function (response) {
+        return response.json().catch(function () { return {}; }).then(function (data) {
+          return { ok: response.ok, status: response.status, data: data };
+        });
+      })
+      .then(function (result) {
+        if (!result.ok) {
+          if (err) {
+            err.textContent = result.data.error ||
+              (result.status === 401
+                ? "Log in with Google so we can email your registered address."
+                : "Could not send the temporary code.");
+          }
+          return;
+        }
+        if (hint) {
+          hint.hidden = false;
+          hint.textContent = "Temporary code sent to " + (result.data.emailedTo || "your registered email") + ". Enter it above.";
+        }
+        showToast("Temporary Focus code emailed. Check your inbox.");
+      })
+      .catch(function () {
+        if (err) err.textContent = "Could not reach the server to email a code.";
+      })
+      .finally(function () {
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = "Forgot code? Email a temporary 4-digit code";
+        }
+      });
+  }
+
+  function tryEmailTempCode(code) {
+    return fetch("/api/aflatoon/focus-pin/verify-email-code", {
+      method: "POST",
+      credentials: "same-origin",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code: code }),
+    }).then(function (response) {
+      return response.json().catch(function () { return {}; }).then(function (data) {
+        return { ok: response.ok, data: data };
+      });
+    });
   }
 
   function submitPin(event) {
@@ -278,21 +469,21 @@
       return;
     }
     hashPin(code).then(function (hash) {
-      if (hash !== loadPin()) {
+      if (hash === loadPin()) {
+        finishPinUnlock();
+        return;
+      }
+      tryEmailTempCode(code).then(function (result) {
+        if (result.ok) {
+          finishPinUnlock();
+          return;
+        }
+        err.textContent = (result.data && result.data.error) || "That code is not right.";
+        $("focusPinA").value = "";
+      }).catch(function () {
         err.textContent = "That code is not right.";
         $("focusPinA").value = "";
-        return;
-      }
-      var mode = pinMode;
-      var action = pinAction;
-      closePin();
-      if (mode === "off") {
-        disableFocus();
-        return;
-      }
-      sprint = null;
-      saveSprint();
-      if (action) action();
+      });
     });
   }
 
@@ -506,7 +697,7 @@
       return "Allow the camera to use Focus mode, then start the sprint again.";
     }
     if (name === "NotFoundError" || name === "DevicesNotFoundError") {
-      return "No camera was found, so Focus mode cannot watch this sprint.";
+      return "No camera detected. Focus Mode uses the camera to check the child is looking at the screen. Nothing is recorded.";
     }
     return "The camera could not start. Close other apps using it, then start the sprint again.";
   }
@@ -582,9 +773,16 @@
       armDetector();
     } catch (err) {
       stopCamera();
-      var blocked = err && (err.name === "NotAllowedError" || err.name === "PermissionDeniedError" || err.name === "NotAllowedError");
-      showToast(cameraErrorText(err));
-      if (isIos() || blocked) showCameraTap("Tap to start the focus camera");
+      var name = err && err.name;
+      var blocked = name === "NotAllowedError" || name === "PermissionDeniedError";
+      var missing = name === "NotFoundError" || name === "DevicesNotFoundError";
+      if (missing) {
+        disableFocus();
+        showCameraError("none");
+      } else {
+        showToast(cameraErrorText(err));
+        if (isIos() || blocked) showCameraTap("Tap to start the focus camera");
+      }
     } finally {
       starting = false;
       paintButton();
@@ -624,9 +822,10 @@
   function toggle() {
     var modal = $("focusPinModal");
     if (modal && !modal.classList.contains("hidden")) return;
+    var camModal = $("focusCameraModal");
+    if (camModal && !camModal.classList.contains("hidden")) return;
     if (!enabled) {
-      if (!loadPin()) openPin("setup");
-      else enableFocus();
+      requestEnableFocus();
       return;
     }
     openPin("off");

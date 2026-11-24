@@ -57,6 +57,13 @@ CREATE TABLE IF NOT EXISTS aflatoon.accounts (
   updated_at TEXT NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS aflatoon.focus_temp_codes (
+  account_id TEXT PRIMARY KEY REFERENCES aflatoon.accounts(id) ON DELETE CASCADE,
+  code_hash TEXT NOT NULL,
+  expires_at TEXT NOT NULL,
+  sent_at TEXT NOT NULL
+);
+
 -- Existing session, focus, and progress rows pointed at phone accounts.
 -- Point them at the Google account instead. The phone tables are left unused.
 DO $$
@@ -98,6 +105,7 @@ ALTER TABLE aflatoon.phone_sessions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE aflatoon.phone_otps ENABLE ROW LEVEL SECURITY;
 ALTER TABLE aflatoon.phone_otp_sends ENABLE ROW LEVEL SECURITY;
 ALTER TABLE aflatoon.focus_passcodes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE aflatoon.focus_temp_codes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE aflatoon.course_progress ENABLE ROW LEVEL SECURITY;
 
 DO $$
@@ -111,7 +119,8 @@ BEGIN
       EXECUTE format(
         'REVOKE ALL ON TABLE
           aflatoon.accounts, aflatoon.phone_accounts, aflatoon.phone_sessions, aflatoon.phone_otps,
-          aflatoon.phone_otp_sends, aflatoon.focus_passcodes, aflatoon.course_progress
+          aflatoon.phone_otp_sends, aflatoon.focus_passcodes, aflatoon.focus_temp_codes,
+          aflatoon.course_progress
         FROM %I',
         role_name
       );
