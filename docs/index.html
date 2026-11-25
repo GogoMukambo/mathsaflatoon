@@ -1312,12 +1312,12 @@
 
                     <!-- Prev / Next Day Navigation -->
                     <div class="flex items-center gap-2 self-end sm:self-center">
-                        <button id="prevDayBtn" onclick="app.changeDayRelative(-1)" class="bg-indigo-900 hover:bg-indigo-800 disabled:opacity-40 border border-indigo-700 text-xs font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5">
+                        <button id="prevDayBtn" onclick="app.changeDayRelative(-1)" class="bg-indigo-900 hover:bg-indigo-800 disabled:opacity-40 border border-indigo-700 text-xs font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5" title="Previous day">
                             <i class="fa-solid fa-chevron-left"></i>
-                            <span>Prev Day</span>
+                            <span class="day-nav-label">Prev Day</span>
                         </button>
-                        <button id="nextDayBtn" onclick="app.changeDayRelative(1)" class="bg-indigo-900 hover:bg-indigo-800 disabled:opacity-40 border border-indigo-700 text-xs font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5">
-                            <span>Next Day</span>
+                        <button id="nextDayBtn" onclick="app.changeDayRelative(1)" class="bg-indigo-900 hover:bg-indigo-800 disabled:opacity-40 border border-indigo-700 text-xs font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5" title="Next day">
+                            <span class="day-nav-label">Next Day</span>
                             <i class="fa-solid fa-chevron-right"></i>
                         </button>
                     </div>
@@ -1327,16 +1327,18 @@
                 <div id="dayTabs" class="flex gap-3 mt-3 border-b border-indigo-800/80">
                     <button id="tabBtnLesson" onclick="app.switchDayTab('lesson')" class="px-5 py-3 font-heading font-bold text-sm sm:text-base rounded-t-2xl transition flex items-center gap-2 border-b-4 border-amber-400 bg-white/10 text-white">
                         <i class="fa-solid fa-book-open-reader text-amber-300"></i>
-                        <span class="flex items-center gap-1.5 flex-wrap">
+                        <span class="tab-label-full flex items-center gap-1.5 flex-wrap">
                             <span>Step 1: Learn The</span>
                             <span class="aflatoon-magic-pill text-xs sm:text-sm"><i class="fa-solid fa-bolt aflatoon-bolt"></i>Aflatoon</span>
                             <span>Way</span>
                         </span>
+                        <span class="tab-label-short hidden">Learn</span>
                     </button>
                     <button id="tabBtnPractice" onclick="app.switchDayTab('practice')" class="px-5 py-3 font-heading font-bold text-sm sm:text-base rounded-t-2xl transition flex items-center gap-2 border-b-4 border-transparent text-indigo-300 hover:text-white hover:bg-white/5">
                         <i class="fa-solid fa-medal text-amber-400"></i>
-                        <span>Step 2: 35-Question Medal Sprint</span>
-                        <span class="bg-amber-400 text-slate-950 text-[11px] font-extrabold px-2 py-0.5 rounded-full">🥇🥈🥉</span>
+                        <span class="tab-label-full">Step 2: 35-Question Medal Sprint</span>
+                        <span class="tab-label-short hidden">Sprint</span>
+                        <span class="bg-amber-400 text-slate-950 text-[11px] font-extrabold px-2 py-0.5 rounded-full day-tab-medal">🥇🥈🥉</span>
                     </button>
                 </div>
             </div>
@@ -2931,7 +2933,7 @@
                 concept: "To find minutes from 2:40 to 3:15, bridge to 3:00 (20 mins) + 15 mins = 35 mins!",
                 goldenRule: "Time Complements use 60 (not 100)!",
                 visualSteps: [{label:"09:45 to 10:20",val:"15m to 10:00",desc:"60−45"},{label:"+ 20m",val:"15 + 20 = 35",desc:"35"},{label:"Answer",val:"35",desc:"35m!"}],
-                examples: [{q:"Mins 4:35 to 5:00",steps:["25"],ans:"25"},{q:"Mins 7:40 to 8:15",steps:["35"],ans:"35"},{q:"19:00 is what PM?",steps:["7"],ans:"7"}],
+                examples: [{q:"Mins 4:35 to 5:00",steps:["60 − 35 = 25"],ans:"25"},{q:"Mins 7:40 to 8:15",steps:["20 to 8:00 + 15 = 35"],ans:"35"},{q:"Mins 2:50 to 3:20",steps:["10 to 3:00 + 20 = 30"],ans:"30"}],
                 warmup: {q:"Minutes from 3:40 to 4:15 = ?",ans:35,hint:"20 + 15 = 35!"},
                 gen: (idx, m) => {
                     const m1 = randInt(25, 55);
@@ -2946,7 +2948,11 @@
                 concept: "For 3 × 1.99, do 3 × 2.00 = 6.00 minus 0.03 = 5.97! For change from 10, make wholes add to 9 and hundredths add to 100.",
                 goldenRule: "Change from 10: Wholes to 9, Cents/Pence to 100!",
                 visualSteps: [{label:"10 − 4.62",val:"9 − 4 = 5",desc:"Wholes"},{label:"Cents",val:"100 − 62 = 38",desc:"38"},{label:"Answer",val:"5.38",desc:"5.38!"}],
-                examples: [{q:"10 − 3.45",steps:["6.55"],ans:"6.55"},{q:"3 × 1.99",steps:["5.97"],ans:"5.97"},{q:"20 − 12.60",steps:["7.4"],ans:"7.4"}],
+                examples: [
+                    {q:"10 − 3.45",steps:["9 − 3 = 6", "100 − 45 = 55 → 6.55"],ans:"6.55"},
+                    {q:"10 − 7.28",steps:["9 − 7 = 2", "100 − 28 = 72 → 2.72"],ans:"2.72"},
+                    {q:"10 − 4.60",steps:["9 − 4 = 5", "100 − 60 = 40 → 5.40"],ans:"5.40"}
+                ],
                 warmup: {q:"10 − 6.25 = ?",ans:3.75,hint:"9−6=3, 100−25=75 → 3.75!"},
                 gen: (idx, m) => {
                     const p = randInt(1, 8);
@@ -2978,7 +2984,11 @@
                 concept: "To square ANY number ending in 5 (like 35²), multiply the first digit by the NEXT higher number (3 × 4 = 12) and stick 25 on the end → 1225!",
                 goldenRule: "For n5²: Multiply tens digit t by (t+1), then attach 25!",
                 visualSteps: [{label:"35²",val:"3 × 4 = 12",desc:"Tens × next"},{label:"Attach 25",val:"1225",desc:"Always 25"},{label:"Result",val:"1225",desc:"1,225!"}],
-                examples: [{q:"9²",steps:["81"],ans:"81"},{q:"√144",steps:["12"],ans:"12"},{q:"25²",steps:["2×3=6, attach 25 → 625"],ans:"625"}],
+                examples: [
+                    {q:"25²",steps:["2 × 3 = 6, attach 25 → 625"],ans:"625"},
+                    {q:"45²",steps:["4 × 5 = 20, attach 25 → 2025"],ans:"2025"},
+                    {q:"65²",steps:["6 × 7 = 42, attach 25 → 4225"],ans:"4225"}
+                ],
                 warmup: {q:"15² = ?",ans:225,hint:"1 × 2 = 2, attach 25 → 225!"},
                 gen: (idx, m) => {
                     if (idx % 3 === 0) {
@@ -2995,11 +3005,11 @@
             {
                 title: "Cube Numbers (1³ to 5³)",
                 subtitle: "Recognise cube numbers on sight",
-                hookTitle: "The Cube Club & Binary Doubling!",
+                hookTitle: "The Cube Club: Multiply Three Times!",
                 concept: "Recognise the first 5 cubes on sight: 1³=1, 2³=8, 3³=27, 4³=64, 5³=125, 10³=1000.",
                 goldenRule: "2³=8, 3³=27, 4³=64, 5³=125!",
                 visualSteps: [{label:"4³",val:"4 × 4 × 4",desc:"Cube"},{label:"Step 1",val:"16",desc:"4×4"},{label:"Step 2",val:"64",desc:"16×4=64!"}],
-                examples: [{q:"3³",steps:["27"],ans:"27"},{q:"5³",steps:["125"],ans:"125"},{q:"2⁵",steps:["32"],ans:"32"}],
+                examples: [{q:"2³",steps:["2 × 2 × 2 = 8"],ans:"8"},{q:"3³",steps:["3 × 3 × 3 = 27"],ans:"27"},{q:"5³",steps:["5 × 5 × 5 = 125"],ans:"125"}],
                 warmup: {q:"4³ = ?",ans:64,hint:"4 × 4 × 4 = 64!"},
                 gen: (idx, m) => {
                     const c = pickOne([2, 3, 4, 5]);
@@ -3109,7 +3119,11 @@
                 concept: "To square 23²: step 3 down to 20 and 3 up to 26. Multiply 20 × 26 = 520, then add 3² (9) → 529!",
                 goldenRule: "n² = (n − d)(n + d) + d² where d is the distance to the nearest 10!",
                 visualSteps: [{label:"22²",val:"20 × 24 + 2²",desc:"d = 2"},{label:"Multiply",val:"20 × 24 = 480",desc:"480"},{label:"Add 2²",val:"480 + 4 = 484",desc:"484!"}],
-                examples: [{q:"16²",steps:["256"],ans:"256"},{q:"21²",steps:["20 × 22 + 1 = 441"],ans:"441"},{q:"32²",steps:["30 × 34 + 4 = 1024"],ans:"1024"}],
+                examples: [
+                    {q:"16²",steps:["Nearest 10 is 20, d = 4","(16 − 4)(16 + 4) + 4²","12 × 20 + 16 = 256"],ans:"256"},
+                    {q:"21²",steps:["Nearest 10 is 20, d = 1","20 × 22 + 1² = 440 + 1 = 441"],ans:"441"},
+                    {q:"32²",steps:["Nearest 10 is 30, d = 2","30 × 34 + 2² = 1020 + 4 = 1024"],ans:"1024"}
+                ],
                 warmup: {q:"23² = ?",ans:529,hint:"(20 × 26) + 3² = 520 + 9 = 529!"},
                 gen: (idx, m) => {
                     const n = randInt(11, 22 + m * 5);
@@ -7857,6 +7871,183 @@
         html[data-platform="phone"] #homeView .home-hero-title { font-size: clamp(1.85rem, 9vw, 2.35rem); }
         html[data-platform="phone"] #homeView .home-trick { gap: 0.55rem; padding: 0.85rem; }
         html[data-platform="phone"] #homeView .home-compare-card { min-height: 0; }
+        html[data-platform="phone"] #homeView > section > .max-w-7xl,
+        html[data-platform="phone"] #courseSelectionView > section > .max-w-7xl,
+        html[data-platform="phone"] #coursePageView > section > .max-w-7xl {
+            padding-top: 0.5rem !important;
+            padding-bottom: 0.75rem !important;
+            padding-left: 0.85rem !important;
+            padding-right: 0.85rem !important;
+        }
+        html[data-platform="phone"] #courseSelectionView h1,
+        html[data-platform="phone"] #coursePageView h1 {
+            font-size: 1.35rem !important;
+            line-height: 1.2;
+        }
+        html[data-platform="phone"] #threeStageCardsGrid > div,
+        html[data-platform="phone"] #roadmapContainer > div {
+            padding: 0.75rem !important;
+        }
+        html[data-platform="phone"] #practiceTabContent {
+            padding-left: 0.75rem !important;
+            padding-right: 0.75rem !important;
+            padding-bottom: 0.75rem;
+        }
+        html[data-platform="phone"] #fcActiveArena > * { min-width: 0; }
+        html[data-platform="phone"] #fcInstantFeedback { min-height: 1.1rem; }
+        html[data-platform="phone"] header .font-heading.text-xl {
+            font-size: 1rem !important;
+        }
+
+        /* Phone lesson: denser chrome + cards, less vertical scroll */
+        html[data-platform="phone"] .day-nav-label,
+        html[data-platform="tablet"][data-orientation="portrait"] .day-nav-label { display: none; }
+        html[data-platform="phone"] #prevDayBtn,
+        html[data-platform="phone"] #nextDayBtn {
+            padding: 0.55rem 0.7rem;
+        }
+        html[data-platform="phone"] .tab-label-full,
+        html[data-platform="tablet"][data-orientation="portrait"] .tab-label-full { display: none !important; }
+        html[data-platform="phone"] .tab-label-short,
+        html[data-platform="tablet"][data-orientation="portrait"] .tab-label-short { display: inline !important; }
+        html[data-platform="phone"] .day-tab-medal { display: none; }
+        html[data-platform="phone"] #dayModuleView .liquid-glass-dark > .max-w-6xl {
+            padding-left: 0.75rem;
+            padding-right: 0.75rem;
+            padding-top: 0.45rem;
+            padding-bottom: 0.35rem;
+        }
+        html[data-platform="phone"] #moduleCourseBadge,
+        html[data-platform="phone"] #moduleWeekBadge {
+            font-size: 0.62rem;
+            padding: 0.15rem 0.45rem;
+        }
+        html[data-platform="phone"] #moduleMedalStatus { font-size: 0.7rem; }
+        html[data-platform="phone"] #moduleTitle {
+            font-size: 1.05rem !important;
+            margin-top: 0.15rem !important;
+            line-height: 1.2;
+        }
+        html[data-platform="phone"] #dayTabs { gap: 0.35rem; margin-top: 0.25rem !important; }
+        html[data-platform="phone"] #tabBtnLesson,
+        html[data-platform="phone"] #tabBtnPractice {
+            flex: 1 1 0;
+            justify-content: center;
+            padding: 0.5rem 0.55rem !important;
+            font-size: 0.85rem !important;
+            gap: 0.35rem;
+        }
+        html[data-platform="phone"] #lessonTabContent {
+            padding-top: 0.55rem !important;
+            padding-left: 0.75rem !important;
+            padding-right: 0.75rem !important;
+            padding-bottom: 0.75rem;
+            gap: 0.55rem !important;
+        }
+        html[data-platform="phone"] #lessonTabContent.space-y-4 > :not([hidden]) ~ :not([hidden]) {
+            margin-top: 0.55rem;
+        }
+        html[data-platform="phone"] #lessonTabContent > .liquid-glass {
+            padding: 0.7rem 0.75rem !important;
+            border-radius: 1.1rem;
+        }
+        html[data-platform="phone"] #lessonTabContent .w-12.h-12 {
+            width: 2.25rem;
+            height: 2.25rem;
+            font-size: 1.1rem;
+            border-radius: 0.75rem;
+        }
+        html[data-platform="phone"] #lessonHookTitle {
+            font-size: 1.05rem !important;
+            line-height: 1.2;
+        }
+        html[data-platform="phone"] #lessonGoldenRule {
+            font-size: 0.78rem !important;
+            line-height: 1.25;
+            margin-top: 0.1rem !important;
+        }
+        html[data-platform="phone"] #lessonTargetTimeBadge {
+            font-size: 0.65rem;
+            padding: 0.25rem 0.55rem;
+        }
+        html[data-platform="phone"] #lessonVisualBlueprint {
+            padding: 0.45rem !important;
+            border-radius: 0.9rem;
+        }
+        html[data-platform="phone"] #lessonVisualBlueprint > .bg-gradient-to-r {
+            padding: 0.55rem 0.5rem !important;
+            margin-bottom: 0.45rem !important;
+            border-radius: 0.85rem;
+            border-width: 1px;
+        }
+        html[data-platform="phone"] #lessonVisualBlueprint > .bg-gradient-to-r .font-heading {
+            font-size: 1.35rem !important;
+            line-height: 1.15;
+        }
+        html[data-platform="phone"] #lessonVisualBlueprint > .grid {
+            display: grid !important;
+            grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+            gap: 0.35rem !important;
+        }
+        html[data-platform="phone"] #lessonVisualBlueprint > .grid > div {
+            padding: 0.4rem 0.35rem !important;
+            border-radius: 0.65rem;
+        }
+        html[data-platform="phone"] #lessonVisualBlueprint > .grid .font-heading {
+            font-size: 0.85rem !important;
+            margin: 0.15rem 0 !important;
+            line-height: 1.15;
+        }
+        html[data-platform="phone"] #lessonVisualBlueprint > .grid .text-xs {
+            font-size: 0.62rem;
+            line-height: 1.2;
+        }
+        html[data-platform="phone"] #lessonVisualBlueprint > .grid .text-\[11px\] {
+            font-size: 0.55rem;
+            letter-spacing: 0.02em;
+        }
+        html[data-platform="phone"] #lessonTabContent .md\:grid-cols-12 {
+            display: flex;
+            flex-direction: column;
+            gap: 0.55rem;
+        }
+        html[data-platform="phone"] #lessonExamplesGrid {
+            gap: 0.35rem !important;
+        }
+        html[data-platform="phone"] #lessonExamplesGrid.space-y-2\.5 > :not([hidden]) ~ :not([hidden]) {
+            margin-top: 0.35rem;
+        }
+        html[data-platform="phone"] #lessonExamplesGrid > div {
+            padding: 0.45rem 0.55rem !important;
+            border-radius: 0.75rem;
+        }
+        html[data-platform="phone"] #lessonExamplesGrid .font-heading.text-base {
+            font-size: 0.92rem !important;
+        }
+        html[data-platform="phone"] #lessonExamplesGrid .text-xl {
+            font-size: 1rem !important;
+            padding: 0.15rem 0.45rem !important;
+        }
+        html[data-platform="phone"] #warmupQuestionText {
+            font-size: 1.25rem !important;
+            padding-top: 0.15rem !important;
+            padding-bottom: 0.15rem !important;
+        }
+        html[data-platform="phone"] #warmupHintText {
+            max-width: 9rem;
+            font-size: 0.65rem;
+        }
+        html[data-platform="phone"] #warmupInput {
+            font-size: 1rem !important;
+            padding: 0.45rem 0.65rem !important;
+        }
+        html[data-platform="phone"] #lessonTabContent button[onclick*="switchDayTab('practice')"] {
+            padding-top: 0.7rem !important;
+            padding-bottom: 0.7rem !important;
+            font-size: 0.92rem !important;
+            border-radius: 0.9rem;
+        }
+
         html[data-ios="1"] input,
         html[data-ios="1"] select,
         html[data-ios="1"] textarea { font-size: max(16px, 1em); }
