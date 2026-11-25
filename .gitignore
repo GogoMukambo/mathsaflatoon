@@ -24,3 +24,5 @@ tools/label-previews/
 content-source/
 
 !.env.example
+.vercel
+.env*

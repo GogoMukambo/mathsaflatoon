@@ -1228,9 +1228,9 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-3 relative z-10">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
                     <div class="flex items-center gap-3">
-                        <button onclick="app.showHomePage()" class="theme-pill-btn bg-white/15 hover:bg-white/25 text-white border border-white/25 font-heading font-bold text-xs px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shrink-0">
+                        <button type="button" onclick="app.showMarketingHome()" class="theme-pill-btn bg-white/15 hover:bg-white/25 text-white border border-white/25 font-heading font-bold text-xs px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shrink-0" title="Marketing home">
                             <i class="fa-solid fa-arrow-left"></i>
-                            <span>Home</span>
+                            <span>About</span>
                         </button>
                         <div>
                             <span class="page-header-sub text-[10px] font-extrabold uppercase tracking-widest text-amber-300">60-Day Program • Just ₹99/- per Course</span>
@@ -1255,8 +1255,8 @@
     <!-- VIEW 3: ACTUAL COURSE PAGE (SAME THEME AS HOME, 6 TILES + SIDE ARROWS)    -->
     <!-- ========================================================================= -->
     <main id="coursePageView" class="hidden flex-1 overflow-hidden flex">
-        <section class="w-full h-full relative overflow-hidden liquid-glass-dark text-white flex flex-col justify-between py-3">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex flex-col justify-between gap-3 relative z-10">
+        <section class="w-full h-full relative overflow-hidden liquid-glass-dark text-white flex flex-col py-3">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex flex-col gap-3 relative z-10 min-h-0">
                 <!-- Clean Course Header Row (No Second Bar) -->
                 <div class="flex flex-wrap items-center gap-3 shrink-0 pt-1">
                     <button onclick="app.showCourseSelectionPage()" class="theme-pill-btn bg-white/15 hover:bg-white/25 text-white border border-white/25 font-heading font-bold text-xs px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shrink-0">
@@ -1266,21 +1266,17 @@
                     <h3 id="roadmapMainHeading" class="page-header-title font-heading text-xl sm:text-2xl font-bold text-white">Foundation Course - Days 1 to 6</h3>
                 </div>
 
-                <!-- 6-Day Topics Area with LEFT-MIDDLE and RIGHT-MIDDLE Navigation Arrows -->
-
-                <div class="flex-1 min-h-0 flex items-center gap-3 sm:gap-4">
-                    <!-- Left Middle Previous Page Arrow -->
-                    <button id="prevTopicPageBtn" onclick="app.changeTopicPage(-1)" title="Previous 6 Days" aria-label="Previous 6 Days" class="shrink-0 w-11 h-11 sm:w-12 sm:h-12 rounded-full btn-3d-amber text-slate-950 disabled:opacity-35 disabled:pointer-events-none flex items-center justify-center text-lg sm:text-xl shadow-lg transition">
+                <!-- Day browser: side arrows on desktop, top pager on phone -->
+                <div class="course-days-shell flex-1 min-h-0 flex items-stretch gap-3 sm:gap-4">
+                    <button id="prevTopicPageBtn" onclick="app.changeTopicPage(-1)" title="Previous 6 Days" aria-label="Previous 6 Days" class="course-days-prev shrink-0 w-11 h-11 sm:w-12 sm:h-12 self-center rounded-full btn-3d-amber text-slate-950 disabled:opacity-35 disabled:pointer-events-none flex items-center justify-center text-lg sm:text-xl shadow-lg transition">
                         <i class="fa-solid fa-chevron-left"></i>
                     </button>
 
-                    <!-- 6 Clearly Separated Day-Wise Tiles -->
-                    <div id="roadmapContainer" class="flex-1 h-full min-h-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 text-slate-900">
+                    <div id="roadmapContainer" class="course-days-grid flex-1 min-h-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-5 text-slate-900 content-start overflow-y-auto pr-0.5">
                         <!-- Populated with 6 Day Cards by JavaScript -->
                     </div>
 
-                    <!-- Right Middle Next Page Arrow -->
-                    <button id="nextTopicPageBtn" onclick="app.changeTopicPage(1)" title="Next 6 Days" aria-label="Next 6 Days" class="shrink-0 w-11 h-11 sm:w-12 sm:h-12 rounded-full btn-3d-amber text-slate-950 disabled:opacity-35 disabled:pointer-events-none flex items-center justify-center text-lg sm:text-xl shadow-lg transition">
+                    <button id="nextTopicPageBtn" onclick="app.changeTopicPage(1)" title="Next 6 Days" aria-label="Next 6 Days" class="course-days-next shrink-0 w-11 h-11 sm:w-12 sm:h-12 self-center rounded-full btn-3d-amber text-slate-950 disabled:opacity-35 disabled:pointer-events-none flex items-center justify-center text-lg sm:text-xl shadow-lg transition">
                         <i class="fa-solid fa-chevron-right"></i>
                     </button>
                 </div>
@@ -2570,7 +2566,18 @@
                     return BEGINNER_TOPICS_30[pick].gen(idx, m);
                 }
             }
-        ];;;
+        ];
+        // Beginner Days 1–2 use the former Days 7–8 topics (Make 10 / +9).
+        // Former Days 1–2 (Doubles / Next-Door Doubles) move to Days 7–8.
+        {
+            const topics = BEGINNER_TOPICS_30;
+            const formerDay7 = topics[6];
+            const formerDay8 = topics[7];
+            topics[6] = topics[0];
+            topics[7] = topics[1];
+            topics[0] = formerDay7;
+            topics[1] = formerDay8;
+        }
 
         /**
          * FOUNDATION TOPICS — 30 Speed Mastery Topics scaled across 2 Months (60 Days)
@@ -4700,17 +4707,12 @@
                     return;
                 }
                 const paid = this.paidCourseIds();
-                if (!paid.length) {
-                    this.showMarketingHome();
-                    return;
-                }
-                if (!this.isCoursePaid(this.state.activeCourse)) {
+                if (paid.length && !this.isCoursePaid(this.state.activeCourse)) {
                     this.state.activeCourse = paid[0];
                     this.saveState();
                 }
-                this.syncRoadmapToContinueDay(this.state.activeCourse);
                 this.paintHomeCourseCtas();
-                this.showCoursePage();
+                this.showCourseSelectionPage();
             },
 
             academyReturnUrl() {
@@ -5790,8 +5792,8 @@
                     FocusGuard.requestLeave(() => this.showHomePage());
                     return;
                 }
-                if (this.isLoggedIn() && this.paidCourseIds().length) {
-                    this.openDefaultLanding();
+                if (this.isLoggedIn()) {
+                    this.showCourseSelectionPage();
                     return;
                 }
                 this.showMarketingHome();
@@ -5855,7 +5857,9 @@
                 if (!this.requireLogin(() => this.showCourseSelectionPage())) return;
                 this.hideAllPages();
                 document.getElementById('courseSelectionView').classList.remove('hidden');
-                this.setActiveTopNav('courses');
+                this.setActiveTopNav('home');
+                this.renderCourseSelectorCards();
+                this.updateNavCourseButtons();
             },
 
             showCoursePage() {
@@ -6657,23 +6661,23 @@
                         : (isDone ? 'border-emerald-400' : isBoss ? 'border-amber-400' : 'border-sky-300/80');
 
                     daysHtml += `
-                        <div onclick="app.openDay(${d})" class="group liquid-glass-tile rounded-3xl p-5 sm:p-6 border-2 ${borderCls} cursor-pointer flex flex-col justify-between h-full">
+                        <div onclick="app.openDay(${d})" class="roadmap-day-card group liquid-glass-tile rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 lg:p-6 border-2 ${borderCls} cursor-pointer flex flex-col justify-between min-h-0">
                             <div>
-                                <div class="flex items-center justify-between gap-2 mb-3">
-                                    <span class="font-heading font-bold text-xs sm:text-sm px-3 py-1 rounded-xl ${isContinue ? 'bg-amber-500 text-slate-950 border border-amber-600' : isBoss ? 'bg-amber-100 text-amber-900 border border-amber-300' : 'bg-indigo-100 text-indigo-900 border border-indigo-200'}">
+                                <div class="flex items-center justify-between gap-2 mb-2 sm:mb-3">
+                                    <span class="font-heading font-bold text-[11px] sm:text-sm px-2.5 sm:px-3 py-1 rounded-lg sm:rounded-xl ${isContinue ? 'bg-amber-500 text-slate-950 border border-amber-600' : isBoss ? 'bg-amber-100 text-amber-900 border border-amber-300' : 'bg-indigo-100 text-indigo-900 border border-indigo-200'}">
                                         ${isBoss ? '<i class="fa-solid fa-crown text-amber-500 mr-1"></i>' : ''}${isContinue ? 'NEXT · ' : ''}DAY ${d}
                                     </span>
                                     ${medalBadgeHtml}
                                 </div>
-                                <h4 class="font-heading font-bold text-xl sm:text-2xl text-slate-900 group-hover:text-indigo-600 transition leading-snug mb-1.5">
+                                <h4 class="font-heading font-bold text-base sm:text-xl lg:text-2xl text-slate-900 group-hover:text-indigo-600 transition leading-snug mb-1">
                                     ${dayObj.title}
                                 </h4>
-                                <p class="text-xs sm:text-sm text-slate-500 line-clamp-1">
+                                <p class="text-[11px] sm:text-sm text-slate-500 line-clamp-2 sm:line-clamp-1">
                                     ${dayObj.hookTitle}
                                 </p>
                             </div>
 
-                            <div class="mt-3 pt-2.5 border-t border-slate-200/80 flex items-center justify-between text-xs sm:text-sm">
+                            <div class="mt-2.5 sm:mt-3 pt-2 border-t border-slate-200/80 flex items-center justify-between text-[11px] sm:text-sm">
                                 ${isDone
                                     ? `<span class="text-emerald-700 font-bold"><i class="fa-solid fa-check-circle mr-1"></i>${p.bestScore}/35</span>`
                                     : `<span class="text-slate-500 font-semibold">35 Questions</span>`
@@ -7797,17 +7801,70 @@
             grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 0.75rem;
         }
-        html[data-platform="phone"] #roadmapContainer {
-            height: auto;
+        html[data-platform="phone"] #coursePageView .course-days-shell,
+        html[data-app="android"] #coursePageView .course-days-shell {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr;
+            grid-template-areas:
+                "prev next"
+                "days days";
+            gap: 0.55rem;
+            align-items: stretch;
+            height: auto !important;
+            flex: none !important;
+            min-height: 0;
+        }
+        html[data-platform="phone"] #coursePageView .course-days-prev,
+        html[data-app="android"] #coursePageView .course-days-prev {
+            grid-area: prev;
+            width: 100% !important;
+            height: 2.6rem !important;
+            border-radius: 0.85rem !important;
+            align-self: stretch;
+        }
+        html[data-platform="phone"] #coursePageView .course-days-next,
+        html[data-app="android"] #coursePageView .course-days-next {
+            grid-area: next;
+            width: 100% !important;
+            height: 2.6rem !important;
+            border-radius: 0.85rem !important;
+            align-self: stretch;
+        }
+        html[data-platform="phone"] #roadmapContainer,
+        html[data-app="android"] #roadmapContainer {
+            grid-area: days;
+            height: auto !important;
+            min-height: 0;
+            overflow: visible !important;
             grid-template-columns: 1fr;
-            gap: 0.75rem;
+            gap: 0.55rem;
             align-content: start;
         }
+        html[data-platform="tablet"][data-orientation="portrait"] #coursePageView .course-days-shell {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr;
+            grid-template-areas:
+                "prev next"
+                "days days";
+            gap: 0.65rem;
+            height: auto !important;
+            flex: none !important;
+        }
+        html[data-platform="tablet"][data-orientation="portrait"] #coursePageView .course-days-prev,
+        html[data-platform="tablet"][data-orientation="portrait"] #coursePageView .course-days-next {
+            width: 100% !important;
+            height: 2.75rem !important;
+            border-radius: 0.9rem !important;
+        }
+        html[data-platform="tablet"][data-orientation="portrait"] #coursePageView .course-days-prev { grid-area: prev; }
+        html[data-platform="tablet"][data-orientation="portrait"] #coursePageView .course-days-next { grid-area: next; }
         html[data-platform="tablet"][data-orientation="portrait"] #roadmapContainer {
+            grid-area: days;
             height: auto;
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 0.75rem;
+            gap: 0.65rem;
             align-content: start;
+            overflow: visible !important;
         }
         html[data-platform="tablet"][data-orientation="landscape"] #roadmapContainer {
             height: auto;
@@ -7815,8 +7872,18 @@
             gap: 0.75rem;
             align-content: start;
         }
-        html[data-platform="phone"] #roadmapContainer > div,
-        html[data-platform="tablet"] #roadmapContainer > div { height: auto; }
+        html[data-platform="phone"] #roadmapContainer > .roadmap-day-card,
+        html[data-platform="tablet"] #roadmapContainer > .roadmap-day-card,
+        html[data-app="android"] #roadmapContainer > .roadmap-day-card {
+            height: auto !important;
+            min-height: 0;
+        }
+        html[data-platform="phone"] #coursePageView #roadmapMainHeading,
+        html[data-app="android"] #coursePageView #roadmapMainHeading {
+            font-size: 1.05rem !important;
+            line-height: 1.25;
+            width: 100%;
+        }
 
         html[data-platform="phone"] #dayTabs,
         html[data-platform="tablet"][data-orientation="portrait"] #dayTabs { flex-wrap: wrap; }
@@ -7885,8 +7952,22 @@
             line-height: 1.2;
         }
         html[data-platform="phone"] #threeStageCardsGrid > div,
-        html[data-platform="phone"] #roadmapContainer > div {
-            padding: 0.75rem !important;
+        html[data-platform="phone"] #roadmapContainer > .roadmap-day-card {
+            padding: 0.7rem 0.75rem !important;
+        }
+        html[data-platform="phone"] #courseSelectionView {
+            align-items: flex-start !important;
+        }
+        html[data-platform="phone"] #courseSelectionView > section {
+            align-items: flex-start !important;
+            padding-top: 0.35rem;
+            padding-bottom: 1rem;
+        }
+        html[data-platform="phone"] #threeStageCardsGrid {
+            gap: 0.85rem !important;
+        }
+        html[data-platform="phone"] #threeStageCardsGrid .liquid-glass-tile {
+            padding: 1rem !important;
         }
         html[data-platform="phone"] #practiceTabContent {
             padding-left: 0.75rem !important;
