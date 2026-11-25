@@ -97,18 +97,15 @@ async function withAflatoon(req, res, run) {
     await run();
   } catch (err) {
     const status = err.status || 500;
-    if (status === 500) console.error(err.message || err);
-    const missingDb =
-      status === 500 &&
-      /DATABASE_URL|needs DATABASE_URL|Could not set up the Maths Aflatoon database/i.test(
-        String(err && err.message ? err.message : "")
-      );
+    const detail = String(err && err.message ? err.message : err || "Unknown error");
+    if (status === 500) console.error(detail);
     json(res, status, {
-      error: missingDb
-        ? "DATABASE_URL is missing or invalid on this host. Set it in Vercel → Settings → Environment Variables."
-        : status === 500
-          ? "Something went wrong. Please try again."
-          : err.message,
+      error:
+        status === 500
+          ? /DATABASE_URL|Supabase|Maths Aflatoon database|password authentication|ECONNREFUSED|timeout/i.test(detail)
+            ? detail
+            : "Something went wrong. Please try again."
+          : detail,
     });
   }
 }

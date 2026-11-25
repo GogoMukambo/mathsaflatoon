@@ -87,6 +87,9 @@ const ready = (async () => {
   });
   try {
     await pool.query("SELECT 1");
+    if (!fs.existsSync(SCHEMA_PATH)) {
+      throw new Error("Schema file missing at " + SCHEMA_PATH);
+    }
     const statements = splitSql(fs.readFileSync(SCHEMA_PATH, "utf8"));
     for (const statement of statements) await pool.query(statement);
   } catch (err) {
