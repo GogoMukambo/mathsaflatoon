@@ -67,8 +67,9 @@ function redact(error) {
 }
 
 let pool;
+let readyPromise = null;
 
-const ready = (async () => {
+async function connectOnce() {
   const connectionString = process.env.DATABASE_URL || "";
   if (!connectionString) {
     throw new Error("Maths Aflatoon needs DATABASE_URL for its Supabase database.");
@@ -77,34 +78,42 @@ const ready = (async () => {
     throw new Error("Use the Supabase Session pooler on port 5432 for Maths Aflatoon.");
   }
   const { Pool } = require("pg");
-  pool = new Pool({
+  const nextPool = new Pool({
     connectionString: connectionString,
     ssl: /localhost|127\.0\.0\.1/i.test(connectionString) ? false : { rejectUnauthorized: false },
-    max: 5,
-    connectionTimeoutMillis: 15000,
-    idleTimeoutMillis: 30000,
+    max: 1,
+    connectionTimeoutMillis: 10000,
+    idleTimeoutMillis: 5000,
+    allowExitOnIdle: true,
     application_name: "maths-aflatoon",
   });
   try {
-    await pool.query("SELECT 1");
+    await nextPool.query("SELECT 1");
     if (!fs.existsSync(SCHEMA_PATH)) {
       throw new Error("Schema file missing at " + SCHEMA_PATH);
     }
     const statements = splitSql(fs.readFileSync(SCHEMA_PATH, "utf8"));
-    for (const statement of statements) await pool.query(statement);
+    for (const statement of statements) await nextPool.query(statement);
+    pool = nextPool;
   } catch (err) {
-    await pool.end().catch(() => {});
-    pool = null;
+    await nextPool.end().catch(() => {});
     throw new Error("Could not set up the Maths Aflatoon database. " + redact(err));
   }
-})();
-// Keep module load alive on Vercel/Node when DATABASE_URL is not set yet.
-ready.catch(() => {});
-// Keep module load alive on Vercel/Node when DATABASE_URL is not set yet.
-ready.catch(() => {});
+}
+
+function ready() {
+  if (pool) return Promise.resolve();
+  if (!readyPromise) {
+    readyPromise = connectOnce().catch((err) => {
+      readyPromise = null;
+      throw err;
+    });
+  }
+  return readyPromise;
+}
 
 async function query(sql, params) {
-  await ready;
+  await ready();
   return pool.query(sql, params || []);
 }
 

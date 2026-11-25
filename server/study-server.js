@@ -467,7 +467,7 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-Promise.all([db.ready, aflatoonDb.ready])
+Promise.all([db.ready, aflatoonDb.ready()])
   .then(() => {
     server.listen(PORT, "0.0.0.0", () => {
       console.log("Website: http://localhost:" + PORT);

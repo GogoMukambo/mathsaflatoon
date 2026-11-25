@@ -93,7 +93,7 @@ async function verifyGoogle(credential) {
 
 async function withAflatoon(req, res, run) {
   try {
-    await aflatoonDb.ready;
+    await aflatoonDb.ready();
     await run();
   } catch (err) {
     const status = err.status || 500;

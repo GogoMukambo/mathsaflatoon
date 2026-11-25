@@ -229,7 +229,7 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-aflatoonDb.ready.then(() => {
+aflatoonDb.ready().then(() => {
   server.listen(PORT, "0.0.0.0", () => {
     console.log("Maths Aflatoon: http://localhost:" + PORT);
     console.log("Database: supabase");
