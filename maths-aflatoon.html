@@ -6241,10 +6241,12 @@
                         const serverMsg = data.error || '';
                         if (result.status === 404) {
                             this.showLoginError('Sign-in API is missing on this host. Deploy the Node/Vercel API and DATABASE_URL.');
-                        } else if (result.status === 500 && !serverMsg) {
+                        } else if (serverMsg) {
+                            this.showLoginError(serverMsg);
+                        } else if (result.status === 500) {
                             this.showLoginError('Server error during sign-in. Check DATABASE_URL on the host.');
                         } else {
-                            this.showLoginError(serverMsg || 'Google sign-in could not be completed.');
+                            this.showLoginError('Google sign-in could not be completed.');
                         }
                         return;
                     }

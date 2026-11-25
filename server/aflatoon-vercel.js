@@ -99,7 +99,14 @@ async function withAflatoon(req, res, run) {
     const status = err.status || 500;
     const detail = String(err && err.message ? err.message : err || "Unknown error");
     if (status === 500) console.error(detail);
-    json(res, status, { error: detail });
+    const exposeDb =
+      status === 500 &&
+      /DATABASE_URL|Supabase|Maths Aflatoon database|password authentication|ECONNREFUSED|timeout|Schema file missing/i.test(
+        detail
+      );
+    json(res, status, {
+      error: exposeDb ? detail : status === 500 ? "Something went wrong. Please try again." : detail,
+    });
   }
 }
 
