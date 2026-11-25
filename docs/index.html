@@ -313,6 +313,20 @@
         body.theme-liquid .liquid-glass-dark .page-header-sub {
             color: #1c1917 !important;
         }
+        /* Keep day-module indigo controls readable (white on indigo) */
+        body.theme-liquid .day-back-btn,
+        body.theme-liquid .day-back-btn i,
+        body.theme-liquid .day-nav-btn,
+        body.theme-liquid .day-nav-btn i,
+        body.theme-liquid .day-nav-btn .day-nav-label,
+        body.theme-original .day-back-btn,
+        body.theme-original .day-back-btn i,
+        body.theme-original .day-nav-btn,
+        body.theme-original .day-nav-btn i,
+        body.theme-original .day-nav-btn .day-nav-label {
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+        }
         body.theme-liquid .liquid-glass-dark .hero-highlight-text {
             color: #7c2d12 !important;
             -webkit-text-fill-color: #7c2d12 !important;
@@ -485,6 +499,196 @@
         }
         .animate-pop {
             animation: popIn 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        @keyframes lessonStepIn {
+            0% { opacity: 0; transform: translateY(18px) scale(0.96); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes lessonArrowGlow {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.55), 0 0 14px rgba(251, 191, 36, 0.45);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 0 0 8px rgba(251, 191, 36, 0), 0 0 22px rgba(251, 191, 36, 0.85);
+                transform: scale(1.08);
+            }
+        }
+        .lesson-step-card {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(18px) scale(0.96);
+            pointer-events: none;
+        }
+        .lesson-step-card.is-visible {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            animation: lessonStepIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        #lessonVisualBlueprint .lesson-step-card .lesson-step-val {
+            font-size: clamp(1.2rem, 2.6vw, 2rem);
+            line-height: 1.15;
+        }
+        #lessonVisualBlueprint .lesson-step-card .lesson-step-desc {
+            font-size: clamp(0.72rem, 1.6vw, 0.9rem);
+            line-height: 1.3;
+        }
+        #lessonVisualBlueprint .lesson-step-card .lesson-step-label {
+            font-size: clamp(0.62rem, 1.4vw, 0.75rem);
+        }
+        .lesson-step-next-btn {
+            width: 2.4rem;
+            height: 2.4rem;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #fbbf24;
+            color: #0f172a;
+            border: 2px solid #fde68a;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: transform 0.15s ease, background 0.15s ease;
+            flex-shrink: 0;
+        }
+        .lesson-step-next-btn:hover {
+            background: #f59e0b;
+            transform: scale(1.06);
+        }
+        .lesson-step-next-btn.is-glowing {
+            animation: lessonArrowGlow 1.4s ease-in-out infinite;
+        }
+        .lesson-step-next-btn:disabled,
+        .lesson-step-next-btn.is-done {
+            animation: none;
+            background: transparent;
+            border-color: transparent;
+            color: #34d399;
+            cursor: default;
+            box-shadow: none;
+        }
+        #lessonExplainModal {
+            overflow: hidden;
+            padding: max(0.4rem, env(safe-area-inset-top)) max(0.4rem, env(safe-area-inset-right)) max(0.4rem, env(safe-area-inset-bottom)) max(0.4rem, env(safe-area-inset-left));
+        }
+        #lessonExplainModal .lesson-popup-shell {
+            height: min(100dvh - 0.8rem, 920px);
+            max-height: min(100dvh - 0.8rem, 920px);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 0.55rem;
+        }
+        #lessonExplainModal .lesson-popup-body {
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 0.55rem;
+        }
+        #lessonExplainModal #lessonVisualBlueprint {
+            flex: 0 0 auto;
+        }
+        #lessonExplainModal #lessonPracticeBlock {
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow: hidden;
+        }
+        #lessonExplainModal .lesson-sprint-footer {
+            flex: 0 0 auto;
+            z-index: 2;
+            padding-top: 0.25rem;
+        }
+        @media (max-width: 640px) {
+            #lessonExplainModal .lesson-popup-shell {
+                height: calc(100dvh - 0.8rem);
+                max-height: calc(100dvh - 0.8rem);
+                border-radius: 1.15rem;
+                padding: 0.7rem 0.75rem 0.65rem !important;
+                gap: 0.45rem;
+            }
+            #lessonExplainModal .lesson-popup-body { gap: 0.4rem; }
+            #lessonExplainModal #lessonCloseBtn {
+                top: 0.45rem;
+                right: 0.45rem;
+                width: 1.85rem;
+                height: 1.85rem;
+                font-size: 0.75rem;
+            }
+            #lessonExplainModal #lessonHookTitle {
+                font-size: 1.05rem !important;
+                line-height: 1.2;
+            }
+            #lessonExplainModal #lessonGoldenRule {
+                font-size: 0.78rem !important;
+                line-height: 1.25;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+            #lessonExplainModal #lessonTargetTimeBadge { display: none; }
+            #lessonExplainModal #lessonProblemBanner {
+                padding: 0.55rem 0.65rem !important;
+                margin-bottom: 0.45rem !important;
+            }
+            #lessonExplainModal #lessonProblemBanner .font-heading {
+                font-size: 1.45rem !important;
+            }
+            #lessonExplainModal #lessonVisualBlueprint {
+                padding: 0.55rem !important;
+                border-radius: 0.9rem !important;
+            }
+            #lessonExplainModal #lessonVisualBlueprint .grid {
+                grid-template-columns: 1fr !important;
+                gap: 0.4rem !important;
+            }
+            /* Keep only visible steps in the vertical flow on phones */
+            #lessonExplainModal #lessonVisualBlueprint .lesson-step-card:not(.is-visible) {
+                display: none;
+            }
+            #lessonExplainModal #lessonVisualBlueprint .lesson-step-card {
+                padding: 0.55rem 0.65rem !important;
+            }
+            #lessonExplainModal #lessonPracticeBlock {
+                grid-template-columns: 1fr !important;
+                gap: 0.4rem !important;
+            }
+            #lessonExplainModal #lessonPracticeBlock > div {
+                padding: 0.55rem 0.65rem !important;
+                border-radius: 0.9rem !important;
+                min-height: 0;
+            }
+            #lessonExplainModal #lessonExamplesGrid {
+                gap: 0.3rem !important;
+            }
+            #lessonExplainModal #lessonExamplesGrid > div {
+                padding: 0.35rem 0.5rem !important;
+            }
+            #lessonExplainModal #lessonExamplesGrid .font-heading.text-base,
+            #lessonExplainModal #lessonExamplesGrid .font-heading.text-lg {
+                font-size: 0.82rem !important;
+            }
+            #lessonExplainModal #warmupQuestionText {
+                font-size: 1.15rem !important;
+                padding-top: 0.15rem !important;
+                padding-bottom: 0.15rem !important;
+            }
+            #lessonExplainModal #warmupInput {
+                font-size: 1rem !important;
+                padding: 0.4rem 0.55rem !important;
+            }
+            #lessonExplainModal #lessonStartSprintBtn {
+                padding: 0.7rem 0.85rem !important;
+                font-size: 0.92rem !important;
+            }
+            .lesson-step-next-btn {
+                width: 2.15rem;
+                height: 2.15rem;
+                font-size: 0.95rem;
+            }
         }
 
         /* UNMISSABLE CONTINUOUS COLOR-CHANGING AFLATOON HIGHLIGHT */
@@ -890,6 +1094,38 @@
         .home-shell { background: transparent; }
         body.theme-original .home-shell { color: var(--oa-ink); }
         body.theme-liquid .home-shell.liquid-glass-dark { color: #fff; }
+        /* Registered-course chips must stay dark-on-light in every theme */
+        #homeRegisteredCourses .home-registered-label {
+            color: #14532d !important;
+            -webkit-text-fill-color: #14532d !important;
+        }
+        #homeRegisteredCourses .home-registered-course {
+            background: #ffffff !important;
+            border-color: #94a3b8 !important;
+            color: #0f172a !important;
+        }
+        #homeRegisteredCourses .home-registered-course.border-emerald-600,
+        #homeRegisteredCourses .home-registered-course[class*="bg-emerald-100"] {
+            background: #d1fae5 !important;
+            border-color: #059669 !important;
+        }
+        #homeRegisteredCourses .home-registered-course .font-heading,
+        #homeRegisteredCourses .home-registered-course .text-slate-900 {
+            color: #0f172a !important;
+            -webkit-text-fill-color: #0f172a !important;
+        }
+        #homeRegisteredCourses .home-registered-course .text-slate-700 {
+            color: #334155 !important;
+            -webkit-text-fill-color: #334155 !important;
+        }
+        #homeRegisteredCourses .home-registered-course .text-emerald-800 {
+            color: #065f46 !important;
+            -webkit-text-fill-color: #065f46 !important;
+        }
+        #homeRegisteredCourses .home-registered-course .text-amber-800 {
+            color: #92400e !important;
+            -webkit-text-fill-color: #92400e !important;
+        }
         .home-kicker {
             font-size: .78rem;
             font-weight: 800;
@@ -1293,10 +1529,10 @@
             <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div class="flex items-start sm:items-center gap-3.5">
-                        <button onclick="app.showCoursePage()" class="mt-1 sm:mt-0 w-10 h-10 rounded-xl bg-indigo-900 hover:bg-indigo-800 border border-indigo-700 flex items-center justify-center text-indigo-200 hover:text-white transition shrink-0" title="Back to 60-Day Course Map">
+                        <button type="button" onclick="app.showCoursePage()" class="day-back-btn mt-1 sm:mt-0 w-10 h-10 rounded-xl bg-indigo-700 hover:bg-indigo-600 border border-indigo-500 flex items-center justify-center text-white transition shrink-0" title="Back to 60-Day Course Map" aria-label="Back to course map">
                             <i class="fa-solid fa-arrow-left"></i>
                         </button>
-                        <div>
+                        <div class="day-module-chapter-block min-w-0">
                             <div class="flex flex-wrap items-center gap-2">
                                 <span id="moduleCourseBadge" class="text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-amber-400 text-slate-950">FOUNDATION COURSE • STAGE 2</span>
                                 <span id="moduleWeekBadge" class="text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-800 text-amber-300 border border-indigo-700">MONTH 1 • DAY 1 OF 60</span>
@@ -1308,11 +1544,11 @@
 
                     <!-- Prev / Next Day Navigation -->
                     <div class="flex items-center gap-2 self-end sm:self-center">
-                        <button id="prevDayBtn" onclick="app.changeDayRelative(-1)" class="bg-indigo-900 hover:bg-indigo-800 disabled:opacity-40 border border-indigo-700 text-xs font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5" title="Previous day">
+                        <button id="prevDayBtn" onclick="app.changeDayRelative(-1)" class="day-nav-btn bg-indigo-700 hover:bg-indigo-600 disabled:opacity-40 border border-indigo-500 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5" title="Previous day">
                             <i class="fa-solid fa-chevron-left"></i>
                             <span class="day-nav-label">Prev Day</span>
                         </button>
-                        <button id="nextDayBtn" onclick="app.changeDayRelative(1)" class="bg-indigo-900 hover:bg-indigo-800 disabled:opacity-40 border border-indigo-700 text-xs font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5" title="Next day">
+                        <button id="nextDayBtn" onclick="app.changeDayRelative(1)" class="day-nav-btn bg-indigo-700 hover:bg-indigo-600 disabled:opacity-40 border border-indigo-500 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5" title="Next day">
                             <span class="day-nav-label">Next Day</span>
                             <i class="fa-solid fa-chevron-right"></i>
                         </button>
@@ -1340,73 +1576,86 @@
             </div>
         </div>
 
+        <!-- Placeholder so lesson tab state still toggles a content node -->
+        <section id="lessonTabContent" class="hidden" aria-hidden="true"></section>
+
         <!-- =============================================================== -->
-        <!-- TAB 1 CONTENT: PUNCHY, VISUAL, CLUTTER-FREE CONCEPT LESSON      -->
+        <!-- AFLATOON LESSON POPUP: steps reveal slowly, then practice block -->
         <!-- =============================================================== -->
-        <section id="lessonTabContent" class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 space-y-4 animate-pop">
-            <!-- 1. The Big Trick Banner + 3-Step Visual Flow -->
-            <div class="liquid-glass rounded-3xl p-5 sm:p-6 space-y-4">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 rounded-2xl bg-amber-400 text-slate-950 flex items-center justify-center text-2xl shrink-0 shadow">
-                            ⚡
+        <div id="lessonExplainModal" class="hidden fixed inset-0 z-[90] bg-slate-950/60 backdrop-blur-md flex items-center justify-center no-print" onclick="if(event.target===this)app.closeLessonPopupFromOutside()">
+            <div class="lesson-popup-shell relative w-full max-w-5xl liquid-glass rounded-3xl p-4 sm:p-5 shadow-2xl border border-white/40" role="dialog" aria-modal="true" aria-labelledby="lessonHookTitle" onclick="event.stopPropagation()">
+                <button type="button" id="lessonCloseBtn" class="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 flex items-center justify-center text-sm transition shadow-sm border border-slate-200" title="Close" aria-label="Close">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <div class="lesson-popup-body">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pr-9 shrink-0">
+                        <div class="flex items-center gap-2.5 min-w-0">
+                            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-amber-400 text-slate-950 flex items-center justify-center text-xl sm:text-2xl shrink-0 shadow">
+                                ⚡
+                            </div>
+                            <div class="min-w-0">
+                                <p class="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-amber-700 mb-0.5">
+                                    <span class="aflatoon-magic-pill text-[10px]"><i class="fa-solid fa-bolt aflatoon-bolt"></i>Aflatoon</span>
+                                    Way
+                                </p>
+                                <h2 id="lessonHookTitle" class="font-heading text-lg sm:text-2xl font-bold text-slate-900 leading-tight"></h2>
+                                <p id="lessonGoldenRule" class="font-kid font-bold text-xs sm:text-base text-indigo-700 mt-0.5"></p>
+                            </div>
                         </div>
-                        <div>
-                            <h2 id="lessonHookTitle" class="font-heading text-xl sm:text-2xl font-bold text-slate-900 leading-tight"></h2>
-                            <p id="lessonGoldenRule" class="font-kid font-bold text-sm sm:text-base text-indigo-700 mt-0.5"></p>
-                        </div>
-                    </div>
-                    <span id="lessonTargetTimeBadge" class="bg-amber-100 text-amber-900 border border-amber-300 text-xs font-extrabold px-3 py-1.5 rounded-full shrink-0 self-start sm:self-center">🥇 Gold: ≥31/35</span>
-                </div>
-
-                <!-- Hidden concept text kept for JS compatibility if needed -->
-                <p id="lessonConceptText" class="hidden"></p>
-
-                <!-- 3-Step Visual Equation Flow -->
-                <div id="lessonVisualBlueprint" class="bg-slate-900 text-white rounded-2xl p-4 font-kid">
-                    <!-- Dynamically rendered visual steps -->
-                </div>
-            </div>
-
-            <!-- 2. Bottom Split: 3 Snap Examples + Quick Try & Launch Sprint -->
-            <div class="grid md:grid-cols-12 gap-4 items-stretch">
-                <!-- Left: 3 Instant Snap Examples -->
-                <div class="md:col-span-7 liquid-glass rounded-3xl p-5 flex flex-col justify-between">
-                    <div class="flex items-center justify-between mb-3">
-                        <h3 class="font-heading text-lg font-bold text-slate-900 flex items-center gap-2">
-                            <span class="aflatoon-magic-pill text-xs"><i class="fa-solid fa-bolt aflatoon-bolt"></i>3 Quick Examples</span>
-                        </h3>
-                        <span class="text-[11px] font-bold text-slate-500">Spot the pattern!</span>
-                    </div>
-                    <div id="lessonExamplesGrid" class="space-y-2.5 flex-1 flex flex-col justify-center">
-                        <!-- 3 Punchy Example Rows injected via JS -->
-                    </div>
-                </div>
-
-                <!-- Right: 1-Question Quick Try + Start 35-Question Sprint -->
-                <div class="md:col-span-5 liquid-glass rounded-3xl p-5 flex flex-col justify-between gap-3">
-                    <div class="space-y-2.5">
-                        <div class="flex items-center justify-between">
-                            <span class="bg-emerald-600 text-white text-[11px] font-extrabold uppercase px-2.5 py-0.5 rounded-full">Quick Try</span>
-                            <span id="warmupHintText" class="text-[11px] font-bold text-slate-500 truncate max-w-[180px]"></span>
-                        </div>
-                        <div id="warmupQuestionText" class="font-heading text-2xl sm:text-3xl font-bold text-slate-900 text-center py-1">100 − 37 = ?</div>
-                        <div class="flex gap-2">
-                            <input type="text" id="warmupInput" inputmode="decimal" autocomplete="off" placeholder="Answer..." onkeydown="if(event.key==='Enter') app.checkWarmup()" class="w-full font-heading text-xl font-bold text-indigo-950 px-3.5 py-2 rounded-xl border-2 border-slate-300 focus:border-indigo-600 focus:outline-none text-center">
-                            <button type="button" onclick="app.checkWarmup()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-bold px-4 py-2 rounded-xl transition shrink-0">
-                                Check
+                        <div class="flex items-center gap-2 shrink-0 self-start sm:self-center">
+                            <span id="lessonTargetTimeBadge" class="bg-amber-100 text-amber-900 border border-amber-300 text-xs font-extrabold px-3 py-1.5 rounded-full">🥇 Gold: ≥31/35</span>
+                            <button type="button" id="lessonSkipBtn" class="text-[11px] font-bold text-slate-600 hover:text-indigo-700 bg-slate-100 hover:bg-indigo-50 px-2.5 py-1.5 rounded-xl transition border border-slate-200" title="Show all steps and examples now">
+                                Skip
                             </button>
                         </div>
-                        <div id="warmupFeedback" class="hidden font-kid font-bold text-xs text-center"></div>
                     </div>
 
-                    <button onclick="app.switchDayTab('practice')" class="w-full btn-3d-indigo text-white font-heading font-bold text-base py-3.5 px-5 rounded-2xl flex items-center justify-center gap-2">
+                    <p id="lessonConceptText" class="hidden"></p>
+
+                    <div id="lessonVisualBlueprint" class="bg-slate-900 text-white rounded-2xl p-3 sm:p-4 font-kid shrink-0">
+                        <!-- Dynamically rendered visual steps -->
+                    </div>
+
+                    <div id="lessonPracticeBlock" class="grid md:grid-cols-12 gap-3 sm:gap-4 items-stretch min-h-0">
+                        <div class="md:col-span-7 liquid-glass-sub rounded-2xl sm:rounded-3xl p-3 sm:p-4 flex flex-col justify-between bg-white/70 border border-slate-200/80 min-h-0 overflow-hidden">
+                            <div class="flex items-center justify-between mb-1.5 sm:mb-2 shrink-0">
+                                <h3 class="font-heading text-sm sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+                                    <span class="aflatoon-magic-pill text-xs"><i class="fa-solid fa-bolt aflatoon-bolt"></i>3 Quick Examples</span>
+                                </h3>
+                                <span class="text-[11px] font-bold text-slate-500 hidden sm:inline">Spot the pattern!</span>
+                            </div>
+                            <div id="lessonExamplesGrid" class="space-y-1.5 sm:space-y-2.5 flex-1 flex flex-col justify-center min-h-0 overflow-hidden">
+                                <!-- 3 Punchy Example Rows injected via JS -->
+                            </div>
+                        </div>
+
+                        <div class="md:col-span-5 liquid-glass-sub rounded-2xl sm:rounded-3xl p-3 sm:p-4 flex flex-col justify-between gap-2 bg-white/70 border border-slate-200/80 min-h-0 overflow-hidden">
+                            <div class="space-y-1.5 sm:space-y-2.5">
+                                <div class="flex items-center justify-between gap-2">
+                                    <span class="bg-emerald-600 text-white text-[11px] font-extrabold uppercase px-2.5 py-0.5 rounded-full">Quick Try</span>
+                                    <span id="warmupHintText" class="text-[10px] sm:text-[11px] font-bold text-slate-500 truncate max-w-[55%]"></span>
+                                </div>
+                                <div id="warmupQuestionText" class="font-heading text-xl sm:text-3xl font-bold text-slate-900 text-center py-0.5 sm:py-1">100 − 37 = ?</div>
+                                <div class="flex gap-2">
+                                    <input type="text" id="warmupInput" inputmode="decimal" autocomplete="off" placeholder="Answer..." onkeydown="if(event.key==='Enter') app.checkWarmup()" class="w-full font-heading text-lg sm:text-xl font-bold text-indigo-950 px-3 py-2 rounded-xl border-2 border-slate-300 focus:border-indigo-600 focus:outline-none text-center">
+                                    <button type="button" onclick="app.checkWarmup()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-bold px-3 sm:px-4 py-2 rounded-xl transition shrink-0">
+                                        Check
+                                    </button>
+                                </div>
+                                <div id="warmupFeedback" class="hidden font-kid font-bold text-xs text-center"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lesson-sprint-footer">
+                    <button type="button" id="lessonStartSprintBtn" class="w-full btn-3d-indigo text-white font-heading font-bold text-sm sm:text-base py-3 sm:py-3.5 px-5 rounded-2xl flex items-center justify-center gap-2">
                         <span>Start 35-Question Sprint</span>
                         <i class="fa-solid fa-arrow-right"></i>
                     </button>
                 </div>
             </div>
-        </section>
+        </div>
 
         <!-- =============================================================== -->
         <!-- TAB 2 CONTENT: 50 TIMED FLASHCARDS ENGINE & MEDAL AWARD         -->
@@ -1446,8 +1695,8 @@
                     <!-- Quick Controls: Input Mode Toggle & Restart Deck -->
                     <div class="flex items-center gap-2">
                         <button onclick="app.toggleInputMode()" id="fcModeToggleBtn" class="theme-accent-btn bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-heading font-bold text-xs sm:text-sm px-3 py-1.5 rounded-xl shadow-sm transition flex items-center gap-1.5" title="Switch between Number Pad and Multiple Choice">
-                            <i id="fcModeToggleIcon" class="fa-solid fa-keyboard"></i>
-                            <span id="fcModeToggleText">Mode: Keypad</span>
+                            <i id="fcModeToggleIcon" class="fa-solid fa-list-check"></i>
+                            <span id="fcModeToggleText">Mode: 4-Choice</span>
                         </button>
                         <button onclick="app.initFlashcardSession(true)" class="text-xs font-bold bg-slate-100 hover:bg-indigo-100 text-slate-600 hover:text-indigo-700 px-2.5 py-1.5 rounded-xl transition" title="Shuffle & Restart 35 Questions">
                             <i class="fa-solid fa-shuffle"></i>
@@ -1504,8 +1753,8 @@
 
                 <!-- Right Column: Fast On-Screen Numpad OR 4 Multiple Choice Buttons -->
                 <div class="md:col-span-5 flex flex-col justify-center">
-                    <!-- On-Screen Touch Numpad -->
-                    <div id="fcKeypadContainer" class="liquid-glass rounded-3xl p-4 sm:p-5 select-none">
+                    <!-- On-Screen Touch Numpad (hidden by default — 4-Choice is first) -->
+                    <div id="fcKeypadContainer" class="hidden liquid-glass rounded-3xl p-4 sm:p-5 select-none">
                         <div class="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-3 text-center flex items-center justify-center flex-wrap gap-1.5">
                             <span class="aflatoon-magic-pill text-xs"><i class="fa-solid fa-bolt aflatoon-bolt"></i>Aflatoon</span>
                             <span>Speed Keypad</span>
@@ -1540,8 +1789,8 @@
                         </div>
                     </div>
 
-                    <!-- Optional Multiple-Choice Grid (Hidden unless toggled) -->
-                    <div id="fcMultipleChoiceContainer" class="hidden liquid-glass rounded-3xl p-5 space-y-3">
+                    <!-- 4-Choice Grid (default answer mode) -->
+                    <div id="fcMultipleChoiceContainer" class="liquid-glass rounded-3xl p-5 space-y-3">
                         <div class="text-xs font-bold text-slate-400 uppercase tracking-wider text-center">Tap the Correct Mental Answer</div>
                         <div id="fcChoicesGrid" class="grid grid-cols-1 gap-3">
                             <!-- 4 Choice buttons injected here -->
@@ -1806,6 +2055,7 @@
                     <button type="button" onclick="app.closeCertificateModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600" aria-label="Close certificate"><i class="fa-solid fa-xmark"></i></button>
                 </div>
             </div>
+            <div id="certCourseRow" class="flex items-center gap-1.5 overflow-x-auto shrink-0 no-print"></div>
             <div id="certChildRow" class="flex items-center gap-1.5 overflow-x-auto shrink-0 no-print"></div>
             <p id="certProgressStatusSub" class="hidden"></p>
             <div id="certProgressNotice" class="hidden"></div>
@@ -1881,6 +2131,32 @@
                     </div>
                 </div>
                 <div id="certSampleMark" class="cert-sample-mark" aria-hidden="true"><span>Sample</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- COURSE CERTIFICATE UNLOCK CELEBRATION (FIREWORKS)                         -->
+    <!-- ========================================================================= -->
+    <div id="courseCertUnlockModal" class="hidden fixed inset-0 z-[130] no-print" aria-modal="true" role="dialog">
+        <canvas id="certFireworksCanvas" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
+        <div class="absolute inset-0 bg-slate-950/55"></div>
+        <div class="relative z-10 h-full flex items-center justify-center p-4">
+            <div class="liquid-glass rounded-3xl max-w-md w-full p-6 sm:p-8 text-center space-y-4 shadow-2xl border border-amber-200/70">
+                <div class="text-4xl">🎆</div>
+                <p class="text-[11px] font-extrabold uppercase tracking-[0.18em] text-amber-700">Course Complete</p>
+                <h2 id="certUnlockTitle" class="font-heading text-2xl sm:text-3xl font-bold text-slate-900 leading-tight">Congratulations!</h2>
+                <p id="certUnlockMessage" class="font-kid text-sm sm:text-base text-slate-700 leading-relaxed">
+                    You earned a medal on every day. Your course certificate is now available.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-2.5 pt-1">
+                    <button type="button" id="certUnlockViewBtn" class="flex-1 btn-3d-amber text-slate-950 font-heading font-bold px-4 py-3 rounded-2xl">
+                        View Certificate
+                    </button>
+                    <button type="button" id="certUnlockCloseBtn" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-800 font-heading font-bold px-4 py-3 rounded-2xl">
+                        Close
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -2103,7 +2379,7 @@
          */
         const BEGINNER_TOPICS_30 = [
             {
-                title: "Quick Doubles",
+                title: "Doubles",
                 subtitle: "Double 1-digit and 2-digit numbers in a snap",
                 hookTitle: "Double Trouble: Partition & Double!",
                 concept: "Doubling is the superpower behind mental multiplication! To double a 2-digit number like 24, double the tens (20→40), double the ones (4→8), and put them together (48)!",
@@ -2118,7 +2394,7 @@
                 }
             },
             {
-                title: "Next-Door Doubles (+1)",
+                title: "Near Doubles",
                 subtitle: "Double the smaller number and add 1",
                 hookTitle: "Double the Smaller Twin + 1!",
                 concept: "When you see 7 + 8 or 15 + 16, notice they are next-door neighbours! Just double the smaller number and add 1!",
@@ -2132,7 +2408,7 @@
                 }
             },
             {
-                title: "Skip Counting Patterns",
+                title: "Number Patterns",
                 subtitle: "Spot the jump and find the next number",
                 hookTitle: "Find the Secret Jump Size!",
                 concept: "Sequences are puzzles where the same jump happens every time! Find the gap between the first two numbers, then apply that exact jump to the last number.",
@@ -2147,7 +2423,7 @@
                 }
             },
             {
-                title: "Hundreds, Tens & Ones",
+                title: "Place Value",
                 subtitle: "Snap place value blocks together cleanly",
                 hookTitle: "Snap the Place Value Blocks Together!",
                 concept: "300 + 40 + 7 snaps straight together as 347! Watch out when a place is missing, like 400 + 8—the tens place gets a 0 placeholder → 408!",
@@ -2163,13 +2439,21 @@
                 }
             },
             {
-                title: "Multiplying by 10 & 100",
+                title: "Times 10 and 100",
                 subtitle: "Add 1 zero for ×10 and 2 zeros for ×100",
                 hookTitle: "Count the Zeros & Slide!",
                 concept: "Multiplying any whole number by 10 moves every digit one place left (attach one 0). Multiplying by 100 attaches two 0s!",
                 goldenRule: "Whole number × 10 → attach 0. Whole number × 100 → attach 00!",
-                visualSteps: [{label:"14 × 10",val:"140",desc:"One zero"},{label:"7 × 100",val:"700",desc:"Two zeros"},{label:"90 ÷ 10",val:"9",desc:"Remove one zero!"}],
-                examples: [{q:"16 × 10",steps:["Attach 0 → 160"],ans:"160"},{q:"5 × 100",steps:["Attach 00 → 500"],ans:"500"},{q:"120 ÷ 10",steps:["Remove 0 → 12"],ans:"12"}],
+                visualSteps: [
+                    {label:"Problem",val:"14 × 10",desc:"Multiply by 10"},
+                    {label:"Attach one 0",val:"14 → 140",desc:"Digits slide one place left"},
+                    {label:"Answer",val:"140",desc:"14 × 10 = 140!"}
+                ],
+                examples: [
+                    {q:"16 × 10",steps:["Attach 0 → 160"],ans:"160"},
+                    {q:"5 × 100",steps:["Attach 00 → 500"],ans:"500"},
+                    {q:"120 ÷ 10",steps:["Remove one 0 → 12"],ans:"12"}
+                ],
                 warmup: {q:"23 × 10 = ?",ans:230,hint:"Attach a zero to 23!"},
                 gen: (idx, m) => {
                     const n = randInt(3, 15 * m);
@@ -2180,7 +2464,7 @@
                 }
             },
             {
-                title: "Jumping by 10s (+10, −10)",
+                title: "Add and Take 10s",
                 subtitle: "Move only the tens digit up or down",
                 hookTitle: "The Elevator Tens Jump!",
                 concept: "When you add or subtract 10, 20, or 30 to any number (like 37 + 20), the ones digit (7) never changes! Only the tens digit rides the elevator up or down.",
@@ -2198,7 +2482,7 @@
                 }
             },
             {
-                title: "Make 10 First to Add",
+                title: "Make 10",
                 subtitle: "Fill up to 10 first, then add the rest",
                 hookTitle: "Fill the 10-Bucket First!",
                 concept: "How do fast kids do 8 + 5? They don't count 9, 10, 11, 12, 13 on fingers! They see 8 needs 2 to make 10. Breaking 5 into 2 and 3 gives 8 + 2 = 10, plus 3 = 13!",
@@ -2214,7 +2498,7 @@
                 }
             },
             {
-                title: "Easy +9 and +19 Trick",
+                title: "Add 9",
                 subtitle: "Add 10 or 20, then step back 1",
                 hookTitle: "9 Is Just 10 Wearing a Minus-1 Hat!",
                 concept: "Adding 9 is tricky if you count by ones, but adding 10 is super easy! To add 9 to any number, jump up by 10, then take 1 tiny step back!",
@@ -2229,7 +2513,7 @@
                 }
             },
             {
-                title: "Easy −9 and −19 Trick",
+                title: "Take Away 9",
                 subtitle: "Take away 10 or 20, then give 1 back",
                 hookTitle: "Take Away 10, Then Give 1 Back!",
                 concept: "When subtracting 9 (like 34 − 9), if you subtract 10 (34 − 10 = 24), you took away 1 too many! So just add 1 back (24 + 1 = 25)!",
@@ -2244,7 +2528,7 @@
                 }
             },
             {
-                title: "Adding 3 Numbers Fast",
+                title: "Add Three Numbers",
                 subtitle: "Pair two numbers that make 10 first",
                 hookTitle: "Hunt for the Secret 10-Bond!",
                 concept: "In 7 + 6 + 3, don't do 7 + 6 first! Spot that 7 and 3 are best friends that make 10! Then 10 + 6 = 16 in one second!",
@@ -2260,7 +2544,7 @@
                 }
             },
             {
-                title: "Left-to-Right Adding",
+                title: "Add Tens First",
                 subtitle: "Add the tens first, then add the ones",
                 hookTitle: "Read & Add from Left to Right!",
                 concept: "To add 32 + 25 in your head, start on the left: 32 + 20 = 52, then + 5 = 57! No column carrying needed.",
@@ -2275,7 +2559,7 @@
                 }
             },
             {
-                title: "Count Up to Subtract",
+                title: "Count Up",
                 subtitle: "Hop up to find the gap between close numbers",
                 hookTitle: "Hop Up Instead of Taking Away!",
                 concept: "When two numbers are close together like 32 − 28, don't subtract! Just count UP from 28 to 32: 28 to 30 is 2, and 30 to 32 is 2 → 2 + 2 = 4!",
@@ -2291,7 +2575,7 @@
                 }
             },
             {
-                title: "Find the Missing Number",
+                title: "Missing Number",
                 subtitle: "Solve simple box equations in your head",
                 hookTitle: "Use the Opposite Operation to Unmask the Mystery Number!",
                 concept: "When you see ___ + 12 = 30, just count up from 12 to 30 (or do 30 − 12 = 18)! Addition and subtraction are opposites that unlock each other.",
@@ -2306,7 +2590,7 @@
                 }
             },
             {
-                title: "Partners to 100",
+                title: "Bonds to 100",
                 subtitle: "Make tens add to 9 and ones add to 10",
                 hookTitle: "The 9-and-10 Magic Bond to 100!",
                 concept: "To find what adds to 64 to make 100, make the tens digit add to 9 (9 − 6 = 3) and the ones digit add to 10 (10 − 4 = 6) → 36!",
@@ -2321,7 +2605,7 @@
                 }
             },
             {
-                title: "Number Pairs to 10 & 20",
+                title: "Pairs to 10",
                 subtitle: "Spot pairs that make 10 and 20 fast",
                 hookTitle: "The Rainbow Pairs to 10 & 20!",
                 concept: "Before you can add big numbers fast, your brain needs to spot pairs that make 10 (like 7+3 or 8+2) in a single heartbeat! For 20, just pair the ones to make 10 and add the extra ten!",
@@ -2336,7 +2620,7 @@
                 }
             },
             {
-                title: "2×, 5× & 10× Tables",
+                title: "Easy Times Tables",
                 subtitle: "Master the three starter times tables",
                 hookTitle: "Doubles, High-Fives & Zero-Sliders!",
                 concept: "Multiplying by 2 is just doubling! Multiplying by 10 just puts a 0 on the end! And multiplying by 5 always ends in 5 or 0 (half of ×10)!",
@@ -2351,7 +2635,7 @@
                 }
             },
             {
-                title: "Half of Even Numbers",
+                title: "Halving",
                 subtitle: "Cut the tens in half, then cut the ones",
                 hookTitle: "Chop Tens in Half, Chop Ones in Half!",
                 concept: "Halving is the exact opposite of doubling! To find half of 48, take half of 40 (20) and half of 8 (4) → 24! For odd tens like 30, remember half of 30 is 15!",
@@ -2365,7 +2649,7 @@
                 }
             },
             {
-                title: "4× Table (Double Twice)",
+                title: "Times 4",
                 subtitle: "Multiply by 4 by doubling two times",
                 hookTitle: "Double Once for 2×, Double Again for 4×!",
                 concept: "Never get stuck on your 4 times table! To multiply any number by 4, just double it, and then double that answer again!",
@@ -2379,7 +2663,7 @@
                 }
             },
             {
-                title: "3× & 6× Tables",
+                title: "Times 3 and 6",
                 subtitle: "Double the number and add one more group",
                 hookTitle: "3× is Double Plus One More! 6× is Double 3×!",
                 concept: "To find 7 × 3, just double 7 (14) and add one more 7 (14 + 7 = 21)! And once you know 3×, doubling it gives you 6×!",
@@ -2394,7 +2678,7 @@
                 }
             },
             {
-                title: "9× Table Magic",
+                title: "Times 9",
                 subtitle: "Use 10× minus the number every time",
                 hookTitle: "Tens Go Up, Ones Go Down!",
                 concept: "When multiplying any single digit (like 7) by 9: the tens digit is always 1 less than the number (7 − 1 = 6), and the two digits always add up to 9 (6 + 3 = 9 → 63)!",
@@ -2408,7 +2692,7 @@
                 }
             },
             {
-                title: "8× Table (Double 3 Times)",
+                title: "Times 8",
                 subtitle: "Double three times to get 8× fast",
                 hookTitle: "Double, Double, Double Again!",
                 concept: "8 is 2 × 2 × 2! So to multiply by 8, you can double three times—or do 10× minus 2× (e.g., 6 × 8 = 60 − 12 = 48)!",
@@ -2422,7 +2706,7 @@
                 }
             },
             {
-                title: "Flip Division into Times",
+                title: "Easy Division",
                 subtitle: "Turn every ÷ question into a × question",
                 hookTitle: "Think 'What Times the Divsor Equals the Total?'",
                 concept: "When you see 35 ÷ 5, don't try to share 35 dots into 5 circles! Flip it around and ask: '5 times WHAT makes 35?' 5 × 7 = 35, so the answer is 7!",
@@ -2437,7 +2721,7 @@
                 }
             },
             {
-                title: "Simple Halves & Quarters",
+                title: "Halves and Quarters",
                 subtitle: "Find 1/2, 1/3, and 1/4 of easy numbers",
                 hookTitle: "Quarter = Halve It Twice!",
                 concept: "1/2 means divide by 2 (half). 1/4 (one quarter) means halve the number, then halve it again! And 1/3 means divide by 3!",
@@ -2452,7 +2736,7 @@
                 }
             },
             {
-                title: "Piggy Bank Money & Change",
+                title: "Money Change",
                 subtitle: "Add notes and find change from ₹100",
                 hookTitle: "Make ₹100 with Your Friendly Number Bonds!",
                 concept: "Shopping uses the exact same 100-bonds you already know! If a toy car costs ₹65 and you pay ₹100, 65 + 35 = 100, so your shopkeeper change is ₹35!",
@@ -2466,7 +2750,7 @@
                 }
             },
             {
-                title: "Clock & Minute Jumps",
+                title: "Clock Time",
                 subtitle: "Count minutes up to the next hour",
                 hookTitle: "Remember the Magic 60 on the Clock Face!",
                 concept: "1 hour = 60 minutes. Half an hour = 30 minutes. A quarter of an hour = 15 minutes! To see how many minutes until the next o'clock, subtract the minutes from 60!",
@@ -2486,7 +2770,7 @@
                 }
             },
             {
-                title: "Metres & Kilograms",
+                title: "Metres and Grams",
                 subtitle: "Convert cm to m and g to kg easily",
                 hookTitle: "Centi Means 100, Kilo Means 1,000!",
                 concept: "There are 100 centimetres in 1 metre, so 3 metres = 300 cm! And there are 1,000 grams in 1 kilogram, so 4 kg = 4,000 g!",
@@ -2502,7 +2786,7 @@
                 }
             },
             {
-                title: "Distance Around Shapes",
+                title: "Shape Borders",
                 subtitle: "Find the outside border of squares and rectangles",
                 hookTitle: "Square = Side × 4! Rectangle = Double (L + W)!",
                 concept: "Perimeter means the total distance around the outside! For a square, multiply the side by 4 (double it twice). For a rectangle, add Length + Width and double the result!",
@@ -2522,7 +2806,7 @@
                 }
             },
             {
-                title: "Compare & Find the Gap",
+                title: "Find the Difference",
                 subtitle: "Find how much bigger one number is",
                 hookTitle: "'How Many More' Always Means Find the Gap!",
                 concept: "Whenever a question asks 'How much bigger is 45 than 30?', just find 45 − 30 = 15!",
@@ -2537,7 +2821,7 @@
                 }
             },
             {
-                title: "Two-Step Number Chains",
+                title: "Two-Step Sums",
                 subtitle: "Hold the first answer in your head and finish",
                 hookTitle: "Solve Step 1, Lock the Number, Then Do Step 2!",
                 concept: "In chains like (8 × 3) + 6, solve the first part (8 × 3 = 24), say '24' clearly in your mind, and then add 6 → 30!",
@@ -2553,7 +2837,7 @@
                 }
             },
             {
-                title: "Beginner Speed Challenge",
+                title: "Beginner Final Sprint",
                 subtitle: "Mix all your Beginner tricks for the Gold Medal!",
                 hookTitle: "Championship Day: Trust Your Fast Brain!",
                 concept: "Today is your Monthly Boss Sprint! You'll face a mix of number bonds, doubles, +9/-9 jumps, times tables, halving, money, and time.",
@@ -2666,12 +2950,20 @@
             {
                 title: "Add & Subtract Speed Check",
                 subtitle: "Mix all 6 adding and subtracting tricks",
-                hookTitle: "Choose the Right Weapon in Half a Second!",
-                concept: "Every question uses Complements, +99 Compensation, Left-to-Right Addition, Split Subtraction, Near-Doubles, or Bridging.",
-                goldenRule: "Glance at the numbers first, pick your shortcut, and fire!",
-                visualSteps: [{label:"1000 − 472",val:"9-9-10 Rule",desc:"528"},{label:"346 + 99",val:"+100 − 1",desc:"445"},{label:"406 − 397",val:"Bridge 400",desc:"9!"}],
-                examples: [{q:"100 − 29",steps:["71"],ans:"71"},{q:"265 + 98",steps:["363"],ans:"363"},{q:"65 + 66",steps:["131"],ans:"131"}],
-                warmup: {q:"305 − 296 = ?",ans:9,hint:"4 + 5 = 9!"},
+                hookTitle: "Pick the Shortcut, Then Fire!",
+                concept: "Each card uses one add/subtract shortcut: complements, +99, left-to-right, split subtraction, near-doubles, or bridging. Spot which one fits.",
+                goldenRule: "Look at the numbers first, then choose the matching shortcut!",
+                visualSteps: [
+                    {label:"Problem",val:"1000 − 472",desc:"Use all-from-9, last-from-10"},
+                    {label:"From 9s",val:"9−4=5, 9−7=2",desc:"Hundreds and tens"},
+                    {label:"From 10",val:"10 − 2 = 8 → 528",desc:"Answer = 528!"}
+                ],
+                examples: [
+                    {q:"100 − 29",steps:["9 − 2 = 7", "10 − 9 = 1 → 71"],ans:"71"},
+                    {q:"265 + 98",steps:["265 + 100 = 365", "365 − 2 = 363"],ans:"363"},
+                    {q:"65 + 66",steps:["Double 65 = 130", "130 + 1 = 131"],ans:"131"}
+                ],
+                warmup: {q:"305 − 296 = ?",ans:9,hint:"Bridge via 300: 4 + 5 = 9!"},
                 gen: (idx, m) => FOUNDATION_TOPICS_30[[0, 1, 2, 3, 4, 4][idx % 6]].gen(idx, m)
             },
             {
@@ -2774,12 +3066,20 @@
             {
                 title: "Multiply & Divide Speed Check",
                 subtitle: "Test all your multiply and divide tricks",
-                hookTitle: "Spot the Pattern & Execute in Under 3 Seconds!",
-                concept: "Combine Powers of 10, Doubling & Halving, ×25/×50, 11s Sandwiches, Partitioning, and Chunking Division.",
-                goldenRule: "Never brute-force when a shortcut is staring right at you!",
-                visualSteps: [{label:"28 × 25",val:"700",desc:"Quarter & ×100"},{label:"53 × 11",val:"583",desc:"11s Sandwich"},{label:"96 ÷ 6",val:"16",desc:"Chunking"}],
-                examples: [{q:"36 × 25",steps:["900"],ans:"900"},{q:"45 × 11",steps:["495"],ans:"495"},{q:"16 × 15",steps:["240"],ans:"240"}],
-                warmup: {q:"14 × 15 = ?",ans:210,hint:"7 × 30 = 210!"},
+                hookTitle: "Spot the Shortcut in Under 3 Seconds!",
+                concept: "Cards mix ×10/×100, halve-and-double, ×25/×50, 11s sandwich, partitioning, and chunking division. Match the numbers to the right trick.",
+                goldenRule: "If you see 25, 11, or an even factor — use the matching shortcut!",
+                visualSteps: [
+                    {label:"Problem",val:"28 × 25",desc:"25 is a quarter of 100"},
+                    {label:"÷ 4",val:"28 ÷ 4 = 7",desc:"Quarter of 28"},
+                    {label:"× 100",val:"7 × 100 = 700",desc:"Answer = 700!"}
+                ],
+                examples: [
+                    {q:"36 × 25",steps:["36 ÷ 4 = 9", "9 × 100 = 900"],ans:"900"},
+                    {q:"45 × 11",steps:["4 and 5, middle 4+5=9 → 495"],ans:"495"},
+                    {q:"16 × 15",steps:["Halve 16 → 8", "double 15 → 30", "8 × 30 = 240"],ans:"240"}
+                ],
+                warmup: {q:"14 × 15 = ?",ans:210,hint:"Halve 14 → 7, double 15 → 30, 7 × 30 = 210!"},
                 gen: (idx, m) => FOUNDATION_TOPICS_30[7 + (idx % 6)].gen(idx, m)
             },
             {
@@ -2896,11 +3196,19 @@
             {
                 title: "Fractions, Decimals & % Check",
                 subtitle: "Mix fractions, decimals, and percentages",
-                hookTitle: "Connect Fractions, Decimals & Percentages!",
-                concept: "Rapidly switch between unit/non-unit fractions, decimal complements, and percentage hacks.",
-                goldenRule: "Divide first to keep numbers small, then multiply!",
-                visualSteps: [{label:"3/5 of 45",val:"27",desc:"(45÷5)×3"},{label:"1 − 0.64",val:"0.36",desc:"100−64"},{label:"15% of 60",val:"9",desc:"6 + 3"}],
-                examples: [{q:"4/5 of 30",steps:["24"],ans:"24"},{q:"1 − 0.83",steps:["0.17"],ans:"0.17"},{q:"75% of 80",steps:["60"],ans:"60"}],
+                hookTitle: "Divide by the Bottom, Then Multiply!",
+                concept: "For a fraction of an amount, divide by the bottom number first, then multiply by the top. Other cards may ask for a decimal partner or a percentage — read each question carefully.",
+                goldenRule: "Fraction of amount: ÷ bottom, then × top!",
+                visualSteps: [
+                    {label:"Problem",val:"3/5 of 45",desc:"Find three-fifths of 45"},
+                    {label:"÷ bottom",val:"45 ÷ 5 = 9",desc:"One fifth is 9"},
+                    {label:"× top",val:"9 × 3 = 27",desc:"Three fifths = 27!"}
+                ],
+                examples: [
+                    {q:"4/5 of 30",steps:["30 ÷ 5 = 6", "6 × 4 = 24"],ans:"24"},
+                    {q:"1 − 0.83",steps:["100 − 83 = 17 → 0.17"],ans:"0.17"},
+                    {q:"75% of 80",steps:["80 ÷ 4 = 20", "20 × 3 = 60"],ans:"60"}
+                ],
                 warmup: {q:"25% of 84 = ?",ans:21,hint:"Quarter of 84 is 21!"},
                 gen: (idx, m) => FOUNDATION_TOPICS_30[14 + (idx % 6)].gen(idx, m)
             },
@@ -2949,104 +3257,155 @@
                 }
             },
             {
-                title: "Shop Change & .99 Deals",
-                subtitle: "Find quick change and .99 multi-buy totals",
-                hookTitle: "Shopkeeper Change & The '1p Less' Trick!",
-                concept: "For 3 × 1.99, do 3 × 2.00 = 6.00 minus 0.03 = 5.97! For change from 10, make wholes add to 9 and hundredths add to 100.",
-                goldenRule: "Change from 10: Wholes to 9, Cents/Pence to 100!",
-                visualSteps: [{label:"10 − 4.62",val:"9 − 4 = 5",desc:"Wholes"},{label:"Cents",val:"100 − 62 = 38",desc:"38"},{label:"Answer",val:"5.38",desc:"5.38!"}],
-                examples: [
-                    {q:"10 − 3.45",steps:["9 − 3 = 6", "100 − 45 = 55 → 6.55"],ans:"6.55"},
-                    {q:"10 − 7.28",steps:["9 − 7 = 2", "100 − 28 = 72 → 2.72"],ans:"2.72"},
-                    {q:"10 − 4.60",steps:["9 − 4 = 5", "100 − 60 = 40 → 5.40"],ans:"5.40"}
+                title: "Change from 10",
+                subtitle: "Find shop change from 10 without long subtraction",
+                hookTitle: "The Break-a-Ten Trick!",
+                concept: "To find change from 10, do not subtract digit by digit. Make the whole numbers add to 9, and the cents add to 100.",
+                goldenRule: "Break-a-Ten: wholes add to 9, cents add to 100!",
+                visualSteps: [
+                    {label:"Problem",val:"Change from 10 for 4.62",desc:"How much money comes back?"},
+                    {label:"Wholes → 9",val:"9 − 4 = 5",desc:"Whole part of the change"},
+                    {label:"Cents → 100",val:"100 − 62 = 38 → 5.38",desc:"Change = 5.38!"}
                 ],
-                warmup: {q:"10 − 6.25 = ?",ans:3.75,hint:"9−6=3, 100−25=75 → 3.75!"},
+                examples: [
+                    {q:"Change from 10 for 3.45",steps:["9 − 3 = 6", "100 − 45 = 55 → 6.55"],ans:"6.55"},
+                    {q:"Change from 10 for 7.28",steps:["9 − 7 = 2", "100 − 28 = 72 → 2.72"],ans:"2.72"},
+                    {q:"Change from 10 for 4.60",steps:["9 − 4 = 5", "100 − 60 = 40 → 5.40"],ans:"5.40"}
+                ],
+                warmup: {q:"Change from 10 for 6.25 = ?",ans:3.75,hint:"9−6=3, 100−25=75 → 3.75!"},
                 gen: (idx, m) => {
                     const p = randInt(1, 8);
                     const c = randInt(2, 19) * 5;
                     const cost = Number((p + c/100).toFixed(2));
-                    return { q: `Change from 10 for ${cost.toFixed(2)} = ?`, ans: Number((10 - cost).toFixed(2)), hint: `Wholes to 9 (${9-p}), Cents to 100 (${100-c})!` };
+                    return { q: `Change from 10 for ${cost.toFixed(2)} = ?`, ans: Number((10 - cost).toFixed(2)), hint: `Wholes to 9 (${9-p}), cents to 100 (${100-c})!` };
                 }
             },
             {
-                title: "Order of Steps (BODMAS)",
-                subtitle: "Multiply and divide before adding or subtracting",
-                hookTitle: "Multiplication Has VIP Priority Over Addition!",
-                concept: "In 4 + 3 × 5, do 3 × 5 = 15 first, then 4 + 15 = 19! Brackets beat everything.",
-                goldenRule: "1st: Brackets ( )  |  2nd: Multiply & Divide  |  Last: Add & Subtract!",
-                visualSteps: [{label:"20 − 3 × 4",val:"3 × 4 = 12",desc:"Multiply first"},{label:"Subtract",val:"20 − 12 = 8",desc:"8"},{label:"Answer",val:"8",desc:"8!"}],
-                examples: [{q:"6 + 4 × 5",steps:["6 + 20 = 26"],ans:"26"},{q:"(6 + 4) × 5",steps:["10 × 5 = 50"],ans:"50"},{q:"30 − 18 ÷ 3",steps:["30 − 6 = 24"],ans:"24"}],
-                warmup: {q:"10 + 5 × 4 = ?",ans:30,hint:"5 × 4 = 20, plus 10 = 30!"},
+                title: "Multiply Before Add",
+                subtitle: "Do × and ÷ first, then + and −",
+                hookTitle: "Times and Divide Come First!",
+                concept: "In 4 + 3 × 5, multiply first: 3 × 5 = 15, then add: 4 + 15 = 19. Brackets are done before everything else.",
+                goldenRule: "Brackets first → then × and ÷ → then + and −!",
+                visualSteps: [
+                    {label:"Problem",val:"20 − 3 × 4",desc:"Do not subtract first"},
+                    {label:"Multiply first",val:"3 × 4 = 12",desc:"× before −"},
+                    {label:"Then subtract",val:"20 − 12 = 8",desc:"Answer = 8!"}
+                ],
+                examples: [
+                    {q:"6 + 4 × 5",steps:["4 × 5 = 20", "6 + 20 = 26"],ans:"26"},
+                    {q:"(6 + 4) × 5",steps:["Brackets: 6 + 4 = 10", "10 × 5 = 50"],ans:"50"},
+                    {q:"30 − 18 ÷ 3",steps:["18 ÷ 3 = 6", "30 − 6 = 24"],ans:"24"}
+                ],
+                warmup: {q:"10 + 5 × 4 = ?",ans:30,hint:"5 × 4 = 20 first, then 10 + 20 = 30!"},
                 gen: (idx, m) => {
                     const a = randInt(5, 15 * m);
                     const b = randInt(2, 8);
                     const c = randInt(2, 8);
+                    if (idx % 3 === 0) {
+                        return { q: `${a} − ${b} × ${c} = ?`, ans: a - b * c, hint: `Multiply ${b}×${c}=${b*c} first, then ${a} − ${b*c}!` };
+                    }
                     return { q: `${a} + ${b} × ${c} = ?`, ans: a + b * c, hint: `Multiply ${b}×${c}=${b*c} first, then + ${a}!` };
                 }
             },
             {
-                title: "Square Numbers & 5-Enders",
-                subtitle: "Master squares up to 15² plus 25² and 35²",
-                hookTitle: "Squaring numbers ending with 5",
-                concept: "To square ANY number ending in 5 (like 35²), multiply the first digit by the NEXT higher number (3 × 4 = 12) and stick 25 on the end → 1225!",
-                goldenRule: "For n5²: Multiply tens digit t by (t+1), then attach 25!",
-                visualSteps: [{label:"35²",val:"3 × 4 = 12",desc:"Tens × next"},{label:"Attach 25",val:"1225",desc:"Always 25"},{label:"Result",val:"1225",desc:"1,225!"}],
+                title: "Squares Ending in 5",
+                subtitle: "Square any number that ends in 5 in two steps",
+                hookTitle: "Ends-in-5 Square Trick!",
+                concept: "For any number ending in 5 (like 35²), multiply the tens digit by the next number (3 × 4 = 12), then stick 25 on the end → 1225.",
+                goldenRule: "For n5²: tens digit × next number, then attach 25!",
+                visualSteps: [
+                    {label:"Problem",val:"35²",desc:"35 ends in 5"},
+                    {label:"Tens × next",val:"3 × 4 = 12",desc:"Use 3 and the next number 4"},
+                    {label:"Attach 25",val:"1225",desc:"Always finish with 25!"}
+                ],
                 examples: [
-                    {q:"25²",steps:["2 × 3 = 6, attach 25 → 625"],ans:"625"},
-                    {q:"45²",steps:["4 × 5 = 20, attach 25 → 2025"],ans:"2025"},
-                    {q:"65²",steps:["6 × 7 = 42, attach 25 → 4225"],ans:"4225"}
+                    {q:"25²",steps:["2 × 3 = 6", "attach 25 → 625"],ans:"625"},
+                    {q:"45²",steps:["4 × 5 = 20", "attach 25 → 2025"],ans:"2025"},
+                    {q:"65²",steps:["6 × 7 = 42", "attach 25 → 4225"],ans:"4225"}
                 ],
                 warmup: {q:"15² = ?",ans:225,hint:"1 × 2 = 2, attach 25 → 225!"},
                 gen: (idx, m) => {
-                    if (idx % 3 === 0) {
-                        const t = randInt(1, 4 + m);
-                        const n = t * 10 + 5;
-                        return { q: `${n}² = ?`, ans: n * n, hint: `${t} × ${t+1} = ${t*(t+1)}, attach 25!` };
+                    if (idx % 4 === 0) {
+                        const n = randInt(2, 10 + m);
+                        return { q: `${n}² = ?`, ans: n * n, hint: `${n} × ${n} = ${n * n}!` };
                     }
-                    const n = randInt(2, 12 + m);
-                    return idx % 2 === 0
-                        ? { q: `${n}² = ?`, ans: n * n, hint: `${n} × ${n}!` }
-                        : { q: `√${n * n} = ?`, ans: n, hint: `What times itself is ${n*n}?` };
+                    const t = randInt(1, 4 + m);
+                    const n = t * 10 + 5;
+                    return { q: `${n}² = ?`, ans: n * n, hint: `${t} × ${t + 1} = ${t * (t + 1)}, attach 25!` };
                 }
             },
             {
-                title: "Cube Numbers (1³ to 5³)",
-                subtitle: "Recognise cube numbers on sight",
-                hookTitle: "The Cube Club: Multiply Three Times!",
-                concept: "Recognise the first 5 cubes on sight: 1³=1, 2³=8, 3³=27, 4³=64, 5³=125, 10³=1000.",
-                goldenRule: "2³=8, 3³=27, 4³=64, 5³=125!",
-                visualSteps: [{label:"4³",val:"4 × 4 × 4",desc:"Cube"},{label:"Step 1",val:"16",desc:"4×4"},{label:"Step 2",val:"64",desc:"16×4=64!"}],
-                examples: [{q:"2³",steps:["2 × 2 × 2 = 8"],ans:"8"},{q:"3³",steps:["3 × 3 × 3 = 27"],ans:"27"},{q:"5³",steps:["5 × 5 × 5 = 125"],ans:"125"}],
-                warmup: {q:"4³ = ?",ans:64,hint:"4 × 4 × 4 = 64!"},
+                title: "Easy Cube Numbers",
+                subtitle: "Know 2³ to 5³ by heart",
+                hookTitle: "Multiply the Number Three Times!",
+                concept: "A cube means multiply the number by itself three times. Learn these: 2³=8, 3³=27, 4³=64, 5³=125.",
+                goldenRule: "2³=8 · 3³=27 · 4³=64 · 5³=125",
+                visualSteps: [
+                    {label:"Problem",val:"4³",desc:"4 × 4 × 4"},
+                    {label:"First multiply",val:"4 × 4 = 16",desc:"Hold 16"},
+                    {label:"Multiply again",val:"16 × 4 = 64",desc:"4³ = 64!"}
+                ],
+                examples: [
+                    {q:"2³",steps:["2 × 2 × 2 = 8"],ans:"8"},
+                    {q:"3³",steps:["3 × 3 × 3 = 27"],ans:"27"},
+                    {q:"5³",steps:["5 × 5 × 5 = 125"],ans:"125"}
+                ],
+                warmup: {q:"4³ = ?",ans:64,hint:"4 × 4 = 16, then 16 × 4 = 64!"},
                 gen: (idx, m) => {
                     const c = pickOne([2, 3, 4, 5]);
-                    const add = randInt(2, 15 * m);
-                    return { q: `${c}³ + ${add} = ?`, ans: Math.pow(c, 3) + add, hint: `${c}³ is ${Math.pow(c,3)}, then + ${add}!` };
+                    const cube = Math.pow(c, 3);
+                    if (m > 1 && idx % 3 === 0) {
+                        const add = randInt(2, 12);
+                        return { q: `${c}³ + ${add} = ?`, ans: cube + add, hint: `${c}³ = ${cube}, then + ${add}!` };
+                    }
+                    return { q: `${c}³ = ?`, ans: cube, hint: `${c} × ${c} × ${c} = ${cube}!` };
                 }
             },
             {
-                title: "Shapes, Angles & Word Sums",
-                subtitle: "Fast perimeter, straight-line angles, and averages",
-                hookTitle: "2-Second Formulas for Geometry & Averages!",
-                concept: "Rectangle Perimeter = 2 × (L + W). Straight Line Angle = 180° − angle. Area = L × W.",
-                goldenRule: "Perimeter = 2(L+W)  |  Straight Line = 180° − angle!",
-                visualSteps: [{label:"Rect 12cm × 8cm",val:"12 + 8 = 20",desc:"L + W"},{label:"Double",val:"40 cm",desc:"Perimeter"},{label:"Line Angle 115°",val:"180 − 115 = 65°",desc:"65°!"}],
-                examples: [{q:"Perimeter 14×6",steps:["40"],ans:"40"},{q:"180° − 115°",steps:["65"],ans:"65"},{q:"Mean of 6, 8, 10",steps:["8"],ans:"8"}],
-                warmup: {q:"Perimeter of 15m × 5m rectangle = ?",ans:40,hint:"2 × (15 + 5) = 40!"},
+                title: "Quick Perimeter",
+                subtitle: "Add length and width, then double",
+                hookTitle: "Add Sides, Then Double!",
+                concept: "Rectangle perimeter is the distance all the way around. Add one length and one width, then double that sum: Perimeter = 2 × (L + W).",
+                goldenRule: "Perimeter = 2 × (L + W)",
+                visualSteps: [
+                    {label:"Problem",val:"Perimeter of 12cm × 8cm",desc:"Go all the way around"},
+                    {label:"Add L + W",val:"12 + 8 = 20",desc:"One length + one width"},
+                    {label:"Double it",val:"20 × 2 = 40",desc:"Perimeter = 40 cm!"}
+                ],
+                examples: [
+                    {q:"Perimeter of a 14 by 6 rectangle",steps:["14 + 6 = 20", "20 × 2 = 40"],ans:"40"},
+                    {q:"Perimeter of a 9 by 4 rectangle",steps:["9 + 4 = 13", "13 × 2 = 26"],ans:"26"},
+                    {q:"Perimeter of a 20 by 7 rectangle",steps:["20 + 7 = 27", "27 × 2 = 54"],ans:"54"}
+                ],
+                warmup: {q:"Perimeter of a 15 by 5 rectangle = ?",ans:40,hint:"2 × (15 + 5) = 40!"},
                 gen: (idx, m) => {
-                    const ang = randInt(25, 155);
-                    return { q: `Straight line angle: 180° − ${ang}° = ?`, ans: 180 - ang, hint: `180 − ${ang}!` };
+                    const l = randInt(6, 12 + 3 * m);
+                    const w = randInt(3, 9 + 2 * m);
+                    const ans = 2 * (l + w);
+                    return {
+                        q: `Perimeter of a ${l} by ${w} rectangle = ?`,
+                        ans,
+                        hint: `Add sides ${l} + ${w} = ${l + w}, then double: 2 × ${l + w} = ${ans}!`
+                    };
                 }
             },
             {
-                title: "Foundation Grand Challenge",
-                subtitle: "Final 35-question sprint across all Foundation skills",
-                hookTitle: "Claim Your Foundation Gold Medal!",
-                concept: "This Championship Sprint tests complements, ×25 hacks, fractions, percentages, squares, BODMAS, and geometry!",
-                goldenRule: "Spot the shortcut hidden inside each card and trust your fast brain!",
-                visualSteps: [{label:"Cards 1–12",val:"+ / − / × / ÷",desc:"Core Hacks"},{label:"Cards 13–24",val:"Frac / Dec / %",desc:"Fluency"},{label:"Cards 25–35",val:"Applied Boss",desc:"Gold Medal!"}],
-                examples: [{q:"1000 − 648",steps:["352"],ans:"352"},{q:"36 × 25",steps:["900"],ans:"900"},{q:"3/4 of 60",steps:["45"],ans:"45"}],
-                warmup: {q:"75% of 48 = ?",ans:36,hint:"12 × 3 = 36!"},
+                title: "Foundation Final Sprint",
+                subtitle: "Mix of all Foundation skills in one medal run",
+                hookTitle: "Use Every Shortcut You Know!",
+                concept: "This final sprint mixes complements, ×25, fractions, percentages, squares, multiply-before-add, and perimeter.",
+                goldenRule: "Read the question, spot the shortcut, answer fast!",
+                visualSteps: [
+                    {label:"Cards 1–12",val:"+ − × ÷ hacks",desc:"Warm-up speed"},
+                    {label:"Cards 13–24",val:"Fractions & %",desc:"Keep accuracy"},
+                    {label:"Cards 25–35",val:"Mixed finish",desc:"Go for Gold!"}
+                ],
+                examples: [
+                    {q:"1000 − 648",steps:["All-from-9 last-from-10 → 352"],ans:"352"},
+                    {q:"36 × 25",steps:["36 ÷ 4 = 9", "9 × 100 = 900"],ans:"900"},
+                    {q:"3/4 of 60",steps:["60 ÷ 4 = 15", "15 × 3 = 45"],ans:"45"}
+                ],
+                warmup: {q:"75% of 48 = ?",ans:36,hint:"25% of 48 = 12, then 12 × 3 = 36!"},
                 gen: (idx, m) => FOUNDATION_TOPICS_30[idx % 29].gen(idx, m)
             }
         ];;;
@@ -3266,8 +3625,16 @@
                 hookTitle: "Increase by 20% = 100% + 20%!",
                 concept: "To increase 80 by 15%, find 15% of 80 (8 + 4 = 12) and add it to 80 → 92! To decrease by 20%, subtract 20%!",
                 goldenRule: "Find the % change first using the 10% key, then add (increase) or subtract (decrease)!",
-                visualSteps: [{label:"Increase 60 by 20%",val:"20% of 60 = 12",desc:"Double 10%"},{label:"Add",val:"60 + 12 = 72",desc:"72"},{label:"Decrease 80 by 25%",val:"80 − 20 = 60",desc:"60!"}],
-                examples: [{q:"Increase 50 by 20%",steps:["20% is 10 → 60"],ans:"60"},{q:"Decrease 120 by 10%",steps:["120 − 12 = 108"],ans:"108"},{q:"Increase 40 by 25%",steps:["40 + 10 = 50"],ans:"50"}],
+                visualSteps: [
+                    {label:"Problem",val:"Increase 60 by 20%",desc:"Add 20% of 60 to 60"},
+                    {label:"Find 20%",val:"10% = 6 → 20% = 12",desc:"Double the 10%"},
+                    {label:"Add it on",val:"60 + 12 = 72",desc:"Answer = 72!"}
+                ],
+                examples: [
+                    {q:"Increase 50 by 20%",steps:["20% of 50 = 10", "50 + 10 = 60"],ans:"60"},
+                    {q:"Decrease 120 by 10%",steps:["10% of 120 = 12", "120 − 12 = 108"],ans:"108"},
+                    {q:"Increase 40 by 25%",steps:["25% of 40 = 10", "40 + 10 = 50"],ans:"50"}
+                ],
                 warmup: {q:"Increase 80 by 10% = ?",ans:88,hint:"10% of 80 is 8, so 80 + 8 = 88!"},
                 gen: (idx, m) => {
                     const base = randInt(2, 12 * m) * 20;
@@ -3576,7 +3943,7 @@
                 day: clampedDay,
                 month: month,
                 courseId: courseId,
-                title: `${baseTopic.title}${month > 1 ? ' • Level II Speed' : ''}`,
+                title: baseTopic.title,
                 subtitle: `${baseTopic.subtitle} (${tierSuffix})`,
                 hookTitle: baseTopic.hookTitle,
                 concept: baseTopic.concept,
@@ -3886,8 +4253,12 @@
                     beginner: {},   // { [dayNum]: { completed: true, medal: 'gold'|'silver'|'bronze', medalPoints: 3|2|1, bestScore: 48, bestTimeSec: 110 } }
                     foundation: {},
                     advanced: {}
-                }
+                },
+                certCelebrated: { beginner: false, foundation: false, advanced: false }
             },
+            certViewCourse: null,
+            _fireworksTimer: null,
+            _fireworksRaf: null,
 
             currentDay: 1,
             currentTab: 'lesson',
@@ -3903,8 +4274,13 @@
             timerInterval: null,
             startTimeMs: 0,
             elapsedSec: 0,
-            inputMode: 'keypad',
+            inputMode: 'mc',
             isTransitioning: false,
+            _navFromHistory: false,
+            _historyBound: false,
+            _lessonRevealTimers: [],
+            _lessonRevealIndex: 0,
+            _lessonButtonsBound: false,
 
             // AI Diagnostic State
             diagDeck: [],
@@ -3954,7 +4330,7 @@
                     course: 'foundation', day: 27,
                     title: 'Meet the ends-in-5 square.',
                     lead: 'Numbers ending in 5 square with a simple pattern: n×(n+1), then attach 25.',
-                    source: 'Foundation Day 27: Square Numbers & 5-Enders',
+                    source: 'Foundation Day 27: Squares Ending in 5',
                     prompt: '35 × 35 = ?', answer: '35 × 35 = 1225', calc: '3 × 4 = 12, attach 25 → 1225',
                     slowHeader: 'Slow way (28s)',
                     slowHtml: '35 × 5 = 175, then 35 × 30 = 1050, then add 175 + 1050 in mid-air. <span class="warn text-orange-700 font-bold">Too many steps!</span>',
@@ -4116,7 +4492,116 @@
                 this.setupGlobalKeyboardListener();
                 this.startHeroChallengeRotation();
                 this.bindNavMenuDismiss();
+                this.bindAppHistory();
+                this.syncInputModeUI();
                 this.paintLoggedInChrome();
+            },
+
+            currentAppRoute() {
+                if (!document.getElementById('homeView').classList.contains('hidden')) return 'home';
+                if (!document.getElementById('courseSelectionView').classList.contains('hidden')) return 'courses';
+                if (!document.getElementById('coursePageView').classList.contains('hidden')) return 'course';
+                if (!document.getElementById('profileView').classList.contains('hidden')) return 'profile';
+                if (!document.getElementById('gamesView').classList.contains('hidden')) return 'games';
+                if (!document.getElementById('dayModuleView').classList.contains('hidden')) {
+                    const tab = this.currentTab === 'practice' ? 'practice' : 'lesson';
+                    return `day/${this.currentDay || 1}/${tab}`;
+                }
+                return this.isLoggedIn() ? 'courses' : 'home';
+            },
+
+            recordAppHistory(route, replace = false) {
+                if (this._navFromHistory) return;
+                const clean = String(route || this.currentAppRoute() || 'home').replace(/^#/, '');
+                const hash = '#' + clean;
+                const state = { route: clean };
+                if (replace || (location.hash || '') === hash) {
+                    history.replaceState(state, '', hash);
+                } else {
+                    history.pushState(state, '', hash);
+                }
+            },
+
+            bindAppHistory() {
+                if (this._historyBound) return;
+                this._historyBound = true;
+                window.addEventListener('popstate', (e) => {
+                    const lessonModal = document.getElementById('lessonExplainModal');
+                    const popupOpen = lessonModal && !lessonModal.classList.contains('hidden');
+                    if (popupOpen || this._lessonPopupExitToCourse) {
+                        // Browser / Android Back (or Esc via history.back) closes the lesson popup
+                        this._lessonPopupExitToCourse = false;
+                        this.closeLessonPopup();
+                        if (this.currentTab === 'lesson') this.showCoursePage();
+                        return;
+                    }
+                    const route = (e.state && e.state.route)
+                        || String(location.hash || '').replace(/^#/, '')
+                        || (this.isLoggedIn() ? 'courses' : 'home');
+                    this.restoreAppRoute(route);
+                });
+            },
+
+            restoreAppRoute(route) {
+                const clean = String(route || '').replace(/^#/, '') || (this.isLoggedIn() ? 'courses' : 'home');
+                const leavingSprint = window.FocusGuard && FocusGuard.sprintLocked()
+                    && !/^day\/\d+\/practice$/.test(clean);
+                if (leavingSprint) {
+                    const stay = `day/${this.currentDay || 1}/practice`;
+                    history.pushState({ route: stay }, '', '#' + stay);
+                    FocusGuard.requestLeave(() => this.restoreAppRoute(clean));
+                    return;
+                }
+                this._navFromHistory = true;
+                try {
+                    const dayMatch = clean.match(/^day\/(\d+)\/(lesson|practice)$/);
+                    if (dayMatch) {
+                        this.openDay(Number(dayMatch[1]), dayMatch[2]);
+                    } else if (clean === 'home') {
+                        this.showMarketingHome();
+                    } else if (clean === 'courses') {
+                        if (this.isLoggedIn()) this.showCourseSelectionPage();
+                        else this.showMarketingHome();
+                    } else if (clean === 'course') {
+                        this.showCoursePage();
+                    } else if (clean === 'profile') {
+                        this.showProfilePage();
+                    } else if (clean === 'games') {
+                        this.showQuickGames();
+                    } else if (COURSE_CATALOG[clean]) {
+                        this.selectCourse(clean, true);
+                    } else {
+                        this.openDefaultLanding();
+                    }
+                } finally {
+                    this._navFromHistory = false;
+                }
+            },
+
+            syncInputModeUI() {
+                const keypad = document.getElementById('fcKeypadContainer');
+                const mc = document.getElementById('fcMultipleChoiceContainer');
+                const label = document.getElementById('fcModeToggleText');
+                const icon = document.getElementById('fcModeToggleIcon');
+                if (!keypad || !mc) return;
+                if (this.inputMode === 'mc') {
+                    keypad.classList.add('hidden');
+                    mc.classList.remove('hidden');
+                    if (label) label.textContent = 'Mode: 4-Choice';
+                    if (icon) icon.className = 'fa-solid fa-list-check';
+                } else {
+                    mc.classList.add('hidden');
+                    keypad.classList.remove('hidden');
+                    if (label) label.textContent = 'Mode: Keypad';
+                    if (icon) icon.className = 'fa-solid fa-keyboard';
+                }
+            },
+
+            setSprintChrome(isSprint) {
+                const view = document.getElementById('dayModuleView');
+                if (view) view.classList.toggle('is-sprint', !!isSprint);
+                const title = document.getElementById('moduleTitle');
+                if (title) title.classList.toggle('hidden', !!isSprint);
             },
 
             loadState() {
@@ -4238,6 +4723,7 @@
                     progress: JSON.parse(JSON.stringify(this.state.progress || { beginner: {}, foundation: {}, advanced: {} })),
                     enrolledAt: JSON.parse(JSON.stringify(this.state.enrolledAt || {})),
                     games: JSON.parse(JSON.stringify(this.state.games || { beginner: { difficulty: 'easy', highScores: {} } })),
+                    certCelebrated: JSON.parse(JSON.stringify(this.state.certCelebrated || { beginner: false, foundation: false, advanced: false })),
                     activeCourse: this.state.activeCourse || 'foundation'
                 };
             },
@@ -4248,6 +4734,7 @@
                     progress: { beginner: {}, foundation: {}, advanced: {} },
                     enrolledAt: {},
                     games: { beginner: { difficulty: 'easy', highScores: {} } },
+                    certCelebrated: { beginner: false, foundation: false, advanced: false },
                     activeCourse: 'foundation'
                 };
             },
@@ -4306,6 +4793,11 @@
                 this.state.games = JSON.parse(JSON.stringify(rec.games || { beginner: { difficulty: 'easy', highScores: {} } }));
                 if (!this.state.games.beginner) this.state.games.beginner = { difficulty: 'easy', highScores: {} };
                 if (!this.state.games.beginner.highScores) this.state.games.beginner.highScores = {};
+                this.state.certCelebrated = JSON.parse(JSON.stringify(rec.certCelebrated || { beginner: false, foundation: false, advanced: false }));
+                if (!this.state.certCelebrated) this.state.certCelebrated = { beginner: false, foundation: false, advanced: false };
+                ['beginner', 'foundation', 'advanced'].forEach(id => {
+                    if (typeof this.state.certCelebrated[id] !== 'boolean') this.state.certCelebrated[id] = false;
+                });
                 this.state.activeCourse = rec.activeCourse || 'foundation';
 
                 this.paintChildButton();
@@ -4400,6 +4892,14 @@
                 document.addEventListener('keydown', (e) => {
                     const pinModal = document.getElementById('focusPinModal');
                     if (pinModal && !pinModal.classList.contains('hidden')) return;
+                    const lessonModal = document.getElementById('lessonExplainModal');
+                    if (lessonModal && !lessonModal.classList.contains('hidden')) {
+                        if (e.key === 'Escape' || e.key === 'BrowserBack' || e.key === 'GoBack') {
+                            e.preventDefault();
+                            this.closeLessonPopupFromOutside();
+                        }
+                        return;
+                    }
                     const payModal = document.getElementById('paymentModal');
                     if (payModal && !payModal.classList.contains('hidden')) {
                         if (e.key === 'Escape') {
@@ -4495,6 +4995,7 @@
                 if (window.FocusGuard) FocusGuard.onModuleStop();
                 this.stopTimer();
                 this.stopQuickGameClock(true);
+                this.closeLessonPopup(true);
                 ['homeView', 'courseSelectionView', 'coursePageView', 'dayModuleView', 'profileView', 'gamesView'].forEach(id => {
                     const el = document.getElementById(id);
                     if (el) el.classList.add('hidden');
@@ -4661,17 +5162,17 @@
                     return;
                 }
                 box.classList.remove('hidden');
-                box.innerHTML = '<p class="text-[11px] font-extrabold uppercase tracking-widest text-amber-300">Your registered courses</p>'
+                box.innerHTML = '<p class="home-registered-label text-[11px] font-extrabold uppercase tracking-widest text-emerald-800">Your registered courses</p>'
                     + paid.map(cid => {
                         const course = COURSE_CATALOG[cid];
                         const stats = this.getCourseMedalStats(cid);
                         const active = cid === this.state.activeCourse;
-                        return `<button type="button" onclick="app.openRegisteredCourse('${cid}')" class="w-full text-left rounded-2xl border ${active ? 'border-emerald-300 bg-emerald-500/20' : 'border-white/25 bg-white/10'} hover:bg-white/20 px-3 py-2.5 flex items-center justify-between gap-2">
-                            <span>
-                                <span class="block font-heading font-bold text-white text-sm">${this.escapeHtml(course.name)}</span>
-                                <span class="block text-[11px] text-indigo-100">${stats.completed}/60 days · 🥇${stats.gold} 🥈${stats.silver} 🥉${stats.bronze}</span>
+                        return `<button type="button" onclick="app.openRegisteredCourse('${cid}')" class="home-registered-course w-full text-left rounded-2xl border ${active ? 'border-emerald-600 bg-emerald-100' : 'border-slate-300 bg-white'} hover:border-emerald-500 hover:bg-emerald-50 px-3 py-2.5 flex items-center justify-between gap-2 shadow-sm">
+                            <span class="min-w-0">
+                                <span class="block font-heading font-bold text-slate-900 text-sm">${this.escapeHtml(course.name)}</span>
+                                <span class="block text-[11px] font-semibold text-slate-700">${stats.completed}/60 days · 🥇${stats.gold} 🥈${stats.silver} 🥉${stats.bronze}</span>
                             </span>
-                            <span class="shrink-0 text-xs font-extrabold uppercase tracking-wide ${active ? 'text-emerald-200' : 'text-amber-200'}">${active ? 'Continue' : 'Open'}</span>
+                            <span class="shrink-0 text-xs font-extrabold uppercase tracking-wide ${active ? 'text-emerald-800' : 'text-amber-800'}">${active ? 'Continue' : 'Open'}</span>
                         </button>`;
                     }).join('');
             },
@@ -4759,6 +5260,7 @@
                 this.hideAllPages();
                 document.getElementById('gamesView').classList.remove('hidden');
                 this.renderQuickGamesHub();
+                this.recordAppHistory('games');
             },
 
             renderQuickGamesHub() {
@@ -5785,6 +6287,7 @@
                 document.getElementById('homeView').classList.remove('hidden');
                 this.setActiveTopNav('home');
                 this.paintHomeCourseCtas();
+                this.recordAppHistory('home');
             },
 
             showHomePage() {
@@ -5809,6 +6312,7 @@
                 this.hideAllPages();
                 document.getElementById('profileView').classList.remove('hidden');
                 this.renderProfilePage();
+                this.recordAppHistory('profile');
             },
 
             renderProfilePage() {
@@ -5860,6 +6364,7 @@
                 this.setActiveTopNav('home');
                 this.renderCourseSelectorCards();
                 this.updateNavCourseButtons();
+                this.recordAppHistory('courses');
             },
 
             showCoursePage() {
@@ -5878,6 +6383,7 @@
                     document.getElementById('coursePageView').classList.remove('hidden');
                     this.setActiveTopNav('course');
                     this.renderRoadmap();
+                    this.recordAppHistory('course');
                 });
             },
 
@@ -6661,23 +7167,23 @@
                         : (isDone ? 'border-emerald-400' : isBoss ? 'border-amber-400' : 'border-sky-300/80');
 
                     daysHtml += `
-                        <div onclick="app.openDay(${d})" class="roadmap-day-card group liquid-glass-tile rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 lg:p-6 border-2 ${borderCls} cursor-pointer flex flex-col justify-between min-h-0">
-                            <div>
-                                <div class="flex items-center justify-between gap-2 mb-2 sm:mb-3">
-                                    <span class="font-heading font-bold text-[11px] sm:text-sm px-2.5 sm:px-3 py-1 rounded-lg sm:rounded-xl ${isContinue ? 'bg-amber-500 text-slate-950 border border-amber-600' : isBoss ? 'bg-amber-100 text-amber-900 border border-amber-300' : 'bg-indigo-100 text-indigo-900 border border-indigo-200'}">
+                        <div onclick="app.openDay(${d})" class="roadmap-day-card group liquid-glass-tile rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 lg:p-6 border-2 ${borderCls} cursor-pointer flex flex-col justify-between min-h-0 overflow-hidden">
+                            <div class="min-h-0">
+                                <div class="flex items-center justify-between gap-2 mb-1.5 sm:mb-3">
+                                    <span class="font-heading font-bold text-[11px] sm:text-sm px-2.5 sm:px-3 py-1 rounded-lg sm:rounded-xl shrink-0 ${isContinue ? 'bg-amber-500 text-slate-950 border border-amber-600' : isBoss ? 'bg-amber-100 text-amber-900 border border-amber-300' : 'bg-indigo-100 text-indigo-900 border border-indigo-200'}">
                                         ${isBoss ? '<i class="fa-solid fa-crown text-amber-500 mr-1"></i>' : ''}${isContinue ? 'NEXT · ' : ''}DAY ${d}
                                     </span>
                                     ${medalBadgeHtml}
                                 </div>
-                                <h4 class="font-heading font-bold text-base sm:text-xl lg:text-2xl text-slate-900 group-hover:text-indigo-600 transition leading-snug mb-1">
+                                <h4 class="roadmap-day-title font-heading font-bold text-base sm:text-xl lg:text-2xl text-slate-900 group-hover:text-indigo-600 transition leading-snug mb-1 line-clamp-2">
                                     ${dayObj.title}
                                 </h4>
-                                <p class="text-[11px] sm:text-sm text-slate-500 line-clamp-2 sm:line-clamp-1">
+                                <p class="roadmap-day-hook text-[11px] sm:text-sm text-slate-500 line-clamp-1">
                                     ${dayObj.hookTitle}
                                 </p>
                             </div>
 
-                            <div class="mt-2.5 sm:mt-3 pt-2 border-t border-slate-200/80 flex items-center justify-between text-[11px] sm:text-sm">
+                            <div class="mt-auto pt-2 border-t border-slate-200/80 flex items-center justify-between text-[11px] sm:text-sm shrink-0">
                                 ${isDone
                                     ? `<span class="text-emerald-700 font-bold"><i class="fa-solid fa-check-circle mr-1"></i>${p.bestScore}/35</span>`
                                     : `<span class="text-slate-500 font-semibold">35 Questions</span>`
@@ -6763,23 +7269,33 @@
 
                 const blueprintEl = document.getElementById('lessonVisualBlueprint');
                 blueprintEl.innerHTML = `
-                    <div class="bg-gradient-to-r from-indigo-950 via-slate-800 to-indigo-950 border-2 border-amber-400/80 rounded-2xl p-4 mb-4 text-center shadow-lg">
-                        <span class="inline-block text-[11px] font-extrabold uppercase tracking-[0.2em] text-amber-300 mb-1">Problem to Solve</span>
-                        <div class="font-heading text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">${featuredProblem}</div>
+                    <div id="lessonProblemBanner" class="bg-gradient-to-r from-indigo-950 via-slate-800 to-indigo-950 border-2 border-amber-400/80 rounded-xl sm:rounded-2xl p-3 sm:p-4 mb-2 sm:mb-3 text-center shadow-lg">
+                        <span class="inline-block text-[10px] sm:text-[11px] font-extrabold uppercase tracking-[0.2em] text-amber-300 mb-0.5">Problem to Solve</span>
+                        <div class="font-heading text-2xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">${featuredProblem}</div>
                     </div>
-                    <div class="grid md:grid-cols-3 gap-4 items-center">
+                    <div class="grid md:grid-cols-3 gap-2 sm:gap-4 items-stretch">
                         ${dayData.visualSteps.map((step, i) => `
-                            <div class="bg-slate-800/90 border border-slate-700 rounded-2xl p-4 relative">
-                                <div class="flex items-center justify-between mb-1">
-                                    <span class="text-[11px] font-extrabold uppercase tracking-wider text-amber-400">STEP ${i + 1}: ${step.label}</span>
-                                    ${i < 2 ? '<i class="fa-solid fa-arrow-right text-slate-500 hidden md:inline"></i>' : '<i class="fa-solid fa-check-circle text-emerald-400"></i>'}
+                            <div class="lesson-step-card bg-slate-800/90 border border-slate-700 rounded-xl sm:rounded-2xl p-3 sm:p-4 relative flex flex-col" data-lesson-step="${i + 1}">
+                                <div class="flex items-center justify-between gap-2 mb-1 sm:mb-2">
+                                    <span class="lesson-step-label font-extrabold uppercase tracking-wider text-amber-400">STEP ${i + 1}: ${step.label}</span>
+                                    ${i < dayData.visualSteps.length - 1
+                                        ? `<button type="button" class="lesson-step-next-btn" data-lesson-next="${i + 1}" aria-label="Show next step" title="Next step"><i class="fa-solid fa-arrow-right"></i></button>`
+                                        : `<span class="lesson-step-next-btn is-done" aria-hidden="true"><i class="fa-solid fa-check-circle"></i></span>`
+                                    }
                                 </div>
-                                <div class="font-heading text-2xl font-bold text-white my-1">${step.val}</div>
-                                <div class="text-xs text-slate-300">${step.desc}</div>
+                                <div class="lesson-step-val font-heading font-bold text-white my-0.5 sm:my-1">${step.val}</div>
+                                <div class="lesson-step-desc text-slate-300 mt-auto">${step.desc}</div>
                             </div>
                         `).join('')}
                     </div>
                 `;
+                blueprintEl.querySelectorAll('[data-lesson-next]').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.advanceLessonReveal();
+                    });
+                });
 
                 const examplesGrid = document.getElementById('lessonExamplesGrid');
                 examplesGrid.innerHTML = dayData.examples.map((ex, idx) => `
@@ -6808,6 +7324,123 @@
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             },
 
+            clearLessonRevealTimers() {
+                (this._lessonRevealTimers || []).forEach(id => clearTimeout(id));
+                this._lessonRevealTimers = [];
+            },
+
+            bindLessonPopupButtons() {
+                if (this._lessonButtonsBound) return;
+                this._lessonButtonsBound = true;
+                const closeBtn = document.getElementById('lessonCloseBtn');
+                const skipBtn = document.getElementById('lessonSkipBtn');
+                const sprintBtn = document.getElementById('lessonStartSprintBtn');
+                if (closeBtn) closeBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.closeLessonPopupFromOutside();
+                });
+                if (skipBtn) skipBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.skipLessonReveal();
+                });
+                if (sprintBtn) sprintBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.startSprintFromLesson();
+                });
+            },
+
+            closeLessonPopup(silent = false) {
+                this.clearLessonRevealTimers();
+                const modal = document.getElementById('lessonExplainModal');
+                if (modal) modal.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            },
+
+            closeLessonPopupFromOutside() {
+                const modal = document.getElementById('lessonExplainModal');
+                const wasOpen = modal && !modal.classList.contains('hidden');
+                if (!wasOpen) {
+                    if (this.currentTab === 'lesson') this.showCoursePage();
+                    return;
+                }
+                // Prefer history.back so Esc/X and browser Back share one path
+                if (history.state && history.state.lessonPopup) {
+                    this._lessonPopupExitToCourse = true;
+                    history.back();
+                    return;
+                }
+                this.closeLessonPopup();
+                if (this.currentTab === 'lesson') this.showCoursePage();
+            },
+
+            openLessonPopup() {
+                this.bindLessonPopupButtons();
+                const modal = document.getElementById('lessonExplainModal');
+                if (!modal) return;
+                const alreadyOpen = !modal.classList.contains('hidden');
+                modal.classList.remove('hidden');
+                document.body.classList.add('overflow-hidden');
+                // Extra history entry so browser/Android Back closes the popup first
+                if (!alreadyOpen && !this._navFromHistory) {
+                    const route = `day/${this.currentDay || 1}/lesson`;
+                    history.pushState({ route: route, lessonPopup: true }, '', '#' + route);
+                }
+                this.startLessonReveal();
+            },
+
+            lessonStepCards() {
+                return Array.from(document.querySelectorAll('#lessonVisualBlueprint [data-lesson-step]'));
+            },
+
+            updateLessonStepArrows() {
+                const steps = this.lessonStepCards();
+                steps.forEach((card, i) => {
+                    const btn = card.querySelector('[data-lesson-next]');
+                    if (!btn) return;
+                    const isActive = i === this._lessonRevealIndex - 1 && this._lessonRevealIndex < steps.length;
+                    btn.classList.toggle('is-glowing', isActive);
+                    btn.disabled = !isActive;
+                });
+            },
+
+            startLessonReveal() {
+                this.clearLessonRevealTimers();
+                const steps = this.lessonStepCards();
+                steps.forEach(card => card.classList.remove('is-visible'));
+                // Step 1 visible immediately; later steps wait for arrow clicks
+                if (steps[0]) steps[0].classList.add('is-visible');
+                this._lessonRevealIndex = Math.min(1, steps.length);
+                this.updateLessonStepArrows();
+            },
+
+            advanceLessonReveal() {
+                const steps = this.lessonStepCards();
+                if (this._lessonRevealIndex >= steps.length) {
+                    this.updateLessonStepArrows();
+                    return;
+                }
+                const card = steps[this._lessonRevealIndex];
+                if (card) card.classList.add('is-visible');
+                this._lessonRevealIndex += 1;
+                this.updateLessonStepArrows();
+            },
+
+            skipLessonReveal() {
+                this.clearLessonRevealTimers();
+                const steps = this.lessonStepCards();
+                steps.forEach(card => card.classList.add('is-visible'));
+                this._lessonRevealIndex = steps.length;
+                this.updateLessonStepArrows();
+            },
+
+            startSprintFromLesson() {
+                this.closeLessonPopup();
+                this.switchDayTab('practice');
+            },
+
             changeDayRelative(offset) {
                 if (window.FocusGuard && FocusGuard.sprintLocked()) {
                     FocusGuard.requestLeave(() => this.changeDayRelative(offset));
@@ -6832,17 +7465,24 @@
 
                 if (tabName === 'lesson') {
                     this.stopTimer();
+                    this.setSprintChrome(false);
                     btnLesson.className = "px-5 py-3 font-heading font-bold text-sm sm:text-base rounded-t-2xl transition flex items-center gap-2 border-b-4 border-amber-400 bg-white/10 text-white";
                     btnPractice.className = "px-5 py-3 font-heading font-bold text-sm sm:text-base rounded-t-2xl transition flex items-center gap-2 border-b-4 border-transparent text-indigo-300 hover:text-white hover:bg-white/5";
-                    lessonContent.classList.remove('hidden');
+                    if (lessonContent) lessonContent.classList.add('hidden');
                     practiceContent.classList.add('hidden');
+                    this.openLessonPopup();
                 } else {
+                    this.closeLessonPopup();
+                    this.setSprintChrome(true);
                     btnPractice.className = "px-5 py-3 font-heading font-bold text-sm sm:text-base rounded-t-2xl transition flex items-center gap-2 border-b-4 border-amber-400 bg-white/10 text-white";
                     btnLesson.className = "px-5 py-3 font-heading font-bold text-sm sm:text-base rounded-t-2xl transition flex items-center gap-2 border-b-4 border-transparent text-indigo-300 hover:text-white hover:bg-white/5";
-                    lessonContent.classList.add('hidden');
+                    if (lessonContent) lessonContent.classList.add('hidden');
                     practiceContent.classList.remove('hidden');
                     if (window.FocusGuard) FocusGuard.onModuleStart();
                     this.initFlashcardSession();
+                }
+                if (!document.getElementById('dayModuleView').classList.contains('hidden')) {
+                    this.recordAppHistory(`day/${this.currentDay || 1}/${tabName === 'practice' ? 'practice' : 'lesson'}`);
                 }
             },
 
@@ -6959,6 +7599,13 @@
                 hintBox.classList.add('hidden');
                 hintBox.textContent = `💡 ${card.hint}`;
 
+                const feedback = document.getElementById('fcInstantFeedback');
+                if (feedback) {
+                    feedback.innerHTML = this.inputMode === 'mc'
+                        ? '<span class="text-slate-400 text-xs">Tap the correct answer!</span>'
+                        : '<span class="text-slate-400 text-xs">Tap the keypad buttons or type on your keyboard!</span>';
+                }
+
                 const inputEl = document.getElementById('fcAnswerInput');
                 inputEl.value = '';
                 if (this.inputMode === 'keypad') {
@@ -6974,24 +7621,12 @@
 
             toggleInputMode() {
                 this.inputMode = this.inputMode === 'keypad' ? 'mc' : 'keypad';
-                const keypad = document.getElementById('fcKeypadContainer');
-                const mc = document.getElementById('fcMultipleChoiceContainer');
-                const label = document.getElementById('fcModeToggleText');
-                const icon = document.getElementById('fcModeToggleIcon');
-
+                this.syncInputModeUI();
                 if (this.inputMode === 'mc') {
-                    keypad.classList.add('hidden');
-                    mc.classList.remove('hidden');
-                    label.textContent = "Mode: 4-Choice";
-                    if (icon) icon.className = "fa-solid fa-list-check";
                     if (this.deck[this.cardIndex]) {
                         this.renderMultipleChoiceOptions(this.deck[this.cardIndex].ans);
                     }
                 } else {
-                    mc.classList.add('hidden');
-                    keypad.classList.remove('hidden');
-                    label.textContent = "Mode: Keypad";
-                    if (icon) icon.className = "fa-solid fa-keyboard";
                     document.getElementById('fcAnswerInput').focus();
                 }
             },
@@ -7637,14 +8272,22 @@
             if (pending && pending.course && pending.day) {
                 app.state.activeCourse = pending.course;
                 app.openDay(pending.day, "practice");
+                app.recordAppHistory(app.currentAppRoute(), true);
                 return;
             }
             var hash = (location.hash || "").replace("#", "");
             if (hash && COURSE_CATALOG[hash]) {
                 app.selectCourse(hash, true);
+                app.recordAppHistory(app.currentAppRoute(), true);
+                return;
+            }
+            if (hash === 'home' || hash === 'courses' || hash === 'course' || hash === 'profile' || hash === 'games' || /^day\/\d+\/(lesson|practice)$/.test(hash)) {
+                app.restoreAppRoute(hash);
+                app.recordAppHistory(app.currentAppRoute(), true);
                 return;
             }
             app.openDefaultLanding();
+            app.recordAppHistory(app.currentAppRoute(), true);
         };
     </script>
     <style id="platform-fit">
@@ -7873,10 +8516,40 @@
             align-content: start;
         }
         html[data-platform="phone"] #roadmapContainer > .roadmap-day-card,
-        html[data-platform="tablet"] #roadmapContainer > .roadmap-day-card,
         html[data-app="android"] #roadmapContainer > .roadmap-day-card {
-            height: auto !important;
-            min-height: 0;
+            height: 7.75rem !important;
+            min-height: 7.75rem !important;
+            max-height: 7.75rem !important;
+            overflow: hidden;
+        }
+        html[data-platform="tablet"] #roadmapContainer > .roadmap-day-card {
+            height: 9rem !important;
+            min-height: 9rem !important;
+            max-height: 9rem !important;
+            overflow: hidden;
+        }
+        html[data-platform="phone"] #roadmapContainer .roadmap-day-title,
+        html[data-app="android"] #roadmapContainer .roadmap-day-title {
+            font-size: 0.95rem !important;
+            line-height: 1.25 !important;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        html[data-platform="phone"] #roadmapContainer .roadmap-day-hook,
+        html[data-app="android"] #roadmapContainer .roadmap-day-hook,
+        html[data-platform="tablet"] #roadmapContainer .roadmap-day-hook {
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        #dayModuleView.is-sprint #moduleTitle {
+            display: none !important;
+        }
+        #dayModuleView.is-sprint .day-module-chapter-block {
+            min-width: 0;
         }
         html[data-platform="phone"] #coursePageView #roadmapMainHeading,
         html[data-app="android"] #coursePageView #roadmapMainHeading {

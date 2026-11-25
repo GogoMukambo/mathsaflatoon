@@ -23,6 +23,5 @@ images/reader/_plain/
 tools/label-previews/
 content-source/
 
-!.env.example
 .vercel
-.env*
+!.env.example
