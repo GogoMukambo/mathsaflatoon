@@ -1,6 +1,6 @@
 require("./load-env");
 
-const db = require("./db");
+const { HttpError } = require("./http-error");
 
 function fromAddress() {
   return process.env.EMAIL_FROM || "Maths Aflatoon <onboarding@resend.dev>";
@@ -48,7 +48,7 @@ async function sendWithResend({ to, subject, text, html }) {
   });
   const payload = await response.json().catch(() => ({}));
   if (!response.ok) {
-    throw new db.HttpError(502, payload.message || "The email could not be sent. Try again.");
+    throw new HttpError(502, payload.message || "The email could not be sent. Try again.");
   }
 }
 
@@ -77,13 +77,13 @@ async function sendWithBrevo({ to, subject, text, html }) {
   });
   const payload = await response.json().catch(() => ({}));
   if (!response.ok) {
-    throw new db.HttpError(502, payload.message || "The email could not be sent. Try again.");
+    throw new HttpError(502, payload.message || "The email could not be sent. Try again.");
   }
 }
 
 async function sendMail(details) {
   const to = String(details.to || "").trim().toLowerCase();
-  if (!to || !to.includes("@")) throw new db.HttpError(400, "No registered email address was found.");
+  if (!to || !to.includes("@")) throw new HttpError(400, "No registered email address was found.");
   const subject = String(details.subject || "").trim();
   const text = String(details.text || "");
   const html = String(details.html || text.replace(/\n/g, "<br>"));
@@ -99,7 +99,7 @@ async function sendMail(details) {
     console.log("[email:dev]", { to, subject, text });
     return { ok: true, provider: "dev-log" };
   }
-  throw new db.HttpError(
+  throw new HttpError(
     503,
     "Email is not set up yet. Add RESEND_API_KEY or BREVO_API_KEY and restart the site."
   );

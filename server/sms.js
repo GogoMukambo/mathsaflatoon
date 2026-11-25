@@ -1,4 +1,4 @@
-const db = require("./db");
+const { HttpError } = require("./http-error");
 
 function loginText(code) {
   return "Maths Aflatoon login code: " + code + ". It expires in 5 minutes.";
@@ -22,7 +22,7 @@ async function sendTwilio(phone, code) {
       body: body,
     }
   );
-  if (!response.ok) throw new db.HttpError(502, "The text message could not be sent. Try again.");
+  if (!response.ok) throw new HttpError(502, "The text message could not be sent. Try again.");
 }
 
 async function sendFast2Sms(phone, code) {
@@ -42,7 +42,7 @@ async function sendFast2Sms(phone, code) {
   });
   const payload = await response.json().catch(() => ({}));
   if (!response.ok || payload.return === false) {
-    throw new db.HttpError(502, "The text message could not be sent. Try again.");
+    throw new HttpError(502, "The text message could not be sent. Try again.");
   }
 }
 
@@ -55,7 +55,7 @@ async function sendLoginCode(phone, code) {
     await sendFast2Sms(phone, code);
     return;
   }
-  throw new db.HttpError(503, "Text messages are not set up yet. Add an SMS key and restart the site.");
+  throw new HttpError(503, "Text messages are not set up yet. Add an SMS key and restart the site.");
 }
 
 module.exports = { sendLoginCode };

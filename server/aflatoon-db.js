@@ -3,7 +3,7 @@ require("./load-env");
 const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
-const { HttpError } = require("./db");
+const { HttpError } = require("./http-error");
 
 const SCHEMA_PATH = path.join(__dirname, "..", "db", "aflatoon.pg.sql");
 
@@ -95,6 +95,10 @@ const ready = (async () => {
     throw new Error("Could not set up the Maths Aflatoon database. " + redact(err));
   }
 })();
+// Keep module load alive on Vercel/Node when DATABASE_URL is not set yet.
+ready.catch(() => {});
+// Keep module load alive on Vercel/Node when DATABASE_URL is not set yet.
+ready.catch(() => {});
 
 async function query(sql, params) {
   await ready;
