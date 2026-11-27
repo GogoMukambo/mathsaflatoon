@@ -27,6 +27,10 @@
             applyPlatform();
             window.addEventListener("resize", applyPlatform);
             window.addEventListener("orientationchange", applyPlatform);
+            try {
+                var dark = localStorage.getItem("aflatoon_dark_mode");
+                if (dark === "1" || dark === "dark") document.documentElement.setAttribute("data-aflatoon-dark", "1");
+            } catch (e) {}
         })();
     </script>
     <title>Aflatoon Mental Maths Academy | 3-Stage 60-Day Speed Mastery (₹99/-)</title>
@@ -1313,6 +1317,673 @@
             .home-trick-lead { display: none; }
             .home-compare-card { min-height: 0; }
         }
+
+        /* ===================================================================== */
+        /* DARK MODE — charcoal glass + readable light text                      */
+        /* ===================================================================== */
+        .aflatoon-dark-toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem;
+            padding: 0.4rem 0.75rem;
+            border-radius: 0.75rem;
+            border: 1px solid #c7d2fe;
+            background: #eef2ff;
+            color: #312e81;
+            font-family: Fredoka, Nunito, sans-serif;
+            font-weight: 700;
+            font-size: 0.75rem;
+            line-height: 1;
+            cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        }
+        .aflatoon-dark-toggle:hover {
+            background: #312e81;
+            color: #fff;
+            border-color: #312e81;
+        }
+        @media (max-width: 640px) {
+            .aflatoon-dark-toggle .aflatoon-dark-toggle-label { display: none; }
+            .aflatoon-dark-toggle { width: 2.25rem; height: 2.25rem; padding: 0; }
+        }
+
+        html[data-aflatoon-dark="1"] {
+            color-scheme: dark;
+        }
+        html[data-aflatoon-dark="1"] body {
+            background-color: #111111 !important;
+            color: #f4f4f5 !important;
+        }
+        html[data-aflatoon-dark="1"] body.theme-liquid,
+        html[data-aflatoon-dark="1"] body.theme-original {
+            background-color: #111111 !important;
+            color: #f4f4f5 !important;
+        }
+        html[data-aflatoon-dark="1"] #liquidAmbientOrbs .absolute.bg-amber-600\/20,
+        html[data-aflatoon-dark="1"] #liquidAmbientOrbs .absolute.bg-orange-800\/15,
+        html[data-aflatoon-dark="1"] #liquidAmbientOrbs .absolute.bg-yellow-700\/15,
+        html[data-aflatoon-dark="1"] #liquidAmbientOrbs .absolute.bg-amber-900\/15 {
+            opacity: 0.55;
+        }
+        html[data-aflatoon-dark="1"] #liquidAmbientOrbs {
+            background:
+                radial-gradient(ellipse 70% 55% at 12% 18%, rgba(52, 211, 153, 0.18), transparent 58%),
+                radial-gradient(ellipse 55% 50% at 88% 22%, rgba(139, 92, 246, 0.22), transparent 55%),
+                radial-gradient(ellipse 60% 45% at 70% 85%, rgba(34, 211, 238, 0.1), transparent 55%);
+        }
+
+        html[data-aflatoon-dark="1"] .liquid-glass-header,
+        html[data-aflatoon-dark="1"] body.theme-liquid .liquid-glass-header,
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass-header {
+            background: rgba(18, 18, 18, 0.88) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: #f4f4f5 !important;
+            backdrop-filter: blur(18px);
+        }
+        html[data-aflatoon-dark="1"] .liquid-glass-header .text-black,
+        html[data-aflatoon-dark="1"] .liquid-glass-header .font-heading.text-black {
+            color: #f8fafc !important;
+        }
+        html[data-aflatoon-dark="1"] .aflatoon-dark-toggle {
+            border-color: rgba(34, 211, 238, 0.45);
+            background: rgba(34, 211, 238, 0.14);
+            color: #ecfeff;
+        }
+        html[data-aflatoon-dark="1"] .aflatoon-dark-toggle:hover {
+            background: rgba(34, 211, 238, 0.28);
+            color: #fff;
+            border-color: rgba(34, 211, 238, 0.7);
+        }
+        html[data-aflatoon-dark="1"] .theme-pill-btn,
+        html[data-aflatoon-dark="1"] #childProfileBtn,
+        html[data-aflatoon-dark="1"] #focusModeBtn,
+        html[data-aflatoon-dark="1"] #navMenuBtn {
+            background: rgba(255, 255, 255, 0.06) !important;
+            border-color: rgba(255, 255, 255, 0.18) !important;
+            color: #f4f4f5 !important;
+        }
+        html[data-aflatoon-dark="1"] #navMenuBtn .text-indigo-800,
+        html[data-aflatoon-dark="1"] #childProfileBtn.text-amber-900,
+        html[data-aflatoon-dark="1"] #focusModeBtn.text-slate-700 {
+            color: #f4f4f5 !important;
+        }
+        html[data-aflatoon-dark="1"] #navMenuBars span {
+            background: #e4e4e7 !important;
+        }
+        html[data-aflatoon-dark="1"] #navMenuPanel {
+            background: #1c1c1c !important;
+            border-color: rgba(255, 255, 255, 0.12) !important;
+            box-shadow: 0 18px 48px rgba(0, 0, 0, 0.55);
+        }
+        html[data-aflatoon-dark="1"] #navMenuPanel button {
+            color: #f4f4f5 !important;
+        }
+        html[data-aflatoon-dark="1"] #navMenuPanel button:hover {
+            background: rgba(34, 211, 238, 0.12) !important;
+        }
+        html[data-aflatoon-dark="1"] #navMenuPanel .text-slate-500,
+        html[data-aflatoon-dark="1"] #navMenuPanel .text-slate-800 {
+            color: #d4d4d8 !important;
+        }
+
+        /* Generic Tailwind text / surface remaps */
+        html[data-aflatoon-dark="1"] .text-black,
+        html[data-aflatoon-dark="1"] .text-slate-950,
+        html[data-aflatoon-dark="1"] .text-slate-900,
+        html[data-aflatoon-dark="1"] .text-slate-800,
+        html[data-aflatoon-dark="1"] .text-gray-900 {
+            color: #f4f4f5 !important;
+        }
+        html[data-aflatoon-dark="1"] .text-slate-700,
+        html[data-aflatoon-dark="1"] .text-slate-600,
+        html[data-aflatoon-dark="1"] .text-gray-700 {
+            color: #d4d4d8 !important;
+        }
+        html[data-aflatoon-dark="1"] .text-slate-500,
+        html[data-aflatoon-dark="1"] .text-slate-400 {
+            color: #a1a1aa !important;
+        }
+        html[data-aflatoon-dark="1"] .text-amber-900,
+        html[data-aflatoon-dark="1"] .text-amber-950 {
+            color: #fde68a !important;
+        }
+        html[data-aflatoon-dark="1"] .text-amber-800,
+        html[data-aflatoon-dark="1"] .text-amber-700 {
+            color: #fbbf24 !important;
+        }
+        html[data-aflatoon-dark="1"] .text-emerald-900,
+        html[data-aflatoon-dark="1"] .text-emerald-800,
+        html[data-aflatoon-dark="1"] .text-emerald-700 {
+            color: #6ee7b7 !important;
+        }
+        html[data-aflatoon-dark="1"] .text-indigo-900,
+        html[data-aflatoon-dark="1"] .text-indigo-800,
+        html[data-aflatoon-dark="1"] .text-indigo-700 {
+            color: #a5b4fc !important;
+        }
+        html[data-aflatoon-dark="1"] .text-rose-800,
+        html[data-aflatoon-dark="1"] .text-rose-700 {
+            color: #fda4af !important;
+        }
+        html[data-aflatoon-dark="1"] .text-orange-700,
+        html[data-aflatoon-dark="1"] .warn {
+            color: #fdba74 !important;
+        }
+
+        html[data-aflatoon-dark="1"] .bg-white,
+        html[data-aflatoon-dark="1"] .bg-white\/80,
+        html[data-aflatoon-dark="1"] .bg-white\/90,
+        html[data-aflatoon-dark="1"] .bg-slate-50,
+        html[data-aflatoon-dark="1"] .bg-slate-100 {
+            background-color: rgba(28, 28, 28, 0.92) !important;
+            color: #f4f4f5 !important;
+        }
+        html[data-aflatoon-dark="1"] .border-slate-100,
+        html[data-aflatoon-dark="1"] .border-slate-200,
+        html[data-aflatoon-dark="1"] .border-slate-300,
+        html[data-aflatoon-dark="1"] .border-amber-200,
+        html[data-aflatoon-dark="1"] .border-indigo-200 {
+            border-color: rgba(255, 255, 255, 0.12) !important;
+        }
+
+        html[data-aflatoon-dark="1"] .liquid-glass,
+        html[data-aflatoon-dark="1"] body.theme-liquid .liquid-glass,
+        html[data-aflatoon-dark="1"] .liquid-glass-tile,
+        html[data-aflatoon-dark="1"] body.theme-liquid .liquid-glass-tile,
+        html[data-aflatoon-dark="1"] .liquid-glass-sub {
+            background: rgba(28, 28, 28, 0.82) !important;
+            border-color: rgba(255, 255, 255, 0.12) !important;
+            color: #f4f4f5 !important;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 16px 40px rgba(0, 0, 0, 0.45) !important;
+        }
+        html[data-aflatoon-dark="1"] .liquid-glass-dark,
+        html[data-aflatoon-dark="1"] body.theme-liquid .liquid-glass-dark,
+        html[data-aflatoon-dark="1"] .home-shell.liquid-glass-dark {
+            background:
+                radial-gradient(ellipse 70% 55% at 12% 18%, rgba(52, 211, 153, 0.16), transparent 58%),
+                radial-gradient(ellipse 55% 50% at 88% 22%, rgba(139, 92, 246, 0.2), transparent 55%),
+                #111111 !important;
+            color: #f8fafc !important;
+        }
+        html[data-aflatoon-dark="1"] body.theme-liquid,
+        html[data-aflatoon-dark="1"] body.theme-liquid .font-sans,
+        html[data-aflatoon-dark="1"] body.theme-liquid .font-kid,
+        html[data-aflatoon-dark="1"] body.theme-liquid p,
+        html[data-aflatoon-dark="1"] body.theme-liquid span:not(.aflatoon-magic):not(.aflatoon-magic-pill),
+        html[data-aflatoon-dark="1"] body.theme-liquid div,
+        html[data-aflatoon-dark="1"] body.theme-liquid label,
+        html[data-aflatoon-dark="1"] body.theme-liquid button {
+            color: #f4f4f5 !important;
+        }
+        html[data-aflatoon-dark="1"] body.theme-liquid h1,
+        html[data-aflatoon-dark="1"] body.theme-liquid h2,
+        html[data-aflatoon-dark="1"] body.theme-liquid h3,
+        html[data-aflatoon-dark="1"] body.theme-liquid h4,
+        html[data-aflatoon-dark="1"] body.theme-liquid .font-heading {
+            color: #fafafa !important;
+        }
+        html[data-aflatoon-dark="1"] body.theme-liquid .text-slate-400,
+        html[data-aflatoon-dark="1"] body.theme-liquid .text-slate-500,
+        html[data-aflatoon-dark="1"] body.theme-liquid .text-slate-600,
+        html[data-aflatoon-dark="1"] body.theme-liquid .text-slate-700 {
+            color: #a1a1aa !important;
+        }
+
+        /* Home hero / trick card — beat theme-original .liquid-glass-dark !important text */
+        html[data-aflatoon-dark="1"] body.theme-original .home-shell,
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass-dark,
+        html[data-aflatoon-dark="1"] body.theme-liquid .home-shell.liquid-glass-dark {
+            color: #f8fafc !important;
+        }
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass-dark h1,
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass-dark h2,
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass-dark h3,
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass-dark h4,
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass-dark p,
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass-dark span,
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass-dark .font-heading,
+        html[data-aflatoon-dark="1"] body.theme-original .home-hero-title,
+        html[data-aflatoon-dark="1"] body.theme-liquid .home-hero-title,
+        html[data-aflatoon-dark="1"] .home-hero-title {
+            color: #fafafa !important;
+            -webkit-text-fill-color: #fafafa !important;
+        }
+        html[data-aflatoon-dark="1"] body.theme-original .home-hero-copy,
+        html[data-aflatoon-dark="1"] body.theme-liquid .home-hero-copy,
+        html[data-aflatoon-dark="1"] .home-hero-copy {
+            color: #d4d4d8 !important;
+            -webkit-text-fill-color: #d4d4d8 !important;
+        }
+        html[data-aflatoon-dark="1"] .home-kicker,
+        html[data-aflatoon-dark="1"] body.theme-liquid .home-kicker,
+        html[data-aflatoon-dark="1"] body.theme-original .home-kicker {
+            color: #67e8f9 !important;
+            -webkit-text-fill-color: #67e8f9 !important;
+        }
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass-dark .hero-highlight-text,
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass-dark .home-hero-accent,
+        html[data-aflatoon-dark="1"] body.theme-original .hero-highlight-text,
+        html[data-aflatoon-dark="1"] body.theme-original .home-hero-accent,
+        html[data-aflatoon-dark="1"] body.theme-original .home-hero-title .home-hero-accent,
+        html[data-aflatoon-dark="1"] .home-hero-accent,
+        html[data-aflatoon-dark="1"] .hero-highlight-text {
+            color: #fbbf24 !important;
+            -webkit-text-fill-color: #fbbf24 !important;
+            background: none !important;
+        }
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass-dark .home-kicker,
+        html[data-aflatoon-dark="1"] body.theme-original .home-kicker {
+            color: #67e8f9 !important;
+            -webkit-text-fill-color: #67e8f9 !important;
+        }
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass-dark .home-hero-copy {
+            color: #d4d4d8 !important;
+            -webkit-text-fill-color: #d4d4d8 !important;
+        }
+        html[data-aflatoon-dark="1"] body.theme-liquid .home-trick,
+        html[data-aflatoon-dark="1"] .home-trick {
+            background: rgba(28, 28, 28, 0.88) !important;
+            color: #f4f4f5 !important;
+            border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        }
+        html[data-aflatoon-dark="1"] .home-trick-title,
+        html[data-aflatoon-dark="1"] body.theme-liquid .home-trick-title {
+            color: #ffffff !important;
+        }
+        html[data-aflatoon-dark="1"] .home-trick .demo-kicker,
+        html[data-aflatoon-dark="1"] body.theme-liquid .home-trick .demo-kicker {
+            color: #67e8f9 !important;
+        }
+        html[data-aflatoon-dark="1"] .home-trick-lead,
+        html[data-aflatoon-dark="1"] body.theme-liquid .home-trick-lead {
+            color: #a1a1aa !important;
+        }
+        html[data-aflatoon-dark="1"] body.theme-liquid .home-math,
+        html[data-aflatoon-dark="1"] .home-math {
+            background: rgba(0, 0, 0, 0.4) !important;
+            border-color: rgba(34, 211, 238, 0.25) !important;
+        }
+        html[data-aflatoon-dark="1"] .home-math-eq,
+        html[data-aflatoon-dark="1"] body.theme-liquid .home-math-eq {
+            color: #fbbf24 !important;
+        }
+        html[data-aflatoon-dark="1"] .home-math-hint,
+        html[data-aflatoon-dark="1"] .home-math-calc {
+            color: #e4e4e7 !important;
+        }
+        html[data-aflatoon-dark="1"] body.theme-liquid .home-compare-slow,
+        html[data-aflatoon-dark="1"] .home-compare-slow {
+            background: rgba(255, 255, 255, 0.05) !important;
+            border-color: rgba(255, 255, 255, 0.12) !important;
+        }
+        html[data-aflatoon-dark="1"] body.theme-liquid .home-compare-fast,
+        html[data-aflatoon-dark="1"] .home-compare-fast {
+            background: rgba(34, 211, 238, 0.1) !important;
+            border-color: rgba(34, 211, 238, 0.3) !important;
+        }
+        html[data-aflatoon-dark="1"] .home-compare-label,
+        html[data-aflatoon-dark="1"] body.theme-liquid .home-compare-label {
+            color: #fbbf24 !important;
+        }
+        html[data-aflatoon-dark="1"] .home-compare-fast .home-compare-label,
+        html[data-aflatoon-dark="1"] body.theme-liquid .home-compare-fast .home-compare-label {
+            color: #67e8f9 !important;
+        }
+        html[data-aflatoon-dark="1"] .home-compare-body,
+        html[data-aflatoon-dark="1"] body.theme-liquid .home-compare-body {
+            color: #e4e4e7 !important;
+        }
+        html[data-aflatoon-dark="1"] body.theme-liquid .home-try-row,
+        html[data-aflatoon-dark="1"] .home-try-row,
+        html[data-aflatoon-dark="1"] .home-try-row #heroTryTitle {
+            background: rgba(255, 255, 255, 0.05) !important;
+            border-color: rgba(255, 255, 255, 0.12) !important;
+            color: #f4f4f5 !important;
+        }
+        html[data-aflatoon-dark="1"] body.theme-liquid .home-shuffle,
+        html[data-aflatoon-dark="1"] .home-shuffle {
+            border-color: rgba(251, 191, 36, 0.35);
+            background: rgba(251, 191, 36, 0.12);
+            color: #fde68a !important;
+        }
+        html[data-aflatoon-dark="1"] #homeRegisteredCourses .home-registered-label {
+            color: #6ee7b7 !important;
+            -webkit-text-fill-color: #6ee7b7 !important;
+        }
+        html[data-aflatoon-dark="1"] #homeRegisteredCourses .home-registered-course {
+            background: rgba(28, 28, 28, 0.9) !important;
+            border-color: rgba(255, 255, 255, 0.14) !important;
+            color: #f4f4f5 !important;
+        }
+        html[data-aflatoon-dark="1"] #homeRegisteredCourses .home-registered-course .font-heading,
+        html[data-aflatoon-dark="1"] #homeRegisteredCourses .home-registered-course .text-slate-900,
+        html[data-aflatoon-dark="1"] #homeRegisteredCourses .home-registered-course .text-slate-700 {
+            color: #f4f4f5 !important;
+            -webkit-text-fill-color: #f4f4f5 !important;
+        }
+
+        /* Course / day / profile cards */
+        html[data-aflatoon-dark="1"] .page-header-title,
+        html[data-aflatoon-dark="1"] .page-header-sub,
+        html[data-aflatoon-dark="1"] #roadmapMainHeading,
+        html[data-aflatoon-dark="1"] #moduleTitle {
+            color: #fafafa !important;
+        }
+        html[data-aflatoon-dark="1"] .roadmap-day-card,
+        html[data-aflatoon-dark="1"] .profile-card,
+        html[data-aflatoon-dark="1"] #threeStageCardsGrid > * {
+            color: #f4f4f5 !important;
+        }
+        html[data-aflatoon-dark="1"] input,
+        html[data-aflatoon-dark="1"] select,
+        html[data-aflatoon-dark="1"] textarea,
+        html[data-aflatoon-dark="1"] #fcAnswerInput,
+        html[data-aflatoon-dark="1"] #warmupInput,
+        html[data-aflatoon-dark="1"] #payAccessCode,
+        html[data-aflatoon-dark="1"] #childNameInput,
+        html[data-aflatoon-dark="1"] #childDobInput,
+        html[data-aflatoon-dark="1"] #childGenderInput,
+        html[data-aflatoon-dark="1"] #childSchoolInput {
+            background: rgba(0, 0, 0, 0.35) !important;
+            color: #f4f4f5 !important;
+            border-color: rgba(255, 255, 255, 0.18) !important;
+        }
+        html[data-aflatoon-dark="1"] input::placeholder,
+        html[data-aflatoon-dark="1"] textarea::placeholder {
+            color: #71717a !important;
+        }
+        html[data-aflatoon-dark="1"] .numpad-btn {
+            background: rgba(255, 255, 255, 0.06) !important;
+            color: #f4f4f5 !important;
+            border-color: rgba(255, 255, 255, 0.14) !important;
+        }
+        html[data-aflatoon-dark="1"] #fcQuestionPrompt,
+        html[data-aflatoon-dark="1"] #warmupQuestionText,
+        html[data-aflatoon-dark="1"] #diagQuestionText,
+        html[data-aflatoon-dark="1"] body.theme-liquid #fcQuestionPrompt {
+            color: #fafafa !important;
+        }
+
+        /* Modals */
+        html[data-aflatoon-dark="1"] #paymentModal > .liquid-glass,
+        html[data-aflatoon-dark="1"] #certificateModal > .liquid-glass,
+        html[data-aflatoon-dark="1"] #reviewProgressModal > .liquid-glass,
+        html[data-aflatoon-dark="1"] #childManagerModal > .liquid-glass,
+        html[data-aflatoon-dark="1"] #phoneLoginModal > .liquid-glass,
+        html[data-aflatoon-dark="1"] #diagnosticModal .liquid-glass,
+        html[data-aflatoon-dark="1"] #lessonExplainModal .liquid-glass,
+        html[data-aflatoon-dark="1"] body.theme-liquid #paymentModal > .liquid-glass,
+        html[data-aflatoon-dark="1"] body.theme-original #paymentModal > .liquid-glass,
+        html[data-aflatoon-dark="1"] body.theme-original #childManagerModal > .liquid-glass,
+        html[data-aflatoon-dark="1"] body.theme-original #phoneLoginModal > .liquid-glass {
+            background: rgba(22, 22, 22, 0.96) !important;
+            border: 1px solid rgba(255, 255, 255, 0.12) !important;
+            color: #f4f4f5 !important;
+        }
+        html[data-aflatoon-dark="1"] #paymentModal h3,
+        html[data-aflatoon-dark="1"] #paymentModal p,
+        html[data-aflatoon-dark="1"] #paymentModal label,
+        html[data-aflatoon-dark="1"] #paymentModal span,
+        html[data-aflatoon-dark="1"] #childManagerModal h3,
+        html[data-aflatoon-dark="1"] #childManagerModal p,
+        html[data-aflatoon-dark="1"] #childManagerModal label,
+        html[data-aflatoon-dark="1"] #phoneLoginModal h3,
+        html[data-aflatoon-dark="1"] #phoneLoginModal p {
+            color: #f4f4f5 !important;
+        }
+        html[data-aflatoon-dark="1"] #childList .bg-white,
+        html[data-aflatoon-dark="1"] #childList .bg-amber-50 {
+            background: rgba(255, 255, 255, 0.05) !important;
+            color: #f4f4f5 !important;
+        }
+        html[data-aflatoon-dark="1"] .hover\:bg-slate-50:hover,
+        html[data-aflatoon-dark="1"] .hover\:bg-emerald-50:hover,
+        html[data-aflatoon-dark="1"] .hover\:bg-amber-50:hover,
+        html[data-aflatoon-dark="1"] .hover\:bg-indigo-50:hover,
+        html[data-aflatoon-dark="1"] .hover\:bg-violet-50:hover,
+        html[data-aflatoon-dark="1"] .hover\:bg-sky-50:hover,
+        html[data-aflatoon-dark="1"] .hover\:bg-rose-50:hover {
+            background: rgba(34, 211, 238, 0.12) !important;
+        }
+
+        /* Beat remaining theme-original ink !important on dark pages / cards */
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass-dark .page-header-title,
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass-dark .page-header-sub,
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass-dark #roadmapMainHeading,
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass-dark #moduleTitle,
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass-dark #moduleMedalStatus,
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass-dark .text-white,
+        html[data-aflatoon-dark="1"] body.theme-original #moduleTitle {
+            color: #fafafa !important;
+            -webkit-text-fill-color: #fafafa !important;
+        }
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass,
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass-tile,
+        html[data-aflatoon-dark="1"] body.theme-original .profile-card {
+            background: rgba(28, 28, 28, 0.9) !important;
+            border-color: rgba(255, 255, 255, 0.12) !important;
+            color: #f4f4f5 !important;
+        }
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass h1,
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass h2,
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass h3,
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass p,
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass label,
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass span,
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass .font-heading,
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass-tile h3,
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass-tile p,
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass-tile span,
+        html[data-aflatoon-dark="1"] body.theme-original .profile-card h3,
+        html[data-aflatoon-dark="1"] body.theme-original .profile-card p {
+            color: #f4f4f5 !important;
+            -webkit-text-fill-color: #f4f4f5 !important;
+        }
+        html[data-aflatoon-dark="1"] body.theme-original .home-cta-light {
+            color: #f4f4f5 !important;
+            border-color: rgba(255, 255, 255, 0.35) !important;
+        }
+        html[data-aflatoon-dark="1"] body.theme-original .btn-3d-indigo,
+        html[data-aflatoon-dark="1"] body.theme-original .theme-accent-btn {
+            background: linear-gradient(135deg, #22d3ee, #0891b2) !important;
+            color: #041016 !important;
+        }
+        html[data-aflatoon-dark="1"] body.theme-original .btn-3d-indigo span,
+        html[data-aflatoon-dark="1"] body.theme-original .btn-3d-indigo i,
+        html[data-aflatoon-dark="1"] body.theme-original .theme-accent-btn span,
+        html[data-aflatoon-dark="1"] body.theme-original .theme-accent-btn i {
+            color: #041016 !important;
+            -webkit-text-fill-color: #041016 !important;
+        }
+
+        /* Answer chips + tinted badges: dark green plate + bright label */
+        .lesson-ans-chip {
+            color: #047857;
+            -webkit-text-fill-color: #047857;
+        }
+        html[data-aflatoon-dark="1"] .lesson-ans-chip,
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass .lesson-ans-chip,
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass-sub .lesson-ans-chip,
+        html[data-aflatoon-dark="1"] body.theme-liquid .lesson-ans-chip,
+        html[data-aflatoon-dark="1"] #lessonExamplesGrid .lesson-ans-chip {
+            background: #059669 !important;
+            border-color: #34d399 !important;
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+        }
+
+        /* Other light tint chips on dark: use saturated plate + white text */
+        html[data-aflatoon-dark="1"] .bg-emerald-50,
+        html[data-aflatoon-dark="1"] .bg-emerald-100,
+        html[data-aflatoon-dark="1"] .bg-amber-50,
+        html[data-aflatoon-dark="1"] .bg-amber-100,
+        html[data-aflatoon-dark="1"] .bg-indigo-50,
+        html[data-aflatoon-dark="1"] .bg-sky-50,
+        html[data-aflatoon-dark="1"] .bg-rose-50,
+        html[data-aflatoon-dark="1"] .bg-violet-50 {
+            background: #047857 !important;
+            border-color: #34d399 !important;
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+        }
+        html[data-aflatoon-dark="1"] .bg-amber-50,
+        html[data-aflatoon-dark="1"] .bg-amber-100 {
+            background: #b45309 !important;
+            border-color: #fbbf24 !important;
+        }
+        html[data-aflatoon-dark="1"] .bg-indigo-50 {
+            background: #4338ca !important;
+            border-color: #a5b4fc !important;
+        }
+
+        /* Solid action buttons: force white label */
+        html[data-aflatoon-dark="1"] button.bg-emerald-600,
+        html[data-aflatoon-dark="1"] button.bg-emerald-700,
+        html[data-aflatoon-dark="1"] .bg-emerald-600.text-white,
+        html[data-aflatoon-dark="1"] .bg-emerald-700.text-white,
+        html[data-aflatoon-dark="1"] button[onclick*="checkWarmup"],
+        html[data-aflatoon-dark="1"] #warmupInput + button.bg-emerald-600 {
+            background: #059669 !important;
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+        }
+        html[data-aflatoon-dark="1"] .btn-3d-indigo,
+        html[data-aflatoon-dark="1"] .btn-3d-indigo span,
+        html[data-aflatoon-dark="1"] .btn-3d-indigo i,
+        html[data-aflatoon-dark="1"] #lessonStartSprintBtn,
+        html[data-aflatoon-dark="1"] #lessonStartSprintBtn span,
+        html[data-aflatoon-dark="1"] #lessonStartSprintBtn i {
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+        }
+        html[data-aflatoon-dark="1"] .btn-3d-amber,
+        html[data-aflatoon-dark="1"] .btn-3d-amber span,
+        html[data-aflatoon-dark="1"] .home-cta-ink,
+        html[data-aflatoon-dark="1"] .home-cta-ink span {
+            color: #0f172a !important;
+            -webkit-text-fill-color: #0f172a !important;
+        }
+        html[data-aflatoon-dark="1"] .text-white {
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+        }
+        html[data-aflatoon-dark="1"] .numpad-btn {
+            color: #fafafa !important;
+            -webkit-text-fill-color: #fafafa !important;
+        }
+
+        /* Roadmap day pills + medals — beat liquid-glass-tile span { color: white } */
+        .roadmap-day-pill {
+            background: #e0e7ff;
+            border-color: #c7d2fe;
+            color: #312e81;
+            -webkit-text-fill-color: #312e81;
+        }
+        .roadmap-day-pill--boss {
+            background: #fef3c7;
+            border-color: #fcd34d;
+            color: #92400e;
+            -webkit-text-fill-color: #92400e;
+        }
+        .roadmap-day-pill--boss .fa-crown {
+            color: #d97706;
+            -webkit-text-fill-color: #d97706;
+        }
+        .roadmap-day-pill--next {
+            background: #f59e0b;
+            border-color: #d97706;
+            color: #1c1917;
+            -webkit-text-fill-color: #1c1917;
+        }
+        .roadmap-medal-pill--none {
+            background: #e2e8f0;
+            color: #475569;
+            -webkit-text-fill-color: #475569;
+        }
+        .roadmap-medal-pill--continue {
+            background: #f59e0b;
+            color: #1c1917;
+            -webkit-text-fill-color: #1c1917;
+        }
+
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass-tile .roadmap-day-pill,
+        html[data-aflatoon-dark="1"] body.theme-liquid .liquid-glass-tile .roadmap-day-pill,
+        html[data-aflatoon-dark="1"] .roadmap-day-card .roadmap-day-pill,
+        html[data-aflatoon-dark="1"] .roadmap-day-pill {
+            background: #e0e7ff !important;
+            border-color: #a5b4fc !important;
+            color: #1e1b4b !important;
+            -webkit-text-fill-color: #1e1b4b !important;
+        }
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass-tile .roadmap-day-pill--boss,
+        html[data-aflatoon-dark="1"] .roadmap-day-card .roadmap-day-pill--boss,
+        html[data-aflatoon-dark="1"] .roadmap-day-pill--boss {
+            background: #fef3c7 !important;
+            border-color: #fbbf24 !important;
+            color: #78350f !important;
+            -webkit-text-fill-color: #78350f !important;
+        }
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass-tile .roadmap-day-pill--boss .fa-crown,
+        html[data-aflatoon-dark="1"] .roadmap-day-pill--boss .fa-crown {
+            color: #b45309 !important;
+            -webkit-text-fill-color: #b45309 !important;
+        }
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass-tile .roadmap-day-pill--next,
+        html[data-aflatoon-dark="1"] .roadmap-day-card .roadmap-day-pill--next,
+        html[data-aflatoon-dark="1"] .roadmap-day-pill--next,
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass-tile .roadmap-medal-pill--continue,
+        html[data-aflatoon-dark="1"] .roadmap-medal-pill--continue {
+            background: #f59e0b !important;
+            border-color: #d97706 !important;
+            color: #1c1917 !important;
+            -webkit-text-fill-color: #1c1917 !important;
+        }
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass-tile .roadmap-medal-pill--none,
+        html[data-aflatoon-dark="1"] .roadmap-medal-pill--none {
+            background: #cbd5e1 !important;
+            color: #0f172a !important;
+            -webkit-text-fill-color: #0f172a !important;
+        }
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass-tile .medal-gold,
+        html[data-aflatoon-dark="1"] body.theme-liquid .liquid-glass-tile .medal-gold,
+        html[data-aflatoon-dark="1"] .roadmap-day-card .medal-gold,
+        html[data-aflatoon-dark="1"] .medal-gold {
+            background: linear-gradient(135deg, #fef08a 0%, #f59e0b 55%, #b45309 100%) !important;
+            color: #451a03 !important;
+            -webkit-text-fill-color: #451a03 !important;
+            border-color: #fde047 !important;
+        }
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass-tile .medal-silver,
+        html[data-aflatoon-dark="1"] body.theme-liquid .liquid-glass-tile .medal-silver,
+        html[data-aflatoon-dark="1"] .roadmap-day-card .medal-silver,
+        html[data-aflatoon-dark="1"] .medal-silver {
+            background: linear-gradient(135deg, #f8fafc 0%, #cbd5e1 55%, #94a3b8 100%) !important;
+            color: #0f172a !important;
+            -webkit-text-fill-color: #0f172a !important;
+            border-color: #e2e8f0 !important;
+        }
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass-tile .medal-bronze,
+        html[data-aflatoon-dark="1"] body.theme-liquid .liquid-glass-tile .medal-bronze,
+        html[data-aflatoon-dark="1"] .roadmap-day-card .medal-bronze,
+        html[data-aflatoon-dark="1"] .medal-bronze {
+            background: linear-gradient(135deg, #fed7aa 0%, #ea580c 55%, #7c2d12 100%) !important;
+            color: #fff7ed !important;
+            -webkit-text-fill-color: #fff7ed !important;
+            border-color: #fdba74 !important;
+        }
+        html[data-aflatoon-dark="1"] .roadmap-day-card .text-indigo-600 {
+            color: #a5b4fc !important;
+            -webkit-text-fill-color: #a5b4fc !important;
+        }
+        html[data-aflatoon-dark="1"] .roadmap-day-card .text-amber-700 {
+            color: #fbbf24 !important;
+            -webkit-text-fill-color: #fbbf24 !important;
+        }
+        html[data-aflatoon-dark="1"] .roadmap-day-card .text-emerald-700 {
+            color: #6ee7b7 !important;
+            -webkit-text-fill-color: #6ee7b7 !important;
+        }
     </style>
 </head>
 <body class="theme-original h-screen overflow-hidden flex flex-col selection:bg-emerald-700 selection:text-white relative">
@@ -1350,12 +2021,17 @@
                                 <span class="font-heading font-bold text-xl sm:text-2xl tracking-tight text-black">Maths</span><span class="aflatoon-magic text-xl sm:text-2xl tracking-tight"><i class="fa-solid fa-bolt aflatoon-bolt"></i>Aflatoon</span>
                             </span>
                             <button type="button" id="childProfileBtn" onclick="app.showProfilePage()" class="hidden theme-pill-btn bg-white hover:bg-amber-50 text-amber-900 border border-amber-200 px-2.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shrink-0" title="Child profiles and course dates">
-                                <i class="fa-solid fa-user"></i>
+                                <i class="fa-solid fa-child" id="childProfileIcon" aria-hidden="true"></i>
                                 <span id="childProfileLabel" class="max-w-[8rem] truncate">Add a child</span>
                             </button>
                         </div>
 
             <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+
+                <button type="button" id="aflatoonDarkToggle" class="aflatoon-dark-toggle shrink-0" onclick="app.toggleDarkMode()" aria-pressed="false" aria-label="Switch to dark mode" title="Switch to dark mode">
+                    <span class="aflatoon-dark-toggle-ico" aria-hidden="true">🌙</span>
+                    <span class="aflatoon-dark-toggle-label">Dark</span>
+                </button>
 
                 <button type="button" id="focusModeBtn" class="hidden theme-pill-btn bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 px-2.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shrink-0" title="Focus mode: the camera watches the sprint. Nothing is recorded.">
                     <span id="focusModeDot" hidden></span>
@@ -1430,7 +2106,7 @@
                             <span class="home-hero-accent hero-highlight-text">Calculate smarter.</span>
                         </h1>
                         <p class="home-hero-copy mx-auto lg:mx-0">
-                            Learn one visual trick and tackle 35 rapid-fire questions a day. Build speed and earn medals as you practise.
+                            Just 10 minutes a day can make you a maths wizard. Learn one visual trick, then race through 35 questions and earn medals.
                         </p>
                         <div class="home-cta-row justify-center lg:justify-start pt-1">
                             <button type="button" onclick="app.openDiagnosticModal()" class="home-cta home-cta-ink btn-3d-amber">Quick assessment ↗</button>
@@ -1561,7 +2237,7 @@
             <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div class="flex items-start sm:items-center gap-3.5">
-                        <button type="button" onclick="app.showCoursePage()" class="day-back-btn mt-1 sm:mt-0 w-10 h-10 rounded-xl bg-indigo-700 hover:bg-indigo-600 border border-indigo-500 flex items-center justify-center text-white transition shrink-0" title="Back to 60-Day Course Map" aria-label="Back to course map">
+                        <button type="button" onclick="app.leaveDayView()" class="day-back-btn mt-1 sm:mt-0 w-10 h-10 rounded-xl bg-indigo-700 hover:bg-indigo-600 border border-indigo-500 flex items-center justify-center text-white transition shrink-0" title="Back to 60-Day Course Map" aria-label="Back to course map">
                             <i class="fa-solid fa-arrow-left"></i>
                         </button>
                         <div class="day-module-chapter-block min-w-0">
@@ -3536,20 +4212,32 @@
             },
             {
                 title: "Square Any 2-Digit Number",
-                subtitle: "Jump to the nearest 10, multiply, and add the gap squared",
-                hookTitle: "Jump to the Nearest 10, Multiply, and Add d²!",
-                concept: "To square 23²: step 3 down to 20 and 3 up to 26. Multiply 20 × 26 = 520, then add 3² (9) → 529!",
-                goldenRule: "n² = (n − d)(n + d) + d² where d is the distance to the nearest 10!",
-                visualSteps: [{label:"22²",val:"20 × 24 + 2²",desc:"d = 2"},{label:"Multiply",val:"20 × 24 = 480",desc:"480"},{label:"Add 2²",val:"480 + 4 = 484",desc:"484!"}],
-                examples: [
-                    {q:"16²",steps:["Nearest 10 is 20, d = 4","(16 − 4)(16 + 4) + 4²","12 × 20 + 16 = 256"],ans:"256"},
-                    {q:"21²",steps:["Nearest 10 is 20, d = 1","20 × 22 + 1² = 440 + 1 = 441"],ans:"441"},
-                    {q:"32²",steps:["Nearest 10 is 30, d = 2","30 × 34 + 2² = 1020 + 4 = 1024"],ans:"1024"}
+                subtitle: "Walk to the nearest 10, multiply the neighbours, then add the small square",
+                hookTitle: "Walk to a Friendly 10 — Then Add the Tiny Square!",
+                concept: "Want 23²? The nearest friendly ten is 20, and the gap is 3. Walk the same gap the other way to 26. Multiply the two neighbours (20 × 26 = 520), then add the tiny square 3² = 9. So 23² = 520 + 9 = 529. Same pattern every time: neighbours × each other, then + gap².",
+                goldenRule: "n² = (nearest 10) × (n mirrored the other way) + (gap)². Gap = how far n is from that 10.",
+                visualSteps: [
+                    {label:"Problem",val:"23² = ?",desc:"Nearest friendly 10 is 20 · gap d = 3"},
+                    {label:"Mirror neighbours",val:"20 and 26",desc:"Down 3 to 20, up 3 to 26"},
+                    {label:"Multiply + add d²",val:"20 × 26 = 520 · + 9",desc:"520 + 3² = 529!"}
                 ],
-                warmup: {q:"23² = ?",ans:529,hint:"(20 × 26) + 3² = 520 + 9 = 529!"},
+                examples: [
+                    {q:"16²",steps:["Nearest 10 = 20, gap d = 4","Neighbours: 12 and 20","12 × 20 = 240, then + 4² (16) → 256"],ans:"256"},
+                    {q:"21²",steps:["Nearest 10 = 20, gap d = 1","Neighbours: 20 and 22","20 × 22 = 440, then + 1² → 441"],ans:"441"},
+                    {q:"32²",steps:["Nearest 10 = 30, gap d = 2","Neighbours: 30 and 34","30 × 34 = 1020, then + 2² (4) → 1024"],ans:"1024"}
+                ],
+                warmup: {q:"23² = ?",ans:529,hint:"Nearest 10 is 20 (gap 3). 20 × 26 = 520, then + 9 → 529!"},
                 gen: (idx, m) => {
                     const n = randInt(11, 22 + m * 5);
-                    return { q: `${n}² = ?`, ans: n * n, hint: `Use (n−d)(n+d) + d²!` };
+                    const nearest = Math.round(n / 10) * 10;
+                    const d = Math.abs(n - nearest) || (n % 10 <= 5 ? n % 10 : 10 - (n % 10));
+                    const low = n - d;
+                    const high = n + d;
+                    return {
+                        q: `${n}² = ?`,
+                        ans: n * n,
+                        hint: `Nearest 10 gap is ${d}: ${low} × ${high} = ${low * high}, then + ${d}² (${d * d}) → ${n * n}!`
+                    };
                 }
             },
             {
@@ -4292,6 +4980,7 @@
             STORAGE_KEY: 'aflatoon_academy_3stage_60d_v3',
             state: {
                 theme: 'original', // 'original' (new default) | 'liquid' (previous)
+                darkMode: false,
                 activeCourse: 'foundation', // 'beginner' | 'foundation' | 'advanced'
                 aiRecommendedCourse: null,
                 studentName: '',
@@ -4532,10 +5221,20 @@
             openHeroChallengeDay() {
                 const item = this.heroChallenges[this.heroChallengeIdx];
                 if (!item) return;
-                this.ensurePaid(item.course, () => {
-                    this.commitCourse(item.course, false);
-                    this.openDay(item.day);
-                });
+                this.openTryDay(item.course, item.day);
+            },
+
+            openTryDay(courseId, dayNum) {
+                if (!COURSE_CATALOG[courseId]) return;
+                this._tryDayMode = true;
+                this._tryDayNum = Math.max(1, Math.min(60, Number(dayNum) || 1));
+                this.state.activeCourse = courseId;
+                this.openDayAfterChild(this._tryDayNum, 'lesson');
+            },
+
+            clearTryDayMode() {
+                this._tryDayMode = false;
+                this._tryDayNum = null;
             },
 
             init() {
@@ -4587,6 +5286,13 @@
                 if (this._historyBound) return;
                 this._historyBound = true;
                 window.addEventListener('popstate', (e) => {
+                    const payModal = document.getElementById('paymentModal');
+                    if (payModal && !payModal.classList.contains('hidden')) {
+                        this._closingPaymentFromHistory = true;
+                        this.closePaymentModal();
+                        this._closingPaymentFromHistory = false;
+                        return;
+                    }
                     const lessonModal = document.getElementById('lessonExplainModal');
                     const popupOpen = lessonModal && !lessonModal.classList.contains('hidden');
                     if (popupOpen || this._lessonPopupExitToCourse) {
@@ -4617,7 +5323,13 @@
                 try {
                     const dayMatch = clean.match(/^day\/(\d+)\/(lesson|practice)$/);
                     if (dayMatch) {
-                        this.openDay(Number(dayMatch[1]), dayMatch[2]);
+                        if (this._tryDayMode || this.isCoursePaid(this.state.activeCourse)) {
+                            this.openDayAfterChild(Number(dayMatch[1]), dayMatch[2]);
+                        } else if (this.isLoggedIn()) {
+                            this.openDay(Number(dayMatch[1]), dayMatch[2]);
+                        } else {
+                            this.showMarketingHome();
+                        }
                     } else if (clean === 'home') {
                         this.showMarketingHome();
                     } else if (clean === 'courses') {
@@ -4703,6 +5415,17 @@
                     return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
                 }
                 return parts[0].slice(0, 2).toUpperCase();
+            },
+
+            childFirstName(name) {
+                return String(name || '').trim().split(/\s+/).filter(Boolean)[0] || '';
+            },
+
+            childDisplayName(name, maxLen = 8) {
+                const first = this.childFirstName(name);
+                if (!first) return '';
+                if (first.length <= maxLen) return first;
+                return first.slice(0, maxLen) + '...';
             },
 
             isCompactNav() {
@@ -4957,15 +5680,19 @@
             paintChildButton() {
                 const btn = document.getElementById('childProfileBtn');
                 const label = document.getElementById('childProfileLabel');
+                const icon = document.getElementById('childProfileIcon');
                 const loggedIn = this.isLoggedIn();
                 if (btn) btn.classList.toggle('hidden', !loggedIn);
+                if (icon) icon.className = 'fa-solid fa-child';
                 if (!label) return;
                 if (!loggedIn) {
                     label.textContent = 'Add a child';
                     return;
                 }
                 const child = this.activeChild();
-                label.textContent = this.childProfileComplete(child) ? child.name : 'Add a child';
+                label.textContent = this.childProfileComplete(child)
+                    ? this.childDisplayName(child.name, 8)
+                    : 'Add a child';
             },
 
             paintLoggedInChrome() {
@@ -4979,7 +5706,9 @@
                     const gamesOpen = document.getElementById('gamesView');
                     const profileOpen = document.getElementById('profileView');
                     const selectionOpen = document.getElementById('courseSelectionView');
-                    const lockedOpen = [courseOpen, dayOpen, gamesOpen, profileOpen, selectionOpen].some(el => el && !el.classList.contains('hidden'));
+                    const allowTryDay = this._tryDayMode && dayOpen && !dayOpen.classList.contains('hidden');
+                    const lockedOpen = [courseOpen, gamesOpen, profileOpen, selectionOpen].some(el => el && !el.classList.contains('hidden'))
+                        || (dayOpen && !dayOpen.classList.contains('hidden') && !allowTryDay);
                     if (lockedOpen) this.showHomePage();
                 }
             },
@@ -5083,7 +5812,7 @@
                     }
                     const payModal = document.getElementById('paymentModal');
                     if (payModal && !payModal.classList.contains('hidden')) {
-                        if (e.key === 'Escape') {
+                        if (e.key === 'Escape' || e.key === 'BrowserBack' || e.key === 'GoBack') {
                             e.preventDefault();
                             this.closePaymentModal();
                         }
@@ -5138,7 +5867,53 @@
                 document.body.classList.toggle('theme-original', theme === 'original');
                 const orbs = document.getElementById('liquidAmbientOrbs');
                 if (orbs) orbs.classList.toggle('hidden', theme === 'original');
+                this.applyDarkModeUI();
                 this.paintThemeMenu();
+            },
+
+            isDarkMode() {
+                return document.documentElement.getAttribute('data-aflatoon-dark') === '1'
+                    || this.state.darkMode === true;
+            },
+
+            applyDarkModeUI(force) {
+                let on;
+                if (typeof force === 'boolean') {
+                    on = force;
+                } else {
+                    try {
+                        const saved = localStorage.getItem('aflatoon_dark_mode');
+                        if (saved === '1' || saved === 'dark') on = true;
+                        else if (saved === '0' || saved === 'light') on = false;
+                        else on = !!this.state.darkMode;
+                    } catch (e) {
+                        on = !!this.state.darkMode;
+                    }
+                }
+                this.state.darkMode = !!on;
+                document.documentElement.setAttribute('data-aflatoon-dark', on ? '1' : '0');
+                try {
+                    localStorage.setItem('aflatoon_dark_mode', on ? '1' : '0');
+                } catch (e) {}
+                this.paintDarkToggle();
+            },
+
+            paintDarkToggle() {
+                const btn = document.getElementById('aflatoonDarkToggle');
+                if (!btn) return;
+                const on = this.state.darkMode;
+                btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+                btn.setAttribute('aria-label', on ? 'Switch to light mode' : 'Switch to dark mode');
+                btn.title = on ? 'Switch to light mode' : 'Switch to dark mode';
+                const ico = btn.querySelector('.aflatoon-dark-toggle-ico');
+                const label = btn.querySelector('.aflatoon-dark-toggle-label');
+                if (ico) ico.textContent = on ? '☀️' : '🌙';
+                if (label) label.textContent = on ? 'Light' : 'Dark';
+            },
+
+            toggleDarkMode() {
+                this.applyDarkModeUI(!this.state.darkMode);
+                this.saveState();
             },
 
             setTheme(theme) {
@@ -6475,6 +7250,7 @@
             },
 
             showMarketingHome() {
+                this.clearTryDayMode();
                 this.hideAllPages();
                 document.getElementById('homeView').classList.remove('hidden');
                 this.setActiveTopNav('home');
@@ -6532,9 +7308,10 @@
                         return '<div class="rounded-xl bg-white/80 border border-amber-200 px-3 py-2"><div class="flex items-center justify-between gap-2"><span class="font-bold text-slate-900">' + name + '</span><span class="text-[11px] font-extrabold uppercase ' + tone + '">' + status + '</span></div><div class="text-xs text-slate-700 mt-1">Start ' + this.escapeHtml(this.formatChildDate(window.start)) + ' · End ' + this.escapeHtml(this.formatChildDate(window.end)) + '</div>' + gamesLine + '</div>';
                     }).join('');
                     const meta = [child.school, child.gender, child.dob ? 'Born ' + this.formatChildDate(child.dob) : ''].filter(Boolean).join(' · ');
+                    const shown = this.childDisplayName(child.name, 8) || child.name;
                     return '<article class="profile-card rounded-3xl p-4 sm:p-5 space-y-3">'
                         + '<div class="flex items-start justify-between gap-3">'
-                        + '<div><h3 class="font-heading text-xl font-bold text-slate-900">' + this.escapeHtml(child.name) + (active ? ' · current' : '') + '</h3>'
+                        + '<div><h3 class="font-heading text-xl font-bold text-slate-900">' + this.escapeHtml(shown) + (active ? ' · current' : '') + '</h3>'
                         + '<p class="text-xs text-slate-700">' + this.escapeHtml(meta || (complete ? '' : 'Profile incomplete')) + '</p></div>'
                         + '<div class="flex gap-1 shrink-0">'
                         + '<button type="button" class="text-xs font-bold px-2 py-1 rounded-lg bg-white border border-slate-200 text-slate-800" onclick="app.openChildManager(); app.editChild(\'' + child.id + '\')">Edit</button>'
@@ -6680,8 +7457,9 @@
                 const start = this.todayIso();
                 const end = this.addMonths(start, 3);
                 const existing = this.courseWindow(courseId, this.state.paid, this.state.enrolledAt, this.state.progress);
+                const childLabel = child ? this.childFirstName(child.name) || child.name : '';
                 let line = child
-                    ? '₹99 opens ' + course.name + ' for ' + child.name + ' from ' + this.formatChildDate(start) + ' to ' + this.formatChildDate(end) + '.'
+                    ? '₹99 opens ' + course.name + ' for ' + childLabel + ' from ' + this.formatChildDate(start) + ' to ' + this.formatChildDate(end) + '.'
                     : 'Add a child before paying.';
                 if (existing && !existing.active) line += ' The last access ended on ' + this.formatChildDate(existing.end) + '.';
                 document.getElementById('paymentChildLine').textContent = line;
@@ -6693,7 +7471,13 @@
                 code.value = '';
                 feedback.textContent = '';
                 feedback.classList.add('hidden');
-                document.getElementById('paymentModal').classList.remove('hidden');
+                const modal = document.getElementById('paymentModal');
+                const alreadyOpen = modal && !modal.classList.contains('hidden');
+                modal.classList.remove('hidden');
+                if (!alreadyOpen && !this._navFromHistory) {
+                    const route = this.currentAppRoute();
+                    history.pushState({ route: route, paymentModal: true }, '', '#' + route);
+                }
             },
 
             setRzpStatus(message) {
@@ -6813,8 +7597,13 @@
             },
 
             closePaymentModal() {
-                document.getElementById('paymentModal').classList.add('hidden');
+                const modal = document.getElementById('paymentModal');
+                const wasOpen = modal && !modal.classList.contains('hidden');
+                if (modal) modal.classList.add('hidden');
                 this.payIntent = null;
+                if (wasOpen && !this._closingPaymentFromHistory && history.state && history.state.paymentModal) {
+                    history.back();
+                }
             },
 
             account: null,
@@ -6860,10 +7649,10 @@
                 const full = (this.account.name || '').trim() || this.account.email.split('@')[0];
                 const initials = this.accountInitials(full);
                 label.textContent = initials;
-                if (icon) icon.className = 'fa-solid fa-user shrink-0';
+                if (icon) icon.className = 'fa-solid fa-circle-user shrink-0';
                 if (menuBtn) {
-                    menuBtn.title = 'Account menu for ' + full;
-                    menuBtn.setAttribute('aria-label', 'Account menu');
+                    menuBtn.title = 'Parent account · ' + full;
+                    menuBtn.setAttribute('aria-label', 'Parent account menu');
                 }
             },
 
@@ -6982,9 +7771,11 @@
             applyRemoteProgress(progress) {
                 this.applyingRemote = true;
                 const keepTheme = this.state.theme === 'liquid' ? 'liquid' : 'original';
+                const keepDark = !!this.state.darkMode;
                 const incomingChildren = progress && Array.isArray(progress.children) && progress.children.length;
                 this.state = Object.assign(this.state, progress || {});
                 this.state.theme = keepTheme;
+                this.state.darkMode = keepDark;
                 if (!this.state.progress) this.state.progress = { beginner: {}, foundation: {}, advanced: {} };
                 if (!incomingChildren && this.state.activeChildId) {
                     if (!this.state.childRecords || typeof this.state.childRecords !== 'object') this.state.childRecords = {};
@@ -7346,29 +8137,34 @@
                     const isBoss = (d % 30 === 0 || d % 10 === 0);
                     const isContinue = d === continueDay;
 
-                    let medalBadgeHtml = `<span class="text-[11px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-lg">No Medal</span>`;
+                    let medalBadgeHtml = `<span class="roadmap-medal-pill roadmap-medal-pill--none text-[11px] font-bold px-2 py-0.5 rounded-lg">No Medal</span>`;
                     if (isDone) {
                         if (p.medal === 'gold') {
-                            medalBadgeHtml = `<span class="medal-gold text-[11px] font-extrabold px-2.5 py-0.5 rounded-lg flex items-center gap-1">🥇 GOLD</span>`;
+                            medalBadgeHtml = `<span class="roadmap-medal-pill medal-gold text-[11px] font-extrabold px-2.5 py-0.5 rounded-lg flex items-center gap-1">🥇 GOLD</span>`;
                         } else if (p.medal === 'silver') {
-                            medalBadgeHtml = `<span class="medal-silver text-[11px] font-extrabold px-2.5 py-0.5 rounded-lg flex items-center gap-1">🥈 SILVER</span>`;
+                            medalBadgeHtml = `<span class="roadmap-medal-pill medal-silver text-[11px] font-extrabold px-2.5 py-0.5 rounded-lg flex items-center gap-1">🥈 SILVER</span>`;
                         } else {
-                            medalBadgeHtml = `<span class="medal-bronze text-[11px] font-extrabold px-2.5 py-0.5 rounded-lg flex items-center gap-1">🥉 BRONZE</span>`;
+                            medalBadgeHtml = `<span class="roadmap-medal-pill medal-bronze text-[11px] font-extrabold px-2.5 py-0.5 rounded-lg flex items-center gap-1">🥉 BRONZE</span>`;
                         }
                     } else if (isContinue) {
-                        medalBadgeHtml = `<span class="text-[11px] font-extrabold px-2.5 py-0.5 rounded-lg bg-amber-500 text-slate-950">CONTINUE</span>`;
+                        medalBadgeHtml = `<span class="roadmap-medal-pill roadmap-medal-pill--continue text-[11px] font-extrabold px-2.5 py-0.5 rounded-lg">CONTINUE</span>`;
                     }
 
                     const borderCls = isContinue
                         ? 'border-amber-500 ring-4 ring-amber-400/30'
                         : (isDone ? 'border-emerald-400' : isBoss ? 'border-amber-400' : 'border-sky-300/80');
+                    const dayPillCls = isContinue
+                        ? 'roadmap-day-pill roadmap-day-pill--next'
+                        : isBoss
+                            ? 'roadmap-day-pill roadmap-day-pill--boss'
+                            : 'roadmap-day-pill';
 
                     daysHtml += `
                         <div onclick="app.openDay(${d})" class="roadmap-day-card group liquid-glass-tile rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 lg:p-6 border-2 ${borderCls} cursor-pointer flex flex-col justify-between min-h-0 overflow-hidden">
                             <div class="min-h-0">
                                 <div class="flex items-center justify-between gap-2 mb-1.5 sm:mb-3">
-                                    <span class="font-heading font-bold text-[11px] sm:text-sm px-2.5 sm:px-3 py-1 rounded-lg sm:rounded-xl shrink-0 ${isContinue ? 'bg-amber-500 text-slate-950 border border-amber-600' : isBoss ? 'bg-amber-100 text-amber-900 border border-amber-300' : 'bg-indigo-100 text-indigo-900 border border-indigo-200'}">
-                                        ${isBoss ? '<i class="fa-solid fa-crown text-amber-500 mr-1"></i>' : ''}${isContinue ? 'NEXT · ' : ''}DAY ${d}
+                                    <span class="roadmap-day-pill font-heading font-bold text-[11px] sm:text-sm px-2.5 sm:px-3 py-1 rounded-lg sm:rounded-xl shrink-0 border ${dayPillCls}">
+                                        ${isBoss ? '<i class="fa-solid fa-crown mr-1"></i>' : ''}${isContinue ? 'NEXT · ' : ''}DAY ${d}
                                     </span>
                                     ${medalBadgeHtml}
                                 </div>
@@ -7405,12 +8201,24 @@
             // =========================================================================
             // DAY MODULE VIEW (LESSON + 50 QUESTIONS)
             // =========================================================================
+            leaveDayView() {
+                if (this._tryDayMode || !this.isLoggedIn()) {
+                    this.showMarketingHome();
+                    return;
+                }
+                this.showCoursePage();
+            },
+
             openDay(dayNum, initialTab = 'lesson') {
+                if (this._tryDayMode) {
+                    this.openDayAfterChild(dayNum, initialTab);
+                    return;
+                }
                 this.requireChild(() => this.openDayAfterChild(dayNum, initialTab));
             },
 
             openDayAfterChild(dayNum, initialTab = 'lesson') {
-                if (!this.isCoursePaid(this.state.activeCourse)) {
+                if (!this._tryDayMode && !this.isCoursePaid(this.state.activeCourse)) {
                     this.ensurePaid(this.state.activeCourse, () => this.openDayAfterChild(dayNum, initialTab));
                     return;
                 }
@@ -7423,20 +8231,22 @@
                 this.hideAllPages();
                 document.getElementById('dayModuleView').classList.remove('hidden');
 
-                document.getElementById('moduleCourseBadge').textContent = `${courseMeta.name.toUpperCase()} • ${courseMeta.levelBadge.toUpperCase()}`;
+                document.getElementById('moduleCourseBadge').textContent = `${courseMeta.name.toUpperCase()} • ${courseMeta.levelBadge.toUpperCase()}${this._tryDayMode ? ' • FREE TRY' : ''}`;
                 document.getElementById('moduleWeekBadge').textContent = `MONTH ${dayData.month} • DAY ${dayData.day} OF 60`;
                 document.getElementById('moduleTitle').textContent = `Day ${dayData.day}: ${dayData.title}`;
 
                 const p = (this.state.progress[cid] || {})[this.currentDay];
-                if (p && p.completed) {
+                if (this._tryDayMode) {
+                    document.getElementById('moduleMedalStatus').textContent = 'Free try · no login needed';
+                } else if (p && p.completed) {
                     const icon = p.medal === 'gold' ? '🥇 GOLD' : p.medal === 'silver' ? '🥈 SILVER' : '🥉 BRONZE';
                     document.getElementById('moduleMedalStatus').textContent = `${icon} MEDAL (Best: ${p.bestScore}/35 in ${this.formatTime(p.bestTimeSec)})`;
                 } else {
                     document.getElementById('moduleMedalStatus').textContent = 'Medal Not Earned Yet';
                 }
 
-                document.getElementById('prevDayBtn').disabled = (this.currentDay === 1);
-                document.getElementById('nextDayBtn').disabled = (this.currentDay === 60);
+                document.getElementById('prevDayBtn').disabled = this._tryDayMode || (this.currentDay === 1);
+                document.getElementById('nextDayBtn').disabled = this._tryDayMode || (this.currentDay === 60);
 
                 // Populate Concept Lesson Tab
                 document.getElementById('lessonHookTitle').textContent = dayData.hookTitle;
@@ -7504,7 +8314,7 @@
                                 <div class="text-xs font-kid text-slate-600 truncate">${ex.steps.join(' → ')}</div>
                             </div>
                         </div>
-                        <div class="font-heading text-xl sm:text-2xl font-bold text-emerald-600 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-xl shrink-0">
+                        <div class="lesson-ans-chip font-heading text-xl sm:text-2xl font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-xl shrink-0">
                             = ${ex.ans}
                         </div>
                     </div>
@@ -7641,6 +8451,13 @@
             changeDayRelative(offset) {
                 if (window.FocusGuard && FocusGuard.sprintLocked()) {
                     FocusGuard.requestLeave(() => this.changeDayRelative(offset));
+                    return;
+                }
+                if (this._tryDayMode) {
+                    this.requireLogin(() => {
+                        this.clearTryDayMode();
+                        this.openDay(this.currentDay + offset, 'lesson');
+                    });
                     return;
                 }
                 const target = this.currentDay + offset;
@@ -8356,8 +9173,9 @@
                     const names = this.courseNamesForChild(child.id);
                     const access = names.length ? names.join(', ') : 'No course unlocked yet';
                     const meta = [child.school, access].filter(Boolean).join(' · ');
+                    const shown = this.childDisplayName(child.name, 8) || child.name;
                     return '<div class="flex items-center justify-between gap-2 rounded-2xl border ' + (active ? 'border-amber-400 bg-amber-50' : 'border-slate-200 bg-white') + ' px-3 py-2">'
-                        + '<div class="min-w-0"><div class="font-bold text-slate-900 truncate">' + this.escapeHtml(child.name) + (active ? ' · current' : '') + '</div>'
+                        + '<div class="min-w-0"><div class="font-bold text-slate-900 truncate">' + this.escapeHtml(shown) + (active ? ' · current' : '') + '</div>'
                         + '<div class="text-[11px] text-slate-600 truncate">' + this.escapeHtml(meta) + '</div></div>'
                         + '<div class="flex gap-1 shrink-0">'
                         + '<button type="button" class="text-xs font-bold px-2 py-1 rounded-lg bg-white border border-slate-200 text-slate-800" onclick="app.editChild(\'' + child.id + '\')">Edit</button>'
@@ -8389,7 +9207,11 @@
                 this.activateChild(id, true);
                 this.renderChildList();
                 if (!document.getElementById('profileView').classList.contains('hidden')) this.renderProfilePage();
-                this.resumeAfterChild();
+                if (this.pendingAfterChild && this.childProfileComplete(this.activeChild())) {
+                    this.resumeAfterChild();
+                } else {
+                    this.closeChildManager();
+                }
             },
 
             readChildForm() {
@@ -9139,6 +9961,128 @@
         html[data-ios="1"] select,
         html[data-ios="1"] textarea { font-size: max(16px, 1em); }
         html[data-ios="1"] #fcAnswerInput { font-size: max(16px, 1.05rem) !important; }
+
+        /* ===== Dark mode: Sprint popup (must beat theme-original white shell) ===== */
+        html[data-aflatoon-dark="1"] #practiceTabContent.is-sprint-popup {
+            background: rgba(0, 0, 0, 0.72) !important;
+        }
+        html[data-aflatoon-dark="1"] #practiceTabContent.is-sprint-popup .sprint-popup-shell,
+        html[data-aflatoon-dark="1"] body.theme-original #practiceTabContent.is-sprint-popup .sprint-popup-shell,
+        html[data-aflatoon-dark="1"] body.theme-liquid #practiceTabContent.is-sprint-popup .sprint-popup-shell {
+            background: #161616 !important;
+            border: 1px solid rgba(255, 255, 255, 0.12) !important;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55) !important;
+            color: #f4f4f5 !important;
+        }
+        html[data-aflatoon-dark="1"] #practiceTabContent.is-sprint-popup .sprint-popup-topbar .text-amber-700,
+        html[data-aflatoon-dark="1"] #practiceTabContent.is-sprint-popup .sprint-popup-topbar #sprintPopupDayLabel,
+        html[data-aflatoon-dark="1"] #practiceTabContent.is-sprint-popup .sprint-popup-topbar .text-slate-900 {
+            color: #fde68a !important;
+            -webkit-text-fill-color: #fde68a !important;
+        }
+        html[data-aflatoon-dark="1"] #practiceTabContent.is-sprint-popup #sprintPopupDayLabel {
+            color: #fafafa !important;
+            -webkit-text-fill-color: #fafafa !important;
+        }
+        html[data-aflatoon-dark="1"] #sprintPopupCloseBtn {
+            background: rgba(255, 255, 255, 0.08) !important;
+            color: #f4f4f5 !important;
+        }
+        html[data-aflatoon-dark="1"] #practiceTabContent .liquid-glass,
+        html[data-aflatoon-dark="1"] #practiceTabContent.is-sprint-popup .liquid-glass,
+        html[data-aflatoon-dark="1"] body.theme-original #practiceTabContent .liquid-glass {
+            background: rgba(28, 28, 28, 0.95) !important;
+            border-color: rgba(255, 255, 255, 0.12) !important;
+            color: #f4f4f5 !important;
+        }
+        html[data-aflatoon-dark="1"] #flashcardBox.flashcard-3d,
+        html[data-aflatoon-dark="1"] body.theme-original #flashcardBox.flashcard-3d,
+        html[data-aflatoon-dark="1"] body.theme-liquid #flashcardBox.flashcard-3d,
+        html[data-aflatoon-dark="1"] .flashcard-3d {
+            background: #1c1c1c !important;
+            border-color: rgba(255, 255, 255, 0.14) !important;
+            box-shadow: 0 12px 0 #0a0a0a, 0 20px 35px rgba(0, 0, 0, 0.45) !important;
+            color: #fafafa !important;
+        }
+        html[data-aflatoon-dark="1"] #fcQuestionPrompt,
+        html[data-aflatoon-dark="1"] body.theme-liquid #fcQuestionPrompt,
+        html[data-aflatoon-dark="1"] body.theme-original #fcQuestionPrompt,
+        html[data-aflatoon-dark="1"] #flashcardBox #fcQuestionPrompt,
+        html[data-aflatoon-dark="1"] #flashcardBox .text-slate-900 {
+            color: #fafafa !important;
+            -webkit-text-fill-color: #fafafa !important;
+        }
+        html[data-aflatoon-dark="1"] #fcSkillTag,
+        html[data-aflatoon-dark="1"] #fcInstantFeedback .text-slate-400,
+        html[data-aflatoon-dark="1"] #flashcardBox .text-slate-400 {
+            color: #a1a1aa !important;
+            -webkit-text-fill-color: #a1a1aa !important;
+        }
+        html[data-aflatoon-dark="1"] #fcAnswerInput,
+        html[data-aflatoon-dark="1"] body.theme-original #fcAnswerInput {
+            background: #0a0a0a !important;
+            color: #fafafa !important;
+            border-color: rgba(34, 211, 238, 0.45) !important;
+            -webkit-text-fill-color: #fafafa !important;
+        }
+        html[data-aflatoon-dark="1"] #fcAnswerInput::placeholder {
+            color: #71717a !important;
+        }
+        html[data-aflatoon-dark="1"] #fcEnterBtn,
+        html[data-aflatoon-dark="1"] #fcModeToggleBtn,
+        html[data-aflatoon-dark="1"] #fcModeToggleBtn span,
+        html[data-aflatoon-dark="1"] #fcModeToggleBtn i {
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+        }
+        html[data-aflatoon-dark="1"] #flashcardBox button.bg-indigo-50,
+        html[data-aflatoon-dark="1"] #flashcardBox .bg-indigo-50 {
+            background: rgba(99, 102, 241, 0.25) !important;
+            color: #c7d2fe !important;
+            -webkit-text-fill-color: #c7d2fe !important;
+        }
+        html[data-aflatoon-dark="1"] #fcCardHintBox {
+            background: rgba(245, 158, 11, 0.18) !important;
+            border-color: rgba(251, 191, 36, 0.4) !important;
+            color: #fde68a !important;
+            -webkit-text-fill-color: #fde68a !important;
+        }
+        html[data-aflatoon-dark="1"] #practiceTabContent .bg-slate-100,
+        html[data-aflatoon-dark="1"] #practiceTabContent .bg-emerald-50,
+        html[data-aflatoon-dark="1"] #practiceTabContent .bg-amber-50,
+        html[data-aflatoon-dark="1"] #practiceTabContent .bg-emerald-100 {
+            background: rgba(255, 255, 255, 0.08) !important;
+            border-color: rgba(255, 255, 255, 0.14) !important;
+            color: #f4f4f5 !important;
+            -webkit-text-fill-color: #f4f4f5 !important;
+        }
+        html[data-aflatoon-dark="1"] #fcDifficultyBadge {
+            background: rgba(16, 185, 129, 0.22) !important;
+            color: #6ee7b7 !important;
+            -webkit-text-fill-color: #6ee7b7 !important;
+        }
+        html[data-aflatoon-dark="1"] #fcTimerDisplay,
+        html[data-aflatoon-dark="1"] #fcStreakDisplay,
+        html[data-aflatoon-dark="1"] #fcScoreDisplay {
+            color: #fafafa !important;
+            -webkit-text-fill-color: #fafafa !important;
+        }
+        html[data-aflatoon-dark="1"] .numpad-btn,
+        html[data-aflatoon-dark="1"] body.theme-liquid .numpad-btn,
+        html[data-aflatoon-dark="1"] body.theme-original .numpad-btn {
+            background: #252525 !important;
+            border-color: rgba(255, 255, 255, 0.14) !important;
+            box-shadow: 0 4px 0 #0a0a0a !important;
+            color: #fafafa !important;
+            -webkit-text-fill-color: #fafafa !important;
+        }
+        html[data-aflatoon-dark="1"] #fcChoicesGrid button,
+        html[data-aflatoon-dark="1"] #fcMcContainer button,
+        html[data-aflatoon-dark="1"] [id*="Choice"] button,
+        html[data-aflatoon-dark="1"] #fcActiveArena .md\:col-span-5 button.font-heading {
+            color: #fafafa !important;
+            -webkit-text-fill-color: #fafafa !important;
+        }
     </style>
 </body>
 </html>
