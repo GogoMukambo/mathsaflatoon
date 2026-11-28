@@ -29,8 +29,11 @@
             window.addEventListener("orientationchange", applyPlatform);
             try {
                 var dark = localStorage.getItem("aflatoon_dark_mode");
-                if (dark === "1" || dark === "dark") document.documentElement.setAttribute("data-aflatoon-dark", "1");
-            } catch (e) {}
+                // Night mode is the default unless the user explicitly chose light.
+                if (dark !== "0" && dark !== "light") document.documentElement.setAttribute("data-aflatoon-dark", "1");
+            } catch (e) {
+                document.documentElement.setAttribute("data-aflatoon-dark", "1");
+            }
         })();
     </script>
     <title>Aflatoon Mental Maths Academy | 3-Stage 60-Day Speed Mastery (₹99/-)</title>
@@ -5275,7 +5278,7 @@
             STORAGE_KEY: 'aflatoon_academy_3stage_60d_v3',
             state: {
                 theme: 'original', // 'original' (new default) | 'liquid' (previous)
-                darkMode: false,
+                darkMode: true,
                 activeCourse: 'foundation', // 'beginner' | 'foundation' | 'advanced'
                 aiRecommendedCourse: null,
                 studentName: '',
@@ -6184,11 +6187,10 @@
                 } else {
                     try {
                         const saved = localStorage.getItem('aflatoon_dark_mode');
-                        if (saved === '1' || saved === 'dark') on = true;
-                        else if (saved === '0' || saved === 'light') on = false;
-                        else on = !!this.state.darkMode;
+                        if (saved === '0' || saved === 'light') on = false;
+                        else on = true; // night mode default
                     } catch (e) {
-                        on = !!this.state.darkMode;
+                        on = true;
                     }
                 }
                 this.state.darkMode = !!on;
