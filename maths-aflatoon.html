@@ -730,6 +730,165 @@
                 height: 2.15rem;
                 font-size: 0.95rem;
             }
+
+            /* When all 3 steps are open: fill the screen with the largest readable type */
+            #lessonExplainModal.is-all-steps-open:not(.is-examples-open) {
+                padding: 0;
+                align-items: stretch;
+            }
+            #lessonExplainModal.is-all-steps-open:not(.is-examples-open) .lesson-popup-shell {
+                height: 100dvh;
+                max-height: 100dvh;
+                width: 100%;
+                max-width: none;
+                border-radius: 0;
+                padding: max(0.45rem, env(safe-area-inset-top)) 0.55rem max(0.45rem, env(safe-area-inset-bottom)) !important;
+                gap: 0.35rem;
+            }
+            #lessonExplainModal.is-all-steps-open:not(.is-examples-open) .lesson-popup-body {
+                flex: 1 1 auto;
+                min-height: 0;
+                overflow: hidden !important;
+                gap: 0.35rem;
+            }
+            #lessonExplainModal.is-all-steps-open:not(.is-examples-open) #lessonPopupHeader {
+                gap: 0.25rem;
+                padding-right: 2.1rem;
+            }
+            #lessonExplainModal.is-all-steps-open:not(.is-examples-open) #lessonPopupHeader .w-10 {
+                width: 2rem;
+                height: 2rem;
+                font-size: 1rem;
+                border-radius: 0.75rem;
+            }
+            #lessonExplainModal.is-all-steps-open:not(.is-examples-open) #lessonHookTitle {
+                font-size: 1rem !important;
+            }
+            #lessonExplainModal.is-all-steps-open:not(.is-examples-open) #lessonGoldenRule {
+                font-size: 0.72rem !important;
+                -webkit-line-clamp: 1;
+            }
+            #lessonExplainModal.is-all-steps-open:not(.is-examples-open) #lessonPracticeBlock {
+                display: none !important;
+            }
+            #lessonExplainModal.is-all-steps-open:not(.is-examples-open) #lessonVisualBlueprint {
+                flex: 1 1 auto !important;
+                min-height: 0;
+                display: flex;
+                flex-direction: column;
+                padding: 0.2rem !important;
+                background: transparent !important;
+            }
+            #lessonExplainModal.is-all-steps-open:not(.is-examples-open) #lessonProblemBanner {
+                display: none !important;
+            }
+            #lessonExplainModal.is-all-steps-open:not(.is-examples-open) #lessonVisualBlueprint .grid {
+                flex: 1 1 auto;
+                min-height: 0;
+                height: 100%;
+                display: grid !important;
+                grid-template-columns: 1fr !important;
+                grid-auto-rows: minmax(0, 1fr);
+                gap: 0.55rem !important;
+            }
+            #lessonExplainModal.is-all-steps-open:not(.is-examples-open) #lessonVisualBlueprint .lesson-step-card {
+                min-height: 0;
+                height: 100%;
+                justify-content: center;
+                padding: 0.7rem 0.85rem !important;
+                border-radius: 1rem !important;
+            }
+            #lessonExplainModal.is-all-steps-open:not(.is-examples-open) #lessonVisualBlueprint .lesson-step-label {
+                font-size: clamp(0.78rem, 3.4vw, 0.95rem) !important;
+                letter-spacing: 0.04em;
+            }
+            #lessonExplainModal.is-all-steps-open:not(.is-examples-open) #lessonVisualBlueprint .lesson-step-val {
+                font-size: clamp(1.7rem, 8.2vw, 2.55rem) !important;
+                line-height: 1.12 !important;
+                margin: 0.35rem 0 !important;
+            }
+            #lessonExplainModal.is-all-steps-open:not(.is-examples-open) #lessonVisualBlueprint .lesson-step-desc {
+                font-size: clamp(1rem, 4.6vw, 1.28rem) !important;
+                line-height: 1.3 !important;
+            }
+            #lessonExplainModal.is-all-steps-open:not(.is-examples-open) .lesson-step-next-btn {
+                width: 2.35rem;
+                height: 2.35rem;
+                font-size: 1.05rem;
+            }
+
+            /* Mobile browser: show More examples; examples open in a separate popup */
+            #lessonExplainModal .lesson-more-examples-btn {
+                display: inline-flex !important;
+                width: 100%;
+            }
+            #lessonExplainModal .lesson-footer-actions {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 0.55rem;
+            }
+            #lessonExplainModal .lesson-sprint-label-full { display: none; }
+            #lessonExplainModal .lesson-sprint-label-short { display: inline; }
+            #lessonExplainModal #lessonPracticeBlock {
+                display: none !important;
+            }
+
+            #lessonExamplesModal {
+                padding: 0;
+                align-items: stretch;
+            }
+            #lessonExamplesModal .lesson-examples-shell {
+                height: 100dvh;
+                max-height: 100dvh;
+                width: 100%;
+                max-width: none;
+                border-radius: 0;
+                padding: max(0.55rem, env(safe-area-inset-top)) 0.75rem max(0.55rem, env(safe-area-inset-bottom));
+                gap: 0.65rem;
+            }
+            #lessonExamplesModal .lesson-examples-topbar {
+                padding-bottom: 0.15rem;
+            }
+            #lessonExamplesModal .lesson-examples-body {
+                -webkit-overflow-scrolling: touch;
+                overscroll-behavior: contain;
+                padding-bottom: 0.25rem;
+            }
+            #lessonExamplesModal #lessonPracticeBlock {
+                display: grid !important;
+                grid-template-columns: 1fr !important;
+                gap: 0.7rem !important;
+                overflow: visible !important;
+                min-height: auto !important;
+            }
+            #lessonExamplesModal #lessonPracticeBlock > div {
+                overflow: visible !important;
+                min-height: auto !important;
+                padding: 0.85rem 0.9rem !important;
+            }
+            #lessonExamplesModal #lessonExamplesGrid {
+                gap: 0.55rem !important;
+                overflow: visible !important;
+                flex: 0 0 auto !important;
+            }
+            #lessonExamplesModal #lessonExamplesGrid > div {
+                padding: 0.65rem 0.75rem !important;
+            }
+            #lessonExamplesModal #lessonExamplesGrid .font-heading.text-base,
+            #lessonExamplesModal #lessonExamplesGrid .font-heading.text-lg {
+                font-size: 1.05rem !important;
+            }
+            #lessonExamplesModal #warmupQuestionText {
+                font-size: 1.45rem !important;
+            }
+            #lessonExamplesModal .lesson-examples-footer {
+                padding-top: 0.15rem;
+            }
+        }
+
+        /* Desktop / wide: examples popup unused */
+        @media (min-width: 641px) {
+            #lessonExamplesModal { display: none !important; }
         }
 
         /* UNMISSABLE CONTINUOUS COLOR-CHANGING AFLATOON HIGHLIGHT */
@@ -1359,7 +1518,25 @@
         }
         @media (max-width: 640px) {
             .aflatoon-dark-toggle .aflatoon-dark-toggle-label { display: none; }
-            .aflatoon-dark-toggle { width: 2.25rem; height: 2.25rem; padding: 0; }
+            .aflatoon-dark-toggle { width: 2rem; height: 2rem; padding: 0; }
+            .liquid-glass-header .header-actions {
+                gap: 0.25rem;
+            }
+            .liquid-glass-header #childProfileBtn {
+                padding-left: 0.4rem;
+                padding-right: 0.45rem;
+                max-width: 7.25rem;
+            }
+            .liquid-glass-header #childProfileLabel {
+                max-width: 4.75rem;
+            }
+            .liquid-glass-header #navMenuBtn {
+                padding-left: 0.45rem;
+                padding-right: 0.4rem;
+            }
+            .liquid-glass-header #phoneLoginBtnLabel {
+                max-width: 2.75rem;
+            }
         }
 
         html[data-aflatoon-dark="1"] {
@@ -2089,19 +2266,19 @@
     <!-- STICKY GLOBAL NAVIGATION BAR                                              -->
     <!-- ========================================================================= -->
     <header class="shrink-0 z-40 liquid-glass-header no-print">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-2 sm:gap-4">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-1.5 sm:gap-4">
             <!-- Brand Title: Maths (Black) + Aflatoon (Multicolour) -->
-                        <div class="flex items-center gap-2">
-                            <span class="inline-flex items-baseline cursor-pointer" onclick="app.showHomePage()">
-                                <span class="font-heading font-bold text-xl sm:text-2xl tracking-tight text-black">Maths</span><span class="aflatoon-magic text-xl sm:text-2xl tracking-tight"><i class="fa-solid fa-bolt aflatoon-bolt"></i>Aflatoon</span>
-                            </span>
-                            <button type="button" id="childProfileBtn" onclick="app.showProfilePage()" class="hidden theme-pill-btn bg-white hover:bg-amber-50 text-amber-900 border border-amber-200 px-2.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shrink-0" title="Child profiles and course dates">
-                                <i class="fa-solid fa-child" id="childProfileIcon" aria-hidden="true"></i>
-                                <span id="childProfileLabel" class="max-w-[8rem] truncate">Add a child</span>
-                            </button>
-                        </div>
+            <div class="flex items-center min-w-0 shrink">
+                <span class="inline-flex items-baseline cursor-pointer" onclick="app.showHomePage()">
+                    <span class="font-heading font-bold text-lg sm:text-2xl tracking-tight text-black">Maths</span><span class="aflatoon-magic text-lg sm:text-2xl tracking-tight"><i class="fa-solid fa-bolt aflatoon-bolt"></i>Aflatoon</span>
+                </span>
+            </div>
 
-            <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            <div class="header-actions flex items-center gap-1 sm:gap-2 shrink-0 ml-auto">
+                <button type="button" id="childProfileBtn" onclick="app.showProfilePage()" class="hidden theme-pill-btn bg-white hover:bg-amber-50 text-amber-900 border border-amber-200 px-2 sm:px-2.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1 sm:gap-1.5 shrink-0" title="Child profiles and course dates">
+                    <i class="fa-solid fa-child" id="childProfileIcon" aria-hidden="true"></i>
+                    <span id="childProfileLabel" class="max-w-[5.5rem] sm:max-w-[8rem] truncate">Add a child</span>
+                </button>
 
                 <button type="button" id="aflatoonDarkToggle" class="aflatoon-dark-toggle shrink-0" onclick="app.toggleDarkMode()" aria-pressed="false" aria-label="Switch to dark mode" title="Switch to dark mode">
                     <span class="aflatoon-dark-toggle-ico" aria-hidden="true">🌙</span>
@@ -2115,9 +2292,9 @@
                 </button>
 
                 <div class="relative shrink-0" id="navMenuWrap">
-                    <button type="button" id="navMenuBtn" onclick="app.onAccountMenuClick()" class="theme-pill-btn bg-white hover:bg-indigo-50 text-indigo-800 border border-indigo-200 pl-2.5 pr-2 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-2 shrink-0 max-w-[15rem]" aria-label="Log in" aria-expanded="false" aria-controls="navMenuPanel" title="Log in with Google">
+                    <button type="button" id="navMenuBtn" onclick="app.onAccountMenuClick()" class="theme-pill-btn bg-white hover:bg-indigo-50 text-indigo-800 border border-indigo-200 pl-2 sm:pl-2.5 pr-1.5 sm:pr-2 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 sm:gap-2 shrink-0 max-w-[15rem]" aria-label="Log in" aria-expanded="false" aria-controls="navMenuPanel" title="Log in with Google">
                         <i class="fa-brands fa-google shrink-0" id="phoneLoginBtnIcon"></i>
-                        <span id="phoneLoginBtnLabel" class="truncate max-w-[3.5rem] sm:max-w-[4rem] tracking-wide">Login</span>
+                        <span id="phoneLoginBtnLabel" class="truncate max-w-[3rem] sm:max-w-[4rem] tracking-wide">Login</span>
                         <span id="navMenuBars" class="hidden flex flex-col items-center justify-center gap-[2.5px] shrink-0 ml-0.5 pl-1.5 border-l border-indigo-200/80" aria-hidden="true">
                             <span class="block w-3.5 h-[2px] rounded bg-slate-800"></span>
                             <span class="block w-3.5 h-[2px] rounded bg-slate-800"></span>
@@ -2245,13 +2422,14 @@
     <main id="courseSelectionView" class="hidden flex-1 overflow-hidden flex items-center">
         <section class="w-full h-full relative overflow-hidden liquid-glass-dark text-white flex items-center">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-3 relative z-10">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+                <div class="course-select-topline flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
                     <div class="flex items-center gap-3">
-                        <button type="button" onclick="app.showMarketingHome()" class="theme-pill-btn bg-white/15 hover:bg-white/25 text-white border border-white/25 font-heading font-bold text-xs px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shrink-0" title="Marketing home">
-                            <i class="fa-solid fa-arrow-left"></i>
-                            <span>About</span>
+                        <button type="button" onclick="app.showMarketingHome()" class="course-select-home-btn theme-pill-btn bg-white/15 hover:bg-white/25 text-white border border-white/25 font-heading font-bold text-xs px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shrink-0" title="Home" aria-label="Home">
+                            <i class="fa-solid fa-arrow-left course-select-home-back" aria-hidden="true"></i>
+                            <i class="fa-solid fa-house course-select-home-ico hidden" aria-hidden="true"></i>
+                            <span class="course-select-home-label">About</span>
                         </button>
-                        <div>
+                        <div class="course-select-header-copy">
                             <span class="page-header-sub text-[10px] font-extrabold uppercase tracking-widest text-amber-300">60-Day Program • Just ₹99/- per Course</span>
                             <h2 class="page-header-title font-heading text-2xl sm:text-3xl font-bold text-white leading-tight">Select Your 60-Day Mental Maths Course</h2>
                         </div>
@@ -2282,6 +2460,14 @@
                         <i class="fa-solid fa-arrow-left"></i>
                         <span>Courses</span>
                     </button>
+                    <div class="course-page-pager-mobile hidden items-center gap-1.5 shrink-0" aria-label="Day page navigation">
+                        <button type="button" id="prevTopicPageBtnMobile" onclick="app.changeTopicPage(-1)" title="Previous 6 Days" aria-label="Previous 6 Days" class="lesson-step-next-btn course-page-pager-btn disabled:opacity-35 disabled:pointer-events-none">
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </button>
+                        <button type="button" id="nextTopicPageBtnMobile" onclick="app.changeTopicPage(1)" title="Next 6 Days" aria-label="Next 6 Days" class="lesson-step-next-btn course-page-pager-btn disabled:opacity-35 disabled:pointer-events-none">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
                     <h3 id="roadmapMainHeading" class="page-header-title font-heading text-xl sm:text-2xl font-bold text-white">Foundation Course - Days 1 to 6</h3>
                 </div>
 
@@ -2399,6 +2585,7 @@
                         <!-- Dynamically rendered visual steps -->
                     </div>
 
+                    <div id="lessonPracticeHome">
                     <div id="lessonPracticeBlock" class="grid md:grid-cols-12 gap-3 sm:gap-4 items-stretch min-h-0">
                         <div class="md:col-span-7 liquid-glass-sub rounded-2xl sm:rounded-3xl p-3 sm:p-4 flex flex-col justify-between bg-white/70 border border-slate-200/80 min-h-0 overflow-hidden">
                             <div class="flex items-center justify-between mb-1.5 sm:mb-2 shrink-0">
@@ -2429,6 +2616,7 @@
                             </div>
                         </div>
                     </div>
+                    </div>
                 </div>
 
                 <div class="lesson-sprint-footer">
@@ -2443,6 +2631,31 @@
                             <i class="fa-solid fa-arrow-right"></i>
                         </button>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile browser: More examples as its own full-screen popup -->
+        <div id="lessonExamplesModal" class="hidden fixed inset-0 z-[95] bg-slate-950/70 backdrop-blur-md flex items-stretch justify-center no-print" onclick="if(event.target===this)app.closeLessonExamplesPopup()">
+            <div class="lesson-examples-shell relative w-full liquid-glass flex flex-col border border-white/40 shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="lessonExamplesTitle" onclick="event.stopPropagation()">
+                <div class="lesson-examples-topbar flex items-center justify-between gap-2 shrink-0">
+                    <button type="button" id="lessonExamplesBackBtn" class="theme-pill-btn bg-white/80 hover:bg-white text-slate-800 border border-slate-200 w-10 h-10 rounded-xl flex items-center justify-center" title="Back to steps" aria-label="Back to steps">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                    <div class="min-w-0 text-center flex-1">
+                        <p class="text-[10px] font-extrabold uppercase tracking-wider text-amber-700">Practice</p>
+                        <h2 id="lessonExamplesTitle" class="font-heading text-base font-bold text-slate-900 leading-tight truncate">More examples</h2>
+                    </div>
+                    <button type="button" id="lessonExamplesCloseBtn" class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center border border-slate-200" title="Close" aria-label="Close">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div id="lessonExamplesModalHost" class="lesson-examples-body flex-1 min-h-0 overflow-y-auto"></div>
+                <div class="lesson-examples-footer shrink-0">
+                    <button type="button" id="lessonExamplesStartSprintBtn" class="w-full btn-3d-indigo text-white font-heading font-bold text-base py-3.5 px-5 rounded-2xl flex items-center justify-center gap-2">
+                        <span>Start 35-Question Sprint</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -5375,6 +5588,12 @@
                         this._closingPaymentFromHistory = false;
                         return;
                     }
+                    const examplesModal = document.getElementById('lessonExamplesModal');
+                    const examplesOpen = examplesModal && !examplesModal.classList.contains('hidden');
+                    if (examplesOpen || this._closingLessonExamplesFromUi) {
+                        this.closeLessonExamplesPopup(true);
+                        return;
+                    }
                     const lessonModal = document.getElementById('lessonExplainModal');
                     const popupOpen = lessonModal && !lessonModal.classList.contains('hidden');
                     if (popupOpen || this._lessonPopupExitToCourse) {
@@ -8203,12 +8422,18 @@
                 const endDay = Math.min(60, startDay + 5);
 
                 const heading = document.getElementById('roadmapMainHeading');
-                const prevBtn = document.getElementById('prevTopicPageBtn');
-                const nextBtn = document.getElementById('nextTopicPageBtn');
+                const prevBtns = [
+                    document.getElementById('prevTopicPageBtn'),
+                    document.getElementById('prevTopicPageBtnMobile')
+                ];
+                const nextBtns = [
+                    document.getElementById('nextTopicPageBtn'),
+                    document.getElementById('nextTopicPageBtnMobile')
+                ];
 
                 if (heading) heading.textContent = `${courseMeta.name} - Days ${startDay} to ${endDay}`;
-                if (prevBtn) prevBtn.disabled = (page === 0);
-                if (nextBtn) nextBtn.disabled = (page === 9);
+                prevBtns.forEach(btn => { if (btn) btn.disabled = (page === 0); });
+                nextBtns.forEach(btn => { if (btn) btn.disabled = (page === 9); });
 
                 const continueDay = this.getContinueDay(cid);
                 let daysHtml = '';
@@ -8418,6 +8643,10 @@
                 this._lessonRevealTimers = [];
             },
 
+            isMobileLessonBrowser() {
+                return !!(window.matchMedia && window.matchMedia('(max-width: 640px)').matches);
+            },
+
             bindLessonPopupButtons() {
                 if (this._lessonButtonsBound) return;
                 this._lessonButtonsBound = true;
@@ -8425,6 +8654,9 @@
                 const skipBtn = document.getElementById('lessonSkipBtn');
                 const moreBtn = document.getElementById('lessonMoreExamplesBtn');
                 const sprintBtn = document.getElementById('lessonStartSprintBtn');
+                const examplesBack = document.getElementById('lessonExamplesBackBtn');
+                const examplesClose = document.getElementById('lessonExamplesCloseBtn');
+                const examplesSprint = document.getElementById('lessonExamplesStartSprintBtn');
                 if (closeBtn) closeBtn.addEventListener('click', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -8445,11 +8677,95 @@
                     e.stopPropagation();
                     this.startSprintFromLesson();
                 });
+                if (examplesBack) examplesBack.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.closeLessonExamplesPopup();
+                });
+                if (examplesClose) examplesClose.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.closeLessonExamplesPopupFromOutside();
+                });
+                if (examplesSprint) examplesSprint.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.startSprintFromLesson();
+                });
+            },
+
+            restoreLessonPracticeHome() {
+                const practice = document.getElementById('lessonPracticeBlock');
+                const home = document.getElementById('lessonPracticeHome');
+                if (practice && home && practice.parentElement !== home) {
+                    home.appendChild(practice);
+                }
+            },
+
+            openLessonExamplesPopup() {
+                const examplesModal = document.getElementById('lessonExamplesModal');
+                const host = document.getElementById('lessonExamplesModalHost');
+                const practice = document.getElementById('lessonPracticeBlock');
+                const explain = document.getElementById('lessonExplainModal');
+                if (!examplesModal || !host || !practice) return;
+                this.skipLessonReveal();
+                host.appendChild(practice);
+                examplesModal.classList.remove('hidden');
+                if (explain) explain.classList.add('is-examples-open');
+                const moreBtn = document.getElementById('lessonMoreExamplesBtn');
+                if (moreBtn) moreBtn.classList.add('is-open');
+                document.body.classList.add('overflow-hidden');
+                if (!this._navFromHistory && !(history.state && history.state.lessonExamplesPopup)) {
+                    const route = `day/${this.currentDay || 1}/lesson/examples`;
+                    history.pushState({ route: route, lessonPopup: true, lessonExamplesPopup: true }, '', '#' + route);
+                }
+                requestAnimationFrame(() => {
+                    host.scrollTop = 0;
+                });
+            },
+
+            closeLessonExamplesPopup(fromHistory = false) {
+                const examplesModal = document.getElementById('lessonExamplesModal');
+                const explain = document.getElementById('lessonExplainModal');
+                const wasOpen = examplesModal && !examplesModal.classList.contains('hidden');
+                if (!wasOpen) {
+                    this.restoreLessonPracticeHome();
+                    return;
+                }
+                if (!fromHistory && history.state && history.state.lessonExamplesPopup) {
+                    this._closingLessonExamplesFromUi = true;
+                    history.back();
+                    return;
+                }
+                this._closingLessonExamplesFromUi = false;
+                if (examplesModal) examplesModal.classList.add('hidden');
+                this.restoreLessonPracticeHome();
+                if (explain) {
+                    explain.classList.remove('is-examples-open');
+                    explain.classList.remove('hidden');
+                }
+                const moreBtn = document.getElementById('lessonMoreExamplesBtn');
+                if (moreBtn) moreBtn.classList.remove('is-open');
+                this.syncLessonStepsOpenClass();
+            },
+
+            closeLessonExamplesPopupFromOutside() {
+                // X on examples: leave examples and close lesson entirely via shared back path
+                const examplesModal = document.getElementById('lessonExamplesModal');
+                if (examplesModal && !examplesModal.classList.contains('hidden')) {
+                    this.closeLessonExamplesPopup();
+                    return;
+                }
+                this.closeLessonPopupFromOutside();
             },
 
             showLessonMoreExamples() {
                 const modal = document.getElementById('lessonExplainModal');
                 if (!modal) return;
+                if (this.isMobileLessonBrowser()) {
+                    this.openLessonExamplesPopup();
+                    return;
+                }
                 this.skipLessonReveal();
                 modal.classList.add('is-examples-open');
                 const moreBtn = document.getElementById('lessonMoreExamplesBtn');
@@ -8464,10 +8780,13 @@
 
             closeLessonPopup(silent = false) {
                 this.clearLessonRevealTimers();
+                const examplesModal = document.getElementById('lessonExamplesModal');
+                if (examplesModal) examplesModal.classList.add('hidden');
+                this.restoreLessonPracticeHome();
                 const modal = document.getElementById('lessonExplainModal');
                 if (modal) {
                     modal.classList.add('hidden');
-                    modal.classList.remove('is-examples-open');
+                    modal.classList.remove('is-examples-open', 'is-all-steps-open');
                 }
                 const moreBtn = document.getElementById('lessonMoreExamplesBtn');
                 if (moreBtn) moreBtn.classList.remove('is-open');
@@ -8475,6 +8794,11 @@
             },
 
             closeLessonPopupFromOutside() {
+                const examplesModal = document.getElementById('lessonExamplesModal');
+                if (examplesModal && !examplesModal.classList.contains('hidden')) {
+                    this.closeLessonExamplesPopup();
+                    return;
+                }
                 const modal = document.getElementById('lessonExplainModal');
                 const wasOpen = modal && !modal.classList.contains('hidden');
                 if (!wasOpen) {
@@ -8493,11 +8817,12 @@
 
             openLessonPopup() {
                 this.bindLessonPopupButtons();
+                this.closeLessonExamplesPopup(true);
                 const modal = document.getElementById('lessonExplainModal');
                 if (!modal) return;
                 const alreadyOpen = !modal.classList.contains('hidden');
                 modal.classList.remove('hidden');
-                modal.classList.remove('is-examples-open');
+                modal.classList.remove('is-examples-open', 'is-all-steps-open');
                 const moreBtn = document.getElementById('lessonMoreExamplesBtn');
                 if (moreBtn) moreBtn.classList.remove('is-open');
                 document.body.classList.add('overflow-hidden');
@@ -8513,6 +8838,15 @@
                 return Array.from(document.querySelectorAll('#lessonVisualBlueprint [data-lesson-step]'));
             },
 
+            syncLessonStepsOpenClass() {
+                const modal = document.getElementById('lessonExplainModal');
+                if (!modal) return;
+                const steps = this.lessonStepCards();
+                const visible = steps.filter(card => card.classList.contains('is-visible')).length;
+                const allOpen = steps.length > 0 && visible >= steps.length;
+                modal.classList.toggle('is-all-steps-open', allOpen);
+            },
+
             updateLessonStepArrows() {
                 const steps = this.lessonStepCards();
                 steps.forEach((card, i) => {
@@ -8522,6 +8856,7 @@
                     btn.classList.toggle('is-glowing', isActive);
                     btn.disabled = !isActive;
                 });
+                this.syncLessonStepsOpenClass();
             },
 
             startLessonReveal() {
@@ -9890,6 +10225,88 @@
         }
         html[data-platform="phone"] #threeStageCardsGrid {
             gap: 0.85rem !important;
+        }
+
+        /* Mobile browser: course selection — hide title, show home icon only */
+        @media (max-width: 640px) {
+            #courseSelectionView .course-select-header-copy {
+                display: none !important;
+            }
+            #courseSelectionView .course-select-topline {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                gap: 0.5rem;
+                margin-bottom: 0.65rem;
+            }
+            #courseSelectionView .course-select-home-btn {
+                width: 2.35rem;
+                height: 2.35rem;
+                padding: 0;
+                justify-content: center;
+                border-radius: 0.85rem;
+            }
+            #courseSelectionView .course-select-home-back,
+            #courseSelectionView .course-select-home-label {
+                display: none !important;
+            }
+            #courseSelectionView .course-select-home-ico {
+                display: inline-block !important;
+                font-size: 0.95rem;
+            }
+            #courseSelectionView .theme-quick-assess-btn {
+                padding: 0.45rem 0.7rem;
+                font-size: 0.68rem;
+            }
+
+            /* Day selection: round step-style arrows beside Courses */
+            #coursePageView .course-page-topline {
+                flex-wrap: nowrap;
+                align-items: center;
+                gap: 0.45rem;
+            }
+            #coursePageView .course-page-pager-mobile {
+                display: inline-flex !important;
+            }
+            #coursePageView .course-page-pager-btn {
+                width: 2.15rem;
+                height: 2.15rem;
+                font-size: 0.95rem;
+            }
+            #coursePageView .course-page-pager-btn:disabled {
+                background: #fbbf24;
+                border-color: #fde68a;
+                color: #0f172a;
+                opacity: 0.35;
+                cursor: default;
+                transform: none;
+                animation: none;
+            }
+            #coursePageView #roadmapMainHeading {
+                font-size: 0.95rem !important;
+                line-height: 1.2;
+                min-width: 0;
+                flex: 1 1 auto;
+            }
+            #coursePageView .course-days-shell {
+                display: block !important;
+                gap: 0 !important;
+                height: auto !important;
+                flex: 1 1 auto !important;
+                min-height: 0;
+            }
+            #coursePageView .course-days-prev,
+            #coursePageView .course-days-next {
+                display: none !important;
+            }
+            #coursePageView #roadmapContainer {
+                display: grid !important;
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                gap: 0.55rem !important;
+                width: 100%;
+                height: auto !important;
+                overflow: visible !important;
+            }
         }
         html[data-platform="phone"] #threeStageCardsGrid .liquid-glass-tile {
             padding: 1rem !important;
