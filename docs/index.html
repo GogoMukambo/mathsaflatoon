@@ -605,6 +605,14 @@
             z-index: 2;
             padding-top: 0.25rem;
         }
+        #lessonExplainModal .lesson-footer-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.55rem;
+        }
+        #lessonExplainModal .lesson-more-examples-btn { display: none; }
+        #lessonExplainModal .lesson-sprint-label-short { display: none; }
+        #lessonExplainModal .lesson-sprint-label-full { display: inline; }
         @media (max-width: 640px) {
             #lessonExplainModal .lesson-popup-shell {
                 height: calc(100dvh - 0.8rem);
@@ -1088,11 +1096,17 @@
         body.theme-original .theme-quick-assess-btn {
             background: var(--oa-lime) !important;
             color: var(--oa-dark) !important;
+            -webkit-text-fill-color: var(--oa-dark) !important;
             box-shadow: none !important;
             border-radius: 999px !important;
         }
         body.theme-original .btn-3d-amber span,
-        body.theme-original .btn-3d-amber i { color: var(--oa-dark) !important; }
+        body.theme-original .btn-3d-amber i,
+        body.theme-original .theme-quick-assess-btn span,
+        body.theme-original .theme-quick-assess-btn i {
+            color: var(--oa-dark) !important;
+            -webkit-text-fill-color: var(--oa-dark) !important;
+        }
         body.theme-original .btn-3d-emerald {
             background: var(--oa-forest) !important;
             color: #fff !important;
@@ -1497,6 +1511,31 @@
             color: #f4f4f5 !important;
             box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 16px 40px rgba(0, 0, 0, 0.45) !important;
         }
+        /* Course + day tiles: clearer edge so they separate from dark page */
+        html[data-aflatoon-dark="1"] #threeStageCardsGrid .liquid-glass-tile,
+        html[data-aflatoon-dark="1"] #threeStageCardsGrid > *,
+        html[data-aflatoon-dark="1"] .roadmap-day-card,
+        html[data-aflatoon-dark="1"] #roadmapContainer .roadmap-day-card,
+        html[data-aflatoon-dark="1"] body.theme-original .roadmap-day-card,
+        html[data-aflatoon-dark="1"] body.theme-liquid .roadmap-day-card {
+            border: 1.5px solid rgba(255, 255, 255, 0.28) !important;
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.06),
+                0 10px 28px rgba(0, 0, 0, 0.4) !important;
+        }
+        html[data-aflatoon-dark="1"] #threeStageCardsGrid .liquid-glass-tile.border-emerald-500,
+        html[data-aflatoon-dark="1"] #threeStageCardsGrid .liquid-glass-tile.border-emerald-300,
+        html[data-aflatoon-dark="1"] #roadmapContainer .roadmap-day-card.border-emerald-400 {
+            border-color: rgba(52, 211, 153, 0.55) !important;
+        }
+        html[data-aflatoon-dark="1"] #roadmapContainer .roadmap-day-card.border-amber-500,
+        html[data-aflatoon-dark="1"] #roadmapContainer .roadmap-day-card.border-amber-400 {
+            border-color: rgba(251, 191, 36, 0.6) !important;
+        }
+        html[data-aflatoon-dark="1"] #roadmapContainer .roadmap-day-card.border-sky-300\/80,
+        html[data-aflatoon-dark="1"] #roadmapContainer .roadmap-day-card[class*="border-sky"] {
+            border-color: rgba(125, 211, 252, 0.45) !important;
+        }
         html[data-aflatoon-dark="1"] .liquid-glass-dark,
         html[data-aflatoon-dark="1"] body.theme-liquid .liquid-glass-dark,
         html[data-aflatoon-dark="1"] .home-shell.liquid-glass-dark {
@@ -1859,10 +1898,27 @@
         }
         html[data-aflatoon-dark="1"] .btn-3d-amber,
         html[data-aflatoon-dark="1"] .btn-3d-amber span,
+        html[data-aflatoon-dark="1"] .btn-3d-amber i,
+        html[data-aflatoon-dark="1"] .theme-quick-assess-btn,
+        html[data-aflatoon-dark="1"] .theme-quick-assess-btn span,
+        html[data-aflatoon-dark="1"] .theme-quick-assess-btn i,
+        html[data-aflatoon-dark="1"] body.theme-original .theme-quick-assess-btn,
+        html[data-aflatoon-dark="1"] body.theme-original .theme-quick-assess-btn span,
+        html[data-aflatoon-dark="1"] body.theme-original .theme-quick-assess-btn i,
+        html[data-aflatoon-dark="1"] body.theme-liquid .theme-quick-assess-btn,
+        html[data-aflatoon-dark="1"] body.theme-liquid .theme-quick-assess-btn span,
+        html[data-aflatoon-dark="1"] body.theme-liquid .theme-quick-assess-btn i,
+        html[data-aflatoon-dark="1"] body.theme-liquid button.theme-quick-assess-btn,
         html[data-aflatoon-dark="1"] .home-cta-ink,
         html[data-aflatoon-dark="1"] .home-cta-ink span {
             color: #0f172a !important;
             -webkit-text-fill-color: #0f172a !important;
+        }
+        html[data-aflatoon-dark="1"] .theme-quick-assess-btn,
+        html[data-aflatoon-dark="1"] body.theme-original .theme-quick-assess-btn,
+        html[data-aflatoon-dark="1"] body.theme-liquid .theme-quick-assess-btn {
+            background: #d8ff65 !important;
+            border-color: #bef264 !important;
         }
         html[data-aflatoon-dark="1"] .text-white {
             color: #ffffff !important;
@@ -1871,6 +1927,25 @@
         html[data-aflatoon-dark="1"] .numpad-btn {
             color: #fafafa !important;
             -webkit-text-fill-color: #fafafa !important;
+        }
+
+        /* Course stage pill — dark text on light chip (beat dark-mode span overrides) */
+        .course-stage-pill,
+        #threeStageCardsGrid .course-stage-pill {
+            background: #e0e7ff !important;
+            border-color: #a5b4fc !important;
+            color: #1e1b4b !important;
+            -webkit-text-fill-color: #1e1b4b !important;
+        }
+        html[data-aflatoon-dark="1"] .course-stage-pill,
+        html[data-aflatoon-dark="1"] #threeStageCardsGrid .course-stage-pill,
+        html[data-aflatoon-dark="1"] body.theme-original .liquid-glass-tile .course-stage-pill,
+        html[data-aflatoon-dark="1"] body.theme-liquid .liquid-glass-tile .course-stage-pill,
+        html[data-aflatoon-dark="1"] body.theme-liquid span.course-stage-pill {
+            background: #e0e7ff !important;
+            border-color: #a5b4fc !important;
+            color: #1e1b4b !important;
+            -webkit-text-fill-color: #1e1b4b !important;
         }
 
         /* Roadmap day pills + medals — beat liquid-glass-tile span { color: white } */
@@ -2296,7 +2371,7 @@
                     <i class="fa-solid fa-xmark"></i>
                 </button>
                 <div class="lesson-popup-body">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pr-9 shrink-0">
+                    <div id="lessonPopupHeader" class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pr-9 shrink-0">
                         <div class="flex items-center gap-2.5 min-w-0">
                             <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-amber-400 text-slate-950 flex items-center justify-center text-xl sm:text-2xl shrink-0 shadow">
                                 ⚡
@@ -2357,10 +2432,17 @@
                 </div>
 
                 <div class="lesson-sprint-footer">
-                    <button type="button" id="lessonStartSprintBtn" class="w-full btn-3d-indigo text-white font-heading font-bold text-sm sm:text-base py-3 sm:py-3.5 px-5 rounded-2xl flex items-center justify-center gap-2">
-                        <span>Start 35-Question Sprint</span>
-                        <i class="fa-solid fa-arrow-right"></i>
-                    </button>
+                    <div class="lesson-footer-actions">
+                        <button type="button" id="lessonMoreExamplesBtn" class="lesson-more-examples-btn theme-pill-btn bg-white hover:bg-amber-50 text-slate-900 border border-amber-300 font-heading font-bold text-sm py-3 px-4 rounded-2xl flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-lightbulb text-amber-500"></i>
+                            <span>More examples</span>
+                        </button>
+                        <button type="button" id="lessonStartSprintBtn" class="w-full btn-3d-indigo text-white font-heading font-bold text-sm sm:text-base py-3 sm:py-3.5 px-5 rounded-2xl flex items-center justify-center gap-2">
+                            <span class="lesson-sprint-label-full">Start 35-Question Sprint</span>
+                            <span class="lesson-sprint-label-short">Start sprint</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -7960,7 +8042,7 @@
 
                             <div class="space-y-4">
                                 <div class="flex items-center justify-between pt-0.5">
-                                    <span class="text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-900 border border-indigo-200">
+                                    <span class="course-stage-pill text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-900 border border-indigo-200">
                                         Stage ${idx + 1} • ${c.levelBadge}
                                     </span>
                                     <span class="text-xl">${c.icon}</span>
@@ -8341,6 +8423,7 @@
                 this._lessonButtonsBound = true;
                 const closeBtn = document.getElementById('lessonCloseBtn');
                 const skipBtn = document.getElementById('lessonSkipBtn');
+                const moreBtn = document.getElementById('lessonMoreExamplesBtn');
                 const sprintBtn = document.getElementById('lessonStartSprintBtn');
                 if (closeBtn) closeBtn.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -8352,6 +8435,11 @@
                     e.stopPropagation();
                     this.skipLessonReveal();
                 });
+                if (moreBtn) moreBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.showLessonMoreExamples();
+                });
                 if (sprintBtn) sprintBtn.addEventListener('click', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -8359,10 +8447,30 @@
                 });
             },
 
+            showLessonMoreExamples() {
+                const modal = document.getElementById('lessonExplainModal');
+                if (!modal) return;
+                this.skipLessonReveal();
+                modal.classList.add('is-examples-open');
+                const moreBtn = document.getElementById('lessonMoreExamplesBtn');
+                if (moreBtn) moreBtn.classList.add('is-open');
+                const practice = document.getElementById('lessonPracticeBlock');
+                if (practice) {
+                    requestAnimationFrame(() => {
+                        practice.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    });
+                }
+            },
+
             closeLessonPopup(silent = false) {
                 this.clearLessonRevealTimers();
                 const modal = document.getElementById('lessonExplainModal');
-                if (modal) modal.classList.add('hidden');
+                if (modal) {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('is-examples-open');
+                }
+                const moreBtn = document.getElementById('lessonMoreExamplesBtn');
+                if (moreBtn) moreBtn.classList.remove('is-open');
                 document.body.classList.remove('overflow-hidden');
             },
 
@@ -8389,6 +8497,9 @@
                 if (!modal) return;
                 const alreadyOpen = !modal.classList.contains('hidden');
                 modal.classList.remove('hidden');
+                modal.classList.remove('is-examples-open');
+                const moreBtn = document.getElementById('lessonMoreExamplesBtn');
+                if (moreBtn) moreBtn.classList.remove('is-open');
                 document.body.classList.add('overflow-hidden');
                 // Extra history entry so browser/Android Back closes the popup first
                 if (!alreadyOpen && !this._navFromHistory) {
@@ -9504,14 +9615,20 @@
             margin-right: 0;
             align-self: stretch;
         }
+        /* Phone: next-days arrow points down. PC/tablet keep → */
+        html[data-platform="phone"] #coursePageView .course-days-next i,
+        html[data-app="android"] #coursePageView .course-days-next i {
+            transform: rotate(90deg);
+        }
         html[data-platform="phone"] #roadmapContainer,
         html[data-app="android"] #roadmapContainer {
             grid-area: days;
             height: auto !important;
             min-height: 0;
             overflow: visible !important;
-            grid-template-columns: 1fr;
-            gap: 0.35rem;
+            /* Mobile: 2 across × 3 down for the 6 day tiles */
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            gap: 0.55rem !important;
             align-content: start;
             width: 100%;
             padding: 0 !important;
@@ -9551,14 +9668,14 @@
         }
         html[data-platform="phone"] #roadmapContainer > .roadmap-day-card,
         html[data-app="android"] #roadmapContainer > .roadmap-day-card {
-            height: 7.35rem !important;
-            min-height: 7.35rem !important;
-            max-height: 7.35rem !important;
+            height: auto !important;
+            min-height: 8.4rem !important;
+            max-height: none !important;
             width: 100% !important;
             max-width: none !important;
-            border-radius: 0 !important;
+            border-radius: 0.9rem !important;
             overflow: hidden;
-            padding: 0.75rem 0.85rem !important;
+            padding: 0.65rem 0.7rem !important;
         }
         html[data-platform="tablet"] #roadmapContainer > .roadmap-day-card {
             height: 9rem !important;
@@ -9788,7 +9905,40 @@
             font-size: 1rem !important;
         }
 
-        /* Phone lesson popup: allow scrolling inside (body lock stays on background) */
+        /* Phone lesson popup: trick only + footer actions (PC/tablet unchanged) */
+        html[data-platform="phone"] #lessonExplainModal .lesson-popup-shell,
+        html[data-app="android"] #lessonExplainModal .lesson-popup-shell {
+            background: #0f172a !important;
+            border-color: rgba(148, 163, 184, 0.25) !important;
+            color: #f8fafc;
+        }
+        html[data-platform="phone"] #lessonExplainModal #lessonPopupHeader,
+        html[data-app="android"] #lessonExplainModal #lessonPopupHeader,
+        html[data-platform="phone"] #lessonExplainModal #lessonProblemBanner,
+        html[data-app="android"] #lessonExplainModal #lessonProblemBanner {
+            display: none !important;
+        }
+        html[data-platform="phone"] #lessonExplainModal #lessonPracticeBlock,
+        html[data-app="android"] #lessonExplainModal #lessonPracticeBlock {
+            display: none !important;
+        }
+        html[data-platform="phone"] #lessonExplainModal.is-examples-open #lessonPracticeBlock,
+        html[data-app="android"] #lessonExplainModal.is-examples-open #lessonPracticeBlock {
+            display: grid !important;
+            overflow: visible !important;
+            flex: 0 0 auto !important;
+            min-height: auto !important;
+            grid-template-columns: 1fr !important;
+            gap: 0.55rem !important;
+        }
+        html[data-platform="phone"] #lessonExplainModal.is-examples-open #lessonPracticeBlock > div,
+        html[data-app="android"] #lessonExplainModal.is-examples-open #lessonPracticeBlock > div,
+        html[data-platform="phone"] #lessonExplainModal.is-examples-open #lessonExamplesGrid,
+        html[data-app="android"] #lessonExplainModal.is-examples-open #lessonExamplesGrid {
+            overflow: visible !important;
+            flex: 0 0 auto !important;
+            min-height: auto !important;
+        }
         html[data-platform="phone"] #lessonExplainModal .lesson-popup-body,
         html[data-app="android"] #lessonExplainModal .lesson-popup-body {
             overflow-x: hidden !important;
@@ -9797,15 +9947,55 @@
             overscroll-behavior: contain;
             touch-action: pan-y;
         }
-        html[data-platform="phone"] #lessonExplainModal #lessonPracticeBlock,
-        html[data-platform="phone"] #lessonExplainModal #lessonPracticeBlock > div,
-        html[data-platform="phone"] #lessonExplainModal #lessonExamplesGrid,
-        html[data-app="android"] #lessonExplainModal #lessonPracticeBlock,
-        html[data-app="android"] #lessonExplainModal #lessonPracticeBlock > div,
-        html[data-app="android"] #lessonExplainModal #lessonExamplesGrid {
-            overflow: visible !important;
-            flex: 0 0 auto !important;
-            min-height: auto !important;
+        html[data-platform="phone"] #lessonExplainModal #lessonVisualBlueprint,
+        html[data-app="android"] #lessonExplainModal #lessonVisualBlueprint {
+            background: transparent !important;
+            padding: 0.15rem !important;
+            flex: 1 1 auto;
+        }
+        html[data-platform="phone"] #lessonExplainModal #lessonVisualBlueprint .grid,
+        html[data-app="android"] #lessonExplainModal #lessonVisualBlueprint .grid {
+            grid-template-columns: 1fr !important;
+            gap: 0.65rem !important;
+        }
+        html[data-platform="phone"] #lessonExplainModal .lesson-step-next-btn i,
+        html[data-app="android"] #lessonExplainModal .lesson-step-next-btn i {
+            transform: rotate(90deg);
+        }
+        html[data-platform="phone"] #lessonExplainModal .lesson-step-next-btn.is-done i,
+        html[data-app="android"] #lessonExplainModal .lesson-step-next-btn.is-done i {
+            transform: none;
+        }
+        html[data-platform="phone"] #lessonExplainModal .lesson-more-examples-btn,
+        html[data-app="android"] #lessonExplainModal .lesson-more-examples-btn {
+            display: inline-flex !important;
+            width: 100%;
+        }
+        html[data-platform="phone"] #lessonExplainModal .lesson-footer-actions,
+        html[data-app="android"] #lessonExplainModal .lesson-footer-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.55rem;
+        }
+        html[data-platform="phone"] #lessonExplainModal #lessonStartSprintBtn,
+        html[data-app="android"] #lessonExplainModal #lessonStartSprintBtn {
+            width: 100%;
+            padding: 0.75rem 0.65rem !important;
+            font-size: 0.88rem !important;
+        }
+        html[data-platform="phone"] #lessonExplainModal .lesson-sprint-label-full,
+        html[data-app="android"] #lessonExplainModal .lesson-sprint-label-full {
+            display: none;
+        }
+        html[data-platform="phone"] #lessonExplainModal .lesson-sprint-label-short,
+        html[data-app="android"] #lessonExplainModal .lesson-sprint-label-short {
+            display: inline;
+        }
+        html[data-platform="phone"] #lessonExplainModal #lessonCloseBtn,
+        html[data-app="android"] #lessonExplainModal #lessonCloseBtn {
+            background: rgba(255,255,255,0.12);
+            border-color: rgba(255,255,255,0.2);
+            color: #e2e8f0;
         }
 
         /* Phone lesson: denser chrome + cards */
